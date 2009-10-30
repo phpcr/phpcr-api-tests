@@ -21,15 +21,6 @@ class jackalope_tests_level1_NamespacesTest_SessionNamespaceRemapping extends ja
     /**
      * @expectedException PHPCR_NamespaceException
      */
-    public function testSetNamespacePrefixRemapExisting() {
-        $session = getJCRSession($this->sharedFixture['config']);
-        $session->setNamespacePrefix('test', 'http://jackalope-test/1.0');
-        $session->setNamespacePrefix('test', 'http://another-uri/1.0');
-    }
-
-    /**
-     * @expectedException PHPCR_NamespaceException
-     */
     public function testSetNamespacePrefixXml() {
         $this->sharedFixture['session']->setNamespacePrefix('xmlwhatever', 'http://www.jcp.org/jcr/mix/1.0');
     }

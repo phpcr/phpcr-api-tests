@@ -1,7 +1,10 @@
 <?php
 require_once(dirname(__FILE__) . '/../../../inc/baseCase.php');
 
-//6.6.8 Query API
+/**
+ * test javax.jcr.QueryManager interface
+ * todo: getQOMFactory
+ */
 class jackalope_tests_level1_SearchTest_QueryManager extends jackalope_baseCase {
     public function testCreateQuery() {
         $ret = $this->sharedFixture['qm']->createQuery('/jcr:root', 'xpath');
