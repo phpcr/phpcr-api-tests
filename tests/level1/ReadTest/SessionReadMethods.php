@@ -4,8 +4,6 @@ require_once(dirname(__FILE__) . '/../../../inc/baseCase.php');
 /** test javax.cr.Session read methods (level 1)
  *  most of the pdf specification is in section 4.4 and 5.1
  *
- *  todo: hasCapability, hasPermission, checkPermission
- *
  *  ExportTest: importXML, getImportContentHandler, exportSystemView, exportDocumentView
  *  NamespacesTest: getNamespacePrefix, getNamespacePrefixes, getNamespaceURI, setNamespacePrefix
  *
@@ -221,5 +219,31 @@ class jackalope_tests_level1_ReadTest_SessionReadMethods extends jackalope_baseC
         $ses->logout();
         $this->assertTrue($ses instanceOf PHPCR_SessionInterface);
         $this->assertFalse($ses->isLive());
+    }
+
+    public function testCheckPermission() {
+        $this->sharedFixture['session']->checkPermission('/tests_level1_access_base', 'read');
+        $this->sharedFixture['session']->checkPermission('/tests_level1_access_base/numberPropertyNode/jcr:content/foo', 'read');
+    }
+    /**
+     * @expectedException PHPCR_AccessControlException
+     */
+    public function testCheckPermissionAccessControlException() {
+        $this->markAsIncomplete('TODO: how to produce a permission exception?');
+        $this->sharedFixture['session']->checkPermission('/tests_level1_access_base/numberPropertyNode/jcr:content/foo', 'add_node');
+    }
+    public function testHasPermission() {
+        $this->assertTrue($this->sharedFixture['session']->hasPermission('/tests_level1_access_base', 'read'));
+        $this->assertTrue($this->sharedFixture['session']->hasPermission('/tests_level1_access_base/numberPropertyNode/jcr:content/foo', 'read'));
+        $this->assertTrue($this->sharedFixture['session']->hasPermission('/tests_level1_access_base/numberPropertyNode/jcr:content/foo', 'add_node')); //we have permission, but this node is not capable of the operation
+    }
+
+    public function testHasCapability() {
+        $node = $this->sharedFixture['session']->getNode('/tests_level1_access_base');
+        $this->assertTrue($this->sharedFixture['session']->hasCapability('getReferences', $node, array()));
+        $this->assertTrue($this->sharedFixture['session']->hasCapability('getProperty', $node, array('foo')));
+        $property = $this->sharedFixture['session']->getProperty('/tests_level1_access_base/numberPropertyNode/jcr:content/foo');
+        $this->assertTrue($this->sharedFixture['session']->hasCapability('getNode', $property, array()));
+        $this->assertFalse($this->sharedFixture['session']->hasCapability('inexistent', $property, array()));
     }
 }
