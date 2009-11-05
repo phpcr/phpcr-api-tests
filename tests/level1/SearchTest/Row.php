@@ -1,7 +1,9 @@
 <?php
 require_once(dirname(__FILE__) . '/../../../inc/baseCase.php');
 
-//6.6.8 Query API
+/** test the javax.jcr.Row interface
+ *  todo: getNode, getPath, getScore
+ */
 class jackalope_tests_level1_SearchTest_Row extends jackalope_baseCase {
     private $row;
 

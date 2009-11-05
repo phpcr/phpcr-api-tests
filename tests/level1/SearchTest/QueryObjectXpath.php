@@ -2,8 +2,9 @@
 require_once(dirname(__FILE__) . '/../../../inc/baseCase.php');
 
 /**
- * 6.6.10 Query Object
+ * test the javax.jcr.Query interface
  *
+ * setLimit, setOffset, bindValue, getBindVariableNames
  */
 class jackalope_tests_level1_SearchTest_QueryObjectXpath extends jackalope_baseCase {
 

@@ -1,15 +1,25 @@
-Usage:
+*******************
+Jackalope API tests
+*******************
+http://liip.to/jackalope
+
+ebi at liip.ch
+david at liip.ch
+chregu at liip.ch
+
+*****
+Usage
+*****
+
 Run phpunit inside of the root directory.
 
 For usage with Zend you probably have to execute it manually like
-this: 
+this:
 
 /usr/local/zend/bin/php-cli /usr/local/zend/bin/phpunit tests/level1/ReadTest.php
 
-Dependencies:
-java in PATH
-PHPUnit in PATH
-PHPUnit in include_path
+Customization
+*************
 
 How to test your own code:
 You need to change the phpunit.xml and write your own bootstrap file. The file
@@ -19,12 +29,33 @@ function getJCRSession(config) which returns the session
 function getSimpleCredentials(user, password) which returns simpleCredentials
 constants necessary to the JCR 1.0/JSR-170 specs
 
-Installing PHPUnit:
+*****
+Setup
+*****
+
+Setting up submodules
+*********************
+
+After the first clone, don't forget to
+
+git submodule init
+git submodule update
+
+Dependencies
+************
+
+java in PATH
+PHPUnit in PATH
+PHPUnit in include_path
+
+Installing PHPUnit
+******************
 Make sure you use the pear from Zend.
 See http://www.phpunit.de/manual/current/en/installation.html
 $  /usr/local/zend/bin/pear install phpunit
 
-Setting up Jackrabbit:
+Setting up Jackrabbit
+*********************
 - Create tests workspace which is different from your default workspace.
 See http://jackrabbit.apache.org/jackrabbit-configuration.html#JackrabbitConfiguration-Workspaceconfiguration
 Or:
@@ -38,11 +69,25 @@ Or:
 
 
 
+**************
+Implementation
+**************
 
-Setting up submodules:
+This code defines a set of unit tests against the PHPCR interfaces.
+The tests are oriented at the javadoc of the JSR 283 interfaces.
 
-After the first clone, don't forget to
+tests/level1 contains tets for the base read functionality.
 
-git submodule init
-git submodule update
+Packages at least partially for level1:
+javax.jcr               => ReadTest, AccessTest, ExportTest, NamespaceTest
+javax.jcr.query         must support javax.jcr.query.JCR-JQOM and javax.jcr.query.JCR-SQL2 => SearchTest
+javax.jcr.query.qom     Specify query object model => QueryObjectModelTest
+javax.jcr.nodetype      => NodeTypesTest
+javax.jcr.util
 
+Packages used for additional features
+javax.jcr.lock          Repository.OPTION_LOCKING_SUPPORTED => LockTest
+javax.jcr.observation   Repository.OPTION_OBSERVATION_SUPPORTED or Repository.OPTION_JOURNALED_OBSERVATION_SUPPORTED
+javax.jcr.retention     Repository.OPTION_RETENTION_SUPPORTED
+javax.jcr.security      Repository.OPTION_ACCESS_CONTROL_SUPPORTED => AccessControlTest
+javax.jcr.version       Repository.OPTION_SIMPLE_VERSIONING_SUPPORTED and Repository.OPTION_VERSIONING_SUPPORTED

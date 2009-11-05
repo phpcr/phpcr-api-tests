@@ -3,7 +3,7 @@ require_once(dirname(__FILE__) . '/../../../inc/baseCase.php');
 
 class jackalope_tests_level1_AccessTest_RepositoryDescriptors extends jackalope_baseCase {
     protected $path = 'level1/read';
-    
+
     //Those constants need to be defined in the bootstrap file
     protected $expectedDescriptors = array(
         SPEC_VERSION_DESC,
@@ -22,8 +22,8 @@ class jackalope_tests_level1_AccessTest_RepositoryDescriptors extends jackalope_
         QUERY_XPATH_POS_INDEX,
         QUERY_XPATH_DOC_ORDER
     );
-    
-    // 6.1.1.1 Repository Descriptors 
+
+    // 24.2 Repository Descriptors
     public function testDescriptorKeys() {
         $rep = getRepository($this->sharedFixture['config']);
         $keys = $rep->getDescriptorKeys();
@@ -42,5 +42,18 @@ class jackalope_tests_level1_AccessTest_RepositoryDescriptors extends jackalope_
             $this->assertTrue(is_string($str));
             $this->assertFalse(empty($str));
         }
+    }
+
+    public function testGetDescriptorValue() {
+        $this->markTestSkipped('TODO: implement');
+    }
+    public function testGetDescriptorValues() {
+        $this->markTestSkipped('TODO: implement');
+    }
+    public function testIsSingleValueDescriptor() {
+        $this->markTestSkipped('TODO: implement');
+    }
+    public function testIsStandardDescriptor() {
+        $this->markTestSkipped('TODO: implement');
     }
 }
