@@ -34,6 +34,8 @@ declare(ENCODING = 'utf-8');
  *
  * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
+ * @license http://opensource.org/licenses/bsd-license.php Simplified BSD License
+ * @api
  */
 interface PHPCR_Version_VersionManagerInterface {
 
@@ -130,7 +132,7 @@ interface PHPCR_Version_VersionManagerInterface {
 	 *  versionable (full or simple) and currently checked-in or
 	 *  non-versionable and its nearest versionable ancestor is checked-in.
 	 *
-	 * @param $absPath an absolute path.
+	 * @param string $absPath an absolute path.
 	 * @return boolean a boolean
 	 * @throws PHPCR_RepositoryException if an error occurs.
 	 * @api
@@ -434,8 +436,8 @@ interface PHPCR_Version_VersionManagerInterface {
 	 * If successful, these changes are dispatched immediately, there is no need
 	 * to call save.
 	 *
-	 * @param string $absPat an absolute path
-	 * @param PHPCR_Version_VersionInterface a version referred to by the jcr:mergeFailed  property of the node at absPath.
+	 * @param string $absPath an absolute path
+	 * @param PHPCR_Version_VersionInterface $version a version referred to by the jcr:mergeFailed  property of the node at absPath.
 	 * @return void
 	 * @throws PHPCR_Version_VersionException if the version specified is not among those referenced in the jcr:mergeFailed  property of the node at absPath  or if the node is currently checked-in.
 	 * @throws PHPCR_InvalidItemStateExceptionif there are unsaved changes pending on the node at absPath.

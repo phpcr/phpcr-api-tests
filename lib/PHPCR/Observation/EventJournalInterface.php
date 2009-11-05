@@ -27,6 +27,8 @@ declare(ENCODING = 'utf-8');
  *
  * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
+ * @license http://opensource.org/licenses/bsd-license.php Simplified BSD License
+ * @api
  */
 interface PHPCR_Observation_EventJournalInterface extends PHPCR_Observation_EventIteratorInterface {
 
@@ -35,7 +37,7 @@ interface PHPCR_Observation_EventJournalInterface extends PHPCR_Observation_Even
 	 * If an attempt is made to skip past the last element of the iterator, no
 	 * exception is thrown but the subsequent EventIterator.nextEvent() will fail.
 	 *
-	 * @param integer value that represents an offset in milliseconds from the epoch.
+	 * @param integer $date value that represents an offset in milliseconds from the epoch.
 	 * @return void
 	 * @api
 	 */

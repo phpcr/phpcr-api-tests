@@ -51,7 +51,7 @@ declare(ENCODING = 'utf-8');
  *  term ::= word | '"' word {whitespace word} '"'
  *  word ::= (A string containing no whitespace)
  *  whitespace ::= (A string of only whitespace)
-
+ *
  * A query satisfies a FullTextSearch constraint if the value (or values) of the
  * full-text indexed properties within the full-text search scope satisfy the
  * specified fullTextSearchExpression, evaluated as follows:
@@ -65,6 +65,8 @@ declare(ENCODING = 'utf-8');
  *
  * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
+ * @license http://opensource.org/licenses/bsd-license.php Simplified BSD License
+ * @api
  */
 interface PHPCR_Query_QOM_FullTextSearchInterface extends PHPCR_Query_QOM_ConstraintInterface {
 

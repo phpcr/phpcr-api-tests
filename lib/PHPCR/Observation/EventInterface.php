@@ -26,6 +26,8 @@ declare(ENCODING = 'utf-8');
  *
  * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
+ * @license http://opensource.org/licenses/bsd-license.php Simplified BSD License
+ * @api
  */
 interface PHPCR_Observation_EventInterface {
 
@@ -78,11 +80,11 @@ interface PHPCR_Observation_EventInterface {
 	 * Generated on persist when a node is moved.
 	 *  getPath() returns the absolute path of the destination of the move.
 	 *  getIdentifier() returns the identifier of the moved node.
-	 *   getInfo() If the method that caused this event was a
+	 *  getInfo() If the method that caused this event was a
 	 *    SessionInterface->move() or WorkspaceInterface->move() then the
 	 *    returned array has keys srcAbsPath and destAbsPath with values
 	 *    corresponding to the parameters passed to the move() method.
-	 *   If the method that caused this event was a NodeInterface.orderBefore()
+	 *  If the method that caused this event was a NodeInterface.orderBefore()
 	 *    then the returned aray has keys srcChildRelPath and destChildRelPath
 	 *    with values corresponding to the parameters passed to the orderBefore()
 	 *    method.

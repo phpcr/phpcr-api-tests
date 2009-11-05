@@ -27,6 +27,8 @@ declare(ENCODING = 'utf-8');
  *
  * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
+ * @license http://opensource.org/licenses/bsd-license.php Simplified BSD License
+ * @api
  */
 interface PHPCR_Version_VersionInterface extends PHPCR_NodeInterface {
 
@@ -59,7 +61,7 @@ interface PHPCR_Version_VersionInterface extends PHPCR_NodeInterface {
 	 * Note that under simple versioning the behavior of this method is equivalent
 	 * to getting the unique successor (if any) of this version.
 	 *
-	 * @see VersionHistory#getAllLinearVersions()
+	 * @see VersionHistory::getAllLinearVersions()
 	 * @return PHPCR_VersionInterface a Version or NULL if no linear successor exists.
 	 * @throws PHPCR_RepositoryException if an error occurs.
 	 * @api
@@ -86,7 +88,7 @@ interface PHPCR_Version_VersionInterface extends PHPCR_NodeInterface {
 	 * Note that under simple versioning the behavior of this method is equivalent
 	 * to getting the unique predecessor (if any) of this version.
 	 *
-	 * @see VersionHistory#getAllLinearVersions()
+	 * @see VersionHistory::getAllLinearVersions()
 	 * @return PHPCR_Version_VersionInterface a Version or NULL if no linear predecessor exists.
 	 * @throws PHPCR_RepositoryException if an error occurs.
 	 * @api

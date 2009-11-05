@@ -26,7 +26,7 @@ declare(ENCODING = 'utf-8');
  * operations on items in the JCR repository. Each privilege is identified by a
  * JCR name. JCR defines a set of standard privileges in the jcr namespace.
  * Implementations may add additional privileges in namespaces other than jcr.
-
+ *
  * A privilege may be an aggregate privilege. Aggregate privileges are sets of
  * other privileges. Granting, denying, or testing an aggregate privilege is
  * equivalent to individually granting, denying, or testing each privilege it
@@ -41,6 +41,8 @@ declare(ENCODING = 'utf-8');
  *
  * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
+ * @license http://opensource.org/licenses/bsd-license.php Simplified BSD License
+ * @api
  */
 interface PHPCR_Security_PrivilegeInterface {
 

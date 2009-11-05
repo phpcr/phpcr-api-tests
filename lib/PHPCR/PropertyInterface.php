@@ -29,6 +29,8 @@ declare(ENCODING = 'utf-8');
  *
  * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
+ * @license http://opensource.org/licenses/bsd-license.php Simplified BSD License
+ * @api
  */
 interface PHPCR_PropertyInterface extends PHPCR_ItemInterface {
 
@@ -638,7 +640,7 @@ interface PHPCR_PropertyInterface extends PHPCR_ItemInterface {
 	 * property in bytes where each is individually calculated as described in
 	 * getLength().
 	 *
-	 * @return array an array of lengths
+	 * @return array an array of lengths (integers)
 	 * @throws PHPCR_ValueFormatException if this property is single-valued.
 	 * @throws PHPCR_RepositoryException if another error occurs.
 	 * @api

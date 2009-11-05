@@ -26,6 +26,8 @@ declare(ENCODING = 'utf-8');
  *
  * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
+ * @license http://opensource.org/licenses/bsd-license.php Simplified BSD License
+ * @api
  */
 class PHPCR_Lock_LockException extends PHPCR_RepositoryException {
 
@@ -45,7 +47,7 @@ class PHPCR_Lock_LockException extends PHPCR_RepositoryException {
 	 *
 	 * @param string $message The exception message
 	 * @param integer $code The exception error code
-	 * @param $failureNodePath the absolute path of the node that caused the error or  NULL if the implementation chooses not to, or cannot, return a path.
+	 * @param string $failureNodePath the absolute path of the node that caused the error or  NULL if the implementation chooses not to, or cannot, return a path.
 	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 * @api
 	 */

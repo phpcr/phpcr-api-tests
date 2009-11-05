@@ -26,6 +26,8 @@ declare(ENCODING = 'utf-8');
  *
  * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
+ * @license http://opensource.org/licenses/bsd-license.php Simplified BSD License
+ * @api
  */
 interface PHPCR_ItemInterface {
 
@@ -42,7 +44,7 @@ interface PHPCR_ItemInterface {
 	 * Returns the name of this Item in qualified form. If this Item is the root
 	 * node of the workspace, an empty string is returned.
 	 *
-	 * @return string the name of this Item> in qualified form or an empty string if this Item is the root node of a workspace.
+	 * @return string the name of this Item in qualified form or an empty string if this Item is the root node of a workspace.
 	 * @throws PHPCR_RepositoryException if an error occurs.
 	 * @api
 	 */

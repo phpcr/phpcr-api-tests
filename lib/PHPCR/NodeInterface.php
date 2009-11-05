@@ -26,6 +26,8 @@ declare(ENCODING = 'utf-8');
  *
  * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
+ * @license http://opensource.org/licenses/bsd-license.php Simplified BSD License
+ * @api
  */
 interface PHPCR_NodeInterface extends PHPCR_ItemInterface {
 
@@ -693,7 +695,7 @@ interface PHPCR_NodeInterface extends PHPCR_ItemInterface {
 	 * support versioning (and therefore all nodes are always "checked-out",
 	 * by default).
 	 *
-	 * @return a boolean
+	 * @return boolean
 	 * @throws PHPCR_RepositoryException if an error occurs.
 	 * @api
 	 */
@@ -705,7 +707,7 @@ interface PHPCR_NodeInterface extends PHPCR_ItemInterface {
 	 * otherwise returns FALSE. This includes the case where a repository does
 	 * not support locking (in which case all nodes are "unlocked" by default).
 	 *
-	 * @return a boolean.
+	 * @return boolean.
 	 * @throws PHPCR_RepositoryException if an error occurs.
 	 * @api
 	 */

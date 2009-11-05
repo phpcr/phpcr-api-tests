@@ -47,6 +47,8 @@ declare(ENCODING = 'utf-8');
  *
  * @version  $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
+ * @license http://opensource.org/licenses/bsd-license.php Simplified BSD License
+ * @api
  */
 interface PHPCR_ValueInterface {
 
@@ -74,7 +76,7 @@ interface PHPCR_ValueInterface {
 	/**
 	 * Returns a long representation of this value.
 	 *
-	 * @return string A long representation of the value of this property.
+	 * @return integer A long representation of the value of this property.
 	 * @throws PHPCR_ValueFormatException if conversion to a long is not possible.
 	 * @throws PHPCR_RepositoryException if another error occurs.
 	 * @api
@@ -82,9 +84,9 @@ interface PHPCR_ValueInterface {
 	public function getLong();
 
 	/**
-	 * Returns a BigDecimal representation of this value.
+	 * Returns a double representation of this value (a BigDecimal in Java).
 	 *
-	 * @return string A double representation of the value of this property.
+	 * @return float A double representation of the value of this property.
 	 * @throws PHPCR_ValueFormatException if conversion is not possible.
 	 * @throws PHPCR_RepositoryException if another error occurs.
 	 * @api
@@ -94,7 +96,7 @@ interface PHPCR_ValueInterface {
 	/**
 	 * Returns a double representation of this value.
 	 *
-	 * @return string A double representation of the value of this property.
+	 * @return float A double representation of the value of this property.
 	 * @throws PHPCR_ValueFormatException if conversion to a double is not possible.
 	 * @throws PHPCR_RepositoryException if another error occurs.
 	 * @api
@@ -117,7 +119,7 @@ interface PHPCR_ValueInterface {
 	/**
 	 * Returns a boolean representation of this value.
 	 *
-	 * @return string A boolean representation of the value of this property.
+	 * @return boolean A boolean representation of the value of this property.
 	 * @throws PHPCR_ValueFormatException if conversion to a boolean is not possible.
 	 * @throws PHPCR_RepositoryException if another error occurs.
 	 * @api

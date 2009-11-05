@@ -22,25 +22,14 @@ declare(ENCODING = 'utf-8');
  *                                                                        */
 
 /**
- * Allows easy iteration through a list of Rows with nextRow as well as a skip
- * method inherited from RangeIterator.
+ * Interface for use by getImportContentHandler. It is currently acting as a
+ * sign that whatever we want to return from getImportContentHandler needs to be
+ * defined in more detail.
  *
  * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @license http://opensource.org/licenses/bsd-license.php Simplified BSD License
- * @api
  */
-interface PHPCR_Query_RowIteratorInterface extends PHPCR_RangeIteratorInterface {
-
-	/**
-	 * Returns the next Row in the iteration.
-	 *
-	 * @return PHPCR_Query_RowInterface
-	 * @throws OutOfBoundsException if the iterator contains no more elements.
-	 * @api
-	 */
-	public function nextRow();
-
-}
+interface PHPCR_ContentHandlerInterface {}
 
 ?>

@@ -32,8 +32,9 @@ declare(ENCODING = 'utf-8');
  * through the tree performing some operation on each Item.
  *
  * @version $Id$
- * @copyright Copyright belongs to the respective authors
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
+ * @license http://opensource.org/licenses/bsd-license.php Simplified BSD License
+ * @api
  */
 interface PHPCR_ItemVisitorInterface {
 
@@ -45,7 +46,7 @@ interface PHPCR_ItemVisitorInterface {
 	 * Note: you need to distinguish between Node and Property objects being
 	 *       visited in your implementation.
 	 *
-	 * @param PHPCR_NodeInterface|PHPCR_PropertyInterface $item a node or property accepting this visitor
+	 * @param PHPCR_ItemInterface $item a node or property accepting this visitor
 	 * @throws PHPCR_RepositoryException if an error occurs
 	 * @api
 	*/

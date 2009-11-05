@@ -28,6 +28,8 @@ declare(ENCODING = 'utf-8');
  *
  * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
+ * @license http://opensource.org/licenses/bsd-license.php Simplified BSD License
+ * @api
  */
 interface PHPCR_Query_QOM_QueryObjectModelFactoryInterface extends PHPCR_Query_QOM_QueryObjectModelConstantsInterface {
 
@@ -40,7 +42,7 @@ interface PHPCR_Query_QOM_QueryObjectModelFactoryInterface extends PHPCR_Query_Q
 	 * See the individual QOM factory methods for the validity criteria of each
 	 * query element.
 	 *
-	 * @param mixed $source the Selector or the node-tuple Source; non-null
+	 * @param PHPCR_Query_QOM_SourceInterface $source the Selector or the node-tuple Source; non-null
 	 * @param PHPCR_Query_QOM_ConstraintInterface $constraint the constraint, or null if none
 	 * @param array $orderings zero or more orderings; null is equivalent to a zero-length array
 	 * @param array $columns the columns; null is equivalent to a zero-length array
@@ -49,7 +51,7 @@ interface PHPCR_Query_QOM_QueryObjectModelFactoryInterface extends PHPCR_Query_Q
 	 * @throws PHPCR_RepositoryException if another error occurs.
 	 * @api
 	 */
-	public function createQuery(PHPCR_Query_QOM_SourceInterface $selectorOrSource, $constraint, array $orderings, array $columns);
+	public function createQuery(PHPCR_Query_QOM_SourceInterface $source, $constraint, array $orderings, array $columns);
 
 	/**
 	 * Selects a subset of the nodes in the repository based on node type.
@@ -81,7 +83,7 @@ interface PHPCR_Query_QOM_QueryObjectModelFactoryInterface extends PHPCR_Query_Q
 	 * @param PHPCR_Query_QOM_SourceInterface $left the left node-tuple source; non-null
 	 * @param PHPCR_Query_QOM_SourceInterface $right the right node-tuple source; non-null
 	 * @param string $joinType one of QueryObjectModelConstants.JCR_JOIN_TYPE_*
-	 * @param PHPCR_Query_QOM_JoinConditionInterface $join Condition the join condition; non-null
+	 * @param PHPCR_Query_QOM_JoinConditionInterface $joinCondition the join condition; non-null
 	 * @return PHPCR_Query_QOM_JoinInterface the join; non-null
 	 * @throws PHPCR_Query_InvalidQueryException if a particular validity test is possible on this method, the implemention chooses to perform that test (and not leave it until later) on createQuery, and the parameters given fail that test
 	 * @throws PHPCR_RepositoryException if the operation otherwise fails
@@ -273,8 +275,8 @@ interface PHPCR_Query_QOM_QueryObjectModelFactoryInterface extends PHPCR_Query_Q
 	 * because of access control constraints), the query is valid but the
 	 * constraint is not satisfied.
 	 *
-	 * @param string $selectorName the selector name; non-null
 	 * @param string $path an absolute path; non-null
+	 * @param string $selectorName the selector name; non-null
 	 * @return PHPCR_Query_QOM_SameNodeInterface the constraint; non-null
 	 * @throws PHPCR_Query_InvalidQueryException if the query is invalid
 	 * @throws PHPCR_RepositoryException if the operation otherwise fails

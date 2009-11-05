@@ -41,6 +41,8 @@ declare(ENCODING = 'utf-8');
  *
  * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
+ * @license http://opensource.org/licenses/bsd-license.php Simplified BSD License
+ * @api
  */
 final class OnParentVersionAction {
 
@@ -152,6 +154,8 @@ final class OnParentVersionAction {
 			case self::ABORT :
 				return self::ACTIONNAME_ABORT;
 				break;
+			default:
+				throw new InvalidArgumentException('Unknown action (' . $action . ') given.', 1257170242);
 		}
 	}
 
@@ -184,6 +188,8 @@ final class OnParentVersionAction {
 			case self::ACTIONNAME_ABORT :
 				return self::ABORT;
 				break;
+			default:
+				throw new InvalidArgumentException('Unknown name (' . $name . ') given.', 1257170243);
 		}
 	}
 }

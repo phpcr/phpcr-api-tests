@@ -31,6 +31,8 @@ declare(ENCODING = 'utf-8');
  *
  * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
+ * @license http://opensource.org/licenses/bsd-license.php Simplified BSD License
+ * @api
  */
 interface PHPCR_NamespaceRegistryInterface {
 
@@ -170,7 +172,7 @@ interface PHPCR_NamespaceRegistryInterface {
 	/**
 	 * Returns the URI to which the given prefix is mapped.
 	 *
-	 * @param $prefix a string
+	 * @param string $prefix a string
 	 * @return string a string
 	 * @throws PHPCR_NamespaceException if a mapping with the specified prefix does not exist.
 	 * @throws PHPCR_RepositoryException if another error occurs

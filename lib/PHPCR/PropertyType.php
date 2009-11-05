@@ -40,8 +40,10 @@ declare(ENCODING = 'utf-8');
  *
  * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
+ * @license http://opensource.org/licenses/bsd-license.php Simplified BSD License
+ * @api
  */
-final class PHPCR_PropertyType {
+final class PropertyType {
 
 	/**
 	 * This constant can be used within a property definition to specify that
@@ -246,6 +248,8 @@ final class PHPCR_PropertyType {
 			case self::URI :
 				return self::TYPENAME_URI;
 				break;
+			default:
+				throw new InvalidArgumentException('Unknown type (' . $type . ') given.', 1257170231);
 		}
 	}
 
@@ -300,6 +304,8 @@ final class PHPCR_PropertyType {
 			case self::TYPENAME_URI :
 				return self::URI;
 				break;
+			default:
+				throw new InvalidArgumentException('Unknown name (' . $name . ') given.', 1257170232);
 		}
 	}
 
