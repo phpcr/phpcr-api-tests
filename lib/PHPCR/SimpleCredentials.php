@@ -31,7 +31,7 @@ declare(ENCODING = 'utf-8');
  * @scope prototype
  * @api
  */
-final class SimpleCredentials implements PHPCR_CredentialsInterface {
+final class PHPCR_SimpleCredentials implements PHPCR_CredentialsInterface {
 
 	/**
 	 * @var string

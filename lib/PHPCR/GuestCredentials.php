@@ -32,6 +32,6 @@ declare(ENCODING = 'utf-8');
  * @license http://opensource.org/licenses/bsd-license.php Simplified BSD License
  * @scope prototype
  */
-final class GuestCredentials implements PHPCR_CredentialsInterface {}
+final class PHPCR_GuestCredentials implements PHPCR_CredentialsInterface {}
 
 ?>

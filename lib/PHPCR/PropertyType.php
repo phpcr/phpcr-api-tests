@@ -43,7 +43,7 @@ declare(ENCODING = 'utf-8');
  * @license http://opensource.org/licenses/bsd-license.php Simplified BSD License
  * @api
  */
-final class PropertyType {
+final class PHPCR_PropertyType {
 
 	/**
 	 * This constant can be used within a property definition to specify that
