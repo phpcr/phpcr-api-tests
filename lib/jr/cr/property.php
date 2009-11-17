@@ -567,6 +567,7 @@ class jr_cr_property implements PHPCR_PropertyInterface {
      */
     public function getDecimal() {
         return $this->JRprop->getDecimal()->doubleValue(); //php float and double are the smae, but we prefer the better precision
+
     }
 
     /**

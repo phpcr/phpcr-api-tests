@@ -28,7 +28,6 @@ class jr_cr_value implements PHPCR_ValueInterface {
         }
     }
 
-
     /**
      * Returns the integer representation of this value.
      *
