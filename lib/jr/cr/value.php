@@ -2,11 +2,11 @@
 class jr_cr_value implements PHPCR_ValueInterface {
     protected $JRvalue;
     protected $isStream = null;
-    
+
     public function __construct($JRvalue) {
         $this->JRvalue = $JRvalue;
     }
-    
+
     /**
      * Returns a string representation of this value.
      *
@@ -19,12 +19,15 @@ class jr_cr_value implements PHPCR_ValueInterface {
      */
     public function getString() {
         try {
+            //FIXME: what should we do if JRvalue is null (meaning a row->getValue did return null)
+            //this might be a bug of jackrabbit 2.0 alpha5, on value for createdBy
+            if ($this->JRvalue==null) return '';
             return $this->JRvalue->getString();
         } catch(JavaException $e) {
             $this->throwExceptionFromJava($e);
         }
     }
-    
+
     /**
      * Returns a number of the value. Which format can be given as param.
      */
@@ -38,14 +41,14 @@ class jr_cr_value implements PHPCR_ValueInterface {
         } catch (JavaException $e) {
             $this->throwExceptionFromJava($e);
         }
-        
+
         if (true === $float) {
             return (float) $num;
         } else {
             return (int)  $num;
         }
     }
-    
+
     /**
      * Returns the int representation of this value.
      *
@@ -58,7 +61,7 @@ class jr_cr_value implements PHPCR_ValueInterface {
     public function getLong() {
         return $this->getInt();
     }
-    
+
     /**
      * Returns the int representation of this value.
      *
@@ -72,7 +75,7 @@ class jr_cr_value implements PHPCR_ValueInterface {
     public function getInt() {
         return $this->getNumber();
     }
-    
+
     /**
      * Returns the float/double representation of this value.
      *
@@ -85,7 +88,7 @@ class jr_cr_value implements PHPCR_ValueInterface {
     public function getDouble() {
         return $this->getFloat();
     }
-    
+
     /**
      * Returns the float/double representation of this value.
      *
@@ -102,7 +105,7 @@ class jr_cr_value implements PHPCR_ValueInterface {
     public function getFloat() {
         return $this->getNumber(true);
     }
-    
+
     /**
      * Returns the timestamp string of this value.
      *
@@ -131,14 +134,14 @@ class jr_cr_value implements PHPCR_ValueInterface {
         } catch (JavaException $e) {
             $this->throwExceptionFromJava($e);
         }
-        
+
         if (! $date instanceOf DateTime) {
             throw new PHPCR_ValueFormatException('Could not get Date');
         }
-        
+
         return $date;
     }
-    
+
     /**
      * Returns the boolean representation of this value.
      *
@@ -157,7 +160,7 @@ class jr_cr_value implements PHPCR_ValueInterface {
         }
         return $bool;
     }
-    
+
     /**
      * Returns the type of this Value.
      * One of:
@@ -181,7 +184,7 @@ class jr_cr_value implements PHPCR_ValueInterface {
     public function getType() {
         //TODO: Insert code
     }
-    
+
     protected function throwExceptionFromJava($e) {
         $str = split("\n", $e->getMessage(), 2);
         if (false !== strpos($str[0], 'ValueFormatException')) {
@@ -190,7 +193,7 @@ class jr_cr_value implements PHPCR_ValueInterface {
             throw new PHPCR_RepositoryException($e->getMessage());
         }
     }
-    
+
     /**
      * Returns a Binary representation of this value. The Binary object in turn provides
      * methods to access the binary data itself. Uses the standard conversion to binary
@@ -202,7 +205,7 @@ class jr_cr_value implements PHPCR_ValueInterface {
     public function getBinary() {
         //TODO: Insert Code
     }
-    
+
     /**
      * Returns a BigDecimal representation of this value.
      *

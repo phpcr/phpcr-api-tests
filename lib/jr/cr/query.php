@@ -40,7 +40,7 @@ class jr_cr_query implements PHPCR_Query_QueryInterface {
      * @see PHPCR_Query::getLanguage()
      */
     public function getLanguage() {
-        //TODO - Insert your code here
+        return $this->JRquery->getLanguage();
     }
     
     /*public function setLimit($limit) {
@@ -53,7 +53,7 @@ class jr_cr_query implements PHPCR_Query_QueryInterface {
      * @see PHPCR_Query::getStatement()
      */
     public function getStatement() {
-        //TODO - Insert your code here
+        return $this->JRquery->getStatement();
     }
     
     /**
@@ -67,7 +67,18 @@ class jr_cr_query implements PHPCR_Query_QueryInterface {
      * @see PHPCR_Query::getStoredQueryPath()
      */
     public function getStoredQueryPath() {
-        //TODO - Insert your code here
+        try {
+            return $this->JRquery->getStoredQueryPath();
+        } catch(JavaException $e) {
+            $str = split("\n", $e->getMessage(), 1);
+            if (strstr($str[0], 'ItemNotFoundException')) {
+                throw new PHPCR_ItemNotFoundException($e->getMessage());
+            } elseif (strstr($str[0], 'RepositoryException')) {
+                throw new PHPCR_RepositoryException($e->getMessage());
+            } else {
+                throw $e;
+            }
+        }
     }
     
     /**
@@ -107,9 +118,30 @@ class jr_cr_query implements PHPCR_Query_QueryInterface {
      * @see PHPCR_Query::storeAsNode()
      */
     public function storeAsNode($absPath) {
-        //TODO - Insert your code here
+        try {
+            return $this->JRquery->storeAsNode($absPath);
+        } catch(JavaException $e) {
+            $str = split("\n", $e->getMessage(), 1);
+            if (strstr($str[0], 'ItemExistsException')) {
+                throw new PHPCR_ItemExistsException($e->getMessage());
+            } elseif (strstr($str[0], 'PathNotFoundException')) {
+                throw new PHPCR_PathNotFoundException($e->getMessage());
+            } elseif (strstr($str[0], 'ConstraintViolationException')) {
+                throw new PHPCR_NodeType_ConstraintViolationException($e->getMessage());
+            } elseif (strstr($str[0], 'VersionException')) {
+                throw new PHPCR_VersionException($e->getMessage());
+            } elseif (strstr($str[0], 'LockException')) {
+                throw new PHPCR_LockException($e->getMessage());
+            } elseif (strstr($str[0], 'UnsupportedRepositoryOperationException')) {
+                throw new PHPCR_UnsupportedRepositoryOperationException($e->getMessage());
+            } elseif (strstr($str[0], 'RepositoryException')) {
+                throw new PHPCR_RepositoryException($e->getMessage());
+            } else {
+                throw $e;
+            }
+        }
     }
-    
+
     /**
      * Sets the maximum size of the result set to limit.
      *
@@ -119,7 +151,7 @@ class jr_cr_query implements PHPCR_Query_QueryInterface {
     public function setLimit($limit) {
         //TODO - Insert your code here
     }
-    
+
     /**
      * Sets the start offset of the result set to offset.
      *

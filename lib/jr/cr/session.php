@@ -6,7 +6,7 @@ class jr_cr_session implements PHPCR_SessionInterface {
     protected $nodes = array();
     protected $modifiedNodes = array();
     public $JRsession = null;
-    
+
     /**
      * Enter description here...
      *
@@ -29,28 +29,7 @@ class jr_cr_session implements PHPCR_SessionInterface {
                                  'automatic_serialization' => true);
         $backendOptions = array('cache_dir' => '/tmp/');// Directory where to put the cache files
     }
-    
-    /**
-     *
-     * @param string
-     * @see PHPCR_Session::addLockToken()
-     */
-    public function addLockToken($lt) {
-        //TODO - Insert your code here
-    }
-    
-    /**
-     *
-     * @throws {@link AccessControlException}
-     * If permission is denied.
-     * @throws {@link RepositoryException}
-     * If another error occurs.
-     * @see PHPCR_Session::checkPermission()
-     */
-    public function checkPermission($absPath, $actions) {
-        //TODO - Insert your code here
-    }
-    
+
     /**
      *
      * @param absPath The path of the root of the subtree to be serialized.
@@ -70,10 +49,10 @@ class jr_cr_session implements PHPCR_SessionInterface {
      * @todo Determine how to handle this
      * @see PHPCR_Session::exportDocumentView()
      */
-    public function exportDocumentView($absPath, XMLWriter $out, $skipBinary, $noRecurse) {
+    public function exportDocumentView($absPath, $out, $skipBinary, $noRecurse) {
         //TODO: Insert code here
     }
-    
+
     /**
      *
      * @param absPath The path of the root of the subtree to be serialized.
@@ -90,10 +69,10 @@ class jr_cr_session implements PHPCR_SessionInterface {
      * If another error occurs.
      * @see PHPCR_Session::exportSystemView()
      */
-    public function exportSystemView($absPath, XMLWriter $out, $skipBinary, $noRecurse) {
+    public function exportSystemView($absPath, $out, $skipBinary, $noRecurse) {
         //TODO - Insert your code here
     }
-    
+
     /**
      *
      * @param string
@@ -105,7 +84,7 @@ class jr_cr_session implements PHPCR_SessionInterface {
     public function getAttribute($name) {
         return $this->JRsession->getAttribute($name);
     }
-    
+
     /**
      *
      * @return array
@@ -114,7 +93,7 @@ class jr_cr_session implements PHPCR_SessionInterface {
     public function getAttributeNames() {
         return $this->JRsession->getAttributeNames();
     }
-    
+
     /**
      *
      * @param parentAbsPath the absolute path of a node under which (as child) the imported subtree will be
@@ -144,25 +123,7 @@ class jr_cr_session implements PHPCR_SessionInterface {
     public function getImportContentHandler($parentAbsPath, $uuidBehavior) {
         //TODO - Insert your code here
     }
-    
-    /**
-     *
-     * @param string
-     * @return object
-     * A {@link Item} object
-     * @throws {@link PathNotFoundException}
-     * If the specified path cannot be found.
-     * @throws {@link RepositoryException}
-     * If another error occurs.
-     * @see PHPCR_Session::getItem()
-     */
-    public function getItem($absPath) {
-        if ($absPath == '' || $absPath == '/') {
-            return $this->getRootNode();
-        }
-        return $this->getRootNode()->getNode($absPath);
-    }
-    
+
     /**
      *
      * @return array
@@ -171,7 +132,7 @@ class jr_cr_session implements PHPCR_SessionInterface {
     public function getLockTokens() {
         //TODO - Insert your code here
     }
-    
+
     /**
      *
      * @param string
@@ -212,7 +173,7 @@ class jr_cr_session implements PHPCR_SessionInterface {
             throw new PHPCR_RepositoryException($e->getMessage());
         }
     }
-    
+
     /**
      *
      * @param string
@@ -238,26 +199,19 @@ class jr_cr_session implements PHPCR_SessionInterface {
             }
         }
     }
-    
+
     /**
-     * Returns the node specifed by the given UUID.
+     * Returns the node specified by the given identifier. Applies to both referenceable
+     * and non-referenceable nodes.
      *
-     * Only applies to nodes that expose a UUID, in other words, those of
-     * mixin node type <i>mix:referenceable</i>
-     *
-     * @param string
-     * @return object
-     *  A {@link Node} object
-     *
-     * @throws {@link ItemNotFoundException}
-     *    If the specified UUID is not found.
-     * @throws {@link RepositoryException}
-     *    If another error occurs.
+     * @param string $id An identifier.
+     * @return PHPCR_NodeInterface A Node.
+     * @throws PHPCR_ItemNotFoundException if no node with the specified identifier exists or if this Session does not have read access to the node with the specified identifier.
+     * @throws PHPCR_RepositoryException if another error occurs.
      */
-    
-    public function getNodeByUUID($uuid) {
+    public function getNodeByIdentifier($id) {
         try {
-            $JRnode = $this->JRsession->getNodeByUUID($uuid);
+            $JRnode = $this->JRsession->getNodeByIdentifier($id);
         } catch (JavaException $e) {
             $str = split("\n", $e->getMessage(), 0);
             if (strstr($str[0], 'ItemNotFoundException')) {
@@ -276,21 +230,9 @@ class jr_cr_session implements PHPCR_SessionInterface {
             return null;
         }
     }
-    
+
     /**
-     * Returns the node specifed by the given UUID.
      *
-     * Only applies to nodes that expose a UUID, in other words, those of
-     * mixin node type <i>mix:referenceable</i>
-     *
-     * @param string
-     * @return object
-     *  A {@link Node} object
-     *
-     * @throws {@link ItemNotFoundException}
-     *    If the specified UUID is not found.
-     * @throws {@link RepositoryException}
-     *    If another error occurs.
      */
     public function getNodeByPath($JRnode) {
         $path = $JRnode->getPath();
@@ -301,7 +243,7 @@ class jr_cr_session implements PHPCR_SessionInterface {
         if ($node) {
             return $node;
         }
-        
+
         $node = new jr_cr_node($this, $JRnode);
         if ($node) {
             $this->addNodeToList($node);
@@ -310,7 +252,7 @@ class jr_cr_session implements PHPCR_SessionInterface {
             return null;
         }
     }
-    
+
     /**
      *
      * @return object
@@ -321,7 +263,7 @@ class jr_cr_session implements PHPCR_SessionInterface {
         $rep = $this->JRsession->getRepository();
         return new jr_cr_repository(null, null, $rep);
     }
-    
+
     /**
      * Returns the root node of the workspace.
      *
@@ -344,7 +286,7 @@ class jr_cr_session implements PHPCR_SessionInterface {
             throw new PHPCR_RepositoryException($e->getMessage());
         }
     }
-    
+
     /**
      *
      * @return string
@@ -353,7 +295,7 @@ class jr_cr_session implements PHPCR_SessionInterface {
     public function getUserID() {
         return $this->JRsession->getUserID();
     }
-    
+
     /**
      *
      * @return object
@@ -368,7 +310,7 @@ class jr_cr_session implements PHPCR_SessionInterface {
         return $this->JRsession->getValueFactory();
         //TODO - Insert your code here
     }
-    
+
     /**
      *
      * @return jr_cr_workspace
@@ -378,7 +320,7 @@ class jr_cr_session implements PHPCR_SessionInterface {
     public function getWorkspace() {
         return $this->workspace;
     }
-    
+
     /**
      *
      * @return boolean
@@ -389,7 +331,7 @@ class jr_cr_session implements PHPCR_SessionInterface {
     public function hasPendingChanges() {
         //TODO - Insert your code here
     }
-    
+
     /**
      *
      * @param object
@@ -405,7 +347,7 @@ class jr_cr_session implements PHPCR_SessionInterface {
     public function impersonate(PHPCR_CredentialsInterface $credentials) {
         return $this->JRsession->impersonate($credentials->getJRcredentials());
     }
-    
+
     /**
      *
      * @param parentAbsPath the absolute path of the node below which the deserialized subtree is added.
@@ -444,7 +386,7 @@ class jr_cr_session implements PHPCR_SessionInterface {
         $in = new Java('java.io.FileInputStream', $in);
         $this->JRsession->importXML($parentAbsPath, $in, $uuidBehavior);
     }
-    
+
     /**
      *
      * @return boolean
@@ -453,7 +395,7 @@ class jr_cr_session implements PHPCR_SessionInterface {
     public function isLive() {
         return $this->JRsession->isLive();
     }
-    
+
     /**
      *
      * @param string
@@ -464,15 +406,12 @@ class jr_cr_session implements PHPCR_SessionInterface {
      */
     public function itemExists($absPath) {
         try {
-            if ('/' !== substr($absPath, 0, 1)) {
-                $absPath = '/' . $absPath;
-            }
             return $this->JRsession->itemExists($absPath);
         } catch (JavaException $e) {
             throw new PHPCR_RepositoryException($e->getMessage());
         }
     }
-    
+
     /**
      *
      * @see PHPCR_Session::logout()
@@ -480,7 +419,7 @@ class jr_cr_session implements PHPCR_SessionInterface {
     public function logout() {
         $this->JRsession->logout();
     }
-    
+
     /**
      *
      * @param string
@@ -516,7 +455,7 @@ class jr_cr_session implements PHPCR_SessionInterface {
     public function move($srcAbsPath, $destAbsPath) {
         //TODO - Insert your code here
     }
-    
+
     /**
      *
      * @param boolean
@@ -527,7 +466,7 @@ class jr_cr_session implements PHPCR_SessionInterface {
     public function refresh($keepChanges) {
         //TODO - Insert your code here
     }
-    
+
     /**
      *
      * @param string
@@ -536,7 +475,7 @@ class jr_cr_session implements PHPCR_SessionInterface {
     public function removeLockToken($lt) {
         //TODO - Insert your code here
     }
-    
+
     /**
      *
      * @throws {@link AccessDeniedException}
@@ -588,11 +527,11 @@ class jr_cr_session implements PHPCR_SessionInterface {
         $this->JRsession->save();
         $this->modifiedNodes = array();
     }
-    
+
     public function optimize() {
         $this->storage->optimize();
     }
-    
+
     /**
      *
      * @param string
@@ -619,42 +558,42 @@ class jr_cr_session implements PHPCR_SessionInterface {
             }
         }
     }
-    
+
     public function addNodeToList($node) {
         $this->nodes[$node->getPath()] = $node;
     }
-    
+
     public function addNodeToModifiedList($node) {
         $this->modifiedNodes[$node->getPath()] = $node;
     }
-    
+
     public function getFromNodesList($path) {
         if (! isset($this->nodes[$path])) {
             return null;
         }
         return $this->nodes[$path];
     }
-    
+
     public function parsePath($path, jr_cr_node $node, $noAbsolute = false) {
         if (! $noAbsolute && substr($path, 0, 1) == '/') {
             $node = $this->getRootNode();
             $path = substr($path, 1);
         }
-        
+
         $parts = explode('/', $path);
         if (count($parts) == 1) {
             return array(array("node" => $node, "name" => $parts[0]));
         }
-        
+
         $firstname = array_shift($parts);
         $paths = array();
-        
+
         if ($firstname == '') {
             $nodes = $this->getAllDescendants($node);
-            
+
             foreach ($nodes as $n) {
                 $subnode = $n->getNode($parts[0]);
-                
+
                 if ($subnode) {
                     $ps = $this->parsePath($path, $n, true);
                     $paths = array_merge($paths, $ps);
@@ -662,7 +601,7 @@ class jr_cr_session implements PHPCR_SessionInterface {
             }
             $firstname = array_shift($parts);
         }
-        
+
         $subnode = $node->getNode($firstname);
         if ($subnode) {
             return array_merge($paths, $this->parsePath(substr($path, strlen($firstname) + 1), $subnode, true));
@@ -670,7 +609,7 @@ class jr_cr_session implements PHPCR_SessionInterface {
             return $paths;
         }
     }
-    
+
     protected function getAllDescendants(jr_cr_node $node) {
         $nodes = $node->getNodes();
         if (count($nodes) > 0) {
@@ -682,20 +621,7 @@ class jr_cr_session implements PHPCR_SessionInterface {
         }
         return $nodes;
     }
-    
-    /**
-     * Returns the node specified by the given identifier. Applies to both referenceable
-     * and non-referenceable nodes.
-     *
-     * @param string $id An identifier.
-     * @return PHPCR_NodeInterface A Node.
-     * @throws PHPCR_ItemNotFoundException if no node with the specified identifier exists or if this Session does not have read access to the node with the specified identifier.
-     * @throws PHPCR_RepositoryException if another error occurs.
-     */
-    public function getNodeByIdentifier($id) {
-        //TODO: Insert code
-    }
-    
+
     /**
      * Returns the node at the specified absolute path in the workspace.
      *
@@ -705,9 +631,12 @@ class jr_cr_session implements PHPCR_SessionInterface {
      * @throws PHPCR_RepositoryException if another error occurs.
      */
     public function getNode($absPath) {
-        //TODO: Insert code
+        if ($absPath == '' || $absPath == '/') {
+            return $this->getRootNode();
+        }
+        return $this->getRootNode()->getNode($absPath);
     }
-    
+
     /**
      * Returns the property at the specified absolute path in the workspace.
      *
@@ -717,9 +646,40 @@ class jr_cr_session implements PHPCR_SessionInterface {
      * @throws PHPCR_RepositoryException if another error occurs.
      */
     public function getProperty($absPath) {
-        //TODO: Insert code
+        try {
+            $jrprop = $this->JRsession->getProperty($absPath);
+            $parentNode = new jr_cr_node($this, $jrprop->getParent());
+            return new jr_cr_property($parentNode, $jrprop);
+        } catch (Exception $e) {
+            throw new PHPCR_PathNotFoundException($absPath);
+        }
     }
-    
+
+    /**
+     *
+     * @param string
+     * @return object
+     * A {@link Item} object
+     * @throws {@link PathNotFoundException}
+     * If the specified path cannot be found.
+     * @throws {@link RepositoryException}
+     * If another error occurs.
+     * @see PHPCR_Session::getItem()
+     */
+    public function getItem($absPath) {
+        try {
+            $jritem = $this->JRsession->getItem($absPath);
+            if (strstr($jritem->class->getName(), 'Node')) {
+                return new jr_cr_node($this, $jritem);
+            } else {
+                return new jr_cr_property($this, $jritem);
+            }
+        } catch (Exception $e) {
+            throw new PHPCR_PathNotFoundException($absPath);
+        }
+    }
+
+
     /**
      * Returns true if a node exists at absPath and this Session has read
      * access to it; otherwise returns false.
@@ -729,9 +689,13 @@ class jr_cr_session implements PHPCR_SessionInterface {
      * @throws 3_PHPCR_RepositoryException if absPath is not a well-formed absolute path.
      */
     public function nodeExists($absPath) {
-        //TODO: Insert Code
+        try {
+            return $this->JRsession->nodeExists($absPath);
+        } catch (JavaException $e) {
+            throw new PHPCR_RepositoryException($e->getMessage());
+        }
     }
-    
+
     /**
      * Returns true if a property exists at absPath and this Session has read
      * access to it; otherwise returns false.
@@ -741,9 +705,13 @@ class jr_cr_session implements PHPCR_SessionInterface {
      * @throws PHPCR_RepositoryException if absPath is not a well-formed absolute path.
      */
     public function propertyExists($absPath) {
-        //TODO: Insert Code
+        try {
+            return $this->JRsession->propertyExists($absPath);
+        } catch (JavaException $e) {
+            throw new PHPCR_RepositoryException($e->getMessage());
+        }
     }
-    
+
     /**
      * Removes the specified item and its subgraph.
      *
@@ -768,7 +736,7 @@ class jr_cr_session implements PHPCR_SessionInterface {
     public function removeItem($absPath) {
         //TODO: Insert code
     }
-    
+
     /**
      * Returns true if this Session has permission to perform the specified
      * actions at the specified absPath and false otherwise.
@@ -802,9 +770,37 @@ class jr_cr_session implements PHPCR_SessionInterface {
      * @throws PHPCR_RepositoryException if an error occurs.
      */
     public function hasPermission($absPath, $actions) {
-        //TODO: Insert Code
+        try {
+            return $this->JRsession->hasPermission($absPath, $actions);
+        } catch (JavaException $e) {
+            throw new PHPCR_RepositoryException($e->getMessage());
+        }
     }
-    
+
+    /**
+     * @param string $absPath an absolute path.
+     * @param string $actions a comma separated list of action strings.
+     * @return void
+     * @throws AccessControlException if permission is denied.
+     * @throws RepositoryException if another error occurs.
+     * @see PHPCR_Session::checkPermission()
+     */
+    public function checkPermission($absPath, $actions) {
+        try {
+            $this->JRsession->checkPermission($absPath, $actions);
+        } catch (JavaException $e) {
+            $str = split("\n", $e->getMessage(), 1);
+            $str = $str[0];
+            if (strstr($str, 'AccessControlException')) {
+                throw new PHPCR_AccessControlException($e->getMessage());
+            } elseif (strstr($str, 'RepositoryException')) {
+                throw new PHPCR_RepositoryException($e->getMessage());
+            } else {
+                throw $e;
+            }
+        }
+    }
+
     /**
      * Checks whether an operation can be performed given as much context as can
      * be determined by the repository, including:
@@ -849,9 +845,34 @@ class jr_cr_session implements PHPCR_SessionInterface {
      * @throws PHPCR_RepositoryException if an error occurs
      */
     public function hasCapability($methodName, $target, array $arguments) {
-        //TODO: Insert Code
+        try {
+            if ($target instanceof jr_cr_node) {
+                $obj = $target->JRnode;
+            } elseif ($target instanceof jr_cr_property) {
+                $obj = $target->JRproperty;
+            } else {
+                throw new PHPCR_RepositoryException('Do not know how to handly the type of $target');
+            }
+            $args = array();
+            foreach($arguments as $argument) {
+                if (is_object($argument)) {
+                    if ($target instanceof jr_cr_node) {
+                        $args[] = $target->JRnode;
+                    } elseif ($target instanceof jr_cr_property) {
+                        $args[] = $target->JRproperty;
+                    } else {
+                        throw new PHPCR_RepositoryException('Do not know how to handly the type of $target');
+                    }
+                } else {
+                    $args[] = $argument; //primitives are added directly
+                }
+            }
+            return $this->JRsession->hasCapability($methodName, $obj, $args);
+        } catch (JavaException $e) {
+            throw new PHPCR_RepositoryException($e->getMessage());
+        }
     }
-    
+
     /**
      * Returns the access control manager for this Session.
      *
@@ -862,7 +883,7 @@ class jr_cr_session implements PHPCR_SessionInterface {
     public function getAccessControlManager() {
         //TODO: Insert Code
     }
-    
+
     /**
      * Returns the retention and hold manager for this Session.
      *

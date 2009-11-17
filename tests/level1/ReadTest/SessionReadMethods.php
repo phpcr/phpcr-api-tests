@@ -229,7 +229,7 @@ class jackalope_tests_level1_ReadTest_SessionReadMethods extends jackalope_baseC
      * @expectedException PHPCR_AccessControlException
      */
     public function testCheckPermissionAccessControlException() {
-        $this->markAsIncomplete('TODO: how to produce a permission exception?');
+        $this->markTestIncomplete('TODO: how to produce a permission exception?');
         $this->sharedFixture['session']->checkPermission('/tests_level1_access_base/numberPropertyNode/jcr:content/foo', 'add_node');
     }
     public function testHasPermission() {

@@ -6,7 +6,7 @@ class jr_cr_querymanager implements PHPCR_Query_QueryManagerInterface {
      * @var jr_cr_workspace
      */
     protected $workspace = null;
-    
+
     protected $JRquerymanager = null;
     /**
      *
@@ -15,7 +15,7 @@ class jr_cr_querymanager implements PHPCR_Query_QueryManagerInterface {
        $this->workspace = $workspace;
        $this->JRquerymanager = $jrquerymanager;
     }
-    
+
     /**
      *
      * @param string
@@ -31,7 +31,7 @@ class jr_cr_querymanager implements PHPCR_Query_QueryManagerInterface {
     public function createQuery($statement, $language ) {
         return new jr_cr_query($this->JRquerymanager->createQuery($statement,$language),$this->workspace->getSession());
     }
-    
+
     /**
      *
      * @see Query::storeAsNode()
@@ -48,7 +48,7 @@ class jr_cr_querymanager implements PHPCR_Query_QueryManagerInterface {
      */
     public function getQuery($node) {
         try {
-            $r = new jr_cr_query($this->JRquerymanager->getQuery($node->JRnode),
+            return new jr_cr_query($this->JRquerymanager->getQuery($node->JRnode),
                                    $this->workspace->getSession());
         } catch(JavaException $e) {
             $str = split("\n", $e->getMessage(), 1);
@@ -61,7 +61,7 @@ class jr_cr_querymanager implements PHPCR_Query_QueryManagerInterface {
             }
         }
     }
-    
+
     /**
      *
      * @return array
@@ -72,7 +72,7 @@ class jr_cr_querymanager implements PHPCR_Query_QueryManagerInterface {
     public function getSupportedQueryLanguages() {
         return $this->JRquerymanager->getSupportedQueryLanguages();
     }
-    
+
     /**
      * Creates a new prepared query by specifying the query statement itself and the language
      * in which the query is stated.
@@ -86,7 +86,7 @@ class jr_cr_querymanager implements PHPCR_Query_QueryManagerInterface {
     public function createPreparedQuery($statement, $language) {
         //TODO: Insert Code
     }
-    
+
     /**
      * Returns a QueryObjectModelFactory with which a JCR-JQOM query can be built
      * programmatically.

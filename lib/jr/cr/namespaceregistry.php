@@ -69,7 +69,23 @@ class jr_cr_namespaceregistry implements PHPCR_NamespaceRegistryInterface {
      *    If another error occurs.
      */
     public function registerNamespace($prefix, $uri) {
-        //TODO: Implement
+        try {
+            $this->JRnamespaceregistry->registerNamespace($prefix, $uri);
+        } catch(JavaException $e) {
+            $str = split("\n", $e->getMessage(), 1);
+            $str = $str[0];
+            if (strstr($str, 'NamespaceException')) {
+                throw new PHPCR_NamespaceException($e->getMessage());
+            } elseif (strstr($str, 'UnsupportedRepositoryOperationException')) {
+                throw new PHPCR_UnsupportedRepositoryOperationException($e->getMessage());
+            } elseif (strstr($str, 'AccessDeniedException')) {
+                throw new PHPCR_AccessDeniedException($e->getMessage());
+            } elseif (strstr($str, 'RepositoryException')) {
+                throw new PHPCR_RepositoryException($e->getMessage());
+            } else {
+                throw $e;
+            }
+        }
     }
 
 
@@ -118,8 +134,23 @@ class jr_cr_namespaceregistry implements PHPCR_NamespaceRegistryInterface {
      *    If another error occurs.
      */
     public function unregisterNamespace($prefix) {
-        //TODO: Implement
-
+        try {
+            $this->JRnamespaceregistry->unregisterNamespace($prefix);
+        } catch(JavaException $e) {
+            $str = split("\n", $e->getMessage(), 1);
+            $str = $str[0];
+            if (strstr($str, 'NamespaceException')) {
+                throw new PHPCR_NamespaceException($e->getMessage());
+            } elseif (strstr($str, 'UnsupportedRepositoryOperationException')) {
+                throw new PHPCR_UnsupportedRepositoryOperationException($e->getMessage());
+            } elseif (strstr($str, 'AccessDeniedException')) {
+                throw new PHPCR_AccessDeniedException($e->getMessage());
+            } elseif (strstr($str, 'RepositoryException')) {
+                throw new PHPCR_RepositoryException($e->getMessage());
+            } else {
+                throw $e;
+            }
+        }
     }
 
     /**

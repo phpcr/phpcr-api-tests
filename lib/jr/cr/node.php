@@ -1,6 +1,6 @@
 <?php
 class jr_cr_node implements PHPCR_NodeInterface {
-    protected $uuid = null;
+    protected $id = null;
     protected $name = '';
     protected $nodeType = null;
     protected $parentNode = null;
@@ -14,7 +14,7 @@ class jr_cr_node implements PHPCR_NodeInterface {
     protected $session = null;
     public $JRnode = null; //querymanager needs access to the java instance
     protected $new = false;
-    
+
     protected $modified = false;
     protected $path = '';
     /**
@@ -24,7 +24,7 @@ class jr_cr_node implements PHPCR_NodeInterface {
         $this->session = $session;
         $this->JRnode = $JRnode;
     }
-    
+
     /**
      *
      * @param string
@@ -51,7 +51,7 @@ class jr_cr_node implements PHPCR_NodeInterface {
     public function addMixin($mixinName) {
         $this->JRnode->addMixin($mixinName);
     }
-    
+
     /**
      *
      * @param string
@@ -100,7 +100,7 @@ class jr_cr_node implements PHPCR_NodeInterface {
                 return $node;
             }
         } catch (Exception $e) {
-            
+
         }
         if (substr($relPath, 0, 1) == '/') {
             $node = $this->session->getRootNode();
@@ -113,7 +113,7 @@ class jr_cr_node implements PHPCR_NodeInterface {
                 $node = $this;
             }
         }
-        
+
         if (! $primaryNodeTypeName) {
             $jrnode = $node->JRnode->addNode($relPath);
         } else {
@@ -125,7 +125,7 @@ class jr_cr_node implements PHPCR_NodeInterface {
         return $node;
         //TODO - Insert your code here
     }
-    
+
     /**
      *
      * @param $string
@@ -140,7 +140,7 @@ class jr_cr_node implements PHPCR_NodeInterface {
     public function canAddMixin($mixinName) {
         //TODO - Insert your code here
     }
-    
+
     /**
      *
      * @param version a version referred to by this node's
@@ -159,7 +159,7 @@ class jr_cr_node implements PHPCR_NodeInterface {
     public function cancelMerge(PHPCR_Version $version) {
         //TODO - Insert your code here
     }
-    
+
     /**
      *
      * @return object
@@ -183,7 +183,7 @@ class jr_cr_node implements PHPCR_NodeInterface {
     public function checkin() {
         $this->JRnode->checkin();
     }
-    
+
     /**
      *
      * @throws {@link UnsupportedRepositoryOperationException}
@@ -197,7 +197,7 @@ class jr_cr_node implements PHPCR_NodeInterface {
     public function checkout() {
         $this->JRnode->checkout();
     }
-    
+
     /**
      *
      * @param object
@@ -218,7 +218,7 @@ class jr_cr_node implements PHPCR_NodeInterface {
     public function doneMerge(PHPCR_Version $version) {
         //TODO - Insert your code here
     }
-    
+
     /**
      *
      * @return object
@@ -233,7 +233,7 @@ class jr_cr_node implements PHPCR_NodeInterface {
         return new jr_cr_node($this->session,$this->JRnode->getBaseVersion());
         //TODO - Insert your code here
     }
-    
+
     /**
      *
      * @param string
@@ -251,7 +251,7 @@ class jr_cr_node implements PHPCR_NodeInterface {
     public function getCorrespondingNodePath($workspaceName) {
         //TODO - Insert your code here
     }
-    
+
     /**
      *
      * @return object
@@ -262,7 +262,7 @@ class jr_cr_node implements PHPCR_NodeInterface {
     public function getDefinition() {
         //TODO - Insert your code here
     }
-    
+
     /**
      *
      * @return int
@@ -277,7 +277,7 @@ class jr_cr_node implements PHPCR_NodeInterface {
             throw new PHPCR_ReposiotryException($e->getMessage());
         }
     }
-    
+
     /**
      *
      * @return object
@@ -295,7 +295,7 @@ class jr_cr_node implements PHPCR_NodeInterface {
     public function getLock() {
         //TODO - Insert your code here
     }
-    
+
     /**
      *
      * @return array
@@ -305,7 +305,7 @@ class jr_cr_node implements PHPCR_NodeInterface {
     public function getMixinNodeTypes() {
         //TODO - Insert your code here
     }
-    
+
     /**
      *
      * @param string
@@ -331,7 +331,6 @@ class jr_cr_node implements PHPCR_NodeInterface {
             }
         }
         try {
-            
             $jrnode = $node->JRnode->getNode($relPath);
             $node = $node->session->getNodeByPath($jrnode);
             if ($node instanceof jr_cr_node) {
@@ -342,7 +341,7 @@ class jr_cr_node implements PHPCR_NodeInterface {
         }
         throw new PHPCR_PathNotFoundException($relPath);
     }
-    
+
     //FIXME selber erfunden, needed for query service later
     public function searchNodes($relPath) {
         $pps = $this->session->parsePath($relPath, $this);
@@ -357,15 +356,15 @@ class jr_cr_node implements PHPCR_NodeInterface {
                     $node = $this;
                 break;
                 default :
-                    $uuid = $this->session->storage->getChildNodeUUID($pp['node'], $pp['name']);
-                    $node = $this->session->getNodeByUUID($uuid);
+                    $id = $this->session->storage->getChildNodeUUID($pp['node'], $pp['name']);
+                    $node = $this->session->getNodeByIdentifier($id);
                 break;
             }
             $nodes[] = $node;
         }
         return $nodes;
     }
-    
+
     /**
      *
      * @param string
@@ -390,7 +389,7 @@ class jr_cr_node implements PHPCR_NodeInterface {
 
         return new jr_cr_nodeiterator($jrnodes, $this->session);
     }
-    
+
     /**
      *
      * @return object
@@ -417,7 +416,7 @@ class jr_cr_node implements PHPCR_NodeInterface {
         }
         return new jr_cr_node($this->session, $node);
     }
-    
+
     /**
      *
      * @return object
@@ -433,7 +432,7 @@ class jr_cr_node implements PHPCR_NodeInterface {
         }
         return $p;
     }
-    
+
     /**
      *
      * @return object
@@ -454,7 +453,7 @@ class jr_cr_node implements PHPCR_NodeInterface {
         }
         return new jr_cr_propertyiterator($jrproperties, $this);
     }
-    
+
     /**
      *
      * @param string
@@ -479,24 +478,23 @@ class jr_cr_node implements PHPCR_NodeInterface {
                 $node = $this;
             }
         }
-        
+
         try {
             $jrnode = $node->JRnode->getProperty($relPath);
         } catch (Exception $e) {
             throw new PHPCR_PathNotFoundException($relPath);
         }
-        
+
         $prop = $this->getPropertyFromList($jrnode);
         if ($prop instanceof jr_cr_property) {
             return clone($prop);
         }
         throw new PHPCR_PathNotFoundException($relPath);
     }
-    
+
     /**
      *
-     * @return object
-     * A {@link PropertyIterator} object
+     * @return PropertyIterator
      * @throws {@link RepositoryException}
      * If an error occurs
      * @see PHPCR_Node::getReferences()
@@ -504,26 +502,23 @@ class jr_cr_node implements PHPCR_NodeInterface {
     public function getReferences($name = null) {
         if (null === $name) {
             $iterator = $this->JRnode->getReferences();
-            return new jr_cr_propertyIterator($iterator, $this);
         } else {
-            //TODO: Insert Code
+            $iterator = $this->JRnode->getReferences($name);
         }
+        return new jr_cr_propertyIterator($iterator, $this);
     }
-    
-    /**
+
+   /**
+     * Returns the identifier of this node. Applies to both referenceable and
+     * non-referenceable nodes.
      *
-     * @return string
-     * The UUID of $this {@link Node}
-     * @throws {@link UnsupportedRepositoryOperationException}
-     * If $this {@link Node} nonreferenceable.
-     * @throws {@link RepositoryException}
-     * If another error occurs.
-     * @see PHPCR_Node::getUUID()
+     * @return string the identifier of this node
+     * @throws PHPCR_RepositoryException If an error occurs.
      */
-    public function getUUID() {
-        if (empty($this->uuid)) {
+    public function getIdentifier() {
+        if (empty($this->id)) {
             try {
-                $this->uuid = $this->JRnode->getUUID();
+                $this->id = $this->JRnode->getIdentifier();
             } catch (JavaException $e) {
                 $str = split("\n", $e->getMessage(), 1);
                 if (strstr($str[0], 'UnsupportedRepositoryOperationException')) {
@@ -535,9 +530,9 @@ class jr_cr_node implements PHPCR_NodeInterface {
                 }
             }
         }
-        return $this->uuid;
+        return $this->id;
     }
-    
+
     /**
      *
      * @return object
@@ -551,7 +546,7 @@ class jr_cr_node implements PHPCR_NodeInterface {
     public function getVersionHistory() {
         return new jr_cr_versionhistory($this->JRnode->getVersionHistory(),$this->session);
     }
-    
+
     /**
      *
      * @param string
@@ -566,7 +561,7 @@ class jr_cr_node implements PHPCR_NodeInterface {
     public function hasNode($relPath) {
         return $this->JRnode->hasNode($relPath);
     }
-    
+
     /**
      *
      * @return bool
@@ -579,7 +574,7 @@ class jr_cr_node implements PHPCR_NodeInterface {
     public function hasNodes() {
         return $this->JRnode->hasNodes();
     }
-    
+
     /**
      *
      * @return bool
@@ -592,7 +587,7 @@ class jr_cr_node implements PHPCR_NodeInterface {
     public function hasProperties() {
         return $this->JRnode->hasProperties();
      }
-     
+
     /**
      *
      * @param string
@@ -611,7 +606,7 @@ class jr_cr_node implements PHPCR_NodeInterface {
             throw new PHPCR_RepositoryException($e->getMessage());
         }
     }
-    
+
     /**
      *
      * @return boolean
@@ -622,7 +617,7 @@ class jr_cr_node implements PHPCR_NodeInterface {
     public function holdsLock() {
         //TODO - Insert your code here
     }
-    
+
     /**
      *
      * @return bool
@@ -633,7 +628,7 @@ class jr_cr_node implements PHPCR_NodeInterface {
     public function isCheckedOut() {
         return $this->JRnode->isCheckedOut();
     }
-    
+
     /**
      *
      * @return boolean
@@ -660,7 +655,7 @@ class jr_cr_node implements PHPCR_NodeInterface {
     public function isNodeType($nodeTypeName) {
         //TODO - Insert your code here
     }
-    
+
     /**
      *
      * @param boolean
@@ -684,7 +679,7 @@ class jr_cr_node implements PHPCR_NodeInterface {
     public function lock($isDeep, $isSessionScoped) {
         //TODO - Insert your code here
     }
-    
+
     /**
      *
      * @param string
@@ -712,7 +707,7 @@ class jr_cr_node implements PHPCR_NodeInterface {
     public function merge($srcWorkspace, $bestEffort) {
         //TODO - Insert your code here
     }
-    
+
     /**
      *
      * @param string
@@ -746,7 +741,7 @@ class jr_cr_node implements PHPCR_NodeInterface {
     public function orderBefore($srcChildRelPath, $destChildRelPath) {
         //TODO - Insert your code here
     }
-    
+
     /**
      *
      * @param string
@@ -775,7 +770,7 @@ class jr_cr_node implements PHPCR_NodeInterface {
     public function removeMixin($mixinName) {
         //TODO - Insert your code here
     }
-    
+
     /**
      *
      * @param string|{@link Version}
@@ -806,7 +801,7 @@ class jr_cr_node implements PHPCR_NodeInterface {
         $this->session->cache->clean(Zend_Cache::CLEANING_MODE_ALL);
         //TODO - Insert your code here
     }
-    
+
     /**
      *
      * @param string
@@ -829,7 +824,7 @@ class jr_cr_node implements PHPCR_NodeInterface {
     public function restoreByLabel($versionLabel, $removeExisting) {
         //TODO - Insert your code here
     }
-    
+
     /**
      *
      * @param string
@@ -866,20 +861,20 @@ class jr_cr_node implements PHPCR_NodeInterface {
         if ($this->hasProperty($name)) {
             $isNew = false;
         }
-        
+
         $filename = null;
-        
+
         switch ($type) {
             case PHPCR_PropertyType::BINARY :
                 $pr = new Java("javax.jcr.PropertyType");
                 $type = $pr->BINARY;
-                
+
                 $strlen = strlen($value);
                 // keep it in memory, if small
                 if ($strlen < 500) {
                     $out = new Java("java.io.ByteArrayOutputStream");
                     $arr = array();
-                    
+
                     for ($i = 0; $i < $strlen; $i ++) {
                         $val = ord(substr($value, $i, 1));
                         if ($val >= 128) {
@@ -915,11 +910,11 @@ class jr_cr_node implements PHPCR_NodeInterface {
             } else {
                 $jrprop = $this->JRnode->setProperty($name, $value);
             }
-            
+
             if (null === $jrprop) {
                 throw new PHPCR_RepositoryException("Couldn't create new property");
             }
-            
+
             if ($filename) {
                 unlink($filename);
             }
@@ -934,7 +929,7 @@ class jr_cr_node implements PHPCR_NodeInterface {
                 $this->session->cache->clean(Zend_Cache::CLEANING_MODE_ALL);
             }
     }
-    
+
     /**
      *
      * @throws {@link UnsupportedRepositoryOperationException}
@@ -952,7 +947,7 @@ class jr_cr_node implements PHPCR_NodeInterface {
     public function unlock() {
         //TODO - Insert your code here
     }
-    
+
     /**
      *
      * @param string
@@ -974,7 +969,7 @@ class jr_cr_node implements PHPCR_NodeInterface {
     public function update($scrWorkspaceName) {
         //TODO - Insert your code here
     }
-    
+
     /**
      *
      * @param object
@@ -986,7 +981,7 @@ class jr_cr_node implements PHPCR_NodeInterface {
     public function accept(PHPCR_ItemVisitorInterface $visitor) {
         //TODO - Insert your code here
     }
-    
+
     /**
      *
      * @param int
@@ -1010,7 +1005,7 @@ class jr_cr_node implements PHPCR_NodeInterface {
     public function getAncestor($degree) {
         //TODO - Insert your code here
     }
-    
+
     /**
      *
      * @return int
@@ -1022,7 +1017,7 @@ class jr_cr_node implements PHPCR_NodeInterface {
     public function getDepth() {
         return $this->JRnode->getDepth();
     }
-    
+
     /**
      *
      * @return string
@@ -1038,7 +1033,7 @@ class jr_cr_node implements PHPCR_NodeInterface {
         }
         return $this->name;
     }
-    
+
     /**
      *
      * @return object
@@ -1062,7 +1057,7 @@ class jr_cr_node implements PHPCR_NodeInterface {
             throw new PHPCR_ItemNotFoundException;
         }
     }
-    
+
     /**
      *
      * @return string
@@ -1077,7 +1072,7 @@ class jr_cr_node implements PHPCR_NodeInterface {
         }
         return $this->path;
     }
-    
+
     /**
      *
      * @return object
@@ -1089,7 +1084,7 @@ class jr_cr_node implements PHPCR_NodeInterface {
     public function getSession() {
         return $this->session;
     }
-    
+
     /**
      *
      * @return boolean
@@ -1098,14 +1093,14 @@ class jr_cr_node implements PHPCR_NodeInterface {
     public function isModified() {
         return $this->modified;
     }
-    
+
     public function setModified($m) {
         if ($m) {
             $this->session->addNodeToModifiedList($this);
         }
         $this->modified = $m;
     }
-    
+
     /**
      *
      * @return boolean
@@ -1114,7 +1109,7 @@ class jr_cr_node implements PHPCR_NodeInterface {
     public function isNew() {
         return $this->new;
     }
-    
+
     public function setNew($new) {
         $this->new = $new;
         if ($new) {
@@ -1122,7 +1117,7 @@ class jr_cr_node implements PHPCR_NodeInterface {
             $this->session->addNodeToModifiedList($this);
         }
     }
-    
+
     /**
      *
      * @return bool
@@ -1133,7 +1128,7 @@ class jr_cr_node implements PHPCR_NodeInterface {
     public function isNode() {
         //TODO - Insert your code here
     }
-    
+
     /**
      *
      * @param object
@@ -1146,7 +1141,7 @@ class jr_cr_node implements PHPCR_NodeInterface {
     public function isSame(PHPCR_ItemInterface $otherItem) {
         //TODO - Insert your code here
     }
-    
+
     /**
      *
      * @param boolean
@@ -1160,7 +1155,7 @@ class jr_cr_node implements PHPCR_NodeInterface {
     public function refresh($keepChanges) {
         //TODO - Insert your code here
     }
-    
+
     /**
      *
      * @throws {@link VersionException}
@@ -1183,7 +1178,7 @@ class jr_cr_node implements PHPCR_NodeInterface {
     public function remove() {
         $this->JRnode->remove();
     }
-    
+
     /**
      * Helper function not in specs :
      *
@@ -1193,7 +1188,7 @@ class jr_cr_node implements PHPCR_NodeInterface {
           $this->session->getWorkspace()->copy($this->getPath(), $toAbsPath);
           return ;
      }
-     
+
     /**
      *
      * @throws {@link AccessDeniedException}
@@ -1240,25 +1235,25 @@ class jr_cr_node implements PHPCR_NodeInterface {
         $this->JRnode->save();
         //some storage providers have to write all properties at once (jr_cr_storage_file eg)
     }
-    
+
     public static function uuid() {
         return sprintf('%04x%04x-%04x-%04x-%04x-%04x%04x%04x', mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0x0fff) | 0x4000, mt_rand(0, 0x3fff) | 0x8000, mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff));
     }
-    
+
     protected function addPropertyToList(jr_cr_property $property) {
         $this->properties[$property->getName()] = $property;
     }
-    
+
     protected function getPropertyFromList($jrnode) {
         $path = $jrnode->getName();
         if (! $path) {
             return null;
         }
-        
+
         if (isset($this->properties[$path]) && $this->properties[$path]) {
             return $this->properties[$path];
         }
-        
+
         $prop = new jr_cr_property($this, $jrnode);
         if ($prop) {
             $this->addPropertyToList($prop);
@@ -1267,18 +1262,7 @@ class jr_cr_node implements PHPCR_NodeInterface {
             return null;
         }
     }
-    
-    /**
-     * Returns the identifier of this node. Applies to both referenceable and
-     * non-referenceable nodes.
-     *
-     * @return string the identifier of this node
-     * @throws PHPCR_RepositoryException If an error occurs.
-     */
-    public function getIdentifier() {
-        //TODO: Insert Code
-    }
-    
+
     /**
      * This method returns all WEAKREFERENCE properties that refer to this node,
      * have the specified name and that are accessible through the current Session.
@@ -1303,9 +1287,14 @@ class jr_cr_node implements PHPCR_NodeInterface {
      * @throws PHPCR_RepositoryException if an error occurs
      */
     public function getWeakReferences($name = NULL) {
-        //TODO: Insert Code
+        if (null === $name) {
+            $iterator = $this->JRnode->getWeakReferences();
+        } else {
+            $iterator = $this->JRnode->getWeakReferences($name);
+        }
+        return new jr_cr_propertyIterator($iterator, $this);
     }
-    
+
     /**
      * Changes the primary node type of this node to nodeTypeName. Also immediately
      * changes this node's jcr:primaryType property appropriately. Semantically,
@@ -1326,7 +1315,7 @@ class jr_cr_node implements PHPCR_NodeInterface {
     public function setPrimaryType($nodeTypeName) {
         //TODO: Insert Code
     }
-    
+
     /**
      * Returns an iterator over all nodes that are in the shared set of this node.
      * If this node is not shared then the returned iterator contains only this node.
@@ -1335,7 +1324,8 @@ class jr_cr_node implements PHPCR_NodeInterface {
      * @throws PHPCR_RepositoryException if an error occurs.
      */
     public function getSharedSet() {
-        //TODO: Insert Code
+        $iterator = $this->JRnode->getSharedSet();
+        return new jr_cr_nodeIterator($iterator, $this);
     }
 
     /**
@@ -1359,7 +1349,7 @@ class jr_cr_node implements PHPCR_NodeInterface {
     public function removeSharedSet(){
         //TODO: Insert Code
     }
-    
+
     /**
      * Removes this node, but does not remove any other node in the shared set
      * of this node.
@@ -1376,7 +1366,7 @@ class jr_cr_node implements PHPCR_NodeInterface {
     public function removeShare() {
         //TODO: insert code
     }
-    
+
     /**
      * Causes the lifecycle state of this node to undergo the specified transition.
      * This method may change the value of the jcr:currentLifecycleState property,
@@ -1395,7 +1385,7 @@ class jr_cr_node implements PHPCR_NodeInterface {
     public function followLifecycleTransition($transition) {
         //TODO: Insert Code
     }
-    
+
     /**
      * Returns the list of valid state transitions for this node.
      *
