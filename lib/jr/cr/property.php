@@ -1,15 +1,11 @@
 <?php
 class jr_cr_property implements PHPCR_PropertyInterface {
     /**
-     * Enter description here...
-     *
      * @var jr_cr_session
      */
     protected $session = null;
-    
+
     /**
-     * Enter description here...
-     *
      * @var jr_cr_node
      */
     protected $parentNode = null;
@@ -21,21 +17,17 @@ class jr_cr_property implements PHPCR_PropertyInterface {
     protected $name = null;
     protected $value = null;
     protected $values = null;
-    
+
     /**
-     * Enter description here...
-     *
-     * @param string $name
-     * @param string $value
      * @param jr_cr_node $parentNode
-     * @param int $type
+     * @param java $jrprop
      */
     public function __construct($parentNode, $jrprop) {
         $this->JRprop = $jrprop;
         $this->parentNode = $parentNode;
         $this->session = $parentNode->getSession();
     }
-    
+
     /**
      *
      * @see Value::getBoolean()
@@ -46,22 +38,40 @@ class jr_cr_property implements PHPCR_PropertyInterface {
     public function getBoolean() {
         return $this->getValue()->getBoolean();
     }
-    
+
+    /**
+     * If this property is of type REFERENCE, WEAKREFERENCE or PATH (or
+     * convertible to one of these types) this method returns the Node to which
+     * this property refers.
+     *
+     * @see PHPCR_Property::getNode
+     */
     public function getNode() {
-        return $this->parentNode;
+        try {
+            return $this->JRprop->getNode();
+        } catch (JavaException $e) {
+            $str = split("\n", $e->getMessage(), 2);
+            if (false !== strpos($str[0], 'ValueFormatException')) {
+                throw new PHPCR_ValueFormatException($e->getMessage());
+            } elseif (false !== strpos($str[0], 'ItemNotFoundException')) {
+                throw new PHPCR_ItemNotFoundException($e->getMessage());
+            } else {
+                throw new PHPCR_RepositoryException($e->getMessage());
+            }
+        }
     }
-    
+
     /**
      *
      * @see Value, Value::getDate()
-     * @return object
+     * @return DateTime
      * A date representation of the value of this {@link Property}.
      * @see PHPCR_Property::getDate()
      */
     public function getDate() {
         return $this->getValue()->getDate();
     }
-    
+
     /**
      *
      * @see NodeType::getPropertyDefinitions()
@@ -73,10 +83,10 @@ class jr_cr_property implements PHPCR_PropertyInterface {
      */
     public function getDefinition() {
         return    $this->JRprop->getDefinition();
-        //TODO - Insert your code here
     }
-    
+
     /**
+     * PHP does not distinct between float and double.
      *
      * @see getFloat(), Value::getDouble()
      * @return float
@@ -85,7 +95,7 @@ class jr_cr_property implements PHPCR_PropertyInterface {
     public function getDouble() {
         return $this->getValue()->getDouble();
     }
-    
+
     /**
      *
      * @see Value, Value::getFloat(), getDouble()
@@ -96,18 +106,7 @@ class jr_cr_property implements PHPCR_PropertyInterface {
     public function getFloat() {
         return $this->getValue()->getFloat();
     }
-    
-    /**
-     *
-     * @see Value::getLong()
-     * @return int
-     * An integer representation of the value of this {@link Property}.
-     * @see PHPCR_Property::getInt()
-     */
-    public function getInt() {
-        return $this->getValue()->getInt();
-    }
-    
+
     /**
      *
      * @return int
@@ -126,7 +125,7 @@ class jr_cr_property implements PHPCR_PropertyInterface {
         }
         return $length;
     }
-    
+
     /**
      *
      * @return array
@@ -145,7 +144,7 @@ class jr_cr_property implements PHPCR_PropertyInterface {
         }
         return $lengths;
     }
-    
+
     /**
      *
      * @see Value::getLong()
@@ -156,7 +155,7 @@ class jr_cr_property implements PHPCR_PropertyInterface {
     public function getLong() {
         return $this->getValue()->getLong();
     }
-    
+
     /**
      *
      * @see Value
@@ -169,7 +168,7 @@ class jr_cr_property implements PHPCR_PropertyInterface {
         $cacheKey = md5("prop::getString::".$this->getPath());
         if (!($this->session->cache && $result = $this->session->cache->load($cacheKey))) {
             if ($this->getType() == PHPCR_PropertyType::BINARY) {
-                
+
                 /**
                  * the copyToFile() method is a patch for
                  *   jackrabbit-jcr-rmi/src/main/java/org/apache/jackrabbit/rmi/client/ClientProperty.java
@@ -185,7 +184,7 @@ class jr_cr_property implements PHPCR_PropertyInterface {
                     $this->JRprop->copyToFile($filename);
                     $data = file_get_contents($filename);
                 } catch (Exception $e) {
-                    $in = $this->JRprop->getStream();
+                    $in = $this->JRprop->getBinary();
                     $data = "";
                     while (($len = $in->read()) != - 1) {
                         //$out->write($len);
@@ -220,7 +219,7 @@ class jr_cr_property implements PHPCR_PropertyInterface {
         }
         return $result;
     }
-    
+
     /**
      *
      * @return int
@@ -233,9 +232,8 @@ class jr_cr_property implements PHPCR_PropertyInterface {
             $this->type =  $this->JRprop->getType();
         }
         return $this->type;
-        //TODO - Insert your code here
     }
-    
+
     /**
      *
      * @return object
@@ -261,7 +259,7 @@ class jr_cr_property implements PHPCR_PropertyInterface {
         }
         return $this->value;
     }
-    
+
     /**
      *
      * @return array
@@ -282,7 +280,7 @@ class jr_cr_property implements PHPCR_PropertyInterface {
                     throw new PHPCR_RepositoryException($e->getMessage());
                 }
             }
-            
+
             $this->values = array();
             foreach ($values as $value) {
                 array_push($this->values, new jr_cr_value($value));
@@ -290,7 +288,7 @@ class jr_cr_property implements PHPCR_PropertyInterface {
         }
         return $this->values;
     }
-    
+
     /**
      *
      * @param mixed
@@ -305,7 +303,7 @@ class jr_cr_property implements PHPCR_PropertyInterface {
     public function setValue($value) {
         $this->JRprop->setValue($value);
     }
-    
+
     /**
      *
      * @param object
@@ -317,7 +315,7 @@ class jr_cr_property implements PHPCR_PropertyInterface {
     public function accept(PHPCR_ItemVisitorInterface $visitor) {
         //TODO - Insert your code here
     }
-    
+
     /**
      *
      * @param int
@@ -341,7 +339,7 @@ class jr_cr_property implements PHPCR_PropertyInterface {
     public function getAncestor($degree) {
         //TODO - Insert your code here
     }
-    
+
     /**
      *
      * @return int
@@ -353,7 +351,7 @@ class jr_cr_property implements PHPCR_PropertyInterface {
     public function getDepth() {
         //TODO - Insert your code here
     }
-    
+
     /**
      *
      * @return string
@@ -367,10 +365,10 @@ class jr_cr_property implements PHPCR_PropertyInterface {
         if (null === $this->name) {
             $this->name = $this->JRprop->getName();
         }
-        
+
         return $this->name;
     }
-    
+
     /**
      *
      * @return object
@@ -389,7 +387,7 @@ class jr_cr_property implements PHPCR_PropertyInterface {
     public function getParent() {
         return $this->parentNode;
     }
-    
+
     /**
      *
      * @return string
@@ -404,7 +402,7 @@ class jr_cr_property implements PHPCR_PropertyInterface {
         }
         return $this->path;
     }
-    
+
     /**
      *
      * @return object
@@ -416,7 +414,7 @@ class jr_cr_property implements PHPCR_PropertyInterface {
     public function getSession() {
         return $this->session;
     }
-    
+
     /**
      *
      * @return boolean
@@ -425,11 +423,11 @@ class jr_cr_property implements PHPCR_PropertyInterface {
     public function isModified() {
         return $this->modified;
     }
-    
+
     public function setModified($mod) {
         $this->modified = $mod;
     }
-    
+
     /**
      *
      * @return boolean
@@ -438,11 +436,11 @@ class jr_cr_property implements PHPCR_PropertyInterface {
     public function isNew() {
         return $this->new;
     }
-    
+
     public function setNew($new) {
         $this->new = $new;
     }
-    
+
     /**
      *
      * @return bool
@@ -453,7 +451,7 @@ class jr_cr_property implements PHPCR_PropertyInterface {
     public function isNode() {
         return false;
     }
-    
+
     /**
      *
      * @param object
@@ -466,7 +464,7 @@ class jr_cr_property implements PHPCR_PropertyInterface {
     public function isSame(PHPCR_ItemInterface $otherItem) {
         //TODO - Insert your code here
     }
-    
+
     /**
      *
      * @param boolean
@@ -480,7 +478,7 @@ class jr_cr_property implements PHPCR_PropertyInterface {
     public function refresh($keepChanges) {
         //TODO - Insert your code here
     }
-    
+
     /**
      *
      * @throws {@link VersionException}
@@ -503,7 +501,7 @@ class jr_cr_property implements PHPCR_PropertyInterface {
     public function remove() {
         $this->JRprop->remove();
     }
-    
+
     /**
      *
      * @throws {@link AccessDeniedException}
@@ -546,7 +544,7 @@ class jr_cr_property implements PHPCR_PropertyInterface {
         $this->setModified(false);
         $this->setNew(false);
     }
-    
+
     /**
      * Returns a Binary representation of the value of this property. A
      * shortcut for Property.getValue().getBinary(). See Value.
@@ -556,9 +554,9 @@ class jr_cr_property implements PHPCR_PropertyInterface {
      * @throws PHPCR_RepositoryException if another error occurs
      */
     public function getBinary() {
-        //TODO: Insert Code
+        return new jr_cr_binary($this->JRprop->getBinary());
     }
-    
+
     /**
      * Returns a BigDecimal representation of the value of this property. A
      * shortcut for Property.getValue().getDecimal(). See Value.
@@ -568,9 +566,9 @@ class jr_cr_property implements PHPCR_PropertyInterface {
      * @throws PHPCR_RepositoryException if another error occurs
      */
     public function getDecimal() {
-        //TODO: Insert Code
+        return $this->JRprop->getDecimal()->doubleValue(); //php float and double are the smae, but we prefer the better precision
     }
-    
+
     /**
      * If this property is of type PATH (or convertible to this type) this
      * method returns the Property to which this property refers.
@@ -591,7 +589,7 @@ class jr_cr_property implements PHPCR_PropertyInterface {
     public function getProperty() {
         //TODO: Insert Code
     }
-    
+
     /**
      * Returns TRUE if this property is multi-valued and FALSE if this property
      * is single-valued.

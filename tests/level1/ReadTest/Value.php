@@ -23,8 +23,18 @@ class jackalope_tests_level1_ReadTest_Value extends jackalope_baseCase {
     public function testGetBinary() {
         $bin = $this->value->getBinary();
         $str = $this->value->getString();
-        echo $str;
-        echo pack('nvc*', extract(explode('', $str)));
-        $this->markTestIncomplete('Figure how to represent this in PHP');
+        $this->assertEquals($bin->getSize(), strlen($str));
+        $binstr ='';
+        $cnt = $bin->read($binstr,0);
+        $this->assertEquals($bin->getSize(), $cnt);
+        $this->assertEquals($binstr, $str);
     }
+/* TODO: implement
+    public function testGetBoolean()
+    public function testGetDate()
+    public function testGetDecimal()
+    public function testGetDouble()
+    public function testGetLong()
+    public function testGetType()
+*/
 }

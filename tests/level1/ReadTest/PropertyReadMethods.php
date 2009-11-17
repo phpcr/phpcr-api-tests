@@ -3,7 +3,7 @@ require_once(dirname(__FILE__) . '/../../../inc/baseCase.php');
 
 /**
  * javax.jcr.Property read methods
- * todo: getProperty, getDecimal, getBinary, CONSTANTS
+ * todo: CONSTANTS
  */
 class jackalope_tests_level1_ReadTest_PropertyReadMethods extends jackalope_baseCase {
     protected $path = 'level1/read';
@@ -88,15 +88,6 @@ class jackalope_tests_level1_ReadTest_PropertyReadMethods extends jackalope_base
         $this->markTestIncomplete('TODO: Figure out how to provoke this error.');
     }
 
-    /**
-     * The PHP Implementation requires that getLong and getInt return the same
-     */
-    public function testGetLongAndIntSame() {
-        $long = $this->property->getLong();
-        $int = $this->property->getInt();
-        $this->assertEquals($long, $int);
-    }
-
     public function testGetDouble() {
         $node = $this->node->getNode('numberPropertyNode/jcr:content');
         $node->setProperty('newFloat', 3.9999);
@@ -104,6 +95,14 @@ class jackalope_tests_level1_ReadTest_PropertyReadMethods extends jackalope_base
         $num = $prop->getDouble();
         $this->assertType('float', $num);
         $this->assertEquals(3.9999, $num);
+    }
+
+    public function testGetDecimal() {
+        $prop = $this->node->getNode('numberPropertyNode/jcr:content')->getProperty('longNumber');
+        $num = $prop->getDecimal();
+        //we do not have an equivalent to java.math.BigDecimal. PHPCR just uses plain float
+        $this->assertType('float', $num);
+        $this->assertEquals(999, $num);
     }
 
     /**
@@ -224,6 +223,17 @@ class jackalope_tests_level1_ReadTest_PropertyReadMethods extends jackalope_base
     /** PATH property, the path references another property */
     public function testGetProperty() {
         $this->markTestIncomplete('TODO: Implement');
+    }
+
+    public function testGetBinary() {
+        $node = $this->node->getNode('index.txt/jcr:content');
+        $node->setProperty('newBinary', 'foobar', PHPCR_PropertyType::BINARY);
+        $bin = $node->getProperty('newBinary')->getBinary();
+        $this->assertTrue($bin instanceof PHPCR_BinaryInterface);
+        $this->assertEquals(6, $bin->getSize());
+    }
+    public function testGetBinaryValueFormatException() {
+        $this->markTestIncomplete('TODO: Figure how multivalue binary properties can be set');
     }
 
     public function testGetLength() {

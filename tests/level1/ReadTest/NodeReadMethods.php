@@ -4,7 +4,8 @@ require_once(dirname(__FILE__) . '/../../../inc/baseCase.php');
 /** test javax.jcr.Node read methods (level1)
  *
  * todo: getCorrespondingNodePath, getDefinition, getMixinNodeTypes, getPrimaryNodeType, isNodeType, orderBefore
-
+ * todo: base Item interface: accept, getAncestor, getDepth, getName, getParent, getPath, getSession, isModified, isNew, isNode, isSame, refresh, remove, save
+ *
  * NodeWriteMethods (level2): addMixin, addNode, canAddMixin, isCheckedOut, isLocked, removeMixin, removeShare, removeSharedSet, setPrimaryType, setProperty, update
  * Lifecycle: followLifecycleTransition, getAllowedLifecycleTransistions
  */
@@ -140,13 +141,15 @@ class jackalope_tests_level1_ReadTest_NodeReadMethods extends jackalope_baseCase
 
     public function testGetPropertiesNameGlobs() {
         $iterator = $this->node->getProperties(array('jcr:cr*', 'jcr:prim*'));
+        //TODO: wtf? if we do this and var_dump, we see the names of all children of /
+        //$iterator = $this->node->getProperties(array('*'));
         $this->assertTrue(is_object($iterator));
         $this->assertTrue($iterator instanceOf PHPCR_PropertyIteratorInterface);
         $props = array();
         foreach ($iterator as $prop) {
             array_push($props, $prop->getName());
         }
-        $this->assertContains('jcr:created', $props);
+        $this->assertContains('jcr:created', $props); //TODO: is this a jackalope bug with arrays? or is something not working?
         $this->assertContains('jcr:primaryType', $props);
     }
 

@@ -38,7 +38,7 @@ class jr_cr_row implements PHPCR_Query_RowInterface {
         foreach($jarr as $key => $jval) $ret[$key] = new jr_cr_value($jval);
         return $ret;
     }
-    
+
     /**
      * Returns the Node corresponding to this Row and the specified selector,
      * if given.
@@ -50,7 +50,7 @@ class jr_cr_row implements PHPCR_Query_RowInterface {
     public function getNode($selectorName = NULL) {
         //TODO: Insert Code
     }
-    
+
     /**
      * Equivalent to Row.getNode(selectorName).getPath(). However, some
      * implementations may be able gain efficiency by not resolving the actual Node.
