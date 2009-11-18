@@ -849,7 +849,7 @@ class jr_cr_session implements PHPCR_SessionInterface {
             if ($target instanceof jr_cr_node) {
                 $obj = $target->JRnode;
             } elseif ($target instanceof jr_cr_property) {
-                $obj = $target->JRproperty;
+                $obj = $target->JRprop;
             } else {
                 throw new PHPCR_RepositoryException('Do not know how to handly the type of $target');
             }

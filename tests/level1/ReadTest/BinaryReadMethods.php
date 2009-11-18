@@ -5,32 +5,33 @@ require_once(dirname(__FILE__) . '/../../../inc/baseCase.php');
 
 class jackalope_tests_level1_ReadTest_BinaryReadMethods extends jackalope_baseCase {
     protected $node;
-    protected $binary;
+    public $JRbinary;
 
     public function setUp() {
         parent::setUp();
         $this->node = $this->sharedFixture['session']->getRootNode()->getNode('tests_level1_access_base/numberPropertyNode/jcr:content');
-        $this->binary = $this->node->getProperty('jcr:data')->getBinary();
-        $this->assertTrue($this->binary instanceOf PHPCR_BinaryInterface);
+        $this->JRbinary = $this->node->getProperty('jcr:data')->getBinary();
+        $this->assertTrue($this->JRbinary instanceOf PHPCR_BinaryInterface);
     }
 
     public function testDispose() {
-        $this->binary->dispose();
+        //just see if this throws any excaption. accessing methods after dispose is tested below
+        $this->JRbinary->dispose();
     }
 
     public function testGetSize() {
-        $size = $this->binary->getSize();
+        $size = $this->JRbinary->getSize();
         $this->assertEquals(392, $size);
     }
 
     /** @expectedException PHPCR_BadMethodCallException */
     public function testGetSizeDisposed() {
-        $this->binary->dispose();
-        $this->binary->getSize();
+        $this->JRbinary->dispose();
+        $this->JRbinary->getSize();
     }
 
     public function testGetStream() {
-        $stream = $this->binary->getStream();
+        $stream = $this->JRbinary->getStream();
         $this->assertNotNull($stream);
         $this->markTestIncomplete('TODO: what is a stream here?');
         //var_dump($stream);
@@ -39,28 +40,28 @@ class jackalope_tests_level1_ReadTest_BinaryReadMethods extends jackalope_baseCa
 
     /** @expectedException PHPCR_BadMethodCallException */
     public function testGetStreamDisposed() {
-        $this->binary->dispose();
-        $this->binary->getStream();
+        $this->JRbinary->dispose();
+        $this->JRbinary->getStream();
     }
 
     public function testRead() {
         $bytes='';
-        $cnt = $this->binary->read($bytes, 0);
+        $cnt = $this->JRbinary->read($bytes, 0);
         $this->assertEquals(392, $cnt);
-        $this->markTestIncomplete('TODO: check contents of $bytes');
+        $this->markTestIncomplete('TODO: check the resulting string when jr_cr_binary is working');
     }
 
     /** @expectedException PHPCR_InvalidArgumentException */
     public function testReadInvalidArgument() {
         $bytes='';
-        $this->binary->read($bytes, -1); //start from negative index
+        $this->JRbinary->read($bytes, -1); //start from negative index
     }
 
     /** @expectedException PHPCR_BadMethodCallException */
     public function testReadDisposed() {
-        $this->binary->dispose();
+        $this->JRbinary->dispose();
         $bytes='';
-        $this->binary->read($bytes, 0);
+        $this->JRbinary->read($bytes, 0);
     }
 
 }

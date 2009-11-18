@@ -50,23 +50,6 @@ class jr_cr_value implements PHPCR_ValueInterface {
      * @return float
      */
     public function getDouble() {
-        return $this->getFloat();
-    }
-
-    /**
-     * Returns the float/double representation of this value.
-     *
-     * This method should always be an alias of {@link getFloat()}.
-     *
-     * @see getFloat()
-     * @return float
-     *
-     * @throws {@link ValueFormatException}
-     *    If conversion to a float is not possible.
-     * @throws {@link RepositoryException}
-     *    If another error occurs.
-     */
-    public function getFloat() {
         return $this->getNumber(true);
     }
 
