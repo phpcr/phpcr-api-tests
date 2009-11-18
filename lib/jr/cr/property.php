@@ -1,20 +1,12 @@
 <?php
-class jr_cr_property implements PHPCR_PropertyInterface {
-    /**
-     * @var jr_cr_session
-     */
-    protected $session = null;
-
+class jr_cr_property extends jr_cr_item implements PHPCR_PropertyInterface {
     /**
      * @var jr_cr_node
      */
     protected $parentNode = null;
-    protected $new = false;
-    protected $modified = false;
     protected $path = null;
     protected $type = null;
-    protected $JRprop = null;
-    protected $name = null;
+    public $JRprop = null;
     protected $value = null;
     protected $values = null;
 
@@ -23,9 +15,9 @@ class jr_cr_property implements PHPCR_PropertyInterface {
      * @param java $jrprop
      */
     public function __construct($parentNode, $jrprop) {
+        parent::__construct($parentNode->getSession(), $jrprop);
         $this->JRprop = $jrprop;
         $this->parentNode = $parentNode;
-        $this->session = $parentNode->getSession();
     }
 
     /**
@@ -48,7 +40,7 @@ class jr_cr_property implements PHPCR_PropertyInterface {
      */
     public function getNode() {
         try {
-            return $this->JRprop->getNode();
+            return new jr_cr_node($this->session, $this->JRprop->getNode());
         } catch (JavaException $e) {
             $str = split("\n", $e->getMessage(), 2);
             if (false !== strpos($str[0], 'ValueFormatException')) {
@@ -82,29 +74,17 @@ class jr_cr_property implements PHPCR_PropertyInterface {
      * @see PHPCR_Property::getDefinition()
      */
     public function getDefinition() {
-        return    $this->JRprop->getDefinition();
+        return    $this->JRprop->getDefinition(); //FIXME: wrap into php object!
     }
 
     /**
      * PHP does not distinct between float and double.
      *
-     * @see getFloat(), Value::getDouble()
      * @return float
      * @see PHPCR_Property::getDouble()
      */
     public function getDouble() {
         return $this->getValue()->getDouble();
-    }
-
-    /**
-     *
-     * @see Value, Value::getFloat(), getDouble()
-     * @return float
-     * A float representation of the value of this {@link Property}.
-     * @see PHPCR_Property::getFloat()
-     */
-    public function getFloat() {
-        return $this->getValue()->getFloat();
     }
 
     /**
@@ -301,144 +281,19 @@ class jr_cr_property implements PHPCR_PropertyInterface {
      * @see PHPCR_Property::setValue()
      */
     public function setValue($value) {
-        $this->JRprop->setValue($value);
+        $this->JRprop->setValue($value); //FIXME: handle php object values properly (node, binary, value object)
     }
 
     /**
+     * overwritten to simplify.
      *
-     * @param object
-     * A {@link ItemVisitor} object
-     * @throws {@link RepositoryException}
-     * If an error occurs.
-     * @see PHPCR_Item::accept()
-     */
-    public function accept(PHPCR_ItemVisitorInterface $visitor) {
-        //TODO - Insert your code here
-    }
-
-    /**
-     *
-     * @param int
-     * An integer, 0 &lt;= $degree &lt;= n where
-     * n is the depth of $this {@link Item} along the
-     * path returned by {@link getPath()}.
-     * @return object
-     * The ancestor of the specified absolute degree of $this
-     * {@link Item} along the path returned by{@link getPath()}.
-     * @throws {@link ItemNotFoundException}
-     * If $degree &lt; 0 or $degree &gt; n
-     * where n is the is the depth of $this {@link Item}
-     * along the path returned by {@link getPath()}.
-     * @throws {@link AccessDeniedException}
-     * If the current {@link Ticket} does not have sufficient access rights to
-     * complete the operation.
-     * @throws {@link RepositoryException}
-     * If another error occurs.
-     * @see PHPCR_Item::getAncestor()
-     */
-    public function getAncestor($degree) {
-        //TODO - Insert your code here
-    }
-
-    /**
-     *
-     * @return int
-     * The depth of this {@link Item} in the repository hierarchy.
-     * @throws {@link RepositoryException}
-     * If an error occurs.
-     * @see PHPCR_Item::getDepth()
-     */
-    public function getDepth() {
-        //TODO - Insert your code here
-    }
-
-    /**
-     *
-     * @return string
-     * The (or a) name of this {@link Item} or an empty string if this
-     * {@link Item} is the root {@link Node}.
-     * @throws {@link RepositoryException}
-     * If an error occurs.
-     * @see PHPCR_Item::getName()
-     */
-    public function getName() {
-        if (null === $this->name) {
-            $this->name = $this->JRprop->getName();
-        }
-
-        return $this->name;
-    }
-
-    /**
-     *
-     * @return object
-     * The parent of this {@link Item} along the path returned by
-     * {@link getPath()}.
-     * @throws {@link ItemNotFoundException}
-     * If there is no parent.  This only happens if $this
-     * {@link Item} is the root node.
-     * @throws {@link AccessDeniedException}
-     * If the current {@link Ticket} does not have sufficient access rights to
-     * complete the operation.
-     * @throws {@link RepositoryException}
-     * If another error occurs.
-     * @see PHPCR_Item::getParent()
+     * @return the node containing this property
+     * @throws ItemNotFoundException Can not happen as property always has a parent
+     * @throws AccessDeniedException If the current {@link Ticket} does not have sufficient access rights to complete the operation.
+     * @throws RepositoryException If another error occurs.
      */
     public function getParent() {
         return $this->parentNode;
-    }
-
-    /**
-     *
-     * @return string
-     * The path (or one of the paths) of this {@link Item}.
-     * @throws {@link RepositoryException}
-     * If an error occurs.
-     * @see PHPCR_Item::getPath()
-     */
-    public function getPath() {
-        if (!$this->path) {
-            $this->path = $this->JRprop->getPath();
-        }
-        return $this->path;
-    }
-
-    /**
-     *
-     * @return object
-     * A {@link Session} object
-     * @throws {@link RepositoryException}
-     * If an error occurs.
-     * @see PHPCR_Item::getSession()
-     */
-    public function getSession() {
-        return $this->session;
-    }
-
-    /**
-     *
-     * @return boolean
-     * @see PHPCR_Item::isModified()
-     */
-    public function isModified() {
-        return $this->modified;
-    }
-
-    public function setModified($mod) {
-        $this->modified = $mod;
-    }
-
-    /**
-     *
-     * @return boolean
-     * @see PHPCR_Item::isNew()
-     */
-    public function isNew() {
-        return $this->new;
-    }
-
-    public function setNew($new) {
-        $this->new = $new;
     }
 
     /**
@@ -450,99 +305,6 @@ class jr_cr_property implements PHPCR_PropertyInterface {
      */
     public function isNode() {
         return false;
-    }
-
-    /**
-     *
-     * @param object
-     * A {@link Item} object
-     * @return boolean
-     * @throws {@link RepositoryException}
-     * If an error occurs.
-     * @see PHPCR_Item::isSame()
-     */
-    public function isSame(PHPCR_ItemInterface $otherItem) {
-        //TODO - Insert your code here
-    }
-
-    /**
-     *
-     * @param boolean
-     * @throws {@link InvalidItemStateException}
-     * If this {@link Item} object represents a workspace item that has been
-     * removed (either by this session or another).
-     * @throws {@link RepositoryException}
-     * If another error occurs.
-     * @see PHPCR_Item::refresh()
-     */
-    public function refresh($keepChanges) {
-        //TODO - Insert your code here
-    }
-
-    /**
-     *
-     * @throws {@link VersionException}
-     * If the parent node of this item is versionable and checked-in or is
-     * non-versionable but its nearest versionable ancestor is checked-in
-     * and this implementation performs this validation immediately instead
-     * of waiting until {@link save()}.
-     * @throws {@link LockException}
-     * If a lock prevents the removal of this item and this implementation
-     * performs this validation immediately instead of waiting until
-     * {@link save()}.
-     * @throws {@link ConstraintViolationException}
-     * If removing the specified item would violate a node type or
-     * implementation-specific constraint and this implementation performs
-     * this validation immediately instead of waiting until {@link save()}.
-     * @throws {@link RepositoryException}
-     * If another error occurs.
-     * @see PHPCR_Item::remove()
-     */
-    public function remove() {
-        $this->JRprop->remove();
-    }
-
-    /**
-     *
-     * @throws {@link AccessDeniedException}
-     * If any of the changes to be persisted would violate the access
-     * privileges of the this {@link Session}. Also thrown if any of the
-     * changes to be persisted would cause the removal of a node that is
-     * currently referenced by a <i>REFERENCE</i> property that this
-     * Session <i>does not</i> have read access to.
-     * @throws {@link ItemExistsException}
-     * If any of the changes to be persisted would be prevented by the
-     * presence of an already existing     item in the workspace.
-     * @throws {@link ConstraintViolationException}
-     * If any of the changes to be persisted would violate a node type or
-     * restriction. Additionally, a repository may use this exception to
-     * enforce implementation- or configuration-dependent restrictions.
-     * @throws {@link InvalidItemStateException}
-     * If any of the changes to be persisted conflicts with a change already
-     * persisted through another session and the implementation is such that
-     * this conflict can only be detected at save-time and therefore was not
-     * detected earlier, at change-time.
-     * @throws {@link ReferentialIntegrityException}
-     * If any of the changes to be persisted would cause the removal of a
-     * node that is currently referenced by a <i>REFERENCE</i> property
-     * that this {@link Session} has read access to.
-     * @throws {@link VersionException}
-     * If the {@link save()} would make a result in a change to persistent
-     * storage that would violate the read-only status of a checked-in node.
-     * @throws {@link LockException}
-     * If the {@link save()} would result in a change to persistent storage
-     * that would violate a lock.
-     * @throws {@link NoSuchNodeTypeException}
-     * If the {@link save()} would result in the addition of a node with an
-     * unrecognized node type.
-     * @throws {@link RepositoryException}
-     * If another error occurs.
-     * @see PHPCR_Item::save()
-     */
-    public function save() {
-        $this->JRprop->save();
-        $this->setModified(false);
-        $this->setNew(false);
     }
 
     /**
@@ -566,7 +328,7 @@ class jr_cr_property implements PHPCR_PropertyInterface {
      * @throws PHPCR_RepositoryException if another error occurs
      */
     public function getDecimal() {
-        return $this->JRprop->getDecimal()->doubleValue(); //php float and double are the smae, but we prefer the better precision
+        return $this->JRprop->getDecimal()->doubleValue(); //php float and double are the same, but we prefer the better precision
 
     }
 

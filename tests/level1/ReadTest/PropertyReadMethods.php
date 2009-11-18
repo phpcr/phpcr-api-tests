@@ -3,21 +3,55 @@ require_once(dirname(__FILE__) . '/../../../inc/baseCase.php');
 
 /**
  * javax.jcr.Property read methods
- * todo: CONSTANTS
+ * TODO: CONSTANTS
+ *
+ * PropertyWriteMethods: isModified, refresh, save, remove, setValue (in many variants)
  */
 class jackalope_tests_level1_ReadTest_PropertyReadMethods extends jackalope_baseCase {
-    protected $path = 'level1/read';
+    protected $rootNode;
     protected $node;
     protected $property;
     protected $multiProperty;
 
     public function setUp() {
         parent::setUp();
-        $this->node = $this->sharedFixture['session']->getRootNode()->getNode('tests_level1_access_base');
+        $this->rootNode = $this->sharedFixture['session']->getRootNode();
+        $this->node = $this->rootNode->getNode('tests_level1_access_base');
         $this->property = $this->node->getProperty('jcr:created');
         $this->multiProperty = $this->node->getNode('multiValueProperty')->getProperty('jcr:mixinTypes');
     }
 
+    /*** item base methods for property ***/
+    function testGetAncestor() {
+        $ancestor = $this->multiProperty->getAncestor(0);
+        $this->assertNotNull($ancestor);
+        $this->assertTrue($ancestor instanceOf PHPCR_ItemInterface);
+        $this->assertTrue($this->rootNode->isSame($ancestor));
+
+        $ancestor = $this->multiProperty->getAncestor(1);
+        $this->assertNotNull($ancestor);
+        $this->assertTrue($ancestor instanceOf PHPCR_ItemInterface);
+        $this->assertTrue($this->node->isSame($ancestor));
+
+        //self
+        $ancestor = $this->multiProperty->getAncestor($this->multiProperty->getDepth());
+        $this->assertNotNull($ancestor);
+        $this->assertTrue($ancestor instanceOf PHPCR_ItemInterface);
+        $this->assertTrue($this->multiProperty->isSame($ancestor));
+    }
+    function testGetDepthProperty() {
+        $this->assertEquals(2, $this->property->getDepth());
+        $deepnode = $this->node->getNode('multiValueProperty');
+        $this->assertEquals(3, $this->multiProperty->getDepth());
+    }
+     /* todo:  getName, getParent, getPath, getSession, isNew, isNode, isSame */
+    function testGetName() {
+        $name = $this->property->getName();
+        $this->assertNotNull($name);
+        $this->assertEquals('jcr:created', $name);
+    }
+
+    /*** property specific methods ***/
     public function testGetValue() {
         $val = $this->property->getValue();
         $this->assertType('object', $val);
@@ -120,12 +154,12 @@ class jackalope_tests_level1_ReadTest_PropertyReadMethods extends jackalope_base
     }
 
     /**
-     * The PHP Implementation requires that getDouble and getFloat return the same
+     * The PHP Implementation requires that getDouble and getDecimal return the same
      */
-    public function testGetDoubleAndFloatSame() {
+    public function testGetDoubleAndDecimalSame() {
         $double = $this->property->getDouble();
-        $float = $this->property->getFloat();
-        $this->assertEquals($double, $float);
+        $decimal = $this->property->getDecimal();
+        $this->assertEquals($double, $decimal);
     }
 
     public function testGetDate() {

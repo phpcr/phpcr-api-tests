@@ -3,23 +3,72 @@ require_once(dirname(__FILE__) . '/../../../inc/baseCase.php');
 
 /** test javax.jcr.Node read methods (level1)
  *
- * todo: getCorrespondingNodePath, getDefinition, getMixinNodeTypes, getPrimaryNodeType, isNodeType, orderBefore
- * todo: base Item interface: accept, getAncestor, getDepth, getName, getParent, getPath, getSession, isModified, isNew, isNode, isSame, refresh, remove, save
+ * todo: getCorrespondingNodePath, getDefinition, getMixinNodeTypes, getPrimaryNodeType, isNodeType
  *
- * NodeWriteMethods (level2): addMixin, addNode, canAddMixin, isCheckedOut, isLocked, removeMixin, removeShare, removeSharedSet, setPrimaryType, setProperty, update
+ * NodeWriteMethods (level2): addMixin, addNode, canAddMixin, isCheckedOut, isLocked, orderBefore, removeMixin, removeShare, removeSharedSet, setPrimaryType, setProperty, update. Base Item write methods: isModified, refresh, save, remove
  * Lifecycle: followLifecycleTransition, getAllowedLifecycleTransistions
  */
 class jackalope_tests_level1_ReadTest_NodeReadMethods extends jackalope_baseCase {
-    protected $path = 'level1/read';
     protected $rootNode;
     protected $node;
+    protected $deepnode;
 
-    function setUp() {
+    public function setUp() {
         parent::setUp();
         $this->rootNode = $this->sharedFixture['session']->getRootNode();
         $this->node = $this->rootNode->getNode('tests_level1_access_base');
+        $this->deepnode = $this->node->getNode('multiValueProperty');
     }
 
+    /*** item base methods for node ***/
+    function testGetAncestor() {
+        $ancestor = $this->deepnode->getAncestor(0);
+        $this->assertNotNull($ancestor);
+        $this->assertTrue($this->rootNode->isSame($ancestor));
+
+        $ancestor = $this->deepnode->getAncestor(1);
+        $this->assertNotNull($ancestor);
+        $this->assertTrue($this->node->isSame($ancestor));
+
+        //self
+        $ancestor = $this->deepnode->getAncestor($this->deepnode->getDepth());
+        $this->assertNotNull($ancestor);
+        $this->assertTrue($this->deepnode->isSame($ancestor));
+    }
+    public function testGetDepth() {
+        $this->assertEquals(1, $this->node->getDepth());
+        $this->assertEquals(2, $this->deepnode->getDepth());
+    }
+    public function testGetName() {
+        $name = $this->node->getName();
+        $this->assertNotNull($name);
+        $this->assertEquals('tests_level1_access_base', $name);
+    }
+    public function testGetParent() {
+        $parent = $this->deepnode->getParent();
+        $this->assertNotNull($parent);
+        $this->assertTrue($this->node->isSame($parent));
+    }
+    public function testGetPath() {
+        $path = $this->deepnode->getPath();
+        $this->assertEquals('/tests_level1_access_base/multiValueProperty', $path);
+    }
+    public function testGetSession() {
+        $sess = $this->node->getSession();
+        $this->assertNotNull($sess);
+        $this->assertTrue($sess instanceOf PHPCR_SessionInterface);
+        //how to further check if we got the right session?
+    }
+    public function testIsNew() {
+        $this->assertFalse($this->deepnode->isNew());
+    }
+    public function testIsNode() {
+        $this->assertTrue($this->deepnode->isNode());
+    }
+    //isSame implicitely tested in the path/parent tests
+
+
+    /*** node specific methods ***/
     public function testGetNodeAbsolutePath() {
         $node = $this->rootNode->getNode('/tests_level1_access_base');
         $this->assertTrue(is_object($node));
@@ -141,15 +190,13 @@ class jackalope_tests_level1_ReadTest_NodeReadMethods extends jackalope_baseCase
 
     public function testGetPropertiesNameGlobs() {
         $iterator = $this->node->getProperties(array('jcr:cr*', 'jcr:prim*'));
-        //TODO: wtf? if we do this and var_dump, we see the names of all children of /
-        //$iterator = $this->node->getProperties(array('*'));
         $this->assertTrue(is_object($iterator));
         $this->assertTrue($iterator instanceOf PHPCR_PropertyIteratorInterface);
         $props = array();
         foreach ($iterator as $prop) {
             array_push($props, $prop->getName());
         }
-        $this->assertContains('jcr:created', $props); //TODO: is this a jackalope bug with arrays? or is something not working?
+        $this->assertContains('jcr:created', $props); //TODO: this should have been fixed in current jackrabbit http://issues.apache.org/jira/browse/JCR-2060
         $this->assertContains('jcr:primaryType', $props);
     }
 
@@ -201,10 +248,18 @@ class jackalope_tests_level1_ReadTest_NodeReadMethods extends jackalope_baseCase
     }
 
     public function testGetReferencesAll() {
-        $iterator = $this->node->getReferences();
+        $ref = $this->rootNode->getNode('tests_level1_access_base/idExample');
+        $iterator = $ref->getReferences();
         $this->assertTrue(is_object($iterator));
         $this->assertTrue($iterator instanceOf PHPCR_PropertyIteratorInterface);
+
         $this->markTestIncomplete('TODO: Have a referenced node');
+
+/*
+        JRnode->setProperty with a JRnode ref returns nothing, seems to be broken
+        $ref = $this->rootNode->getNode('tests_level1_access_base/idExample');
+        $this->node->setProperty('testRef', $ref);
+*/
     }
 
     public function testGetReferencesName() {
