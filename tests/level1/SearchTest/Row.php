@@ -65,7 +65,7 @@ class jackalope_tests_level1_SearchTest_Row extends jackalope_baseCase {
                     break;
                 case 'jcr:score':
                     //for me, it was 1788 but i guess that is highly implementation dependent
-                    $num = $val->getInt();
+                    $num = $val->getLong();
                     $this->assertTrue($num > 0);
                     break;
                 default:

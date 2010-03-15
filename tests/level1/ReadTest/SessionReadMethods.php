@@ -244,6 +244,6 @@ class jackalope_tests_level1_ReadTest_SessionReadMethods extends jackalope_baseC
         $this->assertTrue($this->sharedFixture['session']->hasCapability('getProperty', $node, array('foo')));
         $property = $this->sharedFixture['session']->getProperty('/tests_level1_access_base/numberPropertyNode/jcr:content/foo');
         $this->assertTrue($this->sharedFixture['session']->hasCapability('getNode', $property, array()));
-        $this->assertFalse($this->sharedFixture['session']->hasCapability('inexistent', $property, array()));
+        $this->assertFalse($this->sharedFixture['session']->hasCapability('inexistentXXX', $property, array()));
     }
 }

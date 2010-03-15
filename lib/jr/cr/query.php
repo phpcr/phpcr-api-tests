@@ -7,9 +7,8 @@ class jr_cr_query implements PHPCR_Query_QueryInterface {
     function __construct($jrquery,$session) {
         $this->session = $session;
         $this->JRquery = $jrquery;
-        //TODO - Insert your code here
     }
-    
+
     /**
      *
      * @return jr_cr_queryresult
@@ -32,7 +31,7 @@ class jr_cr_query implements PHPCR_Query_QueryInterface {
             }
         }
     }
-    
+
     /**
      *
      * @see QueryLanguage
@@ -42,11 +41,11 @@ class jr_cr_query implements PHPCR_Query_QueryInterface {
     public function getLanguage() {
         return $this->JRquery->getLanguage();
     }
-    
+
     /*public function setLimit($limit) {
        $this->JRquery->setLimit($limit);
     }*/
-    
+
     /**
      *
      * @return string
@@ -55,7 +54,7 @@ class jr_cr_query implements PHPCR_Query_QueryInterface {
     public function getStatement() {
         return $this->JRquery->getStatement();
     }
-    
+
     /**
      *
      * @return string
@@ -80,7 +79,7 @@ class jr_cr_query implements PHPCR_Query_QueryInterface {
             }
         }
     }
-    
+
     /**
      *
      * @param string
@@ -140,6 +139,14 @@ class jr_cr_query implements PHPCR_Query_QueryInterface {
                 throw $e;
             }
         }
+    }
+
+    public function bindValue($varName, PHPCR_ValueInterface $value) {
+        $this->JRquery->bindValue($varName, $value->JRvalue);
+    }
+
+    public function getBindVariableNames() {
+        return $this->JRquery->getBindVariableNames();
     }
 
     /**

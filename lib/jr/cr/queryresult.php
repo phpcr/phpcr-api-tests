@@ -4,13 +4,13 @@ class jr_cr_queryresult implements PHPCR_Query_QueryResultInterface {
      *
      */
     protected $JRqueryresult = null;
-    
+
     public function __construct($jrqueryresult,$session) {
         $this->session = $session;
         $this->JRqueryresult = $jrqueryresult;
         //TODO - Insert your code here
     }
-    
+
     /**
      *
      * @return array
@@ -21,7 +21,7 @@ class jr_cr_queryresult implements PHPCR_Query_QueryResultInterface {
     public function getColumnNames() {
         return $this->JRqueryresult->getColumnNames();
     }
-    
+
     /**
      *
      * @return jr_cr_nodeiterator
@@ -34,7 +34,7 @@ class jr_cr_queryresult implements PHPCR_Query_QueryResultInterface {
         return new jr_cr_nodeiterator($this->JRqueryresult->getNodes(),$this->session);
         //TODO - Insert your code here
     }
-    
+
     /**
      *
      * @return object
@@ -47,7 +47,7 @@ class jr_cr_queryresult implements PHPCR_Query_QueryResultInterface {
         return new jr_cr_rowiterator($this->JRqueryresult->getRows(),$this->session);
         //TODO - Insert your code here
     }
-    
+
     /**
      * Returns true if the iteration has more elements.
      *
@@ -58,7 +58,7 @@ class jr_cr_queryresult implements PHPCR_Query_QueryResultInterface {
     public function hasNext() {
         //TODO: Insert Code
     }
-    
+
     /**
      * Removes from the underlying collection the last element returned by the iterator.
      * This method can be called only once per call to next. The behavior of an iterator
@@ -71,7 +71,7 @@ class jr_cr_queryresult implements PHPCR_Query_QueryResultInterface {
     public function remove() {
         //TODO: Insert Code
     }
-    
+
     /**
      * Append a new element to the iteration
      *
@@ -80,5 +80,9 @@ class jr_cr_queryresult implements PHPCR_Query_QueryResultInterface {
      */
     public function append($element) {
         //TODO: Insert Code
+    }
+
+    public function getSelectorNames() {
+        return $this->JRqueryresult->getSelectorNames();
     }
 }
