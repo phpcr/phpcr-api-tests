@@ -11,23 +11,20 @@ chregu at liip.ch
 Usage
 *****
 
-Run phpunit inside of the root directory.
+The jackalope-api-tests is a suite to test compliance for implementations of
+the java content repository specification.
+http://github.com/k-fish/PHPCR
 
-For usage with Zend you probably have to execute it manually like
-this:
+You need to provide a couple of files in order to let the tests detect your
+implementation:
 
-/usr/local/zend/bin/php-cli /usr/local/zend/bin/phpunit tests/level1/ReadTest.php
+* Copy phpunit.xml.sample to phpunit.xml and adapt if necessary.
+* Write your own bootstrap file. Have a look at lib/bootstrap.php.sample
 
-Customization
-*************
+Once you are done, run phpunit inside of the root directory. If you use a
+standard php installation, this is usually along the lines of
+$ phpunit tests/level1/ReadTest.php
 
-How to test your own code:
-You need to change the phpunit.xml and write your own bootstrap file. The file
-needs to provide the following:
-function getRepository(config) which returns the repository
-function getJCRSession(config) which returns the session
-function getSimpleCredentials(user, password) which returns simpleCredentials
-constants necessary to the JCR 1.0/JSR-170 specs
 
 *****
 Setup
@@ -44,15 +41,8 @@ git submodule update
 Dependencies
 ************
 
-java in PATH
 PHPUnit in PATH
 PHPUnit in include_path
-
-Installing PHPUnit
-******************
-Make sure you use the pear from Zend.
-See http://www.phpunit.de/manual/current/en/installation.html
-$  /usr/local/zend/bin/pear install phpunit
 
 Setting up Jackrabbit
 *********************

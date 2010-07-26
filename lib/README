@@ -1,0 +1,3 @@
+PHPCR is the current api definition.
+
+The jackrabbit-*.jar libraries are used by Jack to reset the jackrabbit repository to a known state.
