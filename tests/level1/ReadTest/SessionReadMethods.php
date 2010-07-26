@@ -198,7 +198,7 @@ class jackalope_tests_level1_ReadTest_SessionReadMethods extends jackalope_baseC
      * @expectedException PHPCR_ItemNotFoundException
      */
     public function testGetNodeByIdentifierItemNotFoundException() {
-        $this->sharedFixture['session']->getNodeByIdentifier(jr_cr_node::uuid());
+        $this->sharedFixture['session']->getNodeByIdentifier("jackalope-api-tests:nonexisting-id");
     }
 
     /**
