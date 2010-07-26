@@ -1,3 +1,4 @@
 PHPCR is the current api definition.
 
-The jackrabbit-*.jar libraries are used by Jack to reset the jackrabbit repository to a known state.
+The jackrabbit-*.jar and DavexClient.jar libraries are used by Jack to reset 
+the jackrabbit repository to a known state.
