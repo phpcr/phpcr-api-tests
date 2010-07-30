@@ -79,7 +79,7 @@ class jackalope_tests_level1_ReadTest_SessionReadMethods extends jackalope_baseC
         $this->assertTrue($node instanceOf PHPCR_NodeInterface);
         $this->assertEquals($node->getName(), 'index.txt');
 
-        $prop = $this->sharedFixture['session']->getProperty('/tests_level1_access_base/numberPropertyNode/jcr:content/foo');
+        $prop = $this->sharedFixture['session']->getItem('/tests_level1_access_base/numberPropertyNode/jcr:content/foo');
         $this->assertTrue($prop instanceOf PHPCR_PropertyInterface);
         $this->assertEquals($prop->getName(), 'foo');
         $this->assertEquals($prop->getString(), 'bar');
@@ -181,10 +181,9 @@ class jackalope_tests_level1_ReadTest_SessionReadMethods extends jackalope_baseC
     }
 
     public function testGetNodeByIdentifier() {
-        $node1 = $this->sharedFixture['session']->getNode('/tests_level1_access_base/idExample');
-        $node2 = $this->sharedFixture['session']->getNodeByIdentifier('842e61c0-09ab-42a9-87c0-308ccc90e6f4');
-        $this->assertTrue($node2 instanceOf PHPCR_NodeInterface);
-        $this->assertEquals($node1, $node2);
+        $node = $this->sharedFixture['session']->getNodeByIdentifier('842e61c0-09ab-42a9-87c0-308ccc90e6f4');
+        $this->assertTrue($node instanceOf PHPCR_NodeInterface);
+        $this->assertEquals('/tests_level1_access_base/idExample', $node->getPath());
     }
 
     /**
@@ -198,7 +197,7 @@ class jackalope_tests_level1_ReadTest_SessionReadMethods extends jackalope_baseC
      * @expectedException PHPCR_ItemNotFoundException
      */
     public function testGetNodeByIdentifierItemNotFoundException() {
-        $this->sharedFixture['session']->getNodeByIdentifier("jackalope-api-tests:nonexisting-id");
+        $this->sharedFixture['session']->getNodeByIdentifier("jackalope-api-tests-nonexisting-id");
     }
 
     /**
@@ -244,6 +243,6 @@ class jackalope_tests_level1_ReadTest_SessionReadMethods extends jackalope_baseC
         $this->assertTrue($this->sharedFixture['session']->hasCapability('getProperty', $node, array('foo')));
         $property = $this->sharedFixture['session']->getProperty('/tests_level1_access_base/numberPropertyNode/jcr:content/foo');
         $this->assertTrue($this->sharedFixture['session']->hasCapability('getNode', $property, array()));
-        $this->assertFalse($this->sharedFixture['session']->hasCapability('inexistentXXX', $property, array()));
+        $this->assertFalse($this->sharedFixture['session']->hasCapability('inexistentXXX', $property, array())); //actually, the repository is not required to know, it can always say that the info can not be determined and return true.
     }
 }
