@@ -68,16 +68,15 @@ The tests are oriented at the javadoc of the JSR 283 interfaces.
 
 tests/level1 contains tets for the base read functionality.
 
-Packages at least partially for level1:
-javax.jcr               => ReadTest, AccessTest, ExportTest, NamespaceTest
-javax.jcr.query         must support javax.jcr.query.JCR-JQOM and javax.jcr.query.JCR-SQL2 => SearchTest
-javax.jcr.query.qom     Specify query object model => QueryObjectModelTest
-javax.jcr.nodetype      => NodeTypesTest
-javax.jcr.util
 
-Packages used for additional features
-javax.jcr.lock          Repository.OPTION_LOCKING_SUPPORTED => LockTest
-javax.jcr.observation   Repository.OPTION_OBSERVATION_SUPPORTED or Repository.OPTION_JOURNALED_OBSERVATION_SUPPORTED
-javax.jcr.retention     Repository.OPTION_RETENTION_SUPPORTED
-javax.jcr.security      Repository.OPTION_ACCESS_CONTROL_SUPPORTED => AccessControlTest
-javax.jcr.version       Repository.OPTION_SIMPLE_VERSIONING_SUPPORTED and Repository.OPTION_VERSIONING_SUPPORTED
+****
+TODO
+****
+
+This test classes are not completely covering the specification.
+It would be nice if we were able to run the JSR-283 Technology Compliance
+Kit (TCK) against php implementations.
+https://jira.liip.ch/browse/JACK-24
+
+Once we manage to do that, we could hopefully also use the performance test suite
+https://jira.liip.ch/browse/JACK-23
