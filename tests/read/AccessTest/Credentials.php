@@ -21,7 +21,7 @@ class jackalope_tests_read_AccessTest_Credentials extends jackalope_baseCase {
         $cr = $this->assertSimpleCredentials(self::CR_USER, self::CR_PASS);
         $pass = $cr->getPassword();
         $this->assertTrue(is_string($pass));
-        $this->assertEquals($pass, '');
+        $this->assertEquals($pass, 'bar');
     }
 
     public function testAttributes() {
