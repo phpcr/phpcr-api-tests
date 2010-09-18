@@ -4,8 +4,6 @@ require_once(dirname(__FILE__) . '/../../../inc/baseCase.php');
 
 /**
  * Covering jcr-2.8.3 spec $10.6
- *
- * MoveMethods: Session::move Workspace::move
  */
 class jackalope_tests_write_ManipulationTest_MoveMethods extends jackalope_baseCase {
 

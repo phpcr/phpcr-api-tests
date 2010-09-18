@@ -4,8 +4,6 @@ require_once(dirname(__FILE__) . '/../../../inc/baseCase.php');
 
 /**
  * Covering jcr-2.8.3 spec $10.4.2
- *
- * SetMethods: Node::setProperty Property::setValue
  */
 class jackalope_tests_write_SetTest_SetValueMethods extends jackalope_baseCase {
 
@@ -22,7 +20,7 @@ class jackalope_tests_write_SetTest_SetValueMethods extends jackalope_baseCase {
      */
     public function testSetValue() {
         $this->property->setValue(1024);
-        $this->assertEquals(1024, $this->property->getValue());
+        $this->assertEquals(1024, $this->property->getValue()->getLong());
     }
 
     /**
@@ -30,7 +28,7 @@ class jackalope_tests_write_SetTest_SetValueMethods extends jackalope_baseCase {
      */
     public function testSetPropertyExisting() {
         $this->node->setProperty('longNumber', 1024);
-        $this->assertEquals(1024, $this->node->getProperty('longNumber')->getValue());
+        $this->assertEquals(1024, $this->node->getProperty('longNumber')->getValue()->getLong());
     }
 
 
@@ -39,16 +37,15 @@ class jackalope_tests_write_SetTest_SetValueMethods extends jackalope_baseCase {
      */
     public function testSetPropertyNew() {
         $this->node->setProperty('newLongNumber', 1024);
-        $this->assertEquals(1024, $this->node->getProperty('newLongNumber')->getValue());
+        $this->assertEquals(1024, $this->node->getProperty('newLongNumber')->getValue()->getLong());
     }
 
     /**
      * @covers Node::setProperty
      */
     public function testSetPropertyWithType() {
-        $date = '2010-09-18T00:00:00.000+02:00';
-        $this->node->setProperty('jcr:created', $date, PHPCR_PropertyType::DATE);
-        $this->assertEquals($date, $this->node->getProperty('jcr:created')->getValue());
+        $this->node->setProperty('longNumber', 1024, PHPCR_PropertyType::LONG);
+        $this->assertEquals($date, $this->node->getProperty('longNumber')->getValue()->getLong());
     }
 
 
