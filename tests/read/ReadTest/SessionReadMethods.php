@@ -207,8 +207,10 @@ class jackalope_tests_read_ReadTest_SessionReadMethods extends jackalope_baseCas
     public function testImpersonate() {
         //TODO: Check if that's implemented in newer jackrabbit versions.
         //TODO: Write tests for LoginException and RepositoryException
-        $cr = $this->assertSimpleCredentials($this->sharedFixture['config']['user'], $this->sharedFixture['config']['pass']);
-        $ses = $this->sharedFixture['session']->impersonate($cr);
+        //$cr = $this->assertSimpleCredentials($this->sharedFixture['config']['user'], $this->sharedFixture['config']['pass']);
+        //$ses = $this->sharedFixture['session']->impersonate($cr);
+        $this->markTestIncomplete('TODO: check if we should implement this method.');
+
     }
 
     //4.4.4, 4.4.5
