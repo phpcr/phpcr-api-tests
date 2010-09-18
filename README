@@ -19,11 +19,11 @@ You need to provide a couple of files in order to let the tests detect your
 implementation:
 
 * Copy phpunit.xml.sample to phpunit.xml and adapt if necessary.
-* Write your own bootstrap file. Have a look at lib/bootstrap.php.sample
+* Write your own bootstrap file. Have a look at inc/bootstrap.php.sample
 
 Once you are done, run phpunit inside of the root directory. If you use a
 standard php installation, this is usually along the lines of
-$ phpunit tests/level1/ReadTest.php
+$ phpunit tests/read/ReadTest.php
 
 
 *****
@@ -66,7 +66,8 @@ Implementation
 This code defines a set of unit tests against the PHPCR interfaces.
 The tests are oriented at the javadoc of the JSR 283 interfaces.
 
-tests/level1 contains tets for the base read functionality.
+tests/read contains tests for the base read functionality.
+tests/write contains tests for the base write functionality.
 
 
 ****
