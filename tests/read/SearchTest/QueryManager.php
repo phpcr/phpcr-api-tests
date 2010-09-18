@@ -7,9 +7,16 @@ require_once(dirname(__FILE__) . '/../../../inc/baseCase.php');
  */
 class jackalope_tests_read_SearchTest_QueryManager extends jackalope_baseCase {
     public function testCreateQuery() {
-        $ret = $this->sharedFixture['qm']->createQuery('/jcr:root', 'xpath');
+        $ret = $this->sharedFixture['qm']->createQuery(null, PHPCR_Query_QueryInterface::JCR_SQL2);
         $this->assertTrue(is_object($ret));
         $this->assertTrue($ret instanceof PHPCR_Query_QueryInterface);
+    }
+
+    /**
+     * @expectedException PHPCR_Query_InvalidQueryException
+     */
+    public function testCreateXpathQuery() {
+        $this->sharedFixture['qm']->createQuery('/jcr:root', 'xpath');
     }
 
     public function testGetQuery() {
