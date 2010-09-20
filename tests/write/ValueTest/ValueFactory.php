@@ -3,7 +3,7 @@ require_once(dirname(__FILE__) . '/../../../inc/baseCase.php');
 
 // According to PHPCR_ValueFactoryInterface
 
-class jackalope_tests_read_ReadTest_ValueFactory extends jackalope_baseCase {
+class jackalope_tests_write_ValueTest_ValueFactory extends jackalope_baseCase {
     private $factory;
 
     public function setUp() {
