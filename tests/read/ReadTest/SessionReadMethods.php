@@ -86,7 +86,7 @@ class jackalope_tests_read_ReadTest_SessionReadMethods extends jackalope_baseCas
     }
     //5.1.3, 5.1.6
     public function testGetNode() {
-        $node = $this->sharedFixture['session']->getNode('/tests_read_access_base');
+        $node = $this->sharedFixture['session']->getNode('/tests_read_access_base/numberPropertyNode');
         $this->assertTrue($node instanceOf PHPCR_NodeInterface);
         $this->assertEquals($node->getName(), 'tests_read_access_base');
 
@@ -94,6 +94,21 @@ class jackalope_tests_read_ReadTest_SessionReadMethods extends jackalope_baseCas
         $this->assertTrue($node instanceOf PHPCR_NodeInterface);
         $this->assertEquals($node->getName(), 'index.txt');
     }
+    /**
+     * Get something that is a property and not a node
+     * @expectedException PHPCR_PathNotFoundException
+     */
+    public function testGetNodeInvalid() {
+        $this->sharedFixture['session']-> getNode('/tests_read_access_base/idExample/jcr:primaryType');
+    }
+    /**
+     * Get something that is a node and not a property
+     * @expectedException PHPCR_PathNotFoundException
+     */
+    public function testGetPropertyInvalid() {
+        $this->sharedFixture['session']-> getProperty('/tests_read_access_base/idExample');
+    }
+
     //5.1.3, 5.1.6
     public function testGetProperty() {
         $prop = $this->sharedFixture['session']->getProperty('/tests_read_access_base/idExample/jcr:primaryType');

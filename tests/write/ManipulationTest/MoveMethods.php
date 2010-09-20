@@ -64,6 +64,13 @@ class jackalope_tests_write_ManipulationTest_MoveMethods extends jackalope_baseC
         // TODO workspace-write method, also verify that the move was dispatched to the backend
     }
 
+    /**
+     * @covers Node::orderBefore
+     */
+    public function testNodeOrderBefore() {
+        $this->markTestSkipped('TODO: implement different use cases. move up, down, same paths, end, inexisting src, inexisting dest');
+    }
+
 }
 
 
