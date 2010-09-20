@@ -8,6 +8,7 @@ abstract class jackalope_baseCase extends PHPUnit_Framework_TestCase {
     protected $configKeys = array('jcr.url', 'jcr.user', 'jcr.pass', 'jcr.workspace', 'jcr.transport');
 
     protected function setUp() {
+        date_default_timezone_set('Europe/Zurich');
         foreach ($this->configKeys as $cfgKey) {
             $this->config[substr($cfgKey, 4)] = $GLOBALS[$cfgKey];
         }
