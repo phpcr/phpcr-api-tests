@@ -7,6 +7,13 @@ class jackalope_tests_read_ReadTest_Value extends jackalope_baseCase {
     protected $node;
     protected $value;
 
+    static public function  setupBeforeClass()
+    {
+        parent::setupBeforeClass();
+        self::$staticSharedFixture['ie']->import('read/read/base.xml');
+        self::$staticSharedFixture['session'] = getJCRSession(self::$staticSharedFixture['config']);
+    }
+
     public function setUp() {
         parent::setUp();
         $this->node = $this->sharedFixture['session']->getRootNode()->getNode('tests_read_access_base/numberPropertyNode/jcr:content');

@@ -5,7 +5,6 @@ require_once(dirname(__FILE__) . '/AccessTest/Repository.php');
 require_once(dirname(__FILE__) . '/AccessTest/RepositoryDescriptors.php');
 
 class jackalope_tests_read_AccessTest extends jackalope_baseSuite {
-    protected $path = 'read/read';
     
     public static function suite() {
         $suite = new jackalope_tests_read_AccessTest('Read: Accessing the Repository');

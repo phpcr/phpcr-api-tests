@@ -1,10 +1,13 @@
 <?php
+
 require_once(dirname(__FILE__) . '/../../../inc/baseCase.php');
 
 // 6.2.4 Property Read Methods
 
-class jackalope_tests_read_ReadTest_PropertyTypes extends jackalope_baseCase {
-    protected $types = array(
+class jackalope_tests_read_ReadTest_PropertyTypes extends jackalope_baseCase
+{
+
+    protected static $types = array(
         'UNDEFINED',
         'STRING',
         'BINARY',
@@ -19,8 +22,7 @@ class jackalope_tests_read_ReadTest_PropertyTypes extends jackalope_baseCase {
         'URI',
         'DECIMAL',
     );
-    
-    protected $typeNames = array(
+    protected static $typeNames = array(
         'undefined',
         'String',
         'Binary',
@@ -35,15 +37,29 @@ class jackalope_tests_read_ReadTest_PropertyTypes extends jackalope_baseCase {
         'URI',
         'Decimal',
     );
-    
-    public function testNameFromValue() {
-        for ($x=0;$x < count($this->types);$x++) {
-            $this->assertEquals($this->typeNames[$x], PHPCR_PropertyType::nameFromValue($x));
+
+    static public function dataNameFromValue()
+    {
+        $data = array();
+        for ($x = 0; $x < count(self::$types); $x++) {
+            $data[] = array($x, self::$typeNames[$x]);
         }
+        return $data;
     }
-    
-    public function valueFromName() {
-        for ($x=0;$x < count($this->types);$x++) {
+
+    /**
+     * @dataProvider dataNameFromValue
+     */
+    public function testNameFromValue($type, $name)
+    {
+        $this->assertEquals($name, PHPCR_PropertyType::nameFromValue($type));
+    }
+
+    public function testValueFromName($x)
+    {
+        $this->markTestIncomplete("What is this supposed to do?");
+
+        for ($x = 0; $x < count($this->types); $x++) {
             $this->assertEquals($x, PHPCR_PropertyType::valueFromName($this->types[$x]));
         }
     }

@@ -6,16 +6,6 @@ require_once(dirname(__FILE__) . '/NamespacesTest/SessionNamespaceRemapping.php'
 //6.3.4 is explanation only
 
 class jackalope_tests_read_NamespacesTest extends jackalope_baseSuite {
-    public function setUp() {
-        parent::setUp();
-        $this->sharedFixture['session'] = getJCRSession($this->sharedFixture['config']);
-    }
-
-    public function tearDown() {
-        parent::tearDown();
-        $this->sharedFixture['session']->logout();
-        $this->sharedFixture = null;
-    }
 
     public static function suite() {
         $suite = new jackalope_tests_read_NamespacesTest('Read: Namespaces');

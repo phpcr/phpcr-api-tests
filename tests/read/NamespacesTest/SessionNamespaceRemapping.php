@@ -9,6 +9,12 @@ class jackalope_tests_read_NamespacesTest_SessionNamespaceRemapping extends jack
                                  'xml' => 'http://www.w3.org/XML/1998/namespace',
                                  ''    => '');
 
+    static public function setupBeforeClass()
+    {
+        parent::setupBeforeClass();
+        self::$staticSharedFixture['session'] = getJCRSession(self::$staticSharedFixture['config']);
+    }
+
     public function testSetNamespacePrefix() {
         //acquire new session, as we fiddle around with namespace prefixes
         $session = getJCRSession($this->sharedFixture['config']);
