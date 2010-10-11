@@ -7,7 +7,8 @@ require_once(dirname(__FILE__) . '/../../../inc/baseCase.php');
  */
 class jackalope_tests_write_SetTest_SetValueMethods extends jackalope_baseCase {
 
-    protected $node;
+    private $node;
+    private $property;
 
     public function setUp() {
         parent::setUp();

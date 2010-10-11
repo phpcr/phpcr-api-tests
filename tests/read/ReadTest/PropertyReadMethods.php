@@ -13,11 +13,9 @@ class jackalope_tests_read_ReadTest_PropertyReadMethods extends jackalope_baseCa
     protected $property;
     protected $multiProperty;
 
-    static public function  setupBeforeClass()
-    {
+    static public function  setupBeforeClass() {
         parent::setupBeforeClass();
         self::$staticSharedFixture['ie']->import('read/read/base.xml');
-        self::$staticSharedFixture['session'] = getJCRSession(self::$staticSharedFixture['config']);
     }
 
     public function setUp() {

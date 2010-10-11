@@ -16,7 +16,7 @@ abstract class jackalope_baseCase extends PHPUnit_Framework_TestCase {
         foreach ($configKeys as $cfgKey) {
             self::$staticSharedFixture['config'][substr($cfgKey, 4)] = $GLOBALS[$cfgKey];
         }
-
+        self::$staticSharedFixture['session'] = getJCRSession(self::$staticSharedFixture['config']);
         self::$staticSharedFixture['ie'] = new jackalope_importexport(dirname(__FILE__) . "/../fixture/");
     }
 

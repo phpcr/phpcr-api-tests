@@ -12,11 +12,9 @@ class jackalope_tests_read_ReadTest_WorkspaceReadMethods extends jackalope_baseC
     protected $path = 'read/read';
     protected $workspace;
 
-    static public function  setupBeforeClass()
-    {
+    static public function  setupBeforeClass() {
         parent::setupBeforeClass();
         self::$staticSharedFixture['ie']->import('read/read/base.xml');
-        self::$staticSharedFixture['session'] = getJCRSession(self::$staticSharedFixture['config']);
     }
 
     //4.5 Workspace Read Methods

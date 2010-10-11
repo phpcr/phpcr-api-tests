@@ -14,11 +14,9 @@ require_once(dirname(__FILE__) . '/../../../inc/baseCase.php');
 
 class jackalope_tests_read_ReadTest_SessionReadMethods extends jackalope_baseCase {
 
-    static public function  setupBeforeClass()
-    {
+    static public function  setupBeforeClass() {
         parent::setupBeforeClass();
         self::$staticSharedFixture['ie']->import('read/read/base.xml');
-        self::$staticSharedFixture['session'] = getJCRSession(self::$staticSharedFixture['config']);
     }
 
     //4.4.3

@@ -7,10 +7,6 @@ require_once(dirname(__FILE__) . '/../../../inc/baseCase.php');
  */
 class jackalope_tests_write_ManipulationTest_MoveMethods extends jackalope_baseCase {
 
-    protected function setUp() {
-        parent::setUp();
-
-    }
     /**
      * @covers Jackalope_Session::move
      */

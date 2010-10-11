@@ -7,11 +7,9 @@ class jackalope_tests_read_ReadTest_BinaryReadMethods extends jackalope_baseCase
     protected $node;
     public $binary;
 
-    static public function  setupBeforeClass()
-    {
+    static public function  setupBeforeClass() {
         parent::setupBeforeClass();
         self::$staticSharedFixture['ie']->import('read/read/base.xml');
-        self::$staticSharedFixture['session'] = getJCRSession(self::$staticSharedFixture['config']);
     }
 
     public function setUp() {

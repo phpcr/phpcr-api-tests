@@ -6,7 +6,14 @@ class jackalope_tests_read_SearchTest_QueryResults extends jackalope_baseCase {
     public static $expect = array("jcr:createdBy","jcr:created","jcr:primaryType","jcr:path","jcr:score");
     public $query;
 
+    public static function setupBeforeClass() {
+        parent::setupBeforeClass();
+        self::$staticSharedFixture['qm'] = self::$staticSharedFixture['session']->getWorkspace()->getQueryManager();
+    }
+
     public function setUp() {
+        parent::setUp();
+
         //FIXME: xpath is depricated. should test SQL2 (and QOM?)
         $this->query = $this->sharedFixture['qm']->createQuery('//element(*, nt:folder)', 'xpath');
         $this->qr = $this->query->execute();

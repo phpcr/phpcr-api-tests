@@ -7,7 +7,13 @@ require_once(dirname(__FILE__) . '/../../../inc/baseCase.php');
 class jackalope_tests_read_SearchTest_Row extends jackalope_baseCase {
     private $row;
 
+    public static function setupBeforeClass() {
+        parent::setupBeforeClass();
+        self::$staticSharedFixture['qm'] = self::$staticSharedFixture['session']->getWorkspace()->getQueryManager();
+    }
+
     public function setUp() {
+        parent::setUp();
         $query = $this->sharedFixture['qm']->createQuery('/*/element(tests_read_search_base, nt:folder)', 'xpath');
         $qr = $query->execute();
         //sanity check

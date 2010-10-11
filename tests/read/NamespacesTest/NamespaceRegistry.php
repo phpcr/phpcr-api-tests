@@ -11,12 +11,6 @@ class jackalope_tests_read_NamespacesTest_NamespaceRegistry extends jackalope_ba
                                  'xml' => 'http://www.w3.org/XML/1998/namespace',
                                  ''    => '');
 
-    static public function  setupBeforeClass()
-    {
-        parent::setupBeforeClass();
-        self::$staticSharedFixture['session'] = getJCRSession(self::$staticSharedFixture['config']);
-    }
-
     function setUp() {
         parent::setUp();
         $this->workspace = $this->sharedFixture['session']->getWorkspace();
