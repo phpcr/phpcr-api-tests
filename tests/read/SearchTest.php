@@ -14,9 +14,10 @@ class jackalope_tests_read_SearchTest extends jackalope_baseSuite
     public static function suite()
     {
         $suite = new jackalope_tests_read_SearchTest('Read: Search');
-        $suite->addTestSuite('jackalope_tests_read_SearchTest_QueryManager');
-        $suite->addTestSuite('jackalope_tests_read_SearchTest_QueryResults');
-        $suite->addTestSuite('jackalope_tests_read_SearchTest_Row');
+        //TODO: JACK-11: Implement search
+        #$suite->addTestSuite('jackalope_tests_read_SearchTest_QueryManager');
+        #$suite->addTestSuite('jackalope_tests_read_SearchTest_QueryResults');
+        #$suite->addTestSuite('jackalope_tests_read_SearchTest_Row');
         return $suite;
     }
 

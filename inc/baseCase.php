@@ -9,6 +9,12 @@ abstract class jackalope_baseCase extends PHPUnit_Framework_TestCase {
     protected $sharedFixture = array();
     protected static $staticSharedFixture = null;
 
+    /** the bootstrap.php from the client can throw PHPCR_RepositoryException
+     * with this message to tell assertSession when getJCRSession has been called
+     * with parameters not supported by this implementation (like credentials null)
+     */
+    const NOTSUPPORTEDLOGIN = 'Not supported login';
+
     public static function setupBeforeClass()
     {
         self::$staticSharedFixture = array();
@@ -47,7 +53,15 @@ abstract class jackalope_baseCase extends PHPUnit_Framework_TestCase {
 
     /** try to create a session with the config and credentials */
     protected function assertSession($cfg, $credentials = null) {
-        $ses = getJCRSession($cfg, $credentials);
+        try {
+            $ses = getJCRSession($cfg, $credentials);
+        } catch(PHPCR_RepositoryException $e) {
+            if ($e->getMessage() == jackalope_baseCase::NOTSUPPORTEDLOGIN) {
+                $this->markTestSkipped('This implementation does not support this type of login.');
+            } else {
+                throw $e;
+            }
+        }
         $this->assertTrue(is_object($ses));
         $this->assertTrue($ses instanceOf phpCR_SessionInterface);
         return $ses;
