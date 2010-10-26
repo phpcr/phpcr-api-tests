@@ -99,7 +99,7 @@ class jackalope_tests_read_ReadTest_NodeReadMethods extends jackalope_baseCase {
      * @expectedException PHPCR_RepositoryException
      */
     public function testGetNodeRepositoryException() {
-        $this->rootNode->getNode('//');
+        $this->rootNode->getNode('/ /'); //space is not valid in path
     }
 
     public function testGetNodes() {
@@ -298,7 +298,7 @@ class jackalope_tests_read_ReadTest_NodeReadMethods extends jackalope_baseCase {
     }
 
     public function testHasNodePathTrue() {
-        $this->assertTrue($this->node->hasNode('../numberPropertyNode/jcr:content'));
+        $this->assertTrue($this->deepnode->hasNode('../numberPropertyNode/jcr:content'));
     }
 
     public function testHasNodeFalse() {

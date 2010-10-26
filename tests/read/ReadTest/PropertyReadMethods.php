@@ -214,6 +214,7 @@ class jackalope_tests_read_ReadTest_PropertyReadMethods extends jackalope_baseCa
      * @expectedException PHPCR_ValueFormatException
      */
     public function testGetBoolValueFormatException() {
+        $this->markTestSkipped('TODO: What would be an invalid value conversion?');
         $this->property->getBoolean();
     }
 

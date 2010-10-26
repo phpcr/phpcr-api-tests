@@ -68,7 +68,7 @@ class jackalope_tests_read_ReadTest_Value extends jackalope_baseCase {
         $this->assertEquals(999, $number);
     }
     public function testGetType() {
-        $this->assertEquals(PHPCR_PropertyType::STRING, $this->value->getType());
+        $this->assertEquals(PHPCR_PropertyType::UNDEFINED, $this->value->getType());
         /* TODO: test more types. how does jackrabbit determine types? jcr:lastModified is of type string and not date...
          $dv = $this->node->getProperty('jcr:lastModified')->getValue();
          $this->assertEquals(PHPCR_PropertyType::DATE, $dv->getType());

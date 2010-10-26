@@ -41,31 +41,35 @@ class jackalope_tests_read_ReadTest_PropertyTypes extends jackalope_baseCase {
     );
 
     static public function dataValueFromName() {
-        return self::$names;
+        $data = array();
+        foreach(self::$names as $key => $value) $data[] = array($key,$value);
+        return $data;
     }
 
     static public function dataValueFromType() {
-        return self::$types;
+        $data = array();
+        foreach(self::$types as $key => $value) $data[] = array($key,$value);
+        return $data;
     }
 
     /**
      * @dataProvider dataValueFromName
      */
     public function testNameFromValue($field, $name) {
-        $this->assertEquals($name, PHPCR_PropertyType::nameFromValue(PHPCR_PropertyType::$field));
+        $this->assertEquals($name, PHPCR_PropertyType::nameFromValue(constant("PHPCR_PropertyType::$field")));
     }
 
     /**
      * @dataProvider dataValueFromName
      */
     public function testValueFromName($field, $name) {
-        $this->assertEquals(PHPCR_PropertyType::$field, PHPCR_PropertyType::valueFromName($name));
+        $this->assertEquals(constant("PHPCR_PropertyType::$field"), PHPCR_PropertyType::valueFromName($name));
     }
 
     /**
      * @dataProvider dataValueFromType
      */
     public function testValueFromType($field, $type) {
-        $this->assertEquals(PHPCR_PropertyType::$field, PHPCR_PropertyType::valueFromType($type));
+        $this->assertEquals(constant("PHPCR_PropertyType::$field"), PHPCR_PropertyType::valueFromType($type));
     }
 }
