@@ -6,6 +6,11 @@ require_once(dirname(__FILE__) . '/../../../inc/baseCase.php');
 class jackalope_tests_write_ValueTest_ValueFactory extends jackalope_baseCase {
     private $factory;
 
+    static public function setupBeforeClass() {
+        parent::setupBeforeClass();
+        self::$staticSharedFixture['ie']->import('write/value/base.xml');
+    }
+
     public function setUp() {
         parent::setUp();
         $this->factory = $this->sharedFixture['session']->getValueFactory();
@@ -38,22 +43,22 @@ class jackalope_tests_write_ValueTest_ValueFactory extends jackalope_baseCase {
     }
     public function testCreateValueBoolean() {
         $value = $this->factory->createValue(true);
-        $this->assertTrue($value->getBoolean());
-        $this->assertEquals('true', $value->getString());
-        $this->assertEquals(1, $value->getLong());
-        $this->assertEquals(PHPCR_PropertyType::BOOLEAN, $value->getType());
+        $this->assertEquals(PHPCR_PropertyType::BOOLEAN, $value->getType(), 'wrong type');
+        $this->assertTrue($value->getBoolean(), 'boolean not true');
+        $this->assertEquals('1', $value->getString(), 'wrong string value'); //boolean converted to string is "1", not "true"
+        $this->assertEquals(1, $value->getLong(), 'wrong integer value');
     }
     public function testCreateValueNode() {
-        $node = $this->sharedFixture['session']->getRootNode()->getNode('tests_read_access_base/numberPropertyNode/jcr:content');
+        $node = $this->sharedFixture['session']->getNode('/tests_write_value_base/multiValueProperty');
         $value = $this->factory->createValue($node);
-        $this->assertEquals(PHPCR_PropertyType::REFERENCE, $value->getType());
-        $this->assertEquals($node->getIdentifier(), $value->getString());
+        $this->assertEquals(PHPCR_PropertyType::REFERENCE, $value->getType(), 'wrong type');
+        $this->assertEquals($node->getIdentifier(), $value->getString(), 'different uuid');
     }
     public function testCreateValueNodeWeak() {
-        $node = $this->sharedFixture['session']->getRootNode()->getNode('tests_read_access_base/numberPropertyNode/jcr:content');
+        $node = $this->sharedFixture['session']->getRootNode()->getNode('tests_write_value_base/numberPropertyNode/jcr:content');
         $value = $this->factory->createValue($node, null, true);
-        $this->assertEquals(PHPCR_PropertyType::WEAKREFERENCE, $value->getType());
-        $this->assertEquals($node->getIdentifier(), $value->getString());
+        $this->assertEquals(PHPCR_PropertyType::WEAKREFERENCE, $value->getType(), 'wrong type');
+        $this->assertEquals($node->getIdentifier(), $value->getString(), 'different uuid');
     }
 
     public function testCreateValueStringType() {
@@ -67,7 +72,7 @@ class jackalope_tests_write_ValueTest_ValueFactory extends jackalope_baseCase {
         $this->assertEquals(date('c', $time), $value->getString());
     }
     public function testCreateValueNodeType() {
-        $node = $this->sharedFixture['session']->getRootNode()->getNode('tests_read_access_base/numberPropertyNode/jcr:content');
+        $node = $this->sharedFixture['session']->getRootNode()->getNode('tests_write_value_base/numberPropertyNode/jcr:content');
         $value = $this->factory->createValue($node, PHPCR_PropertyType::WEAKREFERENCE);
         $this->assertEquals(PHPCR_PropertyType::WEAKREFERENCE, $value->getType());
         $this->assertEquals($node->getIdentifier(), $value->getString());

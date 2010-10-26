@@ -297,6 +297,10 @@ class jackalope_tests_read_ReadTest_NodeReadMethods extends jackalope_baseCase {
         $this->assertTrue($this->node->hasNode('index.txt'));
     }
 
+    public function testHasNodePathTrue() {
+        $this->assertTrue($this->node->hasNode('../numberPropertyNode/jcr:content'));
+    }
+
     public function testHasNodeFalse() {
         $this->assertFalse($this->node->hasNode('foobar'));
     }

@@ -92,11 +92,11 @@ class jackalope_tests_read_ReadTest_SessionReadMethods extends jackalope_baseCas
     public function testGetNode() {
         $node = $this->sharedFixture['session']->getNode('/tests_read_access_base/numberPropertyNode');
         $this->assertTrue($node instanceOf PHPCR_NodeInterface);
-        $this->assertEquals($node->getName(), 'tests_read_access_base');
+        $this->assertEquals('numberPropertyNode', $node->getName());
 
         $node = $this->sharedFixture['session']->getNode('/tests_read_access_base/index.txt');
         $this->assertTrue($node instanceOf PHPCR_NodeInterface);
-        $this->assertEquals($node->getName(), 'index.txt');
+        $this->assertEquals('index.txt', $node->getName());
     }
     /**
      * Get something that is a property and not a node
@@ -216,7 +216,7 @@ class jackalope_tests_read_ReadTest_SessionReadMethods extends jackalope_baseCas
      * @expectedException PHPCR_ItemNotFoundException
      */
     public function testGetNodeByIdentifierItemNotFoundException() {
-        $this->sharedFixture['session']->getNodeByIdentifier("jackalope-api-tests-nonexisting-id");
+        $this->sharedFixture['session']->getNodeByIdentifier('00000000-0000-0000-0000-000000000000'); //FIXME: is the identifier format defined by the repository? how to generically get a valid but inexistent id?
     }
 
     /**
@@ -264,6 +264,7 @@ class jackalope_tests_read_ReadTest_SessionReadMethods extends jackalope_baseCas
         $this->assertTrue($this->sharedFixture['session']->hasCapability('getProperty', $node, array('foo')), '2');
         $property = $this->sharedFixture['session']->getProperty('/tests_read_access_base/numberPropertyNode/jcr:content/foo');
         $this->assertTrue($this->sharedFixture['session']->hasCapability('getNode', $property, array()), '3');
-        $this->assertFalse($this->sharedFixture['session']->hasCapability('inexistentXXX', $property, array()), '4'); //actually, the repository is not required to know, it can always say that the info can not be determined and return true.
+        //$this->assertFalse($this->sharedFixture['session']->hasCapability('inexistentXXX', $property, array()), '4');
+        //actually, the repository is not required to know, it can always say that the info can not be determined and return true. this makes me think that this method is pretty useless...
     }
 }

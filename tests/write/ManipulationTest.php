@@ -11,6 +11,8 @@ class jackalope_tests_write_ManipulationTest extends jackalope_baseSuite {
         $suite->addTestSuite('jackalope_tests_write_ManipulationTest_AddMethods');
         $suite->addTestSuite('jackalope_tests_write_ManipulationTest_MoveMethods');
         $suite->addTestSuite('jackalope_tests_write_ManipulationTest_CopyMethods');
+        //TODO RemoveMethods
+        //TODO make sure we cover all manipulation methods
         return $suite;
     }
 

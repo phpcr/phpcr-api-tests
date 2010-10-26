@@ -7,6 +7,10 @@ require_once(dirname(__FILE__) . '/../../../inc/baseCase.php');
  */
 class jackalope_tests_write_ManipulationTest_CopyMethods extends jackalope_baseCase {
 
+    static public function setupBeforeClass() {
+        parent::setupBeforeClass();
+        self::$staticSharedFixture['ie']->import('write/manipulation/base.xml');
+    }
 
     /**
      * @covers jackalope_Workspace::copy

@@ -10,6 +10,11 @@ class jackalope_tests_write_SetTest_SetValueMethods extends jackalope_baseCase {
     private $node;
     private $property;
 
+    static public function setupBeforeClass() {
+        parent::setupBeforeClass();
+        self::$staticSharedFixture['ie']->import('write/value/base.xml');
+    }
+
     public function setUp() {
         parent::setUp();
         $this->node = $this->sharedFixture['session']->getNode('/tests_write_value_base/numberPropertyNode/jcr:content');
