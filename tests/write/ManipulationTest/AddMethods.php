@@ -24,7 +24,7 @@ class jackalope_tests_write_ManipulationTest_AddMethods extends jackalope_baseCa
      * @covers jackalope_Session::getNode
      */
     public function testAddNode() {
-        $this->markTestSkipped('Find a case where the parent type specifies the type for this node');
+        $this->markTestSkipped('Find a case where the parent type specifies the type for this node'); //with nt:folder, this is also not working with the java jackrabbit, so it seems not to be an implementation issue
         // should take the primaryType of emptyExample
         $this->node->addNode('newNode');
         $this->assertNotNull($this->sharedFixture['session']->getNode($this->node->getPath() . '/newNode'), 'Node newNode was not created');
