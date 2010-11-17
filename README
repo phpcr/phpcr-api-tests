@@ -13,7 +13,7 @@ Usage
 
 The jackalope-api-tests is a suite to test compliance for implementations of
 the java content repository specification.
-http://github.com/k-fish/PHPCR
+https://github.com/jackalope/phpcr
 
 You need to provide a couple of files in order to let the tests detect your
 implementation:
@@ -73,6 +73,11 @@ tests/write contains tests for the base write functionality.
 ****
 TODO
 ****
+
+At the moment, the API tests assume that the storage backend is Jackrabbit.
+This should be refactored out of the test suite and replaced by a method in
+bootstrap.php to load fixtures into the backend.
+
 
 This test classes are not completely covering the specification.
 It would be nice if we were able to run the JSR-283 Technology Compliance
