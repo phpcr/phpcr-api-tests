@@ -13,13 +13,12 @@ class jackalope_tests_read_SearchTest_QueryManager extends jackalope_baseCase {
     }
 
     public function testCreateQuery() {
-        $ret = $this->sharedFixture['qm']->createQuery(null, PHPCR_Query_QueryInterface::JCR_SQL2);
-        $this->assertTrue(is_object($ret));
-        $this->assertTrue($ret instanceof PHPCR_Query_QueryInterface);
+        $ret = $this->sharedFixture['qm']->createQuery(null, PHPCR\Query\QueryInterface::JCR_SQL2);
+        $this->assertType('PHPCR\Query\QueryInterface', $ret);
     }
 
     /**
-     * @expectedException PHPCR_Query_InvalidQueryException
+     * @expectedException PHPCR\Query\InvalidQueryException
      */
     public function testCreateXpathQuery() {
         $this->sharedFixture['qm']->createQuery('/jcr:root', 'xpath');
@@ -29,12 +28,10 @@ class jackalope_tests_read_SearchTest_QueryManager extends jackalope_baseCase {
         $this->sharedFixture['ie']->import('read/search/query.xml');
         try {
             $qnode = $this->sharedFixture['session']->getRootNode()->getNode('queryNode');
-            $this->assertTrue(is_object($qnode));
-            $this->assertTrue($qnode instanceof PHPCR_NodeInterface);
+            $this->assertType('PHPCR\NodeInterface', $qnode);
 
             $query = $this->sharedFixture['qm']->getQuery($qnode);
-            $this->assertTrue(is_object($qnode));
-            $this->assertTrue($query instanceof PHPCR_Query_QueryInterface);
+            $this->assertTrue('PHPCR\Query\QueryInterface', $query);
         } catch(exception $e) {
             //FIXME: finally?
             $this->sharedFixture['ie']->import('read/search/base.xml');
@@ -43,7 +40,7 @@ class jackalope_tests_read_SearchTest_QueryManager extends jackalope_baseCase {
         $this->sharedFixture['ie']->import('read/search/base.xml');
     }
     /**
-     * @expectedException PHPCR_Query_InvalidQueryException
+     * @expectedException PHPCR\Query\InvalidQueryException
      */
     public function testGetQueryInvalid() {
         $this->sharedFixture['qm']->getQuery($this->sharedFixture['session']->getRootNode());

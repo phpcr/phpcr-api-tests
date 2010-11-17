@@ -60,8 +60,7 @@ class jackalope_tests_read_ReadTest_NodeReadMethods extends jackalope_baseCase {
     }
     public function testGetSession() {
         $sess = $this->node->getSession();
-        $this->assertNotNull($sess);
-        $this->assertTrue($sess instanceOf PHPCR_SessionInterface);
+        $this->assertType('PHPCR\SessionInterface', $sess);
         //how to further check if we got the right session?
     }
     public function testIsNew() {
@@ -76,27 +75,25 @@ class jackalope_tests_read_ReadTest_NodeReadMethods extends jackalope_baseCase {
     /*** node specific methods ***/
     public function testGetNodeAbsolutePath() {
         $node = $this->rootNode->getNode('/tests_read_access_base');
-        $this->assertTrue(is_object($node));
-        $this->assertTrue($node instanceOf PHPCR_NodeInterface);
+        $this->assertType('PHPCR\NodeInterface', $node);
         $this->assertEquals('tests_read_access_base', $node->getName());
     }
 
     public function testGetNodeRelativePath() {
         $node = $this->rootNode->getNode('tests_read_access_base');
-        $this->assertTrue(is_object($node));
-        $this->assertTrue($node instanceOf PHPCR_NodeInterface);
+        $this->assertType('PHPCR\NodeInterface', $node);
         $this->assertEquals('tests_read_access_base', $node->getName());
     }
 
     /**
-     * @expectedException PHPCR_PathNotFoundException
+     * @expectedException \PHPCR\PathNotFoundException
      */
     public function testGetNodePathNotFoundException() {
         $this->rootNode->getNode('/foobar');
     }
 
     /**
-     * @expectedException PHPCR_RepositoryException
+     * @expectedException \PHPCR\RepositoryException
      */
     public function testGetNodeRepositoryException() {
         $this->rootNode->getNode('/ /'); //space is not valid in path
@@ -105,11 +102,10 @@ class jackalope_tests_read_ReadTest_NodeReadMethods extends jackalope_baseCase {
     public function testGetNodes() {
         $node1 = $this->rootNode->getNode('tests_read_access_base');
         $iterator = $this->rootNode->getNodes();
-        $this->assertTrue(is_object($iterator));
-        $this->assertTrue($iterator instanceOf PHPCR_NodeIteratorInterface);
+        $this->assertType('Iterator', $iterator);
     }
     /**
-     * @expectedException PHPCR_RepositoryException
+     * @expectedException \PHPCR\RepositoryException
      */
     public function testGetNodesRepositoryException() {
         $this->markTestIncomplete('TODO: Figure how to produce this exception');
@@ -152,19 +148,18 @@ class jackalope_tests_read_ReadTest_NodeReadMethods extends jackalope_baseCase {
 
     public function testGetProperty() {
         $prop = $this->node->getProperty('jcr:created');
-        $this->assertTrue(is_object($prop));
-        $this->assertTrue($prop instanceOf PHPCR_PropertyInterface);
+        $this->assertType('PHPCR\PropertyInterface', $prop);
     }
 
     /**
-     * @expectedException PHPCR_PathNotFoundException
+     * @expectedException \PHPCR\PathNotFoundException
      */
     public function testGetPropertyPathNotFoundException() {
         $this->node->getProperty('foobar');
     }
 
     /**
-     * @expectedException PHPCR_RepositoryException
+     * @expectedException \PHPCR\RepositoryException
      */
     public function testGetPropertyRepositoryException() {
         $this->node->getProperty('//');
@@ -172,8 +167,7 @@ class jackalope_tests_read_ReadTest_NodeReadMethods extends jackalope_baseCase {
 
     public function testGetPropertiesAll() {
         $iterator = $this->node->getProperties();
-        $this->assertTrue(is_object($iterator));
-        $this->assertTrue($iterator instanceOf PHPCR_PropertyIteratorInterface);
+        $this->assertType('Iterator', $iterator);
         $props = array();
         foreach ($iterator as $prop) {
             array_push($props, $prop->getName());
@@ -183,8 +177,7 @@ class jackalope_tests_read_ReadTest_NodeReadMethods extends jackalope_baseCase {
 
     public function testGetPropertiesPattern() {
         $iterator = $this->node->getProperties('jcr:cr*');
-        $this->assertTrue(is_object($iterator));
-        $this->assertTrue($iterator instanceOf PHPCR_PropertyIteratorInterface);
+        $this->assertType('Iterator', $iterator);
         $props = array();
         foreach ($iterator as $prop) {
             array_push($props, $prop->getName());
@@ -195,8 +188,7 @@ class jackalope_tests_read_ReadTest_NodeReadMethods extends jackalope_baseCase {
 
     public function testGetPropertiesNameGlobs() {
         $iterator = $this->node->getProperties(array('jcr:cr*', 'jcr:prim*'));
-        $this->assertTrue(is_object($iterator));
-        $this->assertTrue($iterator instanceOf PHPCR_PropertyIteratorInterface);
+        $this->assertType('Iterator', $iterator);
         $props = array();
         foreach ($iterator as $prop) {
             array_push($props, $prop->getName());
@@ -206,7 +198,7 @@ class jackalope_tests_read_ReadTest_NodeReadMethods extends jackalope_baseCase {
     }
 
     /**
-     * @expectedException PHPCR_RepositoryError
+     * @expectedException \PHPCR\RepositoryError
      */
     public function testGetPropertiesRepositoryError() {
         $this->markTestIncomplete('TODO: Figure how to produce this error');
@@ -214,20 +206,19 @@ class jackalope_tests_read_ReadTest_NodeReadMethods extends jackalope_baseCase {
 
     public function testGetPrimaryItem() {
         $node = $this->node->getNode('index.txt')->getPrimaryItem();
-        $this->assertTrue(is_object($node));
-        $this->assertTrue($node instanceOf PHPCR_NodeInterface);
+        $this->assertType('PHPCR\NodeInterface', $node);
         $this->assertEquals('/tests_read_access_base/index.txt/jcr:content', $node->getPath());
     }
 
     /**
-     * @expectedException PHPCR_ItemNotFoundException
+     * @expectedException \PHPCR\ItemNotFoundException
      */
     public function testGetPrimaryItemItemNotFound() {
         $this->rootNode->getPrimaryItem();
     }
 
     /**
-     * @expectedException PHPCR_RepositoryException
+     * @expectedException \PHPCR\RepositoryException
      */
     public function testGetPrimaryItemRepositoryException() {
         $this->markTestIncomplete('TODO: Figure how to produce this error');
@@ -246,7 +237,7 @@ class jackalope_tests_read_ReadTest_NodeReadMethods extends jackalope_baseCase {
     }
 
     /**
-     * @expectedException PHPCR_RepositoryException
+     * @expectedException \PHPCR\RepositoryException
      */
     public function testGetIndexRepositoryException() {
         $this->markTestIncomplete('TODO: Figure how to produce this error');
@@ -255,8 +246,7 @@ class jackalope_tests_read_ReadTest_NodeReadMethods extends jackalope_baseCase {
     public function testGetReferencesAll() {
         $ref = $this->rootNode->getNode('tests_read_access_base/idExample');
         $iterator = $ref->getReferences();
-        $this->assertTrue(is_object($iterator));
-        $this->assertTrue($iterator instanceOf PHPCR_PropertyIteratorInterface);
+        $this->assertType('Iterator', $iterator);
 
         $this->markTestIncomplete('TODO: Have a referenced node');
 
@@ -273,8 +263,7 @@ class jackalope_tests_read_ReadTest_NodeReadMethods extends jackalope_baseCase {
 
     public function testGetWeakReferencesAll() {
         $iterator = $this->node->getWeakReferences();
-        $this->assertTrue(is_object($iterator));
-        $this->assertTrue($iterator instanceOf PHPCR_PropertyIteratorInterface);
+        $this->assertType('Iterator', $iterator);
         $this->markTestIncomplete('TODO: Have a weakly referenced node');
     }
 
@@ -283,10 +272,9 @@ class jackalope_tests_read_ReadTest_NodeReadMethods extends jackalope_baseCase {
     }
     public function testGetSharedSetUnreferenced() {
         $iterator = $this->node->getSharedSet();
-        $this->assertTrue(is_object($iterator));
-        $this->assertTrue($iterator instanceOf PHPCR_PropertyIteratorInterface);
-        $this->assertTrue($iterator->hasNext());
-        $node = $iterator->next();
+        $this->assertType('Iterator', $iterator);
+        $this->assertTrue($iterator->valid());
+        $node = $iterator->current();
         $this->assertEquals($node, $this->node);
     }
     public function testGetSharedSetReferenced() {
@@ -323,7 +311,7 @@ class jackalope_tests_read_ReadTest_NodeReadMethods extends jackalope_baseCase {
     }
 
     /**
-     * @expectedException PHPCR_RepositoryException
+     * @expectedException \PHPCR\RepositoryException
      */
     public function testHasPropertyRepositoryException() {
         $this->assertTrue($this->node->hasProperty('/foobar'));

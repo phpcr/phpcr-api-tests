@@ -35,7 +35,7 @@ class jackalope_tests_write_ManipulationTest_MoveMethods extends jackalope_baseC
 
     /**
      * @covers Jackalope_Session::move
-     * @expectedException PHPCR_ItemExistsException
+     * @expectedException \PHPCR\ItemExistsException
      */
     public function testSessionMoveDstExists() {
         $session = $this->sharedFixture['session'];

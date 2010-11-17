@@ -17,15 +17,13 @@ class jackalope_tests_read_SearchTest_Row extends jackalope_baseCase {
         $query = $this->sharedFixture['qm']->createQuery('/*/element(tests_read_search_base, nt:folder)', 'xpath');
         $qr = $query->execute();
         //sanity check
-        $this->assertTrue(is_object($qr));
-        $this->assertTrue($qr instanceof PHPCR_Query_QueryResultInterface);
+        $this->assertType('PHPCR\Query\QueryResultInterface', $qr);
 
         $rs = $qr->getRows();
         $rs->rewind();
         $this->row = $rs->current();
 
-        $this->assertTrue(is_object($this->row));
-        $this->assertTrue($this->row instanceof PHPCR_Query_RowInterface);
+        $this->assertType('PHPCR\Query\RowInterface', $this->row);
     }
 
     public function testRowGetValues() {
@@ -33,15 +31,14 @@ class jackalope_tests_read_SearchTest_Row extends jackalope_baseCase {
         $this->assertType('array', $ret);
 
         foreach($ret as $value) {
-            $this->assertTrue($value instanceof PHPCR_ValueInterface);
+            $this->assertNotNull($value);
         }
     }
 
     public function testRowGetValue() {
         foreach(jackalope_tests_read_SearchTest_QueryResults::$expect as $propName) {
             $val = $this->row->getValue($propName);
-            $this->assertTrue(is_object($val));
-            $this->assertTrue($val instanceof PHPCR_ValueInterface);
+            $this->assertNotNull($val);
 
             switch($propName) {
                 case 'jcr:createdBy':
@@ -49,9 +46,8 @@ class jackalope_tests_read_SearchTest_Row extends jackalope_baseCase {
                     //TODO: seems not to be implemented in alpha5 or null for some other reason. whatever
                     break;
                 case 'jcr:created':
-                    $str = $val->getString();
                     //2009-07-07T14:35:06.955+02:00
-                    list($y, $m, $dusw) = split('-',$str);
+                    list($y, $m, $dusw) = split('-',$val);
                     list($d, $usw) = split('T', $dusw);
                     $this->assertTrue($y > 0);
                     $this->assertTrue($m > 0);
@@ -62,12 +58,11 @@ class jackalope_tests_read_SearchTest_Row extends jackalope_baseCase {
                     break;
                 case 'jcr:primaryType':
                     //nt:folder - depends on the search query
-                    $str = $val->getString();
-                    $this->assertEquals('nt:folder', $str);
+                    $this->assertEquals('nt:folder', $val);
                     break;
                 case 'jcr:path':
                     $str = $val->getString();
-                    $this->assertEquals('/tests_read_search_base', $str);
+                    $this->assertEquals('/tests_read_search_base', $val);
                     break;
                 case 'jcr:score':
                     //for me, it was 1788 but i guess that is highly implementation dependent

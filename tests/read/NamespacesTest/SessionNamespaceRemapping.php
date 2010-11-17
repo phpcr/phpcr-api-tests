@@ -19,14 +19,14 @@ class jackalope_tests_read_NamespacesTest_SessionNamespaceRemapping extends jack
     }
 
     /**
-     * @expectedException PHPCR_NamespaceException
+     * @expectedException \PHPCR\NamespaceException
      */
     public function testSetNamespacePrefixXml() {
         $this->sharedFixture['session']->setNamespacePrefix('xmlwhatever', 'http://www.jcp.org/jcr/mix/1.0');
     }
 
     /**
-     * @expectedException PHPCR_NamespaceException
+     * @expectedException \PHPCR\NamespaceException
      */
     public function testSetNamespaceUnregistered() {
         $this->markTestSkipped('TODO: jackrabbit just adds the namespace URI if it is not yet existing. Spec tells us "A NamespaceException will also be thrown if the specified uri is not among those registered in the NamespaceRegistry."');
@@ -47,7 +47,7 @@ class jackalope_tests_read_NamespacesTest_SessionNamespaceRemapping extends jack
     }
 
     /**
-     * @expectedException PHPCR_NamespaceException
+     * @expectedException \PHPCR\NamespaceException
      */
     public function testGetNamespaceURINonExistent() {
         $this->sharedFixture['session']->getNamespaceURI('http://nonexistent/2.0');
@@ -59,7 +59,7 @@ class jackalope_tests_read_NamespacesTest_SessionNamespaceRemapping extends jack
     }
 
     /**
-     * @expectedException PHPCR_NamespaceException
+     * @expectedException \PHPCR\NamespaceException
      */
     public function testGetNamespacePrefixNonExistent() {
         $this->sharedFixture['session']->getNamespacePrefix('nonexistent');

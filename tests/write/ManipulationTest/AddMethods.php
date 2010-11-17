@@ -51,13 +51,13 @@ class jackalope_tests_write_ManipulationTest_AddMethods extends jackalope_baseCa
 
     /**
      * @covers jackalope_Node::addNode
-     * @expectedException \PHPCR_NodeType_ConstraintViolationException
+     * @expectedException \PHPCR\NodeType\ConstraintViolationException
      */
     public function testAddNodeMissingType() {
         $this->node->addNode('newNode');
     }
     /**
-     * @expectedException \PHPCR_NodeType_NoSuchNodeTypeException
+     * @expectedException \PHPCR\NodeType\NoSuchNodeTypeException
      */
     public function testAddNodeWithInexistingType() {
         $this->node->addNode('newFileNode', 'inexistenttype');
@@ -65,7 +65,7 @@ class jackalope_tests_write_ManipulationTest_AddMethods extends jackalope_baseCa
     }
 
     /**
-     * @expectedException \PHPCR_ItemExistsException
+     * @expectedException \PHPCR\ItemExistsException
      */
     public function testAddNodeExisting() {
         $name = $this->node->getName();
@@ -75,7 +75,7 @@ class jackalope_tests_write_ManipulationTest_AddMethods extends jackalope_baseCa
 
     /**
      * try to add a node below a not existing node.
-     * @expectedException \PHPCR_PathNotFoundException
+     * @expectedException \PHPCR\PathNotFoundException
      */
     public function testAddNodePathNotFound() {
         $parent = $this->node->addNode('nonExistent/newNode', 'nt:unstructured');
@@ -84,14 +84,14 @@ class jackalope_tests_write_ManipulationTest_AddMethods extends jackalope_baseCa
     /**
      * try to add a node below a property
      *
-     * @expectedException \PHPCR_NodeType_ConstraintViolationException
+     * @expectedException \PHPCR\NodeType\ConstraintViolationException
      */
     public function testAddNodeToProperty() {
         $this->node->addNode('../numberPropertyNode/jcr:created/name', 'nt:unstructured');
     }
 
     /**
-     * @expectedException \PHPCR_RepositoryException
+     * @expectedException \PHPCR\RepositoryException
      */
     public function testAddNodeWithIndex() {
         $this->node->addNode('name[3]', 'nt:unstructured');

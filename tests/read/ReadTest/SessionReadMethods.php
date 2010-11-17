@@ -22,8 +22,7 @@ class jackalope_tests_read_ReadTest_SessionReadMethods extends jackalope_baseCas
     //4.4.3
     public function testGetRepository() {
         $rep = $this->sharedFixture['session']->getRepository();
-        $this->assertTrue(is_object($rep));
-        $this->assertTrue($rep instanceOf PHPCR_RepositoryInterface);
+        $this->assertType('PHPCR\RepositoryInterface', $rep);
     }
 
     //4.4.1
@@ -56,18 +55,18 @@ class jackalope_tests_read_ReadTest_SessionReadMethods extends jackalope_baseCas
     //4.5.1
     public function testGetWorkspace() {
         $workspace = $this->sharedFixture['session']->getWorkspace();
-        $this->assertTrue($workspace instanceOf PHPCR_WorkspaceInterface);
+        $this->assertType('PHPCR\WorkspaceInterface', $workspace);
     }
 
     //5.1.1
     public function testGetRootNode() {
         $node = $this->sharedFixture['session']->getRootNode();
-        $this->assertTrue($node instanceOf PHPCR_NodeInterface);
+        $this->assertType('PHPCR\NodeInterface', $node);
         $this->assertEquals($node->getPath(), '/');
     }
 
     /**
-     * @expectedException PHPCR_RepositoryException
+     * @expectedException \PHPCR\RepositoryException
      */
     public function testGetRootNodeRepositoryException() {
         $this->markTestIncomplete('TODO: Figure out how to test this');
@@ -76,38 +75,38 @@ class jackalope_tests_read_ReadTest_SessionReadMethods extends jackalope_baseCas
     //5.1.3, 5.1.6
     public function testGetItem() {
         $node = $this->sharedFixture['session']->getItem('/tests_read_access_base');
-        $this->assertTrue($node instanceOf PHPCR_NodeInterface);
+        $this->assertType('PHPCR\NodeInterface', $node);
         $this->assertEquals($node->getName(), 'tests_read_access_base');
 
         $node = $this->sharedFixture['session']->getItem('/tests_read_access_base/index.txt');
-        $this->assertTrue($node instanceOf PHPCR_NodeInterface);
+        $this->assertType('PHPCR\NodeInterface', $node);
         $this->assertEquals($node->getName(), 'index.txt');
 
         $prop = $this->sharedFixture['session']->getItem('/tests_read_access_base/numberPropertyNode/jcr:content/foo');
-        $this->assertTrue($prop instanceOf PHPCR_PropertyInterface);
+        $this->assertType('PHPCR\PropertyInterface', $prop);
         $this->assertEquals($prop->getName(), 'foo');
         $this->assertEquals($prop->getString(), 'bar');
     }
     //5.1.3, 5.1.6
     public function testGetNode() {
         $node = $this->sharedFixture['session']->getNode('/tests_read_access_base/numberPropertyNode');
-        $this->assertTrue($node instanceOf PHPCR_NodeInterface);
+        $this->assertType('PHPCR\NodeInterface', $node);
         $this->assertEquals('numberPropertyNode', $node->getName());
 
         $node = $this->sharedFixture['session']->getNode('/tests_read_access_base/index.txt');
-        $this->assertTrue($node instanceOf PHPCR_NodeInterface);
+        $this->assertType('PHPCR\NodeInterface', $node);
         $this->assertEquals('index.txt', $node->getName());
     }
     /**
      * Get something that is a property and not a node
-     * @expectedException PHPCR_PathNotFoundException
+     * @expectedException \PHPCR\PathNotFoundException
      */
     public function testGetNodeInvalid() {
         $this->sharedFixture['session']-> getNode('/tests_read_access_base/idExample/jcr:primaryType');
     }
     /**
      * Get something that is a node and not a property
-     * @expectedException PHPCR_PathNotFoundException
+     * @expectedException \PHPCR\PathNotFoundException
      */
     public function testGetPropertyInvalid() {
         $this->sharedFixture['session']-> getProperty('/tests_read_access_base/idExample');
@@ -116,28 +115,28 @@ class jackalope_tests_read_ReadTest_SessionReadMethods extends jackalope_baseCas
     //5.1.3, 5.1.6
     public function testGetProperty() {
         $prop = $this->sharedFixture['session']->getProperty('/tests_read_access_base/idExample/jcr:primaryType');
-        $this->assertTrue($prop instanceOf PHPCR_PropertyInterface);
+        $this->assertType('PHPCR\PropertyInterface', $prop);
         $this->assertEquals($prop->getName(), 'jcr:primaryType');
         $this->assertEquals($prop->getString(), 'nt:file');
     }
 
     /**
      * it is forbidden to call getItem on the session with a relative path
-     * @expectedException PHPCR_PathNotFoundException
+     * @expectedException \PHPCR\PathNotFoundException
      */
     public function testGetItemRelativePathException() {
         $node = $this->sharedFixture['session']->getItem('tests_read_access_base');
     }
 
     /**
-     * @expectedException PHPCR_PathNotFoundException
+     * @expectedException \PHPCR\PathNotFoundException
      */
     public function testGetItemPathNotFound() {
         $this->sharedFixture['session']->getItem('/foobarmooh');
     }
 
     /**
-     * @expectedException PHPCR_RepositoryException
+     * @expectedException \PHPCR\RepositoryException
      */
      public function testGetItemRepositoryException() {
          $this->sharedFixture['session']->getItem('//');
@@ -149,13 +148,13 @@ class jackalope_tests_read_ReadTest_SessionReadMethods extends jackalope_baseCas
         $this->assertFalse($this->sharedFixture['session']->itemExists('/foobar'));
     }
     /**
-     * @expectedException PHPCR_RepositoryException
+     * @expectedException \PHPCR\RepositoryException
      */
     public function testItemExistsRelativePath() {
         $this->sharedFixture['session']->itemExists('tests_read_access_base');
     }
     /**
-     * @expectedException PHPCR_RepositoryException
+     * @expectedException \PHPCR\RepositoryException
      */
     public function testItemExistsInvalidPath() {
         $this->sharedFixture['session']->itemExists('//');
@@ -169,13 +168,13 @@ class jackalope_tests_read_ReadTest_SessionReadMethods extends jackalope_baseCas
         $this->assertFalse($this->sharedFixture['session']->nodeExists('/tests_read_access_base/numberPropertyNode/jcr:content/foo'));
     }
     /**
-     * @expectedException PHPCR_RepositoryException
+     * @expectedException \PHPCR\RepositoryException
      */
     public function testNodeExistsRelativePath() {
         $this->sharedFixture['session']->nodeExists('tests_read_access_base');
     }
     /**
-     * @expectedException PHPCR_RepositoryException
+     * @expectedException \PHPCR\RepositoryException
      */
     public function testNodeExistsInvalidPath() {
         $this->sharedFixture['session']->nodeExists('//');
@@ -187,13 +186,13 @@ class jackalope_tests_read_ReadTest_SessionReadMethods extends jackalope_baseCas
         $this->assertFalse($this->sharedFixture['session']->propertyExists('/tests_read_access_base'));
     }
     /**
-     * @expectedException PHPCR_RepositoryException
+     * @expectedException \PHPCR\RepositoryException
      */
     public function testPropertyExistsRelativePath() {
         $this->sharedFixture['session']->propertyExists('tests_read_access_base/numberPropertyNode/jcr:content/foo');
     }
     /**
-     * @expectedException PHPCR_RepositoryException
+     * @expectedException \PHPCR\RepositoryException
      */
     public function testPropertyExistsInvalidPath() {
         $this->sharedFixture['session']->propertyExists('//');
@@ -201,19 +200,19 @@ class jackalope_tests_read_ReadTest_SessionReadMethods extends jackalope_baseCas
 
     public function testGetNodeByIdentifier() {
         $node = $this->sharedFixture['session']->getNodeByIdentifier('842e61c0-09ab-42a9-87c0-308ccc90e6f4');
-        $this->assertTrue($node instanceOf PHPCR_NodeInterface);
+        $this->assertType('PHPCR\NodeInterface', $node);
         $this->assertEquals('/tests_read_access_base/idExample', $node->getPath());
     }
 
     /**
-     * @expectedException PHPCR_RepositoryException
+     * @expectedException \PHPCR\RepositoryException
      */
     public function testGetNodeByIdentifierRepositoryException() {
         $this->sharedFixture['session']->getNodeByIdentifier('foo');
     }
 
     /**
-     * @expectedException PHPCR_ItemNotFoundException
+     * @expectedException \PHPCR\ItemNotFoundException
      */
     public function testGetNodeByIdentifierItemNotFoundException() {
         $this->sharedFixture['session']->getNodeByIdentifier('00000000-0000-0000-0000-000000000000'); //FIXME: is the identifier format defined by the repository? how to generically get a valid but inexistent id?
@@ -237,7 +236,7 @@ class jackalope_tests_read_ReadTest_SessionReadMethods extends jackalope_baseCas
         $ses = $this->assertSession($this->sharedFixture['config']);
         $this->assertTrue($ses->isLive());
         $ses->logout();
-        $this->assertTrue($ses instanceOf PHPCR_SessionInterface);
+        $this->assertType('PHPCR\SessionInterface', $ses);
         $this->assertFalse($ses->isLive());
     }
 
@@ -246,7 +245,7 @@ class jackalope_tests_read_ReadTest_SessionReadMethods extends jackalope_baseCas
         $this->sharedFixture['session']->checkPermission('/tests_read_access_base/numberPropertyNode/jcr:content/foo', 'read');
     }
     /**
-     * @expectedException PHPCR_AccessControlException
+     * @expectedException \PHPCR\AccessControlException
      */
     public function testCheckPermissionAccessControlException() {
         $this->markTestIncomplete('TODO: how to produce a permission exception?');

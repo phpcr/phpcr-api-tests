@@ -36,12 +36,11 @@ class jackalope_tests_read_ReadTest_WorkspaceReadMethods extends jackalope_baseC
 
     public function testGetQueryManager() {
         $qm = $this->workspace->getQueryManager();
-        $this->assertTrue(is_object($qm));
-        $this->assertTrue($qm instanceOf PHPCR_Query_QueryManagerInterface);
+        $this->assertType('PHPCR\Query\QueryManagerInterface', $qm);
     }
 
     /**
-     * @expectedException PHPCR_RepositoryException
+     * @expectedException PHPCR\RepositoryException
      */
     public function testGetQueryManagerRepositoryException() {
         $this->markTestIncomplete('TODO: Figure how to produce this exception.');
@@ -49,12 +48,11 @@ class jackalope_tests_read_ReadTest_WorkspaceReadMethods extends jackalope_baseC
 
     public function testGetNamespaceRegistry() {
         $nr = $this->workspace->getNamespaceRegistry();
-        $this->assertTrue(is_object($nr));
-        $this->assertTrue($nr instanceOf PHPCR_NamespaceRegistryInterface);
+        $this->assertType('PHPCR\NamespaceRegistryInterface', $nr);
     }
 
     /**
-     * @expectedException PHPCR_RepositoryException
+     * @expectedException PHPCR\RepositoryException
      */
     public function testGetNamespaceRegistryRepositoryException() {
         $this->markTestIncomplete('TODO: Figure how to produce this exception.');
@@ -62,12 +60,11 @@ class jackalope_tests_read_ReadTest_WorkspaceReadMethods extends jackalope_baseC
 
     public function testGetNodeTypeManager() {
         $ntm = $this->workspace->getNodeTypeManager();
-        $this->assertTrue(is_object($ntm));
-        $this->assertTrue($ntm instanceOf PHPCR_NodeType_NodeTypeManagerInterface);
+        $this->assertType('PHPCR\NodeType\NodeTypeManagerInterface', $ntm);
     }
 
     /**
-     * @expectedException PHPCR_RepositoryException
+     * @expectedException PHPCR\RepositoryException
      */
     public function testGetNodeTypeManagerRepositoryException() {
         $this->markTestIncomplete('TODO: Figure how to produce this exception.');
@@ -76,12 +73,12 @@ class jackalope_tests_read_ReadTest_WorkspaceReadMethods extends jackalope_baseC
     //4.5.4
     public function testGetAccessibleWorkspaceNames() {
         $names = $this->workspace->getAccessibleWorkspaceNames();
-        $this->assertTrue(is_array($names));
+        $this->assertType('array', $names);
         $this->assertContains($this->sharedFixture['config']['workspace'], $names);
     }
 
     /**
-     * @expectedException PHPCR_RepositoryException
+     * @expectedException PHPCR\RepositoryException
      */
     public function testGetAccessibleWorkspaceNamesRepositoryException() {
         $this->markTestIncomplete('TODO: Figure how to produce this exception.');

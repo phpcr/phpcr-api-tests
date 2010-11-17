@@ -11,15 +11,14 @@ class jackalope_tests_read_SearchTest_QueryObjectXpath extends jackalope_baseCas
     public function testExecute() {
         $query = $this->sharedFixture['qm']->createQuery('//idExample[jcr:mimeType="text/plain"]', 'xpath');
         $qr = $query->execute();
-        $this->assertTrue(is_object($qr));
-        $this->assertTrue($qr instanceof PHPCR_Query_QueryResultInterface);
+        $this->assertType('PHPCR\Query\QueryResultInterface', $qr);
         //content of result is tested in QueryResults
     }
 
     /**
-     * @expectedException PHPCR_Query_InvalidQueryException
+     * @expectedException PHPCR\Query\InvalidQueryException
      *
-     * the doc claims there would just be a phpCR_RepositoryException
+     * the doc claims there would just be a PHPCR\RepositoryException
      * it makes sense that there is a InvalidQueryException
      */
     public function testExecuteInvalid() {
@@ -39,7 +38,7 @@ class jackalope_tests_read_SearchTest_QueryObjectXpath extends jackalope_baseCas
     }
     /**
      * a transient query has no stored query path
-     * @expectedException PHPCR_ItemNotFoundException
+     * @expectedException PHPCR\ItemNotFoundException
      */
     public function testGetStoredQueryPathItemNotFound() {
         $qstr = '//idExample[jcr:mimeType="text/plain"]';
@@ -64,12 +63,10 @@ class jackalope_tests_read_SearchTest_QueryObjectXpath extends jackalope_baseCas
         $this->sharedFixture['ie']->import('query.xml');
         try {
             $qnode = $this->sharedFixture['session']->getRootNode()->getNode('queryNode');
-            $this->assertTrue(is_object($qnode));
-            $this->assertTrue($qnode instanceof PHPCR_NodeInterface);
+            $this->assertType('PHPCR\NodeInterface', $qnode);
 
             $query = $this->sharedFixture['qm']->getQuery($qnode);
-            $this->assertTrue(is_object($qnode));
-            $this->assertTrue($query instanceof PHPCR_Query_QueryInterface);
+            $this->assertType('PHPCR\Query\QueryInterface', $query);
             //same as QueryManager::testGetQuery
 
             $p = $query->getStoredQueryPath();

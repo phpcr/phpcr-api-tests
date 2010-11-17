@@ -1,7 +1,7 @@
 <?php
 require_once(dirname(__FILE__) . '/../../../inc/baseCase.php');
 
-// According to PHPCR_BinaryInterface
+// According to PHPCR\BinaryInterface
 
 class jackalope_tests_read_ReadTest_BinaryReadMethods extends jackalope_baseCase {
     protected $node;
@@ -17,7 +17,7 @@ class jackalope_tests_read_ReadTest_BinaryReadMethods extends jackalope_baseCase
         parent::setUp();
         $this->node = $this->sharedFixture['session']->getRootNode()->getNode('tests_read_access_base/numberPropertyNode/jcr:content');
         $this->binary = $this->node->getProperty('jcr:data')->getBinary();
-        $this->assertTrue($this->binary instanceOf PHPCR_BinaryInterface);
+        $this->assertType('PHPCR\BinaryInterface', $this->binary);
     }
 
     public function testDispose() {
@@ -30,7 +30,7 @@ class jackalope_tests_read_ReadTest_BinaryReadMethods extends jackalope_baseCase
         $this->assertEquals(392, $size);
     }
 
-    /** @expectedException PHPCR_BadMethodCallException */
+    /** @expectedException PHPCR\BadMethodCallException */
     public function testGetSizeDisposed() {
         $this->binary->dispose();
         $this->binary->getSize();
@@ -43,7 +43,7 @@ class jackalope_tests_read_ReadTest_BinaryReadMethods extends jackalope_baseCase
         $this->assertEquals($this->binarystring, $bytes);
     }
 
-    /** @expectedException PHPCR_BadMethodCallException */
+    /** @expectedException PHPCR\BadMethodCallException */
     public function testGetStreamDisposed() {
         $this->binary->dispose();
         $this->binary->getStream();
@@ -56,13 +56,13 @@ class jackalope_tests_read_ReadTest_BinaryReadMethods extends jackalope_baseCase
         $this->assertEquals($this->binarystring, $bytes);
     }
 
-    /** @expectedException PHPCR_InvalidArgumentException */
+    /** @expectedException PHPCR\InvalidArgumentException */
     public function testReadInvalidArgument() {
         $bytes='';
         $this->binary->read($bytes, -1); //start from negative index
     }
 
-    /** @expectedException PHPCR_BadMethodCallException */
+    /** @expectedException PHPCR\BadMethodCallException */
     public function testReadDisposed() {
         $this->binary->dispose();
         $bytes='';

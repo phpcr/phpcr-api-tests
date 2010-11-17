@@ -7,8 +7,7 @@ class jackalope_tests_read_AccessTest_Repository extends jackalope_baseCase {
     // 4.1 Repository
     public function testRepository() {
         $rep = getRepository($this->sharedFixture['config']);
-        $this->assertTrue(is_object($rep));
-        $this->assertTrue($rep instanceOf PHPCR_RepositoryInterface);
+        $this->assertType('PHPCR\RepositoryInterface', $rep);
     }
 
     public function testLoginSession() {
@@ -43,7 +42,7 @@ class jackalope_tests_read_AccessTest_Repository extends jackalope_baseCase {
     }
 
     /**
-     * @expectedException phpCR_LoginException
+     * @expectedException \PHPCR\LoginException
      */
     public function testLoginException() {
         $this->markTestSkipped('TODO: Figure how to make a login fail');
@@ -54,7 +53,7 @@ class jackalope_tests_read_AccessTest_Repository extends jackalope_baseCase {
     }
 
     /**
-     * @expectedException phpCR_NoSuchWorkspaceException
+     * @expectedException PHPCR\NoSuchWorkspaceException
      */
     public function testLoginNoSuchWorkspace() {
         $cfg = $this->sharedFixture['config'];
@@ -63,7 +62,7 @@ class jackalope_tests_read_AccessTest_Repository extends jackalope_baseCase {
     }
 
     /**
-     * @expectedException phpCR_RepositoryException
+     * @expectedException \PHPCR\RepositoryException
      */
     public function testLoginRepositoryException() {
         $cfg = $this->sharedFixture['config'];

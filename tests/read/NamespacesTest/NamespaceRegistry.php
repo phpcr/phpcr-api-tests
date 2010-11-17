@@ -25,7 +25,7 @@ class jackalope_tests_read_NamespacesTest_NamespaceRegistry extends jackalope_ba
 
     public function testGetURIs() {
         $ret = $this->nr->getURIs();
-        $this->assertTrue(is_array($ret));
+        $this->assertType('array', $ret);
         $this->assertTrue(count($ret) >= count($this->nsBuiltIn));
         //we test in getURI / getPrefix if the names match
     }
@@ -38,14 +38,14 @@ class jackalope_tests_read_NamespacesTest_NamespaceRegistry extends jackalope_ba
     }
 
     /**
-     * @expectedException PHPCR_NamespaceException
+     * @expectedException \PHPCR\NamespaceException
      */
     public function testGetURINamespaceException() {
         $this->nr->getURI('thisshouldnotexist');
     }
 
     /**
-     * @expectedException PHPCR_RepositoryException
+     * @expectedException \PHPCR\RepositoryException
      */
     public function testGetURIRepositoryException() {
         $this->nr->getURI('in:valid');
@@ -59,7 +59,7 @@ class jackalope_tests_read_NamespacesTest_NamespaceRegistry extends jackalope_ba
     }
 
     /**
-     * @expectedException PHPCR_NamespaceException
+     * @expectedException \PHPCR\NamespaceException
      */
     public function testGetPrefixNamespaceException() {
         $this->nr->getPrefix('http://thisshouldnotexist.org/0.0');
@@ -83,19 +83,19 @@ class jackalope_tests_read_NamespacesTest_NamespaceRegistry extends jackalope_ba
     }
 
     /**
-     * @expectedException PHPCR_NamespaceException
+     * @expectedException \PHPCR\NamespaceException
      */
     public function testRegisterNamespaceException() {
         $this->nr->registerNamespace('valid', $this->nsBuiltIn['jcr']);
     }
     /**
-     * @expectedException PHPCR_RepositoryException
+     * @expectedException \PHPCR\RepositoryException
      */
     public function testRegisterNamespacePrefixRepositoryException() {
         $this->nr->registerNamespace('in:valid', 'http://a_new_namespace');
     }
     /**
-     * @expectedException PHPCR_NamespaceException
+     * @expectedException \PHPCR\NamespaceException
      */
     public function testUnregisterNamespaceException() {
         $this->nr->unregisterNamespace('http://thisshouldnotexist.org/0.0');

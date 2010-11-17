@@ -18,8 +18,7 @@ class jackalope_tests_read_SearchTest_QueryResults extends jackalope_baseCase {
         $this->query = $this->sharedFixture['qm']->createQuery('//element(*, nt:folder)', 'xpath');
         $this->qr = $this->query->execute();
         //sanity check
-        $this->assertTrue(is_object($this->qr));
-        $this->assertTrue($this->qr instanceof PHPCR_Query_QueryResultInterface);
+        $this->assertType('PHPCR\Query\QueryResultInterface', $this->qr);
     }
 
     public function testBindValue() {
@@ -46,14 +45,13 @@ class jackalope_tests_read_SearchTest_QueryResults extends jackalope_baseCase {
     public function testGetRows() {
         $ret = $this->qr->getRows();
 
-        $this->assertTrue(is_object($ret));
-        $this->assertTrue($ret instanceof PHPCR_Query_RowIteratorInterface);
+        $this->assertType('PHPCR\Query\RowIteratorInterface', $ret);
 
         $exptsize = $ret->getSize();
         $num = 0;
         foreach($ret as $row) {
             $num++;
-            $this->assertTrue($row instanceof PHPCR_Query_RowInterface);
+            $this->assertType('PHPCR\Query\RowInterface', $row);
         }
 
         $this->assertEquals($exptsize, $num);
@@ -70,13 +68,12 @@ class jackalope_tests_read_SearchTest_QueryResults extends jackalope_baseCase {
     public function testGetNodes() {
         $ret = $this->qr->getNodes();
 
-        $this->assertTrue(is_object($ret));
-        $this->assertTrue($ret instanceof PHPCR_NodeIteratorInterface);
+        $this->assertType('PHPCR\NodeIteratorInterface', $ret);
         $exptsize = $ret->getSize();
         $num = 0;
         foreach($ret as $node) {
             $num++;
-            $this->assertTrue($node instanceof PHPCR_NodeInterface);
+            $this->assertType('PHPCR\NodeInterface', $node);
         }
         $this->assertEquals($exptsize, $num);
     }
