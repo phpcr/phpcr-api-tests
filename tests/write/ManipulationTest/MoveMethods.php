@@ -26,7 +26,7 @@ class jackalope_tests_write_ManipulationTest_MoveMethods extends jackalope_baseC
 
         // node was moved
         $movedNode = $session->getNode($dst.'/'.basename($src));
-        $this->assertTrue(!is_null($movedNode), 'Cannot find moved node');
+        $this->assertNotNull($movedNode, 'Cannot find moved node');
 
         // uuid unchanged
         $this->assertEquals($srcUuid, $movedNode->getIdentifier(), 'UUID of referenceable was modified during move');
@@ -57,7 +57,7 @@ class jackalope_tests_write_ManipulationTest_MoveMethods extends jackalope_baseC
         $workspace->move($src, $dst);
 
         // session was updated as well
-        $this->assertTrue(!is_null($session->getNode($dst.'/'.basename($src))));
+        $this->assertNotNull($session->getNode($dst.'/'.basename($src)));
 
         // uuid unchanged
         $this->assertEquals($srcUuid, $movedNode->getIdentifier(), 'UUID of referenceable was modified during move');

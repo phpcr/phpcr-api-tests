@@ -38,7 +38,7 @@ class jackalope_tests_read_ReadTest_SessionReadMethods extends jackalope_baseCas
         $cr->setAttribute('foo', 'bar');
         $session = $this->assertSession($this->sharedFixture['config'], $cr);
         $attrs = $session->getAttributeNames();
-        $this->assertTrue(is_array($attrs));
+        $this->assertType('array', $attrs);
         $this->assertContains('foo', $attrs);
     }
 
@@ -48,8 +48,7 @@ class jackalope_tests_read_ReadTest_SessionReadMethods extends jackalope_baseCas
         $cr->setAttribute('foo', 'bar');
         $session = $this->assertSession($this->sharedFixture['config'], $cr);
         $val = $session->getAttribute('foo');
-        $this->assertTrue(is_string($val));
-        $this->assertEquals($val, 'bar');
+        $this->assertSame($val, 'bar');
     }
 
     //4.5.1

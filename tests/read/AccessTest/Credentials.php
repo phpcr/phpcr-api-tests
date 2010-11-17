@@ -20,8 +20,7 @@ class jackalope_tests_read_AccessTest_Credentials extends jackalope_baseCase {
     public function testGetPassword() {
         $cr = $this->assertSimpleCredentials(self::CR_USER, self::CR_PASS);
         $pass = $cr->getPassword();
-        $this->assertTrue(is_string($pass));
-        $this->assertEquals($pass, 'bar');
+        $this->assertSame($pass, 'bar');
     }
 
     public function testAttributes() {
@@ -31,7 +30,7 @@ class jackalope_tests_read_AccessTest_Credentials extends jackalope_baseCase {
         $cr->setAttribute($attrName, $attrValue);
         $this->assertEquals($attrValue, $cr->getAttribute($attrName));
         $attrs = $cr->getAttributeNames();
-        $this->assertTrue(is_array($attrs));
+        $this->assertType('array', $attrs);
         $this->assertContains($attrName, $attrs);
         $cr->removeAttribute($attrName);
         $this->assertNull($cr->getAttribute($attrName));

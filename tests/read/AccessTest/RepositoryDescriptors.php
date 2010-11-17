@@ -27,7 +27,7 @@ class jackalope_tests_read_AccessTest_RepositoryDescriptors extends jackalope_ba
     public function testDescriptorKeys() {
         $rep = getRepository($this->sharedFixture['config']);
         $keys = $rep->getDescriptorKeys();
-        $this->assertTrue(is_array($keys));
+        $this->assertType('array', $keys);
         $this->assertFalse(empty($keys));
         foreach ($this->expectedDescriptors as $descriptor) {
             $this->assertContains($descriptor, $keys);
@@ -39,7 +39,7 @@ class jackalope_tests_read_AccessTest_RepositoryDescriptors extends jackalope_ba
         $rep = getRepository($this->sharedFixture['config']);
         foreach ($this->expectedDescriptors as $descriptor) {
             $str = $rep->getDescriptor($descriptor);
-            $this->assertTrue(is_string($str));
+            $this->assertType('string', $str);
             $this->assertFalse(empty($str));
         }
     }

@@ -24,7 +24,7 @@ class jackalope_tests_write_ManipulationTest_CopyMethods extends jackalope_baseC
         $workspace->copy($src, $dst);
 
         // session was updated as well
-        $this->assertTrue(!is_null($session->getNode($dst.'/'.basename($src))));
+        $this->assertNotNull($session->getNode($dst.'/'.basename($src)));
 
         // TODO workspace-write method, also verify that the move was dispatched to the backend
     }

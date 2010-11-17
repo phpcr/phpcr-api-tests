@@ -54,7 +54,7 @@ class jackalope_tests_read_SearchTest_Row extends jackalope_baseCase {
                     $this->assertTrue($d > 0);
                     $this->assertTrue(strlen($usw)==18);
                     $d = $val->getDate();
-                    $this->assertTrue($d instanceof DateTime);
+                    $this->assertType('DateTime', $d);
                     break;
                 case 'jcr:primaryType':
                     //nt:folder - depends on the search query
