@@ -1,5 +1,10 @@
 <?php
-require_once 'PHPUnit/Framework.php';
+require_once dirname(__FILE__).'/importexport.php';
+
+// PHPUnit 3.4 compat
+if (method_exists('PHPUnit_Util_Filter', 'addDirectoryToFilter')) {
+    require_once 'PHPUnit/Framework.php';
+}
 
 abstract class jackalope_baseCase extends PHPUnit_Framework_TestCase {
     protected $path = ''; // Describes the path to the test
