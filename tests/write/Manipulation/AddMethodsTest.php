@@ -2,6 +2,8 @@
 
 require_once(dirname(__FILE__) . '/../../../inc/baseCase.php');
 
+use PHPCR\PropertyType as Type;
+
 /**
  * Covering jcr-283 spec $10.4
  */
@@ -39,9 +41,27 @@ class Write_Manipulation_AddMethodsTest extends jackalope_baseCase {
         $this->assertNotNull($this->sharedFixture['session']->getNode($this->node->getPath() . '/../test:namespacedNode/newNode'), 'Node newNode was not created');
     }
 
+    /**
+     * @group 1
+     */
     public function testAddNodeFileType() {
         $this->node->addNode('newFileNode', 'nt:file');
-        $this->assertNotNull($this->sharedFixture['session']->getNode($this->node->getPath() . '/newFileNode'), 'Node newFileNode was not created');
+        $newNode = $this->sharedFixture['session']->getNode($this->node->getPath() . '/newFileNode');
+        $contentNode = $newNode->addNode('jcr:content', 'nt:resource');
+        $contentNode->setProperty('jcr:mimeType', 'text/plain', Type::STRING);
+        $contentNode->setProperty('jcr:data', 'Hello', Type::BINARY);
+        $contentNode->setProperty('jcr:lastModified', new DateTime(), Type::DATE);
+
+        $this->assertNotNull($newNode, 'Node newFileNode was not created');
+        $this->assertTrue($newNode->isNew(), 'Node newFileNode is not marked dirty');
+        $this->sharedFixture['session']->getObjectManager()->save();
+        $this->assertFalse($newNode->isNew(), 'Node newFileNode was not saved');
+
+        $this->renewSession();
+
+        $newNode = $this->sharedFixture['session']->getNode($this->node->getPath() . '/newFileNode');
+        $this->assertNotNull($newNode, 'Node newFileNode was not created');
+        $this->assertEquals('nt:file', $newNode->getPrimaryNodeType()->getName(), 'Node newFileNode was not created');
     }
 
     public function testAddNodeUnstructuredType() {
