@@ -7,16 +7,18 @@ use PHPCR\PropertyType as Type;
 /**
  * Covering jcr-283 spec $10.4
  */
-class Write_Manipulation_AddMethodsTest extends jackalope_baseCase {
-
+class Write_Manipulation_AddMethodsTest extends jackalope_baseCase
+{
     protected $node;
 
-    static public function setupBeforeClass() {
+    static public function setupBeforeClass()
+    {
         parent::setupBeforeClass();
         self::$staticSharedFixture['ie']->import('write/manipulation/base.xml');
     }
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->node = $this->sharedFixture['session']->getNode('/tests_write_manipulation_base/emptyExample');
     }
@@ -25,7 +27,8 @@ class Write_Manipulation_AddMethodsTest extends jackalope_baseCase {
      * @covers jackalope_Node::addNode
      * @covers jackalope_Session::getNode
      */
-    public function testAddNode() {
+    public function testAddNode()
+    {
         $this->markTestSkipped('Find a case where the parent type specifies the type for this node'); //with nt:folder, this is also not working with the java jackrabbit, so it seems not to be an implementation issue
         // should take the primaryType of emptyExample
         $this->node->addNode('newNode');
@@ -35,7 +38,8 @@ class Write_Manipulation_AddMethodsTest extends jackalope_baseCase {
      * @covers jackalope_Node::addNode
      * @covers jackalope_Session::getNode
      */
-    public function testAddNodeWithPath() {
+    public function testAddNodeWithPath()
+    {
         // should take the primaryType of emptyExample
         $this->node->addNode('../test:namespacedNode/newNode', 'nt:unstructured');
         $this->assertNotNull($this->sharedFixture['session']->getNode($this->node->getPath() . '/../test:namespacedNode/newNode'), 'Node newNode was not created');
@@ -44,7 +48,8 @@ class Write_Manipulation_AddMethodsTest extends jackalope_baseCase {
     /**
      * @group 1
      */
-    public function testAddNodeFileType() {
+    public function testAddNodeFileType()
+    {
         $this->node->addNode('newFileNode', 'nt:file');
         $newNode = $this->sharedFixture['session']->getNode($this->node->getPath() . '/newFileNode');
         $contentNode = $newNode->addNode('jcr:content', 'nt:resource');
@@ -64,7 +69,8 @@ class Write_Manipulation_AddMethodsTest extends jackalope_baseCase {
         $this->assertEquals('nt:file', $newNode->getPrimaryNodeType()->getName(), 'Node newFileNode was not created');
     }
 
-    public function testAddNodeUnstructuredType() {
+    public function testAddNodeUnstructuredType()
+    {
         $this->node->addNode('newUnstructuredNode', 'nt:unstructured');
         $this->assertNotNull($this->sharedFixture['session']->getNode($this->node->getPath() . '/newFileNode'), 'Node newFileNode was not created');
     }
@@ -73,13 +79,15 @@ class Write_Manipulation_AddMethodsTest extends jackalope_baseCase {
      * @covers jackalope_Node::addNode
      * @expectedException \PHPCR\NodeType\ConstraintViolationException
      */
-    public function testAddNodeMissingType() {
+    public function testAddNodeMissingType()
+    {
         $this->node->addNode('newNode');
     }
     /**
      * @expectedException \PHPCR\NodeType\NoSuchNodeTypeException
      */
-    public function testAddNodeWithInexistingType() {
+    public function testAddNodeWithInexistingType()
+    {
         $this->node->addNode('newFileNode', 'inexistenttype');
         $this->assertNotNull($this->sharedFixture['session']->getNode($this->node->getPath() . '/newFileNode'), 'Node newFileNode was not created');
     }
@@ -87,7 +95,8 @@ class Write_Manipulation_AddMethodsTest extends jackalope_baseCase {
     /**
      * @expectedException \PHPCR\ItemExistsException
      */
-    public function testAddNodeExisting() {
+    public function testAddNodeExisting()
+    {
         $name = $this->node->getName();
         $parent = $this->node->getParent();
         $parent->addNode($name, 'nt:unstructured');
@@ -97,7 +106,8 @@ class Write_Manipulation_AddMethodsTest extends jackalope_baseCase {
      * try to add a node below a not existing node.
      * @expectedException \PHPCR\PathNotFoundException
      */
-    public function testAddNodePathNotFound() {
+    public function testAddNodePathNotFound()
+    {
         $parent = $this->node->addNode('nonExistent/newNode', 'nt:unstructured');
     }
 
@@ -106,14 +116,16 @@ class Write_Manipulation_AddMethodsTest extends jackalope_baseCase {
      *
      * @expectedException \PHPCR\NodeType\ConstraintViolationException
      */
-    public function testAddNodeToProperty() {
+    public function testAddNodeToProperty()
+    {
         $this->node->addNode('../numberPropertyNode/jcr:created/name', 'nt:unstructured');
     }
 
     /**
      * @expectedException \PHPCR\RepositoryException
      */
-    public function testAddNodeWithIndex() {
+    public function testAddNodeWithIndex()
+    {
         $this->node->addNode('name[3]', 'nt:unstructured');
     }
 }

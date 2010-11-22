@@ -2,7 +2,8 @@
 require_once(dirname(__FILE__) . '/../../../inc/baseCase.php');
 
 //6.3.1 Namespace Registry
-class Read_Namespaces_NamespaceRegistryTest extends jackalope_baseCase {
+class Read_Namespaces_NamespaceRegistryTest extends jackalope_baseCase
+{
     protected $workspace;
     protected $nr; //the NamespaceRegistry
     protected $nsBuiltIn = array('jcr' => 'http://www.jcp.org/jcr/1.0',
@@ -11,26 +12,30 @@ class Read_Namespaces_NamespaceRegistryTest extends jackalope_baseCase {
                                  'xml' => 'http://www.w3.org/XML/1998/namespace',
                                  ''    => '');
 
-    function setUp() {
+    function setUp()
+    {
         parent::setUp();
         $this->workspace = $this->sharedFixture['session']->getWorkspace();
         $this->nr = $this->workspace->getNamespaceRegistry(); //this function is tested in ReadTest/WorkspaceReadMethods.php::testGetNamespaceRegistry
     }
 
-    public function testGetPrefixes() {
+    public function testGetPrefixes()
+    {
         $ret = $this->nr->getPrefixes();
         $this->assertType('array', $ret);
         $this->assertTrue(count($ret) >= count($this->nsBuiltIn));
     }
 
-    public function testGetURIs() {
+    public function testGetURIs()
+    {
         $ret = $this->nr->getURIs();
         $this->assertType('array', $ret);
         $this->assertTrue(count($ret) >= count($this->nsBuiltIn));
         //we test in getURI / getPrefix if the names match
     }
 
-    public function testGetURI() {
+    public function testGetURI()
+    {
         foreach($this->nsBuiltIn as $prefix => $uri) {
             $ret = $this->nr->getURI($prefix);
             $this->assertEquals($uri, $ret);
@@ -40,18 +45,21 @@ class Read_Namespaces_NamespaceRegistryTest extends jackalope_baseCase {
     /**
      * @expectedException \PHPCR\NamespaceException
      */
-    public function testGetURINamespaceException() {
+    public function testGetURINamespaceException()
+    {
         $this->nr->getURI('thisshouldnotexist');
     }
 
     /**
      * @expectedException \PHPCR\RepositoryException
      */
-    public function testGetURIRepositoryException() {
+    public function testGetURIRepositoryException()
+    {
         $this->nr->getURI('in:valid');
     }
 
-    public function testGetPrefix() {
+    public function testGetPrefix()
+    {
         foreach($this->nsBuiltIn as $prefix => $uri) {
             $ret = $this->nr->getPrefix($uri);
             $this->assertEquals($prefix, $ret);
@@ -61,11 +69,13 @@ class Read_Namespaces_NamespaceRegistryTest extends jackalope_baseCase {
     /**
      * @expectedException \PHPCR\NamespaceException
      */
-    public function testGetPrefixNamespaceException() {
+    public function testGetPrefixNamespaceException()
+    {
         $this->nr->getPrefix('http://thisshouldnotexist.org/0.0');
     }
 
-    public function testRegisterUnregisterNamespace() {
+    public function testRegisterUnregisterNamespace()
+    {
         $uri = 'http://a_new_namespace';
         $prefix = 'new_prefix';
         $prefix2 = 'my_prefix';
@@ -85,19 +95,22 @@ class Read_Namespaces_NamespaceRegistryTest extends jackalope_baseCase {
     /**
      * @expectedException \PHPCR\NamespaceException
      */
-    public function testRegisterNamespaceException() {
+    public function testRegisterNamespaceException()
+    {
         $this->nr->registerNamespace('valid', $this->nsBuiltIn['jcr']);
     }
     /**
      * @expectedException \PHPCR\RepositoryException
      */
-    public function testRegisterNamespacePrefixRepositoryException() {
+    public function testRegisterNamespacePrefixRepositoryException()
+    {
         $this->nr->registerNamespace('in:valid', 'http://a_new_namespace');
     }
     /**
      * @expectedException \PHPCR\NamespaceException
      */
-    public function testUnregisterNamespaceException() {
+    public function testUnregisterNamespaceException()
+    {
         $this->nr->unregisterNamespace('http://thisshouldnotexist.org/0.0');
     }
 }

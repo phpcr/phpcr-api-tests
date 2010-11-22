@@ -8,33 +8,39 @@ require_once(dirname(__FILE__) . '/../../../inc/baseCase.php');
  *  Versioning: getVersionManager
  *  level2: WorkspaceWriteMethods: clone, copy, createWorkspace, deleteWorkspace, getImportContentHandler, importXML, move
  */
-class Read_Read_WorkspaceReadMethodsTest extends jackalope_baseCase {
+class Read_Read_WorkspaceReadMethodsTest extends jackalope_baseCase
+{
     protected $path = 'read/read';
     protected $workspace;
 
-    static public function  setupBeforeClass() {
+    static public function  setupBeforeClass()
+    {
         parent::setupBeforeClass();
         self::$staticSharedFixture['ie']->import('read/read/base.xml');
     }
 
     //4.5 Workspace Read Methods
 
-    function setUp() {
+    function setUp()
+    {
         parent::setUp();
         $this->workspace = $this->sharedFixture['session']->getWorkspace();
     }
 
     //4.5.2
-    public function testGetSession() {
+    public function testGetSession()
+    {
         $this->assertEquals($this->sharedFixture['session'], $this->workspace->getSession());
     }
 
     //4.5.3
-    public function testGetName() {
+    public function testGetName()
+    {
         $this->assertEquals($this->sharedFixture['config']['workspace'], $this->workspace->getName());
     }
 
-    public function testGetQueryManager() {
+    public function testGetQueryManager()
+    {
         $qm = $this->workspace->getQueryManager();
         $this->assertType('PHPCR\Query\QueryManagerInterface', $qm);
     }
@@ -42,11 +48,13 @@ class Read_Read_WorkspaceReadMethodsTest extends jackalope_baseCase {
     /**
      * @expectedException PHPCR\RepositoryException
      */
-    public function testGetQueryManagerRepositoryException() {
+    public function testGetQueryManagerRepositoryException()
+    {
         $this->markTestIncomplete('TODO: Figure how to produce this exception.');
     }
 
-    public function testGetNamespaceRegistry() {
+    public function testGetNamespaceRegistry()
+    {
         $nr = $this->workspace->getNamespaceRegistry();
         $this->assertType('PHPCR\NamespaceRegistryInterface', $nr);
     }
@@ -54,11 +62,13 @@ class Read_Read_WorkspaceReadMethodsTest extends jackalope_baseCase {
     /**
      * @expectedException PHPCR\RepositoryException
      */
-    public function testGetNamespaceRegistryRepositoryException() {
+    public function testGetNamespaceRegistryRepositoryException()
+    {
         $this->markTestIncomplete('TODO: Figure how to produce this exception.');
     }
 
-    public function testGetNodeTypeManager() {
+    public function testGetNodeTypeManager()
+    {
         $ntm = $this->workspace->getNodeTypeManager();
         $this->assertType('PHPCR\NodeType\NodeTypeManagerInterface', $ntm);
     }
@@ -66,12 +76,14 @@ class Read_Read_WorkspaceReadMethodsTest extends jackalope_baseCase {
     /**
      * @expectedException PHPCR\RepositoryException
      */
-    public function testGetNodeTypeManagerRepositoryException() {
+    public function testGetNodeTypeManagerRepositoryException()
+    {
         $this->markTestIncomplete('TODO: Figure how to produce this exception.');
     }
 
     //4.5.4
-    public function testGetAccessibleWorkspaceNames() {
+    public function testGetAccessibleWorkspaceNames()
+    {
         $names = $this->workspace->getAccessibleWorkspaceNames();
         $this->assertType('array', $names);
         $this->assertContains($this->sharedFixture['config']['workspace'], $names);
@@ -80,7 +92,8 @@ class Read_Read_WorkspaceReadMethodsTest extends jackalope_baseCase {
     /**
      * @expectedException PHPCR\RepositoryException
      */
-    public function testGetAccessibleWorkspaceNamesRepositoryException() {
+    public function testGetAccessibleWorkspaceNamesRepositoryException()
+    {
         $this->markTestIncomplete('TODO: Figure how to produce this exception.');
     }
 }

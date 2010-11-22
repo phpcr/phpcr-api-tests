@@ -4,15 +4,18 @@ require_once(dirname(__FILE__) . '/../../../inc/baseCase.php');
 /** test the javax.jcr.Row interface
  *  todo: getNode, getPath, getScore
  */
-class Read_Search_RowTest extends jackalope_baseCase {
+class Read_Search_RowTest extends jackalope_baseCase
+{
     private $row;
 
-    public static function setupBeforeClass() {
+    public static function setupBeforeClass()
+    {
         parent::setupBeforeClass();
         self::$staticSharedFixture['qm'] = self::$staticSharedFixture['session']->getWorkspace()->getQueryManager();
     }
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $query = $this->sharedFixture['qm']->createQuery('/*/element(tests_read_search_base, nt:folder)', 'xpath');
         $qr = $query->execute();
@@ -26,7 +29,8 @@ class Read_Search_RowTest extends jackalope_baseCase {
         $this->assertType('PHPCR\Query\RowInterface', $this->row);
     }
 
-    public function testRowGetValues() {
+    public function testRowGetValues()
+    {
         $ret = $this->row->getValues();
         $this->assertType('array', $ret);
 
@@ -35,7 +39,8 @@ class Read_Search_RowTest extends jackalope_baseCase {
         }
     }
 
-    public function testRowGetValue() {
+    public function testRowGetValue()
+    {
         foreach(jackalope_tests_read_SearchTest_QueryResults::$expect as $propName) {
             $val = $this->row->getValue($propName);
             $this->assertNotNull($val);

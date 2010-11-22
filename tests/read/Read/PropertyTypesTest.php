@@ -4,8 +4,8 @@ require_once(dirname(__FILE__) . '/../../../inc/baseCase.php');
 
 // 6.2.4 Property Read Methods
 
-class Read_Read_PropertyTypesTest extends jackalope_baseCase {
-
+class Read_Read_PropertyTypesTest extends jackalope_baseCase
+{
     /** key = numeric type constant names as defined by api
      *  value = expected value of the TYPENAME_<TYPE> constants
      */
@@ -40,13 +40,15 @@ class Read_Read_PropertyTypesTest extends jackalope_baseCase {
         'UNDEFINED'      => 'undefined',
     );
 
-    static public function dataValueFromName() {
+    static public function dataValueFromName()
+    {
         $data = array();
         foreach(self::$names as $key => $value) $data[] = array($key,$value);
         return $data;
     }
 
-    static public function dataValueFromType() {
+    static public function dataValueFromType()
+    {
         $data = array();
         foreach(self::$types as $key => $value) $data[] = array($key,$value);
         return $data;
@@ -55,21 +57,24 @@ class Read_Read_PropertyTypesTest extends jackalope_baseCase {
     /**
      * @dataProvider dataValueFromName
      */
-    public function testNameFromValue($field, $name) {
+    public function testNameFromValue($field, $name)
+    {
         $this->assertEquals($name, \PHPCR\PropertyType::nameFromValue(constant("PHPCR\PropertyType::$field")));
     }
 
     /**
      * @dataProvider dataValueFromName
      */
-    public function testValueFromName($field, $name) {
+    public function testValueFromName($field, $name)
+    {
         $this->assertEquals(constant("PHPCR\PropertyType::$field"), \PHPCR\PropertyType::valueFromName($name));
     }
 
     /**
      * @dataProvider dataValueFromType
      */
-    public function testValueFromType($field, $type) {
+    public function testValueFromType($field, $type)
+    {
         $this->assertEquals(constant("PHPCR\PropertyType::$field"), \PHPCR\PropertyType::valueFromType($type));
     }
 }

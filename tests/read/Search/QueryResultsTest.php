@@ -2,16 +2,19 @@
 require_once(dirname(__FILE__) . '/../../../inc/baseCase.php');
 
 //6.6.8 Query API
-class Read_Search_QueryResultsTest extends jackalope_baseCase {
+class Read_Search_QueryResultsTest extends jackalope_baseCase
+{
     public static $expect = array("jcr:createdBy","jcr:created","jcr:primaryType","jcr:path","jcr:score");
     public $query;
 
-    public static function setupBeforeClass() {
+    public static function setupBeforeClass()
+    {
         parent::setupBeforeClass();
         self::$staticSharedFixture['qm'] = self::$staticSharedFixture['session']->getWorkspace()->getQueryManager();
     }
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         //FIXME: xpath is depricated. should test SQL2 (and QOM?)
@@ -21,19 +24,23 @@ class Read_Search_QueryResultsTest extends jackalope_baseCase {
         $this->assertType('PHPCR\Query\QueryResultInterface', $this->qr);
     }
 
-    public function testBindValue() {
+    public function testBindValue()
+    {
         $this->markTestSkipped(); //TODO: test with a SQL2 query
     }
-    public function testGetBindVariableNames() {
+    public function testGetBindVariableNames()
+    {
         $this->markTestSkipped(); //TODO: test with a SQL2 query
     }
-    public function testGetBindVariableNamesEmpty() {
+    public function testGetBindVariableNamesEmpty()
+    {
         $ret = $this->query->getBindVariableNames();
         $this->assertType('array', $ret);
         $this->assertLessThan(1, count($ret));
     }
 
-    public function testGetColumnNames() {
+    public function testGetColumnNames()
+    {
         $ret = $this->qr->getColumnNames();
         $this->assertType('array', $ret);
 
@@ -42,7 +49,8 @@ class Read_Search_QueryResultsTest extends jackalope_baseCase {
         $this->assertEquals(self::$expect, $ret);
     }
 
-    public function testGetRows() {
+    public function testGetRows()
+    {
         $ret = $this->qr->getRows();
 
         $this->assertType('PHPCR\Query\RowIteratorInterface', $ret);
@@ -60,12 +68,14 @@ class Read_Search_QueryResultsTest extends jackalope_baseCase {
     /**
      * @expectedException OutOfBoundsException
      */
-    public function testGetRowsNoSuchElement() {
+    public function testGetRowsNoSuchElement()
+    {
         $ret = $this->qr->getRows();
         while($row = $ret->nextRow()); //just retrieve until after the last
     }
 
-    public function testGetNodes() {
+    public function testGetNodes()
+    {
         $ret = $this->qr->getNodes();
 
         $this->assertType('PHPCR\NodeIteratorInterface', $ret);
@@ -81,17 +91,20 @@ class Read_Search_QueryResultsTest extends jackalope_baseCase {
     /**
      * @expectedException OutOfBoundsException
      */
-    public function testGetNodesNoSuchElement() {
+    public function testGetNodesNoSuchElement()
+    {
         $ret = $this->qr->getNodes();
         while($row = $ret->nextNode()); //just retrieve after the last
     }
 
-    public function testGetSelectorNamesEmpty() {
+    public function testGetSelectorNamesEmpty()
+    {
         $ret = $this->qr->getSelectorNames();
         $this->assertType('array', $ret);
         $this->assertLessThan(1, count($ret));
     }
-    public function testGetSelectorNames() {
+    public function testGetSelectorNames()
+    {
         $this->markTestSkipped(); //TODO: how to have selector names in result?
     }
 }
