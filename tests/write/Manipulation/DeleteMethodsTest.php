@@ -66,6 +66,45 @@ class jackalope_tests_write_ManipulationTest_DeleteMethodsTest extends jackalope
         $this->node->remove();
         $this->assertFalse($parent->hasNode('jcr:content'));
     }
+
+    public function testRemoveNodeFromBackend()
+    {
+        $node = $this->rootNode->addNode('toBeDeleted', 'nt:unstructured');
+        $this->sharedFixture['session']->getObjectManager()->save();
+
+        $this->renewSession();
+
+        $node = $this->sharedFixture['session']->getNode('/toBeDeleted');
+        $this->assertNotNull($node, 'Node was not created');
+
+        $node->remove();
+        $this->sharedFixture['session']->getObjectManager()->save();
+
+        $this->renewSession();
+
+        $this->setExpectedException('\PHPCR\PathNotFoundException');
+        $this->sharedFixture['session']->getNode('/toBeDeleted');
+    }
+
+    public function testRemovePropertyFromBackend()
+    {
+        $node = $this->rootNode->setProperty('toBeDeletedProperty', 'TEMP');
+        $this->sharedFixture['session']->getObjectManager()->save();
+
+        $this->renewSession();
+
+        $node = $this->sharedFixture['session']->getNode('/');
+        $this->assertEquals('TEMP', $node->getPropertyValue('toBeDeletedProperty'), 'Property was not created');
+
+        $node->getProperty('toBeDeletedProperty')->remove();
+        $this->sharedFixture['session']->getObjectManager()->save();
+
+        $this->renewSession();
+
+        $this->setExpectedException('\PHPCR\PathNotFoundException');
+        $this->sharedFixture['session']->getNode('/')->getProperty('toBeDeletedProperty');
+    }
+
     /**
      * @covers ItemInterface::remove
      */
@@ -84,6 +123,7 @@ class jackalope_tests_write_ManipulationTest_DeleteMethodsTest extends jackalope
         $this->assertFalse($this->node->hasProperty('longNumber'));
         $this->assertFalse($this->sharedFixture['session']->itemExists('/tests_write_manipulation_base/numberPropertyNode/jcr:content/longNumber'));
     }
+
     public function testNodeRemovePropertyNotExisting()
     {
         $this->node->setProperty('inexistent', null);

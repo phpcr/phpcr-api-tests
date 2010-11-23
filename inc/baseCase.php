@@ -57,6 +57,8 @@ abstract class jackalope_baseCase extends PHPUnit_Framework_TestCase
         foreach ($this->configKeys as $cfgKey) {
             $this->config[substr($cfgKey, 4)] = $GLOBALS[$cfgKey];
         }
+
+        $this->rootNode = $this->sharedFixture['session']->getNode('/');
     }
 
     /** try to create credentials from this user/password */
