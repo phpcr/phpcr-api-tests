@@ -14,7 +14,7 @@ class Write_Manipulation_CopyMethodsTest extends jackalope_baseCase
     }
 
     /**
-     * @covers jackalope_Workspace::copy
+     * @covers Jackalope\Workspace::copy
      */
     public function testWorkspaceCopy()
     {

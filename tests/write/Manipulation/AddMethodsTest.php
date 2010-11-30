@@ -24,8 +24,8 @@ class Write_Manipulation_AddMethodsTest extends jackalope_baseCase
     }
 
     /**
-     * @covers jackalope_Node::addNode
-     * @covers jackalope_Session::getNode
+     * @covers Jackalope\Node::addNode
+     * @covers Jackalope\Session::getNode
      */
     public function testAddNode()
     {
@@ -35,8 +35,8 @@ class Write_Manipulation_AddMethodsTest extends jackalope_baseCase
         $this->assertNotNull($this->sharedFixture['session']->getNode($this->node->getPath() . '/newNode'), 'Node newNode was not created');
     }
     /**
-     * @covers jackalope_Node::addNode
-     * @covers jackalope_Session::getNode
+     * @covers Jackalope\Node::addNode
+     * @covers Jackalope\Session::getNode
      */
     public function testAddNodeWithPath()
     {
@@ -98,7 +98,7 @@ class Write_Manipulation_AddMethodsTest extends jackalope_baseCase
     }
 
     /**
-     * @covers jackalope_Node::addNode
+     * @covers Jackalope\Node::addNode
      * @expectedException \PHPCR\NodeType\ConstraintViolationException
      */
     public function testAddNodeMissingType()

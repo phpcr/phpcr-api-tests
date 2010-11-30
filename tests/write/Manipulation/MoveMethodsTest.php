@@ -14,7 +14,7 @@ class Write_Manipulation_MoveMethodsTest extends jackalope_baseCase
     }
 
     /**
-     * @covers Jackalope_Session::move
+     * @covers Jackalope\Session::move
      */
     public function testSessionMove()
     {
@@ -36,7 +36,7 @@ class Write_Manipulation_MoveMethodsTest extends jackalope_baseCase
 
 
     /**
-     * @covers Jackalope_Session::move
+     * @covers Jackalope\Session::move
      * @expectedException \PHPCR\ItemExistsException
      */
     public function testSessionMoveDstExists()
