@@ -28,6 +28,7 @@ class Read_Read_PropertyReadMethodsTest extends jackalope_baseCase
         $this->property = $this->node->getProperty('jcr:created');
         $this->valProperty = $this->sharedFixture['session']->getRootNode()->getNode('tests_read_access_base/numberPropertyNode/jcr:content')->getProperty('foo');
         $this->multiProperty = $this->node->getNode('multiValueProperty')->getProperty('jcr:mixinTypes');
+        $this->dateProperty = $this->node->getNode('index.txt/jcr:content')->getProperty('jcr:lastModified');
     }
 
     /*** item base methods for property ***/
@@ -199,15 +200,14 @@ class Read_Read_PropertyReadMethodsTest extends jackalope_baseCase
 
     public function testGetDate()
     {
-        $date = $this->property->getDate();
+        $date = $this->dateProperty->getDate();
         $this->assertType('DateTime', $date);
-        $this->assertEquals(floor($date->format('U') / 1000), floor(time() / 1000));
         $this->assertEquals(1240830067, $date->format('U'));
     }
 
     public function testGetDateMulti()
     {
-        $arr = $this->multiProperty->getDouble();
+        $arr = $this->multiProperty->getDate();
         $this->assertType('array', $arr);
         foreach($arr as $v) {
             $this->assertType('DateTime', $v);
