@@ -70,7 +70,7 @@ class Write_Manipulation_MoveMethodsTest extends jackalope_baseCase
     }
 
     /**
-     * @covers Node::orderBefore
+     * @covers \PHPCR\NodeInterface::orderBefore
      */
     public function testNodeOrderBefore()
     {

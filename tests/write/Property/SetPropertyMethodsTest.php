@@ -26,7 +26,7 @@ class Write_Property_SetPropertyMethodsTest extends jackalope_baseCase
     }
 
     /**
-     * @covers Property::setValue
+     * @covers \PHPCR\PropertyInterface::setValue
      */
     public function testSetValue()
     {
@@ -35,7 +35,7 @@ class Write_Property_SetPropertyMethodsTest extends jackalope_baseCase
     }
 
     /**
-     * @covers Node::setProperty
+     * @covers \PHPCR\NodeInterface::setProperty
      */
     public function testSetPropertyExisting()
     {
@@ -47,7 +47,7 @@ class Write_Property_SetPropertyMethodsTest extends jackalope_baseCase
 
 
     /**
-     * @covers Node::setProperty
+     * @covers \PHPCR\NodeInterface::setProperty
      */
     public function testSetPropertyNew()
     {
@@ -58,7 +58,7 @@ class Write_Property_SetPropertyMethodsTest extends jackalope_baseCase
 
     /**
      * change type of existing property
-     * @covers Node::setProperty
+     * @covers \PHPCR\NodeInterface::setProperty
      */
     public function testSetPropertyWithType()
     {
@@ -69,7 +69,7 @@ class Write_Property_SetPropertyMethodsTest extends jackalope_baseCase
 
     /**
      * add new property
-     * @covers Node::setProperty
+     * @covers \PHPCR\NodeInterface::setProperty
      */
     public function testSetPropertyNewWithType()
     {

@@ -20,7 +20,7 @@ class jackalope_tests_write_ManipulationTest_DeleteMethodsTest extends jackalope
     }
 
     /**
-     * @covers SessionInterface::removeItem
+     * @covers \PHPCR\SessionInterface::removeItem
      */
     public function testRemoveItemNode()
     {
@@ -31,7 +31,7 @@ class jackalope_tests_write_ManipulationTest_DeleteMethodsTest extends jackalope
         // $this->sharedFixture['session']->getObjectManager()->save();
     }
     /**
-     * @covers SessionInterface::removeItem
+     * @covers \PHPCR\SessionInterface::removeItem
      */
     public function testRemoveItemProperty()
     {
@@ -41,7 +41,7 @@ class jackalope_tests_write_ManipulationTest_DeleteMethodsTest extends jackalope
         $this->assertFalse($node->hasProperty('longNumber'));
     }
     /**
-     * @covers SessionInterface::removeItem
+     * @covers \PHPCR\SessionInterface::removeItem
      * @expectedException \PHPCR\ConstraintViolationException
      */
     public function testRemoveItemConstraintViolation()
@@ -50,7 +50,7 @@ class jackalope_tests_write_ManipulationTest_DeleteMethodsTest extends jackalope
         $this->markTestIncomplete('TODO: figure out how to provoke that error');
     }
     /**
-     * @covers SessionInterface::removeItem
+     * @covers \PHPCR\SessionInterface::removeItem
      * @expectedException \PHPCR\PathNotFoundException
      */
     public function testRemoveItemNotExisting()
@@ -58,7 +58,7 @@ class jackalope_tests_write_ManipulationTest_DeleteMethodsTest extends jackalope
         $this->sharedFixture['session']->removeItem('/not/existing');
     }
     /**
-     * @covers ItemInterface::remove
+     * @covers \PHPCR\ItemInterface::remove
      */
     public function testRemoveNode()
     {
@@ -106,7 +106,7 @@ class jackalope_tests_write_ManipulationTest_DeleteMethodsTest extends jackalope
     }
 
     /**
-     * @covers ItemInterface::remove
+     * @covers \PHPCR\ItemInterface::remove
      */
     public function testRemoveProperty()
     {
@@ -130,7 +130,7 @@ class jackalope_tests_write_ManipulationTest_DeleteMethodsTest extends jackalope
         //TODO: what should happen?
     }
     /**
-     * @covers NodeInterface::setProperty
+     * @covers \PHPCR\NodeInterface::setProperty
      * @expectedException \PHPCR\ConstraintViolationException
      */
     public function testNodeRemovePropertyConstraintViolation()
@@ -139,8 +139,8 @@ class jackalope_tests_write_ManipulationTest_DeleteMethodsTest extends jackalope
         $this->markTestIncomplete('TODO: figure out how to provoke that error');
     }
     /**
-     * @covers NodeInterface::remove
-     * @covers SessionInterface::getNode
+     * @covers \PHPCR\NodeInterface::remove
+     * @covers \PHPCR\SessionInterface::getNode
      * @expectedException \PHPCR\ItemNotFoundException
      */
     public function testGetRemovedNodeSession()
@@ -150,8 +150,8 @@ class jackalope_tests_write_ManipulationTest_DeleteMethodsTest extends jackalope
         $this->sharedFixture['session']->getNode($path);
     }
     /**
-     * @covers NodeInterface::remove
-     * @covers NodeInterface::getNode
+     * @covers \PHPCR\NodeInterface::remove
+     * @covers \PHPCR\NodeInterface::getNode
      * @expectedException \PHPCR\ItemNotFoundException
      */
     public function testGetRemovedNodeNode()
@@ -162,8 +162,8 @@ class jackalope_tests_write_ManipulationTest_DeleteMethodsTest extends jackalope
         $parent->getNode($name);
     }
     /**
-     * @covers NodeInterface::remove
-     * @covers SessionInterface::getNode
+     * @covers \PHPCR\NodeInterface::remove
+     * @covers \PHPCR\SessionInterface::getNode
      * @expectedException \PHPCR\ItemNotFoundException
      */
     public function testGetRemovedPropertySession()
@@ -173,8 +173,8 @@ class jackalope_tests_write_ManipulationTest_DeleteMethodsTest extends jackalope
         $this->sharedFixture['session']->getProperty($path);
     }
     /**
-     * @covers NodeInterface::remove
-     * @covers NodeInterface::getNode
+     * @covers \PHPCR\NodeInterface::remove
+     * @covers \PHPCR\NodeInterface::getNode
      * @expectedException \PHPCR\ItemNotFoundException
      */
     public function testGetRemovedPropertyNode()
