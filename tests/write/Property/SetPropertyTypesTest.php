@@ -42,9 +42,8 @@ class Write_Property_SetPropertyTypesTest extends jackalope_baseCase
     public function testCreateValueBinary()
     {
         $bin = $this->node->setProperty('newBinary', 'foobar', PHPCR\PropertyType::BINARY);
-        $this->assertType('PHPCR\BinaryInterface', $bin);
-        $this->assertEquals(6, $bin->getSize());
-        //TODO: can we also create a property from a resource stream instead of string?
+        $this->assertEquals(\PHPCR\PropertyType::BINARY, $bin->getType());
+        $this->assertEquals('foobar', $bin->getBinary());
     }
     public function testCreateValueInt()
     {

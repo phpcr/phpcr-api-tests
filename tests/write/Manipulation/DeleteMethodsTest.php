@@ -15,7 +15,7 @@ class jackalope_tests_write_ManipulationTest_DeleteMethodsTest extends jackalope
     public function setUp()
     {
         parent::setUp();
-        $this->node = $this->sharedFixture['session']->getNode('/tests_write_manipulation_base/numberPropertyNode/jcr:content');
+        $this->node = $this->sharedFixture['session']->getNode('/tests_write_manipulation_base/numberPropertyNode');
         $this->property = $this->sharedFixture['session']->getProperty('/tests_write_manipulation_base/numberPropertyNode/jcr:content/longNumber');
     }
 
@@ -25,9 +25,10 @@ class jackalope_tests_write_ManipulationTest_DeleteMethodsTest extends jackalope
     public function testRemoveItemNode()
     {
         $parent = $this->node->getParent();
-        $this->assertTrue($parent->hasNode('jcr:content'));
-        $this->sharedFixture['session']->removeItem('/tests_write_manipulation_base/numberPropertyNode/jcr:content');
-        $this->assertFalse($parent->hasNode('jcr:content'));
+        $this->assertTrue($parent->hasNode('numberPropertyNode'));
+        $this->sharedFixture['session']->removeItem('/tests_write_manipulation_base/numberPropertyNode');
+        $this->assertFalse($parent->hasNode('numberPropertyNode'), 'Node shouldnt be there anymore');
+        // $this->sharedFixture['session']->getObjectManager()->save();
     }
     /**
      * @covers SessionInterface::removeItem
@@ -62,9 +63,9 @@ class jackalope_tests_write_ManipulationTest_DeleteMethodsTest extends jackalope
     public function testRemoveNode()
     {
         $parent = $this->node->getParent();
-        $this->assertTrue($parent->hasNode('jcr:content'));
+        $this->assertTrue($parent->hasNode('numberPropertyNode'));
         $this->node->remove();
-        $this->assertFalse($parent->hasNode('jcr:content'));
+        $this->assertFalse($parent->hasNode('numberPropertyNode'));
     }
 
     public function testRemoveNodeFromBackend()
@@ -75,7 +76,6 @@ class jackalope_tests_write_ManipulationTest_DeleteMethodsTest extends jackalope
         $this->renewSession();
 
         $node = $this->sharedFixture['session']->getNode('/toBeDeleted');
-        $this->assertNotNull($node, 'Node was not created');
 
         $node->remove();
         $this->sharedFixture['session']->getObjectManager()->save();
@@ -202,7 +202,7 @@ class jackalope_tests_write_ManipulationTest_DeleteMethodsTest extends jackalope
         $path = $this->node->getPath();
         $parent = $this->node->getParent();
         $this->node->remove();
-        $new = $parent->addNode($name);
+        $new = $parent->addNode($name, 'nt:unstructured');
         $item = $this->sharedFixture['session']->getNode($path);
         $this->assertEquals($new, $item);
         $this->markTestIncomplete('TODO: check if saving the session works properly');
