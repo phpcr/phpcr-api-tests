@@ -56,6 +56,7 @@ class Read_Search_QueryManagerTest extends jackalope_baseCase
     {
         $ret = $this->sharedFixture['qm']->getSupportedQueryLanguages();
         $this->assertType('array', $ret);
-        $this->assertContains('xpath', $ret);
+        $this->assertContains('JCR-SQL2', $ret);
+        $this->assertContains('JCR-JQOM', $ret);
     }
 }

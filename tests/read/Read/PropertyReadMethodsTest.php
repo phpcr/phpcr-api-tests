@@ -69,7 +69,7 @@ class Read_Read_PropertyReadMethodsTest extends jackalope_baseCase
     public function testGetNativeValue()
     {
         $val = $this->property->getNativeValue();
-        $this->assertType('string', $val);
+        $this->assertType('DateTime', $val);
     }
     public function testGetNativeValueMulti()
     {
@@ -219,7 +219,7 @@ class Read_Read_PropertyReadMethodsTest extends jackalope_baseCase
      */
     public function testGetDateValueFormatException()
     {
-        $this->property->getDate();
+        $this->valProperty->getDate();
     }
 
     /**
