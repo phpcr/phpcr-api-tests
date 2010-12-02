@@ -109,6 +109,7 @@ class Write_Property_SetPropertyTypesTest extends jackalope_baseCase
         $time = time();
         $value = $this->node->setProperty('x', $time, \PHPCR\PropertyType::DATE);
         $this->assertEquals(\PHPCR\PropertyType::DATE, $value->getType());
-        $this->assertEquals(date('c', $time), $value->getString());
+        $expected = new \DateTime('@'.$time);
+        $this->assertEquals($expected->format('Y-m-d\TH:i:s.000P'), $value->getString());
     }
 }
