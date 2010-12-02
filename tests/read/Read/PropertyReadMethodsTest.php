@@ -412,7 +412,7 @@ class Read_Read_PropertyReadMethodsTest extends jackalope_baseCase
     public function testGetTypeDate()
     {
         $node = $this->node->getNode('index.txt/jcr:content');
-        $node->setProperty('newDate', 'foobar', \PHPCR\PropertyType::DATE);
+        $node->setProperty('newDate', '2009-04-27T13:01:04.758+02:00', \PHPCR\PropertyType::DATE);
         $this->assertEquals(\PHPCR\PropertyType::DATE, $node->getProperty('newDate')->getType());
     }
 
