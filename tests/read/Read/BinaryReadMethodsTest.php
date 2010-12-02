@@ -24,66 +24,75 @@ class Read_Read_BinaryReadMethodsTest extends jackalope_baseCase
         // $this->assertType('PHPCR\BinaryInterface', $this->binary);
     }
 
-    public function testReadBinaryValue() {
+    public function testReadBinaryValue() 
+    {
         $binary = $this->node->getProperty('jcr:data')->getBinary();
         $this->assertEquals($this->binarystring, $binary);
     }
 
-    // public function testDispose()
-    // {
+    public function testDispose()
+    {
+        $this->markTestSkipped('Uncomment this Tests as soon as PHPCR\BinaryInterface is implemented');
     //     //just see if this throws any exception. accessing methods after dispose is tested below
     //     $this->binary->dispose();
-    // }
+    }
 
-    // public function testGetSize()
-    // {
+    public function testGetSize()
+    {
+        $this->markTestSkipped('Uncomment this Tests as soon as PHPCR\BinaryInterface is implemented');
     //     $size = $this->binary->getSize();
     //     $this->assertEquals(392, $size);
-    // }
+    }
 
     // /** @expectedException PHPCR\BadMethodCallException */
-    // public function testGetSizeDisposed()
-    // {
+    public function testGetSizeDisposed()
+    {
+        $this->markTestSkipped('Uncomment this Tests as soon as PHPCR\BinaryInterface is implemented');
     //     $this->binary->dispose();
     //     $this->binary->getSize();
-    // }
+    }
 
-    // public function testGetStream()
-    // {
+    public function testGetStream()
+    {
+        $this->markTestSkipped('Uncomment this Tests as soon as PHPCR\BinaryInterface is implemented');
     //     $stream = $this->binary->getStream();
     //     $this->assertNotNull($stream);
     //     $bytes = fread($stream, $this->binary->getSize());
     //     $this->assertEquals($this->binarystring, $bytes);
-    // }
+    }
 
     // /** @expectedException PHPCR\BadMethodCallException */
-    // public function testGetStreamDisposed()
-    // {
+    public function testGetStreamDisposed()
+    {
+        $this->markTestSkipped('Uncomment this Tests as soon as PHPCR\BinaryInterface is implemented');
     //     $this->binary->dispose();
     //     $this->binary->getStream();
-    // }
+    }
 
-    // public function testRead()
-    // {
+    public function testRead()
+    {
+        $this->markTestSkipped('Uncomment this Tests as soon as PHPCR\BinaryInterface is implemented');
     //     $bytes='';
     //     $cnt = $this->binary->read($bytes, 0);
     //     $this->assertEquals(392, $cnt);
     //     $this->assertEquals($this->binarystring, $bytes);
-    // }
+    }
 
     // /** @expectedException PHPCR\InvalidArgumentException */
-    // public function testReadInvalidArgument()
-    // {
+    public function testReadInvalidArgument()
+    {
+        $this->markTestSkipped('Uncomment this Tests as soon as PHPCR\BinaryInterface is implemented');
     //     $bytes='';
     //     $this->binary->read($bytes, -1); //start from negative index
-    // }
+    }
 
     // /** @expectedException PHPCR\BadMethodCallException */
-    // public function testReadDisposed()
-    // {
+    public function testReadDisposed()
+    {
+        $this->markTestSkipped('Uncomment this Tests as soon as PHPCR\BinaryInterface is implemented');
     //     $this->binary->dispose();
     //     $bytes='';
     //     $this->binary->read($bytes, 0);
-    // }
+    }
 
 }
