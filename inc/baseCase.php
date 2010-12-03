@@ -48,6 +48,10 @@ abstract class jackalope_baseCase extends PHPUnit_Framework_TestCase {
         }
     }
 
+    /*************************************************************************
+     * Custom assertions
+     *************************************************************************/
+
     /** try to create credentials from this user/password */
     protected function assertSimpleCredentials($user, $password) {
         $cr = getSimpleCredentials($user, $password);
@@ -68,5 +72,8 @@ abstract class jackalope_baseCase extends PHPUnit_Framework_TestCase {
         }
         $this->assertType('PHPCR\SessionInterface', $ses);
         return $ses;
+    }
+    protected function assertTraversableImplemented($obj) {
+        $this->assertTrue($obj instanceof \Iterator || $obj instanceof \IteratorAggregate, 'To provide a traversable, you have to either implement Iterator or IteratorAggregate');
     }
 }

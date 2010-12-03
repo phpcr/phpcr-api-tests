@@ -100,4 +100,17 @@ class Read_Namespaces_NamespaceRegistryTest extends jackalope_baseCase {
     public function testUnregisterNamespaceException() {
         $this->nr->unregisterNamespace('http://thisshouldnotexist.org/0.0');
     }
+
+    public function testIterator() {
+        $this->assertTraversableImplemented($this->nr);
+        $results = 0;
+        foreach($this->nr as $prefix => $url) {
+            $results++;
+            $this->assertInternalType('string', $prefix);
+            $this->assertInternalType('string', $url);
+            $this->assertEquals($this->nr->getURI($prefix), $url);
+        }
+        $this->assertTrue($results>3, 'Not enough namespaces');
+    }
+
 }

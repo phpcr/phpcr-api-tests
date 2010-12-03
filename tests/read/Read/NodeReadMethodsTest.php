@@ -324,4 +324,16 @@ class Read_ReadTest_NodeReadMethodsTest extends jackalope_baseCase {
     public function testHasPropertiesFalse() {
         $this->markTestIncomplete('TODO: Figure how to create a node even without jcr:primaryType');
     }
+
+    public function testIterator() {
+        $this->assertTraversableImplemented($this->node);
+        $results = false;
+        foreach($this->node as $name => $child) {
+            $results = true;
+            $this->assertInternalType('string', $name);
+            $this->assertType('\PHPCR\NodeInterface', $child);
+            $this->assertEquals($name, $child->getName());
+        }
+        $this->assertTrue($results, 'Iterator had no elements');
+    }
 }

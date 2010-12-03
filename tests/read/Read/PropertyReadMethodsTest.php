@@ -388,4 +388,33 @@ class Read_Read_PropertyReadMethodsTest extends jackalope_baseCase {
         $node->setProperty('newRef', 'foobar', \PHPCR\PropertyType::REFERENCE);
         $this->assertEquals(\PHPCR\PropertyType::REFERENCE, $node->getProperty('newRef')->getType());
     }
+    /**
+     * @group a
+     */
+    public function testIterator() {
+        $this->assertTraversableImplemented($this->valProperty);
+
+        $results = 0;
+        foreach($this->valProperty as $value) {
+            $results++;
+            $this->assertType('string', $value);
+            $this->assertEquals('bar', $value);
+        }
+
+        $this->assertTrue($results==1, 'Single value iterator must have exactly one entry');
+    }
+
+    /**
+     * @group a
+     */
+    public function testIteratorMulti() {
+        $this->assertTraversableImplemented($this->multiProperty);
+        $expected = array('mix:referenceable', 'mix:versionable');
+        $returned = array();
+        foreach($this->multiProperty as $value) {
+            $returned[] = $value;
+        }
+        $this->assertEquals($expected, $returned);
+    }
+
 }
