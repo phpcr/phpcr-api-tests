@@ -1,21 +1,25 @@
 <?php
 require_once(dirname(__FILE__) . '/../../../inc/baseCase.php');
 
-class Read_Access_RepositoryTest extends jackalope_baseCase {
+class Read_Access_RepositoryTest extends jackalope_baseCase
+{
     protected $path = 'read/read';
 
     // 4.1 Repository
-    public function testRepository() {
+    public function testRepository()
+    {
         $rep = getRepository($this->sharedFixture['config']);
         $this->assertType('PHPCR\RepositoryInterface', $rep);
     }
 
-    public function testLoginSession() {
+    public function testLoginSession()
+    {
         $ses = $this->assertSession($this->sharedFixture['config']);
         $this->assertEquals($ses->getWorkspace()->getName(), $this->sharedFixture['config']['workspace']);
     }
 
-    public function testDefaultWorkspace() {
+    public function testDefaultWorkspace()
+    {
         $cfg = $this->sharedFixture['config'];
         unset($cfg['workspace']);
         $ses = $this->assertSession($cfg);
@@ -24,7 +28,8 @@ class Read_Access_RepositoryTest extends jackalope_baseCase {
     }
 
     /** external authentication */
-    public function testNoLogin() {
+    public function testNoLogin()
+    {
         $cfg = $this->sharedFixture['config'];
         unset($cfg['user']);
         unset($cfg['pass']);
@@ -32,7 +37,8 @@ class Read_Access_RepositoryTest extends jackalope_baseCase {
         $this->assertEquals($ses->getWorkspace()->getName(), $this->sharedFixture['config']['workspace']);
     }
 
-    public function testNoLoginAndWorkspace() {
+    public function testNoLoginAndWorkspace()
+    {
         $cfg = $this->sharedFixture['config'];
         unset($cfg['user']);
         unset($cfg['pass']);
@@ -44,7 +50,8 @@ class Read_Access_RepositoryTest extends jackalope_baseCase {
     /**
      * @expectedException \PHPCR\LoginException
      */
-    public function testLoginException() {
+    public function testLoginException()
+    {
         $this->markTestSkipped('TODO: Figure how to make a login fail');
         $cfg = $this->sharedFixture['config'];
         $cfg['user'] = 'foo';
@@ -55,7 +62,8 @@ class Read_Access_RepositoryTest extends jackalope_baseCase {
     /**
      * @expectedException PHPCR\NoSuchWorkspaceException
      */
-    public function testLoginNoSuchWorkspace() {
+    public function testLoginNoSuchWorkspace()
+    {
         $cfg = $this->sharedFixture['config'];
         $cfg['workspace'] = 'foobar';
         $ses = $this->assertSession($cfg);
@@ -64,7 +72,8 @@ class Read_Access_RepositoryTest extends jackalope_baseCase {
     /**
      * @expectedException \PHPCR\RepositoryException
      */
-    public function testLoginRepositoryException() {
+    public function testLoginRepositoryException()
+    {
         $cfg = $this->sharedFixture['config'];
         $cfg['workspace'] = '//';
         $ses = $this->assertSession($cfg);

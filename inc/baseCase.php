@@ -6,7 +6,8 @@ if (method_exists('PHPUnit_Util_Filter', 'addDirectoryToFilter')) {
     require_once 'PHPUnit/Framework.php';
 }
 
-abstract class jackalope_baseCase extends PHPUnit_Framework_TestCase {
+abstract class jackalope_baseCase extends PHPUnit_Framework_TestCase
+{
     protected $path = ''; // Describes the path to the test
 
     protected $config;
@@ -39,13 +40,25 @@ abstract class jackalope_baseCase extends PHPUnit_Framework_TestCase {
         self::$staticSharedFixture = null;
     }
 
-    protected function setUp() {
+    protected function renewSession()
+    {
+        if (isset(self::$staticSharedFixture['session'])) {
+            self::$staticSharedFixture['session']->logout();
+        }
+        self::$staticSharedFixture['session'] = getJCRSession(self::$staticSharedFixture['config']);
+        $this->sharedFixture['session'] = self::$staticSharedFixture['session'];
+    }
+
+    protected function setUp()
+    {
         $this->sharedFixture = self::$staticSharedFixture;
 
         date_default_timezone_set('Europe/Zurich');
         foreach ($this->configKeys as $cfgKey) {
             $this->config[substr($cfgKey, 4)] = $GLOBALS[$cfgKey];
         }
+
+        $this->rootNode = $this->sharedFixture['session']->getNode('/');
     }
 
     /*************************************************************************
@@ -53,14 +66,16 @@ abstract class jackalope_baseCase extends PHPUnit_Framework_TestCase {
      *************************************************************************/
 
     /** try to create credentials from this user/password */
-    protected function assertSimpleCredentials($user, $password) {
+    protected function assertSimpleCredentials($user, $password)
+    {
         $cr = getSimpleCredentials($user, $password);
         $this->assertType('PHPCR\CredentialsInterface', $cr);
         return $cr;
     }
 
     /** try to create a session with the config and credentials */
-    protected function assertSession($cfg, $credentials = null) {
+    protected function assertSession($cfg, $credentials = null)
+    {
         try {
             $ses = getJCRSession($cfg, $credentials);
         } catch(PHPCR\RepositoryException $e) {

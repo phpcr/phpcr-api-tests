@@ -5,17 +5,19 @@ require_once(dirname(__FILE__) . '/../../../inc/baseCase.php');
 /**
  * Covering jcr-2.8.3 spec $10.6
  */
-class Write_Manipulation_MoveMethodsTest extends jackalope_baseCase {
-
-    static public function setupBeforeClass() {
+class Write_Manipulation_MoveMethodsTest extends jackalope_baseCase
+{
+    static public function setupBeforeClass()
+    {
         parent::setupBeforeClass();
         self::$staticSharedFixture['ie']->import('write/manipulation/base.xml');
     }
 
     /**
-     * @covers Jackalope_Session::move
+     * @covers Jackalope\Session::move
      */
-    public function testSessionMove() {
+    public function testSessionMove()
+    {
         $session = $this->sharedFixture['session'];
         // has mix:referenceable
         $src = '/tests_write_manipulation_base/multiValueProperty';
@@ -34,10 +36,11 @@ class Write_Manipulation_MoveMethodsTest extends jackalope_baseCase {
 
 
     /**
-     * @covers Jackalope_Session::move
+     * @covers Jackalope\Session::move
      * @expectedException \PHPCR\ItemExistsException
      */
-    public function testSessionMoveDstExists() {
+    public function testSessionMoveDstExists()
+    {
         $session = $this->sharedFixture['session'];
 
         $src = '/tests_write_manipulation_base/index.txt/jcr:content';
@@ -47,7 +50,8 @@ class Write_Manipulation_MoveMethodsTest extends jackalope_baseCase {
         $session->move($src, $dst);
     }
 
-    public function testWorkspaceMove() {
+    public function testWorkspaceMove()
+    {
         $session = $this->sharedFixture['session'];
         $workspace = $session->getWorkspace();
         $src = '/tests_write_manipulation_base/multiValueProperty';
@@ -66,9 +70,10 @@ class Write_Manipulation_MoveMethodsTest extends jackalope_baseCase {
     }
 
     /**
-     * @covers Node::orderBefore
+     * @covers \PHPCR\NodeInterface::orderBefore
      */
-    public function testNodeOrderBefore() {
+    public function testNodeOrderBefore()
+    {
         $this->markTestSkipped('TODO: implement different use cases. move up, down, same paths, end, inexisting src, inexisting dest');
     }
 

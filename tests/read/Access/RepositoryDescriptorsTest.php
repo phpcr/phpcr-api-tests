@@ -1,7 +1,8 @@
 <?php
 require_once(dirname(__FILE__) . '/../../../inc/baseCase.php');
 
-class Read_Access_RepositoryDescriptorsTest extends jackalope_baseCase {
+class Read_Access_RepositoryDescriptorsTest extends jackalope_baseCase
+{
     protected $path = 'read/read';
 
     //Those constants need to be defined in the bootstrap file
@@ -24,7 +25,8 @@ class Read_Access_RepositoryDescriptorsTest extends jackalope_baseCase {
     );
 
     // 24.2 Repository Descriptors
-    public function testDescriptorKeys() {
+    public function testDescriptorKeys()
+    {
         $rep = getRepository($this->sharedFixture['config']);
         $keys = $rep->getDescriptorKeys();
         $this->assertType('array', $keys);
@@ -35,7 +37,8 @@ class Read_Access_RepositoryDescriptorsTest extends jackalope_baseCase {
     }
 
     //TODO: Check if the values are compatible to the spec
-    public function testDescription() {
+    public function testDescription()
+    {
         $rep = getRepository($this->sharedFixture['config']);
         foreach ($this->expectedDescriptors as $descriptor) {
             $str = $rep->getDescriptor($descriptor);
@@ -44,16 +47,20 @@ class Read_Access_RepositoryDescriptorsTest extends jackalope_baseCase {
         }
     }
 
-    public function testGetDescriptorValue() {
+    public function testGetDescriptorValue()
+    {
         $this->markTestSkipped('TODO: implement');
     }
-    public function testGetDescriptorValues() {
+    public function testGetDescriptorValues()
+    {
         $this->markTestSkipped('TODO: implement');
     }
-    public function testIsSingleValueDescriptor() {
+    public function testIsSingleValueDescriptor()
+    {
         $this->markTestSkipped('TODO: implement');
     }
-    public function testIsStandardDescriptor() {
+    public function testIsStandardDescriptor()
+    {
         $this->markTestSkipped('TODO: implement');
     }
 }

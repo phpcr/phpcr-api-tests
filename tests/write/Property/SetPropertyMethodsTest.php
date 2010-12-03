@@ -7,34 +7,38 @@ require_once(dirname(__FILE__) . '/../../../inc/baseCase.php');
  *
  * Covering jcr-2.8.3 spec $10.4.2
  */
-class Write_Property_SetPropertyMethodsTest extends jackalope_baseCase {
-
+class Write_Property_SetPropertyMethodsTest extends jackalope_baseCase
+{
     private $node;
     private $property;
 
-    static public function setupBeforeClass() {
+    static public function setupBeforeClass()
+    {
         parent::setupBeforeClass();
         self::$staticSharedFixture['ie']->import('write/value/base.xml');
     }
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->node = $this->sharedFixture['session']->getNode('/tests_write_value_base/numberPropertyNode/jcr:content');
         $this->property = $this->sharedFixture['session']->getProperty('/tests_write_value_base/numberPropertyNode/jcr:content/longNumber');
     }
 
     /**
-     * @covers Property::setValue
+     * @covers \PHPCR\PropertyInterface::setValue
      */
-    public function testSetValue() {
+    public function testSetValue()
+    {
         $this->property->setValue(1024);
         $this->assertEquals(1024, $this->property->getLong());
     }
 
     /**
-     * @covers Node::setProperty
+     * @covers \PHPCR\NodeInterface::setProperty
      */
-    public function testSetPropertyExisting() {
+    public function testSetPropertyExisting()
+    {
         $this->assertTrue($this->node->hasProperty('longNumber'));
         $property = $this->node->setProperty('longNumber', 1024);
         $this->assertType('PHPCR\PropertyInterface', $property);
@@ -43,9 +47,10 @@ class Write_Property_SetPropertyMethodsTest extends jackalope_baseCase {
 
 
     /**
-     * @covers Node::setProperty
+     * @covers \PHPCR\NodeInterface::setProperty
      */
-    public function testSetPropertyNew() {
+    public function testSetPropertyNew()
+    {
         $property = $this->node->setProperty('newLongNumber', 1024);
         $this->assertType('PHPCR\PropertyInterface', $property);
         $this->assertEquals(1024, $this->node->getProperty('newLongNumber')->getLong());
@@ -53,9 +58,10 @@ class Write_Property_SetPropertyMethodsTest extends jackalope_baseCase {
 
     /**
      * change type of existing property
-     * @covers Node::setProperty
+     * @covers \PHPCR\NodeInterface::setProperty
      */
-    public function testSetPropertyWithType() {
+    public function testSetPropertyWithType()
+    {
         $this->node->setProperty('longNumber', 1024.5, \PHPCR\PropertyType::LONG);
         $this->assertEquals(1024, $this->node->getProperty('longNumber')->getLong());
         $this->assertEquals(\PHPCR\PropertyType::LONG, $this->node->getProperty('longNumber')->getType());
@@ -63,9 +69,10 @@ class Write_Property_SetPropertyMethodsTest extends jackalope_baseCase {
 
     /**
      * add new property
-     * @covers Node::setProperty
+     * @covers \PHPCR\NodeInterface::setProperty
      */
-    public function testSetPropertyNewWithType() {
+    public function testSetPropertyNewWithType()
+    {
         $this->node->setProperty('newLongNumber', 102.5, \PHPCR\PropertyType::LONG);
         $this->assertEquals(102, $this->node->getProperty('newLongNumber')->getLong());
         $this->assertEquals(\PHPCR\PropertyType::LONG, $this->node->getProperty('newLongNumber')->getType());
