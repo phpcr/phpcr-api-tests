@@ -23,11 +23,11 @@ class Read_Read_PropertyReadMethodsTest extends jackalope_baseCase
     public function setUp()
     {
         parent::setUp();
-        $this->rootNode = $this->sharedFixture['session']->getRootNode();
         $this->node = $this->rootNode->getNode('tests_read_access_base');
         $this->property = $this->node->getProperty('jcr:created');
         $this->valProperty = $this->sharedFixture['session']->getRootNode()->getNode('tests_read_access_base/numberPropertyNode/jcr:content')->getProperty('foo');
         $this->multiProperty = $this->node->getNode('multiValueProperty')->getProperty('jcr:mixinTypes');
+//        $this->multiDateProperty = $this->node->getNode('multiDateProperty')->getProperty('dates');
         $this->dateProperty = $this->node->getNode('index.txt/jcr:content')->getProperty('jcr:lastModified');
     }
 
@@ -209,11 +209,20 @@ class Read_Read_PropertyReadMethodsTest extends jackalope_baseCase
 
     public function testGetDateMulti()
     {
-        $arr = $this->multiProperty->getDate();
+        $this->markTestIncomplete('TODO: we need a property definition that can hold multiple dates');
+        $arr = $this->multiDateProperty->getDate();
         $this->assertType('array', $arr);
         foreach($arr as $v) {
             $this->assertType('DateTime', $v);
         }
+    }
+
+    /**
+     * @expectedException \PHPCR\ValueFormatException
+     */
+    public function testGetDateMultiValueFormatException()
+    {
+        $this->multiProperty->getDate();
     }
 
     /**
