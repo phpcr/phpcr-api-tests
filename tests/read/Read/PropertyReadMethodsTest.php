@@ -103,9 +103,11 @@ class Read_Read_PropertyReadMethodsTest extends jackalope_baseCase
 
     public function testGetBinary()
     {
-        $bin = $this->property->getBinary();
-        $str = $this->property->getString();
-        $this->assertEquals($bin->getSize(), strlen($str));
+        $bin = $this->valProperty->getBinary();
+        $str = $this->valProperty->getString();
+        $this->assertEquals($bin, $str);
+        $this->markTestIncomplete('TODO: reenable this test as soon as we use PHPCR\BinaryInterface');
+        // $this->assertEquals($bin->getSize(), strlen($str));
     }
 
     public function testGetBinaryMulti()
@@ -193,8 +195,8 @@ class Read_Read_PropertyReadMethodsTest extends jackalope_baseCase
      */
     public function testGetDoubleAndDecimalSame()
     {
-        $double = $this->property->getDouble();
-        $decimal = $this->property->getDecimal();
+        $double = $this->valProperty->getDouble();
+        $decimal = $this->valProperty->getDecimal();
         $this->assertEquals($double, $decimal);
     }
 
