@@ -20,8 +20,8 @@ class Write_Manipulation_MoveMethodsTest extends jackalope_baseCase
     {
         $session = $this->sharedFixture['session'];
         // has mix:referenceable
-        $src = '/tests_write_manipulation_base/multiValueProperty';
-        $dst = '/tests_write_manipulation_base/emptyExample';
+        $src = '/tests_write_manipulation_base/testSessionMove/srcNode';
+        $dst = '/tests_write_manipulation_base/testSessionMove/dstNode';
 
         $srcUuid = $session->getNode($src)->getIdentifier();
         $session->move($src, $dst);
@@ -43,9 +43,9 @@ class Write_Manipulation_MoveMethodsTest extends jackalope_baseCase
     {
         $session = $this->sharedFixture['session'];
 
-        $src = '/tests_write_manipulation_base/index.txt/jcr:content';
+        $src = '/tests_write_manipulation_base/testSessionMoveDstExists/srcFile/jcr:content';
         // jcr:content already exists at $dst
-        $dst = '/tests_write_manipulation_base/idExample';
+        $dst = '/tests_write_manipulation_base/testSessionMoveDstExists/dstFile';
 
         $session->move($src, $dst);
     }
@@ -54,8 +54,8 @@ class Write_Manipulation_MoveMethodsTest extends jackalope_baseCase
     {
         $session = $this->sharedFixture['session'];
         $workspace = $session->getWorkspace();
-        $src = '/tests_write_manipulation_base/multiValueProperty';
-        $dst = '/tests_write_manipulation_base/emptyExample';
+        $src = '/tests_write_manipulation_base/testWorkspaceMove/srcNode';
+        $dst = '/tests_write_manipulation_base/testWorkspaceMove/dstNode';
 
         $srcUuid = $session->getNode($src)->getIdentifier();
         $workspace->move($src, $dst);

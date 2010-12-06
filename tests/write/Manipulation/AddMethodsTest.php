@@ -9,7 +9,6 @@ use PHPCR\PropertyType as Type;
  */
 class Write_Manipulation_AddMethodsTest extends jackalope_baseCase
 {
-    protected $node;
 
     static public function setupBeforeClass()
     {
@@ -19,8 +18,8 @@ class Write_Manipulation_AddMethodsTest extends jackalope_baseCase
 
     public function setUp()
     {
+        $this->renewSession();
         parent::setUp();
-        $this->node = $this->sharedFixture['session']->getNode('/tests_write_manipulation_base/emptyExample');
     }
 
     /**
@@ -40,9 +39,9 @@ class Write_Manipulation_AddMethodsTest extends jackalope_baseCase
      */
     public function testAddNodeWithPath()
     {
-        // should take the primaryType of emptyExample
-        $this->node->addNode('../test:namespacedNode/newNode', 'nt:unstructured');
-        $this->assertNotNull($this->sharedFixture['session']->getNode($this->node->getPath() . '/../test:namespacedNode/newNode'), 'Node newNode was not created');
+        // should take the primaryType of <testAddNodeWithPath />
+        $this->node->addNode('test:namespacedNode/newNode', 'nt:unstructured');
+        $this->assertNotNull($this->sharedFixture['session']->getNode($this->node->getPath() . '/test:namespacedNode/newNode'), 'Node newNode was not created');
     }
 
     public function testAddNodeFileType()
@@ -69,19 +68,19 @@ class Write_Manipulation_AddMethodsTest extends jackalope_baseCase
     public function testAddNodeUnstructuredType()
     {
         $this->node->addNode('newUnstructuredNode', 'nt:unstructured');
-        $this->assertNotNull($this->sharedFixture['session']->getNode($this->node->getPath() . '/newFileNode'), 'Node newFileNode was not created');
+        $this->assertNotNull($this->sharedFixture['session']->getNode($this->node->getPath() . '/newUnstructuredNode'), 'Node newUnstructuredNode was not created');
     }
 
     public function testAddPropertyOnUnstructured()
     {
-        $node = $this->node->addNode('../unstructuredNode', 'nt:unstructured');
+        $node = $this->node->addNode('unstructuredNode', 'nt:unstructured');
         $node->setProperty('test', 'val');
 
         $this->sharedFixture['session']->getObjectManager()->save();
         $this->assertFalse($node->isNew(), 'Node was not saved');
 
         $this->renewSession();
-        $node = $this->sharedFixture['session']->getNode($this->node->getPath() . '/../unstructuredNode');
+        $node = $this->sharedFixture['session']->getNode($this->node->getPath() . '/unstructuredNode');
 
         $this->assertNotNull($node, 'Node was not created');
         $this->assertEquals('val', $node->getPropertyValue('test'), 'Property was not saved correctly');
@@ -92,7 +91,7 @@ class Write_Manipulation_AddMethodsTest extends jackalope_baseCase
         $this->assertFalse($node->isNew(), 'Node was not saved');
         $this->assertFalse($node->getProperty('test2')->isNew(), 'Property was not saved');
         $this->renewSession();
-        $node = $this->sharedFixture['session']->getNode($this->node->getPath() . '/../unstructuredNode');
+        $node = $this->sharedFixture['session']->getNode($this->node->getPath() . '/unstructuredNode');
 
         $this->assertEquals('val2', $node->getPropertyValue('test2'), 'Property was not added correctly');
     }
@@ -140,7 +139,7 @@ class Write_Manipulation_AddMethodsTest extends jackalope_baseCase
      */
     public function testAddNodeToProperty()
     {
-        $this->node->addNode('../numberPropertyNode/jcr:created/name', 'nt:unstructured');
+        $this->node->addNode('prop/failNode', 'nt:unstructured');
     }
 
     /**

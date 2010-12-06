@@ -9,8 +9,6 @@ require_once(dirname(__FILE__) . '/../../../inc/baseCase.php');
  */
 class Write_Property_SetPropertyMethodsTest extends jackalope_baseCase
 {
-    private $node;
-    private $property;
 
     static public function setupBeforeClass()
     {

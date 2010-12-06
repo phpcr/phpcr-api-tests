@@ -8,20 +8,18 @@ require_once(dirname(__FILE__) . '/../../../inc/baseCase.php');
  */
 class Write_Property_SetPropertyTypesTest extends jackalope_baseCase
 {
-    private $factory;
 
     static public function setupBeforeClass()
     {
-        //do nothing
+        parent::setupBeforeClass();
+        self::$staticSharedFixture['ie']->import('write/value/base.xml');
     }
 
     public function setUp()
     {
-        //we manipulate, thus we have to re-setup everything each run
-        parent::setupBeforeClass();
-        self::$staticSharedFixture['ie']->import('write/value/base.xml');
-
         parent::setUp();
+
+        $this->renewSession();
         $this->node = $this->sharedFixture['session']->getNode('/tests_write_value_base/numberPropertyNode/jcr:content');
         $this->property = $this->sharedFixture['session']->getProperty('/tests_write_value_base/numberPropertyNode/jcr:content/longNumber');
     }

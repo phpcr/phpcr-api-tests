@@ -12,11 +12,11 @@ class Write_Manipulation_DeleteMethodsTest extends jackalope_baseCase
         parent::setupBeforeClass();
         self::$staticSharedFixture['ie']->import('write/manipulation/base.xml');
     }
+
     public function setUp()
     {
+        $this->renewSession(); // get rid of cache from previous tests
         parent::setUp();
-        $this->node = $this->sharedFixture['session']->getNode('/tests_write_manipulation_base/numberPropertyNode');
-        $this->property = $this->sharedFixture['session']->getProperty('/tests_write_manipulation_base/numberPropertyNode/jcr:content/longNumber');
     }
 
     /**
@@ -25,20 +25,20 @@ class Write_Manipulation_DeleteMethodsTest extends jackalope_baseCase
     public function testRemoveItemNode()
     {
         $parent = $this->node->getParent();
-        $this->assertTrue($parent->hasNode('numberPropertyNode'));
-        $this->sharedFixture['session']->removeItem('/tests_write_manipulation_base/numberPropertyNode');
-        $this->assertFalse($parent->hasNode('numberPropertyNode'), 'Node shouldnt be there anymore');
-        // $this->sharedFixture['session']->getObjectManager()->save();
+        $this->assertTrue($parent->hasNode('testRemoveItemNode'));
+        $this->sharedFixture['session']->removeItem('/tests_write_manipulation_base/testRemoveItemNode');
+        $this->assertFalse($parent->hasNode('testRemoveItemNode'), 'Node was not removed');
     }
+
     /**
      * @covers \PHPCR\SessionInterface::removeItem
      */
     public function testRemoveItemProperty()
     {
-        $node = $this->property->getParent();
-        $this->assertTrue($node->hasProperty('longNumber'));
-        $this->sharedFixture['session']->removeItem('/tests_write_manipulation_base/numberPropertyNode/jcr:content/longNumber');
-        $this->assertFalse($node->hasProperty('longNumber'));
+        $property = $this->node->getProperty('longNumber');
+        $this->assertTrue($this->node->hasProperty('longNumber'));
+        $this->sharedFixture['session']->removeItem('/tests_write_manipulation_base/testRemoveItemProperty/longNumber');
+        $this->assertFalse($this->node->hasProperty('longNumber'));
     }
     /**
      * @covers \PHPCR\SessionInterface::removeItem
@@ -63,9 +63,9 @@ class Write_Manipulation_DeleteMethodsTest extends jackalope_baseCase
     public function testRemoveNode()
     {
         $parent = $this->node->getParent();
-        $this->assertTrue($parent->hasNode('numberPropertyNode'));
+        $this->assertTrue($parent->hasNode('testRemoveNode'));
         $this->node->remove();
-        $this->assertFalse($parent->hasNode('numberPropertyNode'));
+        $this->assertFalse($parent->hasNode('child'));
     }
 
     public function testRemoveNodeFromBackend()
@@ -84,11 +84,12 @@ class Write_Manipulation_DeleteMethodsTest extends jackalope_baseCase
 
         $this->setExpectedException('\PHPCR\PathNotFoundException');
         $this->sharedFixture['session']->getNode('/toBeDeleted');
+
     }
 
     public function testRemovePropertyFromBackend()
     {
-        $node = $this->rootNode->setProperty('toBeDeletedProperty', 'TEMP');
+        $this->rootNode->setProperty('toBeDeletedProperty', 'TEMP');
         $this->sharedFixture['session']->getObjectManager()->save();
 
         $this->renewSession();
@@ -103,31 +104,38 @@ class Write_Manipulation_DeleteMethodsTest extends jackalope_baseCase
 
         $this->setExpectedException('\PHPCR\PathNotFoundException');
         $this->sharedFixture['session']->getNode('/')->getProperty('toBeDeletedProperty');
+
     }
 
     /**
-     * @covers \PHPCR\ItemInterface::remove
+     * @covers \PHPCR\PropertyInterface::remove
      */
     public function testRemoveProperty()
     {
-        $node = $this->property->getParent();
-        $this->assertTrue($node->hasProperty('longNumber'));
-        $this->property->remove();
-        $this->assertFalse($node->hasProperty('longNumber'));
+        $property = $this->node->getProperty('longNumber');
+        $this->assertTrue($this->node->hasProperty('longNumber'));
+        $property->remove();
+        $this->assertFalse($this->node->hasProperty('longNumber'));
     }
 
+    /**
+     * @covers \PHPCR\NodeInterface::setProperty
+     */
     public function testNodeRemoveProperty()
     {
         $this->assertTrue($this->node->hasProperty('longNumber'));
         $this->node->setProperty('longNumber', null);
         $this->assertFalse($this->node->hasProperty('longNumber'));
-        $this->assertFalse($this->sharedFixture['session']->itemExists('/tests_write_manipulation_base/numberPropertyNode/jcr:content/longNumber'));
+        $this->assertFalse($this->sharedFixture['session']->itemExists('/tests_write_manipulation_base/testNodeRemobeProperty/longNumber'));
     }
 
+    /**
+     * @covers \PHPCR\NodeInterface::setProperty
+     */
     public function testNodeRemovePropertyNotExisting()
     {
-        $this->node->setProperty('inexistent', null);
-        //TODO: what should happen?
+//        $this->node->setProperty('inexistent', null);
+        $this->markTestIncomplete('TODO: figure out what should happen when inexistant property is removed');
     }
     /**
      * @covers \PHPCR\NodeInterface::setProperty
@@ -141,7 +149,7 @@ class Write_Manipulation_DeleteMethodsTest extends jackalope_baseCase
     /**
      * @covers \PHPCR\NodeInterface::remove
      * @covers \PHPCR\SessionInterface::getNode
-     * @expectedException \PHPCR\ItemNotFoundException
+     * @expectedException \PHPCR\PathNotFoundException
      */
     public function testGetRemovedNodeSession()
     {
@@ -152,7 +160,7 @@ class Write_Manipulation_DeleteMethodsTest extends jackalope_baseCase
     /**
      * @covers \PHPCR\NodeInterface::remove
      * @covers \PHPCR\NodeInterface::getNode
-     * @expectedException \PHPCR\ItemNotFoundException
+     * @expectedException \PHPCR\PathNotFoundException
      */
     public function testGetRemovedNodeNode()
     {
@@ -164,28 +172,30 @@ class Write_Manipulation_DeleteMethodsTest extends jackalope_baseCase
     /**
      * @covers \PHPCR\NodeInterface::remove
      * @covers \PHPCR\SessionInterface::getNode
-     * @expectedException \PHPCR\ItemNotFoundException
+     * @expectedException \PHPCR\PathNotFoundException
      */
     public function testGetRemovedPropertySession()
     {
-        $path = $this->property->getPath();
-        $this->property->remove();
+        $property = $this->node->getProperty('prop');
+        $path = $property->getPath();
+        $property->remove();
         $this->sharedFixture['session']->getProperty($path);
     }
     /**
      * @covers \PHPCR\NodeInterface::remove
      * @covers \PHPCR\NodeInterface::getNode
-     * @expectedException \PHPCR\ItemNotFoundException
+     * @expectedException \PHPCR\PathNotFoundException
      */
     public function testGetRemovedPropertyNode()
     {
-        $parent = $this->property->getParent();
-        $name = $this->property->getName();
-        $this->property->remove();
-        $parent->getProperty($name);
+        $property = $this->node->getProperty('prop');
+        $name = $property->getName();
+        $property->remove();
+        $this->node->getProperty($name);
     }
     /**
      * try to remove a node that has already been removed in this session
+     * @expectedException \PHPCR\PathNotFoundException
      */
     public function testRemoveRemovedNode()
     {

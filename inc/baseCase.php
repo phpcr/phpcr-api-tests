@@ -10,6 +10,12 @@ abstract class jackalope_baseCase extends PHPUnit_Framework_TestCase
 {
     protected $path = ''; // Describes the path to the test
 
+    /** The root node of the fixture, initialized for each test */
+    protected $rootNode = null;
+
+    /** The node in the current fixture at /test_class_name/testMethod */
+    protected $node = null;
+
     protected $config;
     protected $configKeys = array('jcr.url', 'jcr.user', 'jcr.pass', 'jcr.workspace', 'jcr.transport');
     protected $sharedFixture = array();
@@ -59,6 +65,12 @@ abstract class jackalope_baseCase extends PHPUnit_Framework_TestCase
         }
 
         $this->rootNode = $this->sharedFixture['session']->getNode('/');
+
+        $this->node = null;
+        $children = $this->rootNode->getNodes();
+        // first node seems to be always jcr:system?
+        $child = next($children);
+        $this->node = $child->hasNode($this->getName()) ? $child->getNode($this->getName()) : null;
     }
 
     /*************************************************************************
