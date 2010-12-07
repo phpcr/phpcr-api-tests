@@ -7,10 +7,21 @@ require_once(dirname(__FILE__) . '/../../../inc/baseCase.php');
  */
 class Write_Manipulation_CopyMethodsTest extends jackalope_baseCase
 {
+    protected $ws;
+
+
     static public function setupBeforeClass()
     {
         parent::setupBeforeClass();
         self::$staticSharedFixture['ie']->import('write/manipulation/base.xml');
+    }
+
+    protected function setUp()
+    {
+        $this->renewSession(); // get rid of cache from previous tests
+        parent::setUp();
+
+        $this->ws = $this->sharedFixture['session']->getWorkspace();
     }
 
     /**
@@ -18,19 +29,118 @@ class Write_Manipulation_CopyMethodsTest extends jackalope_baseCase
      */
     public function testWorkspaceCopy()
     {
-        $session = $this->sharedFixture['session'];
-        $workspace = $session->getWorkspace();
-        $src = '/tests_write_manipulation_base/multiValueProperty';
-        $dst = '/tests_write_manipulation_base/emptyExample';
+        $src = '/tests_write_manipulation_base/testWorkspaceCopy/srcNode';
+        $dst = '/tests_write_manipulation_base/testWorkspaceCopy/dstNode/srcNode';
 
-        $workspace->copy($src, $dst);
+        $this->ws->copy($src, $dst);
 
-        // session was updated as well
-        $this->assertNotNull($session->getNode($dst.'/'.basename($src)));
+        // not really required as we haven't read the nodes but...
+        $this->renewSession();
 
-        // TODO workspace-write method, also verify that the move was dispatched to the backend
+        $this->assertTrue($this->sharedFixture['session']->nodeExists($dst));
+
+        $snode = $this->sharedFixture['session']->getNode($src);
+        $dnode = $this->sharedFixture['session']->getNode($dst);
+        $this->assertNotEquals($snode->getIdentifier(), $dnode->getIdentifier(), 'UUID was not changed');
+
+        $this->assertTrue($this->sharedFixture['session']->nodeExists($dst.'/srcFile/jcr:content'), 'Did not copy the whole subgraph');
+
     }
 
+    /**
+     * @expectedException   \PHPCR\NoSuchWorkspaceException
+     */
+    public function testCopyNoSuchWorkspace()
+    {
+        $src = '/tests_write_manipulation_base/testWorkspaceCopy/srcNode';
+        $dst = '/tests_write_manipulation_base/testWorkspaceCopy/dstNode/srcNode';
+        $this->ws->copy($src, $dst, 'inexistentworkspace');
+    }
+
+    /**
+     * @covers Jackalope\Workspace::copy
+     */
+    public function testWorkspaceCopyBackend()
+    {
+        $this->markTestIncomplete('TODO: just do');
+    }
+
+    /**
+     * @expectedException   \PHPCR\RepositoryException
+     */
+    public function testCopyRelativePaths()
+    {
+        $this->ws->copy('foo/moo', 'bar/mar');
+    }
+
+    /**
+     * @expectedException   \PHPCR\RepositoryException
+     */
+    public function testCopyInvalidDstPath()
+    {
+        $src = '/tests_write_manipulation_base/testCopyInvalidDstPath/srcNode';
+        $dst = '/tests_write_manipulation_base/testCopyInvalidDstPath/dstNode/srcNode[3]';
+        $this->ws->copy($src, $dst);
+    }
+
+    /**
+     * @expectedException   \PHPCR\RepositoryException
+     */
+    public function testCopyProperty()
+    {
+        $src = '/tests_write_manipulation_base/testCopyProperty/srcFile/jcr:content/someProperty';
+        $dst = '/tests_write_manipulation_base/testCopyProperty/dstFile/jcr:content/someProperty';
+        $this->ws->copy($src, $dst);
+    }
+
+    /**
+     * @expectedException   \PHPCR\PathNotFoundException
+     */
+    public function testCopySrcNotFound()
+    {
+        $src = '/tests_write_manipulation_base/testCopySrcNotFound/notFound';
+        $dst = '/tests_write_manipulation_base/testCopySrcNotFound/dstNode/notFound';
+        $this->ws->copy($src, $dst);
+    }
+
+    /**
+     * @expectedException   \PHPCR\PathNotFoundException
+     */
+    public function testCopyDstParentNotFound()
+    {
+        $src = '/tests_write_manipulation_base/testCopyDstParentNotFound/srcNode';
+        $dst = '/tests_write_manipulation_base/testCopyDstParentNotFound/dstNode/notFound/srcNode';
+        $this->ws->copy($src, $dst);
+    }
+
+    /**
+     * Verifies that there is no update-on-copy if the target node already exists
+     *
+     * @expectedException   \PHPCR\ItemExistsException
+     */
+    public function testCopyNoUpdateOnCopy()
+    {
+        $src = '/tests_write_manipulation_base/testCopyNoUpdateOnCopy/srcNode';
+        $dst = '/tests_write_manipulation_base/testCopyNoUpdateOnCopy/dstNode/srcNode';
+
+        $this->ws->copy($src, $dst);
+    }
+
+    public function testCopyUpdateOnCopy()
+    {
+        $this->markTestSkipped('Enable this to test an update-on-copy implementation ');
+
+        $sess = $this->sharedFixture['session'];
+
+        $src = '/tests_write_manipulation_base/testCopyNoUpdateOnCopy/srcNode';
+        $dst = '/tests_write_manipulation_base/testCopyNoUpdateOnCopy/dstNode/srcNode';
+        $this->ws->copy($src, $dst);
+
+        // make sure child node was copied
+        $this->assertTrue($sess->nodeExists($dst.'/srcFile'));
+        // make sure things were updated
+        $this->assertEquals('123', $sess->getProperty($dst.'/updateFile/jcr:data')->getNativeValue());
+    }
 
 }
 
