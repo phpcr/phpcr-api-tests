@@ -52,8 +52,8 @@ class Write_Manipulation_CopyMethodsTest extends jackalope_baseCase
      */
     public function testCopyNoSuchWorkspace()
     {
-        $src = '/tests_write_manipulation_base/testWorkspaceCopy/srcNode';
-        $dst = '/tests_write_manipulation_base/testWorkspaceCopy/dstNode/srcNode';
+        $src = '/somewhere/foo';
+        $dst = '/here/foo';
         $this->ws->copy($src, $dst, 'inexistentworkspace');
     }
 
