@@ -13,7 +13,7 @@ class Write_Manipulation_CopyMethodsTest extends jackalope_baseCase
     static public function setupBeforeClass()
     {
         parent::setupBeforeClass();
-        self::$staticSharedFixture['ie']->import('write/manipulation/base.xml');
+        self::$staticSharedFixture['ie']->import('write/manipulation/copy.xml');
     }
 
     protected function setUp()
@@ -29,8 +29,8 @@ class Write_Manipulation_CopyMethodsTest extends jackalope_baseCase
      */
     public function testWorkspaceCopy()
     {
-        $src = '/tests_write_manipulation_base/testWorkspaceCopy/srcNode';
-        $dst = '/tests_write_manipulation_base/testWorkspaceCopy/dstNode/srcNode';
+        $src = '/tests_write_manipulation_copy/testWorkspaceCopy/srcNode';
+        $dst = '/tests_write_manipulation_copy/testWorkspaceCopy/dstNode/srcNode';
 
         $this->ws->copy($src, $dst);
 
@@ -78,8 +78,8 @@ class Write_Manipulation_CopyMethodsTest extends jackalope_baseCase
      */
     public function testCopyInvalidDstPath()
     {
-        $src = '/tests_write_manipulation_base/testCopyInvalidDstPath/srcNode';
-        $dst = '/tests_write_manipulation_base/testCopyInvalidDstPath/dstNode/srcNode[3]';
+        $src = '/tests_write_manipulation_copy/testCopyInvalidDstPath/srcNode';
+        $dst = '/tests_write_manipulation_copy/testCopyInvalidDstPath/dstNode/srcNode[3]';
         $this->ws->copy($src, $dst);
     }
 
@@ -88,8 +88,8 @@ class Write_Manipulation_CopyMethodsTest extends jackalope_baseCase
      */
     public function testCopyProperty()
     {
-        $src = '/tests_write_manipulation_base/testCopyProperty/srcFile/jcr:content/someProperty';
-        $dst = '/tests_write_manipulation_base/testCopyProperty/dstFile/jcr:content/someProperty';
+        $src = '/tests_write_manipulation_copy/testCopyProperty/srcFile/jcr:content/someProperty';
+        $dst = '/tests_write_manipulation_copy/testCopyProperty/dstFile/jcr:content/someProperty';
         $this->ws->copy($src, $dst);
     }
 
@@ -98,8 +98,8 @@ class Write_Manipulation_CopyMethodsTest extends jackalope_baseCase
      */
     public function testCopySrcNotFound()
     {
-        $src = '/tests_write_manipulation_base/testCopySrcNotFound/notFound';
-        $dst = '/tests_write_manipulation_base/testCopySrcNotFound/dstNode/notFound';
+        $src = '/tests_write_manipulation_copy/testCopySrcNotFound/notFound';
+        $dst = '/tests_write_manipulation_copy/testCopySrcNotFound/dstNode/notFound';
         $this->ws->copy($src, $dst);
     }
 
@@ -108,8 +108,8 @@ class Write_Manipulation_CopyMethodsTest extends jackalope_baseCase
      */
     public function testCopyDstParentNotFound()
     {
-        $src = '/tests_write_manipulation_base/testCopyDstParentNotFound/srcNode';
-        $dst = '/tests_write_manipulation_base/testCopyDstParentNotFound/dstNode/notFound/srcNode';
+        $src = '/tests_write_manipulation_copy/testCopyDstParentNotFound/srcNode';
+        $dst = '/tests_write_manipulation_copy/testCopyDstParentNotFound/dstNode/notFound/srcNode';
         $this->ws->copy($src, $dst);
     }
 
@@ -120,8 +120,8 @@ class Write_Manipulation_CopyMethodsTest extends jackalope_baseCase
      */
     public function testCopyNoUpdateOnCopy()
     {
-        $src = '/tests_write_manipulation_base/testCopyNoUpdateOnCopy/srcNode';
-        $dst = '/tests_write_manipulation_base/testCopyNoUpdateOnCopy/dstNode/srcNode';
+        $src = '/tests_write_manipulation_copy/testCopyNoUpdateOnCopy/srcNode';
+        $dst = '/tests_write_manipulation_copy/testCopyNoUpdateOnCopy/dstNode/srcNode';
 
         $this->ws->copy($src, $dst);
     }
@@ -132,8 +132,8 @@ class Write_Manipulation_CopyMethodsTest extends jackalope_baseCase
 
         $sess = $this->sharedFixture['session'];
 
-        $src = '/tests_write_manipulation_base/testCopyNoUpdateOnCopy/srcNode';
-        $dst = '/tests_write_manipulation_base/testCopyNoUpdateOnCopy/dstNode/srcNode';
+        $src = '/tests_write_manipulation_copy/testCopyNoUpdateOnCopy/srcNode';
+        $dst = '/tests_write_manipulation_copy/testCopyNoUpdateOnCopy/dstNode/srcNode';
         $this->ws->copy($src, $dst);
 
         // make sure child node was copied

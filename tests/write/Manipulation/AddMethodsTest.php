@@ -13,7 +13,7 @@ class Write_Manipulation_AddMethodsTest extends jackalope_baseCase
     static public function setupBeforeClass()
     {
         parent::setupBeforeClass();
-        self::$staticSharedFixture['ie']->import('write/manipulation/base.xml');
+        self::$staticSharedFixture['ie']->import('write/manipulation/add.xml');
     }
 
     public function setUp()
@@ -156,10 +156,10 @@ class Write_Manipulation_AddMethodsTest extends jackalope_baseCase
         $newNode = $this->node->addNode('parent', 'nt:unstructured');
         $newNode->addNode('child', 'nt:unstructured');
 
-        $this->assertTrue($this->sharedFixture['session']->nodeExists('/tests_write_manipulation_base/testAddNodeChild/parent/child'), 'Child node not found [Session]');
+        $this->assertTrue($this->sharedFixture['session']->nodeExists('/tests_write_manipulation_add/testAddNodeChild/parent/child'), 'Child node not found [Session]');
 
         // dispatch to backend
         $session = $this->saveAndRenewSession();
-        $this->assertTrue($session->nodeExists('/tests_write_manipulation_base/testAddNodeChild/parent/child'), 'Child node not found [Backend]');
+        $this->assertTrue($session->nodeExists('/tests_write_manipulation_add/testAddNodeChild/parent/child'), 'Child node not found [Backend]');
     }
 }

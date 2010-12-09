@@ -10,7 +10,7 @@ class Write_Manipulation_DeleteMethodsTest extends jackalope_baseCase
     static public function setupBeforeClass()
     {
         parent::setupBeforeClass();
-        self::$staticSharedFixture['ie']->import('write/manipulation/base.xml');
+        self::$staticSharedFixture['ie']->import('write/manipulation/delete.xml');
     }
 
     public function setUp()
@@ -26,7 +26,7 @@ class Write_Manipulation_DeleteMethodsTest extends jackalope_baseCase
     {
         $parent = $this->node->getParent();
         $this->assertTrue($parent->hasNode('testRemoveItemNode'));
-        $this->sharedFixture['session']->removeItem('/tests_write_manipulation_base/testRemoveItemNode');
+        $this->sharedFixture['session']->removeItem('/tests_write_manipulation_delete/testRemoveItemNode');
         $this->assertFalse($parent->hasNode('testRemoveItemNode'), 'Node was not removed');
     }
 
@@ -37,7 +37,7 @@ class Write_Manipulation_DeleteMethodsTest extends jackalope_baseCase
     {
         $property = $this->node->getProperty('longNumber');
         $this->assertTrue($this->node->hasProperty('longNumber'));
-        $this->sharedFixture['session']->removeItem('/tests_write_manipulation_base/testRemoveItemProperty/longNumber');
+        $this->sharedFixture['session']->removeItem('/tests_write_manipulation_delete/testRemoveItemProperty/longNumber');
         $this->assertFalse($this->node->hasProperty('longNumber'));
     }
     /**
@@ -126,7 +126,7 @@ class Write_Manipulation_DeleteMethodsTest extends jackalope_baseCase
         $this->assertTrue($this->node->hasProperty('longNumber'));
         $this->node->setProperty('longNumber', null);
         $this->assertFalse($this->node->hasProperty('longNumber'));
-        $this->assertFalse($this->sharedFixture['session']->itemExists('/tests_write_manipulation_base/testNodeRemobeProperty/longNumber'));
+        $this->assertFalse($this->sharedFixture['session']->itemExists('/tests_write_manipulation_delete/testNodeRemobeProperty/longNumber'));
     }
 
     /**

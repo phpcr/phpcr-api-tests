@@ -11,7 +11,7 @@ class Write_Manipulation_MoveMethodsTest extends jackalope_baseCase
     static public function setupBeforeClass()
     {
         parent::setupBeforeClass();
-        self::$staticSharedFixture['ie']->import('write/manipulation/base.xml');
+        self::$staticSharedFixture['ie']->import('write/manipulation/move.xml');
     }
 
     protected function setUp()
@@ -28,8 +28,8 @@ class Write_Manipulation_MoveMethodsTest extends jackalope_baseCase
     {
         $session = $this->sharedFixture['session'];
 
-        $src = '/tests_write_manipulation_base/testSessionMove/srcNode';
-        $dst = '/tests_write_manipulation_base/testSessionMove/dstNode/srcNode';
+        $src = '/tests_write_manipulation_move/testSessionMove/srcNode';
+        $dst = '/tests_write_manipulation_move/testSessionMove/dstNode/srcNode';
 
         $session->move($src, $dst);
 
@@ -53,8 +53,8 @@ class Write_Manipulation_MoveMethodsTest extends jackalope_baseCase
     {
         $session = $this->sharedFixture['session'];
         // has mix:referenceable
-        $src = '/tests_write_manipulation_base/testSessionMoveReferencable/srcNode';
-        $dst = '/tests_write_manipulation_base/testSessionMoveReferencable/dstNode/srcNode';
+        $src = '/tests_write_manipulation_move/testSessionMoveReferencable/srcNode';
+        $dst = '/tests_write_manipulation_move/testSessionMoveReferencable/dstNode/srcNode';
 
         $srcUuid = $session->getNode($src)->getIdentifier();
         $session->move($src, $dst);
@@ -78,8 +78,8 @@ class Write_Manipulation_MoveMethodsTest extends jackalope_baseCase
     {
         $session = $this->sharedFixture['session'];
 
-        $src = '/tests_write_manipulation_base/testSessionMovePathUpdated/srcNode';
-        $dst = '/tests_write_manipulation_base/testSessionMovePathUpdated/dstNode/srcNode';
+        $src = '/tests_write_manipulation_move/testSessionMovePathUpdated/srcNode';
+        $dst = '/tests_write_manipulation_move/testSessionMovePathUpdated/dstNode/srcNode';
 
         // load node into cache
         $session->getNode($src);
@@ -94,8 +94,8 @@ class Write_Manipulation_MoveMethodsTest extends jackalope_baseCase
     {
         $session = $this->sharedFixture['session'];
 
-        $src = '/tests_write_manipulation_base/testSessionMovePathUpdatedChild/srcNode';
-        $dst = '/tests_write_manipulation_base/testSessionMovePathUpdatedChild/dstNode/srcNode';
+        $src = '/tests_write_manipulation_move/testSessionMovePathUpdatedChild/srcNode';
+        $dst = '/tests_write_manipulation_move/testSessionMovePathUpdatedChild/dstNode/srcNode';
 
         // load nodes into cache
         $session->getNode($src);
@@ -112,8 +112,8 @@ class Write_Manipulation_MoveMethodsTest extends jackalope_baseCase
     {
         $session = $this->sharedFixture['session'];
 
-        $src = '/tests_write_manipulation_base/testSessionMoveHasNode/srcNode';
-        $dst = '/tests_write_manipulation_base/testSessionMoveHasNode/dstNode/srcNode';
+        $src = '/tests_write_manipulation_move/testSessionMoveHasNode/srcNode';
+        $dst = '/tests_write_manipulation_move/testSessionMoveHasNode/dstNode/srcNode';
 
         // load node and child into cache
         $srcNode = $session->getNode($src);
@@ -129,8 +129,8 @@ class Write_Manipulation_MoveMethodsTest extends jackalope_baseCase
     {
         $session = $this->sharedFixture['session'];
 
-        $src = '/tests_write_manipulation_base/testSessionMoveHasNodeParent/srcNode';
-        $dst = '/tests_write_manipulation_base/testSessionMoveHasNodeParent/dstNode/srcNode';
+        $src = '/tests_write_manipulation_move/testSessionMoveHasNodeParent/srcNode';
+        $dst = '/tests_write_manipulation_move/testSessionMoveHasNodeParent/dstNode/srcNode';
 
         // load node into cache
         $session->getNode($src);
@@ -145,9 +145,9 @@ class Write_Manipulation_MoveMethodsTest extends jackalope_baseCase
     {
         $session = $this->sharedFixture['session'];
 
-        $src = '/tests_write_manipulation_base/testSessionMoveMoved/srcNode';
-        $dst = '/tests_write_manipulation_base/testSessionMoveMoved/dstNode/srcNode';
-        $dst2 = '/tests_write_manipulation_base/testSessionMoveMoved/dstNode2/srcNode';
+        $src = '/tests_write_manipulation_move/testSessionMoveMoved/srcNode';
+        $dst = '/tests_write_manipulation_move/testSessionMoveMoved/dstNode/srcNode';
+        $dst2 = '/tests_write_manipulation_move/testSessionMoveMoved/dstNode2/srcNode';
 
         $session->move($src, $dst);
         $session->move($dst, $dst2);
@@ -171,8 +171,8 @@ class Write_Manipulation_MoveMethodsTest extends jackalope_baseCase
     {
         $session = $this->sharedFixture['session'];
 
-        $src = '/tests_write_manipulation_base/testSessionDeleteMoved/srcNode';
-        $dst = '/tests_write_manipulation_base/testSessionDeleteMoved/dstNode/srcNode';
+        $src = '/tests_write_manipulation_move/testSessionDeleteMoved/srcNode';
+        $dst = '/tests_write_manipulation_move/testSessionDeleteMoved/dstNode/srcNode';
 
         $session->move($src, $dst);
         $session->removeItem($dst);
@@ -183,8 +183,8 @@ class Write_Manipulation_MoveMethodsTest extends jackalope_baseCase
         $session = $this->sharedFixture['session'];
 
         $this->node->addNode('newNode', 'nt:unstructured');
-        $src = '/tests_write_manipulation_base/testSessionMoveAdded/newNode';
-        $dst = '/tests_write_manipulation_base/testSessionMoveAdded/dstNode/newNode';
+        $src = '/tests_write_manipulation_move/testSessionMoveAdded/newNode';
+        $dst = '/tests_write_manipulation_move/testSessionMoveAdded/dstNode/newNode';
 
         $session->move($src, $dst);
 
@@ -208,8 +208,8 @@ class Write_Manipulation_MoveMethodsTest extends jackalope_baseCase
         $newNode = $this->node->addNode('newNode', 'nt:unstructured');
         $newNode->addNode('newChild', 'nt:unstructured');
 
-        $src = '/tests_write_manipulation_base/testSessionMoveChildAdded/newNode/newChild';
-        $dst = '/tests_write_manipulation_base/testSessionMoveChildAdded/dstNode/newChild';
+        $src = '/tests_write_manipulation_move/testSessionMoveChildAdded/newNode/newChild';
+        $dst = '/tests_write_manipulation_move/testSessionMoveChildAdded/dstNode/newChild';
 
         $session->move($src, $dst);
 
@@ -230,9 +230,9 @@ class Write_Manipulation_MoveMethodsTest extends jackalope_baseCase
     {
         $session = $this->sharedFixture['session'];
 
-        $src = '/tests_write_manipulation_base/testSessionMoveChildMoved/srcNode';
-        $dst = '/tests_write_manipulation_base/testSessionMoveChildMoved/dstNode/srcNode';
-        $dst2 = '/tests_write_manipulation_base/testSessionMoveChildMoved/srcFile';
+        $src = '/tests_write_manipulation_move/testSessionMoveChildMoved/srcNode';
+        $dst = '/tests_write_manipulation_move/testSessionMoveChildMoved/dstNode/srcNode';
+        $dst2 = '/tests_write_manipulation_move/testSessionMoveChildMoved/srcFile';
 
         $session->move($src, $dst);
         $session->move($dst.'/srcFile', $dst2);
@@ -256,8 +256,8 @@ class Write_Manipulation_MoveMethodsTest extends jackalope_baseCase
     {
         $session = $this->sharedFixture['session'];
 
-        $src = '/tests_write_manipulation_base/testSessionMoveProperty/srcNode/prop';
-        $dst = '/tests_write_manipulation_base/testSessionMoveProperty/dstNode/prop';
+        $src = '/tests_write_manipulation_move/testSessionMoveProperty/srcNode/prop';
+        $dst = '/tests_write_manipulation_move/testSessionMoveProperty/dstNode/prop';
         $session->move($src, $dst);
         $session->save();
     }
@@ -269,8 +269,8 @@ class Write_Manipulation_MoveMethodsTest extends jackalope_baseCase
     {
         $session = $this->sharedFixture['session'];
 
-        $src = '/tests_write_manipulation_base/testSessionMoveInvalidDstPath/srcNode';
-        $dst = '/tests_write_manipulation_base/testSessionMoveInvalidDstPath/dstNode/srcNode[3]';
+        $src = '/tests_write_manipulation_move/testSessionMoveInvalidDstPath/srcNode';
+        $dst = '/tests_write_manipulation_move/testSessionMoveInvalidDstPath/dstNode/srcNode[3]';
         $session->move($src, $dst);
         $session->save();
     }
@@ -282,8 +282,8 @@ class Write_Manipulation_MoveMethodsTest extends jackalope_baseCase
     {
         $session = $this->sharedFixture['session'];
 
-        $src = '/tests_write_manipulation_base/testSessionMoveSrcNotFound/notFound';
-        $dst = '/tests_write_manipulation_base/testSessionMoveSrcNotFound/dstNode/notFound';
+        $src = '/tests_write_manipulation_move/testSessionMoveSrcNotFound/notFound';
+        $dst = '/tests_write_manipulation_move/testSessionMoveSrcNotFound/dstNode/notFound';
         $session->move($src, $dst);
         $session->save();
     }
@@ -296,8 +296,8 @@ class Write_Manipulation_MoveMethodsTest extends jackalope_baseCase
     {
         $session = $this->sharedFixture['session'];
 
-        $src = '/tests_write_manipulation_base/testSessionMoveDstNotFound/srcNode';
-        $dst = '/tests_write_manipulation_base/testSessionMoveDstNotFound/notFound/srcNode';
+        $src = '/tests_write_manipulation_move/testSessionMoveDstNotFound/srcNode';
+        $dst = '/tests_write_manipulation_move/testSessionMoveDstNotFound/notFound/srcNode';
         $session->move($src, $dst);
         $session->save();
     }
@@ -311,8 +311,8 @@ class Write_Manipulation_MoveMethodsTest extends jackalope_baseCase
     {
         $session = $this->sharedFixture['session'];
 
-        $src = '/tests_write_manipulation_base/testSessionMoveDstExists/srcNode/srcChild';
-        $dst = '/tests_write_manipulation_base/testSessionMoveDstExists/dstNode/srcChild';
+        $src = '/tests_write_manipulation_move/testSessionMoveDstExists/srcNode/srcChild';
+        $dst = '/tests_write_manipulation_move/testSessionMoveDstExists/dstNode/srcChild';
 
         // srcChild already exists at $dst
         $session->move($src, $dst);
@@ -325,8 +325,8 @@ class Write_Manipulation_MoveMethodsTest extends jackalope_baseCase
         $session = $this->sharedFixture['session'];
 
         $workspace = $session->getWorkspace();
-        $src = '/tests_write_manipulation_base/testWorkspaceMove/srcNode';
-        $dst = '/tests_write_manipulation_base/testWorkspaceMove/dstNode/srcNode';
+        $src = '/tests_write_manipulation_move/testWorkspaceMove/srcNode';
+        $dst = '/tests_write_manipulation_move/testWorkspaceMove/dstNode/srcNode';
 
         $srcUuid = $session->getNode($src)->getIdentifier();
         $workspace->move($src, $dst);
