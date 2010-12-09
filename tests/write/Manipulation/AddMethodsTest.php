@@ -96,6 +96,7 @@ class Write_Manipulation_AddMethodsTest extends jackalope_baseCase
         $this->assertEquals('val2', $node->getPropertyValue('test2'), 'Property was not added correctly');
     }
 
+
     /**
      * @covers Jackalope\Node::addNode
      * @expectedException \PHPCR\NodeType\ConstraintViolationException
@@ -148,5 +149,17 @@ class Write_Manipulation_AddMethodsTest extends jackalope_baseCase
     public function testAddNodeWithIndex()
     {
         $this->node->addNode('name[3]', 'nt:unstructured');
+    }
+
+    public function testAddNodeChild()
+    {
+        $newNode = $this->node->addNode('parent', 'nt:unstructured');
+        $newNode->addNode('child', 'nt:unstructured');
+
+        $this->assertTrue($this->sharedFixture['session']->nodeExists('/tests_write_manipulation_base/testAddNodeChild/parent/child'), 'Child node not found [Session]');
+
+        // dispatch to backend
+        $session = $this->saveAndRenewSession();
+        $this->assertTrue($session->nodeExists('/tests_write_manipulation_base/testAddNodeChild/parent/child'), 'Child node not found [Backend]');
     }
 }

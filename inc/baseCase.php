@@ -56,6 +56,17 @@ abstract class jackalope_baseCase extends PHPUnit_Framework_TestCase
         $this->sharedFixture['session'] = self::$staticSharedFixture['session'];
     }
 
+    /**
+     * Saves the session and clears the cache
+     * @return \Jackalope\Session   The new session
+     */
+    protected function saveAndRenewSession()
+    {
+        $this->sharedFixture['session']->save();
+        $this->renewSession();
+        return $this->sharedFixture['session'];
+    }
+
     protected function setUp()
     {
         $this->sharedFixture = self::$staticSharedFixture;
