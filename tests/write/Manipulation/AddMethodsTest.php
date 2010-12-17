@@ -96,6 +96,31 @@ class Write_Manipulation_AddMethodsTest extends jackalope_baseCase
         $this->assertEquals('val2', $node->getPropertyValue('test2'), 'Property was not added correctly');
     }
 
+    public function testAddMultiValuePropertyOnUnstructured()
+    {
+        $node = $this->node->addNode('unstructuredNode2', 'nt:unstructured');
+        $node->setProperty('test', array('val', 'val2'));
+
+        $this->sharedFixture['session']->getObjectManager()->save();
+        $this->assertFalse($node->isNew(), 'Node was not saved');
+
+        $this->renewSession();
+        $node = $this->sharedFixture['session']->getNode($this->node->getPath() . '/unstructuredNode2');
+
+        $this->assertNotNull($node, 'Node was not created');
+        $this->assertEquals(array('val', 'val2'), $node->getPropertyValue('test'), 'Property was not saved correctly');
+
+        $node->setProperty('test2', array('val3', 'val4'));
+
+        $this->sharedFixture['session']->getObjectManager()->save();
+        $this->assertFalse($node->isNew(), 'Node was not saved');
+        $this->assertFalse($node->getProperty('test2')->isNew(), 'Property was not saved');
+        $this->renewSession();
+        $node = $this->sharedFixture['session']->getNode($this->node->getPath() . '/unstructuredNode2');
+
+        $this->assertEquals(array('val3', 'val4'), $node->getPropertyValue('test2'), 'Property was not added correctly');
+    }
+
 
     /**
      * @covers Jackalope\Node::addNode
@@ -161,5 +186,30 @@ class Write_Manipulation_AddMethodsTest extends jackalope_baseCase
         // dispatch to backend
         $session = $this->saveAndRenewSession();
         $this->assertTrue($session->nodeExists('/tests_write_manipulation_add/testAddNodeChild/parent/child'), 'Child node not found [Backend]');
+    }
+
+    public function testAddMixinOnNewNode()
+    {
+        $newNode = $this->node->addNode('parent', 'nt:unstructured');
+        $newNode->addMixin('mix:versionable');
+        $session = $this->saveAndRenewSession();
+        $savedNode = $session->getNode($newNode->getPath());
+        $resultTypes = array();
+        foreach ($savedNode->getMixinNodeTypes() as $type) {
+            $resultTypes[] = $type->getName();
+        }
+        $this->assertEquals(array('mix:versionable'), $resultTypes, 'Property mixins should contain mix:versionable');
+    }
+
+    public function testAddMixinOnExistingNode()
+    {
+        $this->node->addMixin('mix:versionable');
+        $session = $this->saveAndRenewSession();
+        $savedNode = $session->getNode($this->node->getPath());
+        $resultTypes = array();
+        foreach ($savedNode->getMixinNodeTypes() as $type) {
+            $resultTypes[] = $type->getName();
+        }
+        $this->assertEquals(array('mix:versionable'), $resultTypes, 'Property mixins should contain mix:versionable');
     }
 }
