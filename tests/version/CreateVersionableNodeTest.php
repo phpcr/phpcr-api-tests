@@ -21,18 +21,20 @@ class Version_CreateVersionableNodeTest extends jackalope_baseCase
         $this->node = $this->sharedFixture['session']->getNode('/tests_version_base/versionable');
     }
     
-     /**
-     * @covers \PHPCR\PropertyInterface::setValue
-     */
     public function testAddVersionableMixin()
     {
         $this->node->addMixin("mix:versionable");
-        $this->node->addMixin("mix:simpleVersionable");
         $mixins = array();
         foreach ($this->node->getMixinNodeTypes() as $mix) {
             $mixins[] = $mix->getName();
         }
-        $this->assertContains("mix:versionable", $mixins, "Node doesn't have mix:versionable mixin");
         
+        
+        $this->assertContains("mix:versionable", $mixins, "Node doesn't have mix:versionable mixin");
+        $this->sharedFixture['session']->save();
+        //get the node again from the server
+        $this->node = $this->sharedFixture['session']->getNode('/tests_version_base/versionable');
+        $this->assertContains("mix:versionable", $mixins, "Node doesn't have mix:versionable mixin");
+        $this->assertTrue( $this->node->getProperty("jcr:isCheckedOut")->getBoolean(),"jcr:isCheckout is not true");
     }
 }
