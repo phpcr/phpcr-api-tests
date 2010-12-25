@@ -36,7 +36,7 @@ abstract class jackalope_baseCase extends PHPUnit_Framework_TestCase
         }
         self::$staticSharedFixture['session'] = getJCRSession(self::$staticSharedFixture['config']);
         self::$staticSharedFixture['ie'] = new jackalope_importexport(dirname(__FILE__) . "/../fixture/");
-        self::$staticSharedFixture['qm'] = new Jackalope\Query\QueryManager(self::$staticSharedFixture['session']->getObjectManager());
+        self::$staticSharedFixture['qm'] = self::$staticSharedFixture['session']->getWorkspace()->getQueryManager();
     }
 
     public static function tearDownAfterClass()
