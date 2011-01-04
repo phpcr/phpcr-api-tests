@@ -37,4 +37,33 @@ class Version_CreateVersionableNodeTest extends jackalope_baseCase
         $this->assertContains("mix:versionable", $mixins, "Node doesn't have mix:versionable mixin");
         $this->assertTrue( $this->node->getProperty("jcr:isCheckedOut")->getBoolean(),"jcr:isCheckout is not true");
     }
+    
+    public function testCheckinVersion() {
+        $ws = $this->sharedFixture['session']->getWorkspace();
+        $vm = $ws->getVersionManager();
+        $vm->checkout("/tests_version_base/versioned");
+        $node = $this->sharedFixture['session']->getNode('/tests_version_base/versioned');
+        $node->setProperty('foo', 'bar');
+        $vm->checkin("/tests_version_base/versioned");
+        $history = $vm->getVersionHistory("/tests_version_base/versioned");
+        $this->AssertNotEmpty($history);
+    }
+
+    /**
+     * @expectedException PHPCR\Version\VersionException
+     */
+    public function testWriteNotCheckedOutVersion() {
+        $ws = $this->sharedFixture['session']->getWorkspace();
+        $vm = $ws->getVersionManager();
+        $vm->checkout("/tests_version_base/versioned");
+        $node = $this->sharedFixture['session']->getNode('/tests_version_base/versioned');
+
+        $node->setProperty('foo', 'bar');
+        $this->sharedFixture['session']->save();
+        $newNode = $vm->checkin("/tests_version_base/versioned");
+
+        $node->setProperty('foo', 'bar2');
+        $this->sharedFixture['session']->save();
+
+    }
 }
