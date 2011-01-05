@@ -19,6 +19,7 @@ class Version_CreateVersionableNodeTest extends jackalope_baseCase
     {
         parent::setUp();
         $this->node = $this->sharedFixture['session']->getNode('/tests_version_base/versionable');
+        $this->vm = $this->sharedFixture['session']->getWorkspace()->getVersionManager();
     }
     
     public function testAddVersionableMixin()
@@ -46,7 +47,7 @@ class Version_CreateVersionableNodeTest extends jackalope_baseCase
         $node->setProperty('foo', 'bar');
         $vm->checkin("/tests_version_base/versioned");
         $history = $vm->getVersionHistory("/tests_version_base/versioned");
-        $this->AssertNotEmpty($history);
+        $this->AssertEquals(count($history->getAllVersions()), 2);
     }
 
     /**
@@ -66,4 +67,5 @@ class Version_CreateVersionableNodeTest extends jackalope_baseCase
         $this->sharedFixture['session']->save();
 
     }
+    
 }
