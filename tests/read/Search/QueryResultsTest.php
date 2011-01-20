@@ -18,10 +18,10 @@ class Read_Search_QueryResultsTest extends jackalope_baseCase
         parent::setUp();
 
         //FIXME: xpath is depricated. should test SQL2 (and QOM?)
-        $this->query = $this->sharedFixture['qm']->createQuery('//element(*, nt:folder)', 'xpath');
-        $this->qr = $this->query->execute();
+        // $this->query = $this->sharedFixture['qm']->createQuery('//element(*, nt:folder)', 'xpath');
+        // $this->qr = $this->query->execute();
         //sanity check
-        $this->assertType('PHPCR\Query\QueryResultInterface', $this->qr);
+        // $this->assertType('PHPCR\Query\QueryResultInterface', $this->qr);
     }
 
     public function testBindValue()
@@ -106,5 +106,16 @@ class Read_Search_QueryResultsTest extends jackalope_baseCase
     public function testGetSelectorNames()
     {
         $this->markTestSkipped(); //TODO: how to have selector names in result?
+    }
+
+    public function testGetSQL2Query()
+    {
+        $query = $this->sharedFixture['qm']->createQuery("SELECT * FROM [nt:unstructured]", \PHPCR\Query\QueryInterface::JCR_SQL2);
+        $queryResult = $query->execute();
+        $vals = array("rep:root", "nt:unstructured", "nt:unstructured");
+
+        foreach ($queryResult as $key => $row) {
+            $this->assertEquals($vals[$key], $row->getProperty('jcr:primaryType')->getNativeValue());
+        }
     }
 }
