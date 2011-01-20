@@ -17,84 +17,59 @@ class Read_Search_QueryResultsTest extends jackalope_baseCase
     {
         parent::setUp();
 
-        //FIXME: xpath is depricated. should test SQL2 (and QOM?)
-        // $this->query = $this->sharedFixture['qm']->createQuery('//element(*, nt:folder)', 'xpath');
-        // $this->qr = $this->query->execute();
+        $this->query = $this->sharedFixture['qm']->createQuery("SELECT * FROM [nt:unstructured]", \PHPCR\Query\QueryInterface::JCR_SQL2);
+        $this->qr = $this->query->execute();
         //sanity check
-        // $this->assertType('PHPCR\Query\QueryResultInterface', $this->qr);
+        $this->assertType('PHPCR\Query\QueryResultInterface', $this->qr);
     }
 
     public function testBindValue()
     {
         $this->markTestSkipped(); //TODO: test with a SQL2 query
     }
+
     public function testGetBindVariableNames()
     {
         $this->markTestSkipped(); //TODO: test with a SQL2 query
     }
+
     public function testGetBindVariableNamesEmpty()
     {
-        $ret = $this->query->getBindVariableNames();
-        $this->assertType('array', $ret);
-        $this->assertLessThan(1, count($ret));
+        $this->markTestSkipped(); //TODO: test with a SQL2 query
     }
 
     public function testGetColumnNames()
     {
-        $ret = $this->qr->getColumnNames();
-        $this->assertType('array', $ret);
-
-        //the fields seem to depend on the node type we filtered for. todo: the field names might be implementation specific
-
-        $this->assertEquals(self::$expect, $ret);
+       $this->assertEquals(3, count($this->qr->getColumnNames()));
     }
 
     public function testGetRows()
     {
-        $ret = $this->qr->getRows();
+        $count = 0;
 
-        $this->assertType('PHPCR\Query\RowIteratorInterface', $ret);
+        foreach ($this->qr->getRows() as $key => $row) {
+            $this->assertType('Jackalope\Query\Row', $row); // Test if the return element is an istance of row
+            $this->assertType('Jackalope\Node', $row->getNode()); //Test if we can get the node of a certain row
+            $this->assertEquals(3, count($row->getValues())); // test if we can get all the values of a row
 
-        $exptsize = $ret->getSize();
-        $num = 0;
-        foreach($ret as $row) {
-            $num++;
-            $this->assertType('PHPCR\Query\RowInterface', $row);
+            foreach ($row as $key => $value) { // Test if we can iterate over the columns inside a row
+                $count++;
+            }
         }
-
-        $this->assertEquals($exptsize, $num);
-        //further tests in Row.php
-    }
-    /**
-     * @expectedException OutOfBoundsException
-     */
-    public function testGetRowsNoSuchElement()
-    {
-        $ret = $this->qr->getRows();
-        while($row = $ret->nextRow()); //just retrieve until after the last
+        $this->assertEquals(9, $count);
     }
 
     public function testGetNodes()
     {
-        $ret = $this->qr->getNodes();
+        $nodes = $this->qr->getNodes();
+        $count = 0;
 
-        $this->assertType('PHPCR\NodeIteratorInterface', $ret);
-        $exptsize = $ret->getSize();
-        $num = 0;
-        foreach($ret as $node) {
-            $num++;
+        foreach ($nodes as $node) {
+            // $this->assertType('Jackalope\Node', $node);
             $this->assertType('PHPCR\NodeInterface', $node);
+            $count++;
         }
-        $this->assertEquals($exptsize, $num);
-    }
-
-    /**
-     * @expectedException OutOfBoundsException
-     */
-    public function testGetNodesNoSuchElement()
-    {
-        $ret = $this->qr->getNodes();
-        while($row = $ret->nextNode()); //just retrieve after the last
+        $this->assertEquals(3, $count);
     }
 
     public function testGetSelectorNamesEmpty()
@@ -108,14 +83,19 @@ class Read_Search_QueryResultsTest extends jackalope_baseCase
         $this->markTestSkipped(); //TODO: how to have selector names in result?
     }
 
-    public function testGetSQL2Query()
+    public function testIterateOverQueryResult()
     {
-        $query = $this->sharedFixture['qm']->createQuery("SELECT * FROM [nt:unstructured]", \PHPCR\Query\QueryInterface::JCR_SQL2);
-        $queryResult = $query->execute();
-        $vals = array("rep:root", "nt:unstructured", "nt:unstructured");
+        $count = 0;
 
-        foreach ($queryResult as $key => $row) {
-            $this->assertEquals($vals[$key], $row->getProperty('jcr:primaryType')->getNativeValue());
+        foreach ($this->qr as $key => $row) {
+            $this->assertType('Jackalope\Query\Row', $row); // Test if the return element is an istance of row
+            $this->assertType('Jackalope\Node', $row->getNode()); //Test if we can get the node of a certain row
+            $this->assertEquals(3, count($row->getValues())); // test if we can get all the values of a row
+
+            foreach ($row as $key => $value) { // Test if we can iterate over the columns inside a row
+                $count++;
+            }
         }
+        $this->assertEquals(9, $count);
     }
 }
