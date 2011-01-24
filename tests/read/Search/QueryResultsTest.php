@@ -92,7 +92,7 @@ class Read_Search_QueryResultsTest extends jackalope_baseCase
             $this->assertType('Jackalope\Node', $row->getNode()); //Test if we can get the node of a certain row
             $this->assertEquals(3, count($row->getValues())); // test if we can get all the values of a row
 
-            foreach ($row as $key => $value) { // Test if we can iterate over the columns inside a row
+            foreach ($row as $columnName => $value) { // Test if we can iterate over the columns inside a row
                 $count++;
             }
         }
