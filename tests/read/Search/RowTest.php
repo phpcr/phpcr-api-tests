@@ -1,4 +1,5 @@
 <?php
+
 require_once(dirname(__FILE__) . '/../../../inc/baseCase.php');
 
 /** test the javax.jcr.Row interface
@@ -17,66 +18,65 @@ class Read_Search_RowTest extends jackalope_baseCase
     public function setUp()
     {
         parent::setUp();
-        $query = $this->sharedFixture['qm']->createQuery('/*/element(tests_read_search_base, nt:folder)', 'xpath');
-        $qr = $query->execute();
-        //sanity check
-        $this->assertType('PHPCR\Query\QueryResultInterface', $qr);
 
-        $rs = $qr->getRows();
-        $rs->rewind();
-        $this->row = $rs->current();
+        $query = $this->sharedFixture['qm']->createQuery("SELECT * FROM [nt:unstructured]", \PHPCR\Query\QueryInterface::JCR_SQL2);
+        $rows = $query->execute()->getRows();
 
-        $this->assertType('PHPCR\Query\RowInterface', $this->row);
+        $rows->rewind();
+        $this->row = $rows->current();
+
+        $this->assertInstanceOf('PHPCR\Query\RowInterface', $this->row);
+    }
+    public function testIterator()
+    {
+        $count = 0;
+
+        foreach ($this->row as $name => $value)
+        {
+            $this->assertNotNull($name);
+            $this->assertNotNull($value);
+            $count++;
+        }
+
+        $this->assertEquals(3, $count);
     }
 
-    public function testRowGetValues()
+    public function testGetValues()
     {
-        $ret = $this->row->getValues();
-        $this->assertType('array', $ret);
+        $values = $this->row->getValues();
 
-        foreach($ret as $value) {
+        foreach($values as $value) {
             $this->assertNotNull($value);
         }
     }
 
-    public function testRowGetValue()
+    public function testGetValue()
     {
-        foreach(jackalope_tests_read_SearchTest_QueryResults::$expect as $propName) {
-            $val = $this->row->getValue($propName);
-            $this->assertNotNull($val);
+        $this->assertEquals('/', $this->row->getValue('jcr:path'));
+    }
 
-            switch($propName) {
-                case 'jcr:createdBy':
-                    $val->getString();
-                    //TODO: seems not to be implemented in alpha5 or null for some other reason. whatever
-                    break;
-                case 'jcr:created':
-                    //2009-07-07T14:35:06.955+02:00
-                    list($y, $m, $dusw) = split('-',$val);
-                    list($d, $usw) = split('T', $dusw);
-                    $this->assertTrue($y > 0);
-                    $this->assertTrue($m > 0);
-                    $this->assertTrue($d > 0);
-                    $this->assertTrue(strlen($usw)==18);
-                    $d = $val->getDate();
-                    $this->assertType('DateTime', $d);
-                    break;
-                case 'jcr:primaryType':
-                    //nt:folder - depends on the search query
-                    $this->assertEquals('nt:folder', $val);
-                    break;
-                case 'jcr:path':
-                    $str = $val->getString();
-                    $this->assertEquals('/tests_read_search_base', $val);
-                    break;
-                case 'jcr:score':
-                    //for me, it was 1788 but i guess that is highly implementation dependent
-                    $num = $val->getLong();
-                    $this->assertTrue($num > 0);
-                    break;
-                default:
-                    $this->fail("Unknown property $propName");
-            }
-        }
+    /**
+     * @expectedException \PHPCR\ItemNotFoundException
+     */
+    public function testGetValueItemNotFound()
+    {
+        $columnName = 'foobar';
+
+        $this->row->getValue($columnName);
+    }
+
+    public function testGetNode()
+    {
+        $this->assertInstanceOf('Jackalope\Node', $this->row->getNode());
+    }
+
+    public function testGetPath()
+    {
+        $this->assertEquals('/', $this->row->getPath());
+    }
+
+    public function testGetScore()
+    {
+        $this->assertNotNull($this->row->getScore());
     }
 }
