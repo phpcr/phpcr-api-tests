@@ -82,7 +82,9 @@ abstract class jackalope_baseCase extends PHPUnit_Framework_TestCase
         $children = $this->rootNode->getNodes();
         // first node seems to be always jcr:system?
         $child = next($children);
-        $this->node = $child->hasNode($this->getName()) ? $child->getNode($this->getName()) : null;
+        if(false !== $child){
+            $this->node = $child->hasNode($this->getName()) ? $child->getNode($this->getName()) : null;
+        }        
     }
 
     /*************************************************************************
