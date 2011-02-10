@@ -223,6 +223,23 @@ class Read_ReadTest_NodeReadMethodsTest extends jackalope_baseCase
         $this->assertContains('jcr:primaryType', $props);
     }
 
+    public function testGetPropertiesValues() {
+        $iterator = $this->node->getPropertiesValues();
+        $this->assertType('Iterator', $iterator);
+        $props = array();
+        $propnames = array();
+        foreach($iterator as $name => $value) {
+            $props[] = $value;
+            $propnames[] = $name;
+        }
+        $this->assertContains('jcr:created', $propnames);
+        $this->assertContains('admin', $props);
+    }
+
+    public function testGetPropertiesValuesFilter() {
+        $this->markTestSkipped('TODO');
+    }
+
     /**
      * @expectedException \PHPCR\RepositoryError
      */
