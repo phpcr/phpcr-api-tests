@@ -1,19 +1,16 @@
-*******************
-Jackalope API tests
-*******************
-http://liip.to/jackalope
+# Jackalope API tests
 
-ebi at liip.ch
-david at liip.ch
-chregu at liip.ch
+[http://liip.to/jackalope](http://liip.to/jackalope)
 
-*****
-Usage
-*****
+* ebi at liip.ch
+* david at liip.ch
+* chregu at liip.ch
+
+## Usage
 
 The jackalope-api-tests is a suite to test compliance for implementations of
 the java content repository specification.
-https://github.com/jackalope/phpcr
+[https://github.com/jackalope/phpcr](https://github.com/jackalope/phpcr)
 
 You need to provide a couple of files in order to let the tests detect your
 implementation:
@@ -23,45 +20,48 @@ implementation:
 
 Once you are done, run phpunit inside of the root directory. If you use a
 standard php installation, this is usually along the lines of
-$ phpunit tests/read/ReadTest.php
+
+    $ phpunit tests/read/ReadTest.php
 
 
-*****
-Setup
-*****
+## Setup
 
-Setting up submodules
-*********************
+### Setting up submodules
 
 After the first clone, don't forget to
 
-git submodule init
-git submodule update
+    git submodule init
+    git submodule update
 
-Dependencies
-************
+### Dependencies
 
-PHPUnit in PATH
-PHPUnit in include_path
+* PHPUnit in PATH
+* PHPUnit in include_path
 
-Setting up Jackrabbit
-*********************
-- Create tests workspace which is different from your default workspace.
-See http://jackrabbit.apache.org/jackrabbit-configuration.html#JackrabbitConfiguration-Workspaceconfiguration
+### Setting up Jackrabbit
+
+Create tests workspace which is different from your default workspace.
+See [http://jackrabbit.apache.org/jackrabbit-configuration.html#JackrabbitConfiguration-Workspaceconfiguration](http://jackrabbit.apache.org/jackrabbit-configuration.html#JackrabbitConfiguration-Workspaceconfiguration)
+
 Or:
-- Go to the directory you started jackrabbit-standalone (eg. /opt/svn/jackrabbit/jackrabbit-standalone/target)
-- cd jackrabbit
-- cd workspaces
-- cp -r default tests
-- cd tests
-- change <Workspace name="default"> to <Workspace name="tests">
-- start jackrabbit again
+
+Go to the directory you started jackrabbit-standalone (eg. /opt/svn/jackrabbit/jackrabbit-standalone/target) and copy the default-workspace to a workspace called "test"
+
+     cp -rp jackrabbit/workspaces/default jackrabbit/workspaces/tests
+
+You then will have to adjust the jackrabbit/workspaces/tests/workspace.xml:
+
+Change the following attribute:
+
+     <Workspace name="default">
+to 
+
+    <Workspace name="tests">
+
+Then start jackrabbit again
 
 
-
-**************
-Implementation
-**************
+## Implementation
 
 This code defines a set of unit tests against the PHPCR interfaces.
 The tests are oriented at the javadoc of the JSR 283 interfaces.
@@ -69,10 +69,7 @@ The tests are oriented at the javadoc of the JSR 283 interfaces.
 tests/read contains tests for the base read functionality.
 tests/write contains tests for the base write functionality.
 
-
-****
-TODO
-****
+## TODO
 
 At the moment, the API tests assume that the storage backend is Jackrabbit.
 This should be refactored out of the test suite and replaced by a method in
@@ -82,7 +79,7 @@ bootstrap.php to load fixtures into the backend.
 This test classes are not completely covering the specification.
 It would be nice if we were able to run the JSR-283 Technology Compliance
 Kit (TCK) against php implementations.
-https://jira.liip.ch/browse/JACK-24
+[https://jira.liip.ch/browse/JACK-24](https://jira.liip.ch/browse/JACK-24)
 
 Once we manage to do that, we could hopefully also use the performance test suite
-https://jira.liip.ch/browse/JACK-23
+[https://jira.liip.ch/browse/JACK-23](https://jira.liip.ch/browse/JACK-23)
