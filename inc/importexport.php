@@ -51,7 +51,8 @@ class jackalope_importexport
             'jcr.user' => 'username',
             'jcr.pass' => 'password',
             'jcr.workspace' => 'workspace',
-            'jcr.transport' => 'transport'
+            'jcr.transport' => 'transport',
+            'jcr.basepath' => 'repository-base-xpath',
         );
         $opts = "";
         foreach ($args AS $arg => $newArg) {
