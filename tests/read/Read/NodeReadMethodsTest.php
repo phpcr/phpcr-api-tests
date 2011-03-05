@@ -25,29 +25,42 @@ class Read_ReadTest_NodeReadMethodsTest extends jackalope_baseCase
         parent::setUp();
         $this->rootNode = $this->sharedFixture['session']->getRootNode();
         $this->node = $this->rootNode->getNode('tests_read_access_base');
-        $this->deepnode = $this->node->getNode('multiValueProperty');
+        $this->deepnode = $this->node->getNode('multiValueProperty')->getNode('deepnode');
     }
 
     /*** item base methods for node ***/
-    function testGetAncestor()
+    public function testGetAncestor()
     {
         $ancestor = $this->deepnode->getAncestor(0);
         $this->assertNotNull($ancestor);
-        $this->assertTrue($this->rootNode->isSame($ancestor));
+        $this->assertTrue($this->rootNode->isSame($ancestor), 'depth 0 wrong');
 
         $ancestor = $this->deepnode->getAncestor(1);
         $this->assertNotNull($ancestor);
-        $this->assertTrue($this->node->isSame($ancestor));
+        $this->assertTrue($this->node->isSame($ancestor), 'depth 1 wrong');
+
+        $ancestor = $this->deepnode->getAncestor(2);
+        $this->assertNotNull($ancestor);
+        $this->assertTrue($this->node->getNode('multiValueProperty')->isSame($ancestor), 'depth 2 wrong');
 
         //self
         $ancestor = $this->deepnode->getAncestor($this->deepnode->getDepth());
         $this->assertNotNull($ancestor);
         $this->assertTrue($this->deepnode->isSame($ancestor));
     }
+
+    /**
+     * @expectedException \PHPCR\ItemNotFoundException
+     */
+    public function testGetAncestorTooDeep()
+    {
+        $this->deepnode->getAncestor($this->deepnode->getDepth()+1);
+    }
+
     public function testGetDepth()
     {
         $this->assertEquals(1, $this->node->getDepth());
-        $this->assertEquals(2, $this->deepnode->getDepth());
+        $this->assertEquals(3, $this->deepnode->getDepth());
     }
     public function testGetName()
     {
@@ -59,12 +72,12 @@ class Read_ReadTest_NodeReadMethodsTest extends jackalope_baseCase
     {
         $parent = $this->deepnode->getParent();
         $this->assertNotNull($parent);
-        $this->assertTrue($this->node->isSame($parent));
+        $this->assertTrue($this->node->getNode('multiValueProperty')->isSame($parent));
     }
     public function testGetPath()
     {
         $path = $this->deepnode->getPath();
-        $this->assertEquals('/tests_read_access_base/multiValueProperty', $path);
+        $this->assertEquals('/tests_read_access_base/multiValueProperty/deepnode', $path);
     }
     public function testGetSession()
     {
@@ -223,23 +236,6 @@ class Read_ReadTest_NodeReadMethodsTest extends jackalope_baseCase
         $this->assertContains('jcr:primaryType', $props);
     }
 
-    public function testGetPropertiesValues() {
-        $iterator = $this->node->getPropertiesValues();
-        $this->assertType('Iterator', $iterator);
-        $props = array();
-        $propnames = array();
-        foreach($iterator as $name => $value) {
-            $props[] = $value;
-            $propnames[] = $name;
-        }
-        $this->assertContains('jcr:created', $propnames);
-        $this->assertContains('admin', $props);
-    }
-
-    public function testGetPropertiesValuesFilter() {
-        $this->markTestSkipped('TODO');
-    }
-
     /**
      * @expectedException \PHPCR\RepositoryError
      */
@@ -344,7 +340,7 @@ class Read_ReadTest_NodeReadMethodsTest extends jackalope_baseCase
 
     public function testHasNodePathTrue()
     {
-        $this->assertTrue($this->deepnode->hasNode('../numberPropertyNode/jcr:content'));
+        $this->assertTrue($this->deepnode->hasNode('../../numberPropertyNode/jcr:content'));
     }
 
     public function testHasNodeFalse()
