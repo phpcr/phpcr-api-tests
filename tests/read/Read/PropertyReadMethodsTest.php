@@ -55,7 +55,43 @@ class Read_Read_PropertyReadMethodsTest extends jackalope_baseCase
         $deepnode = $this->node->getNode('multiValueProperty');
         $this->assertEquals(3, $this->multiProperty->getDepth());
     }
-     /* todo:  getParent, getPath, getSession, isNew, isNode, isSame */
+    public function testGetParent()
+    {
+        $parent = $this->property->getParent();
+        $this->assertNotNull($parent);
+        $this->assertTrue($this->node->isSame($parent));
+    }
+    public function testGetPath()
+    {
+        $path = $this->property->getPath();
+        $this->assertEquals('/tests_read_access_base/jcr:created', $path);
+    }
+    public function testGetSession()
+    {
+        $sess = $this->property->getSession();
+        $this->assertType('PHPCR\SessionInterface', $sess);
+        //how to further check if we got the right session?
+    }
+    public function testIsNew()
+    {
+        $this->assertFalse($this->property->isNew());
+    }
+    public function testIsNode()
+    {
+        $this->assertFalse($this->property->isNode());
+    }
+    //isSame implicitely tested in the path/parent tests
+
+    public function testAccept()
+    {
+        $mock = $this->getMock('PHPCR\ItemVisitorInterface', array('visit'));
+        $mock->expects($this->once())
+            ->method('visit')
+            ->with($this->equalTo($this->property));
+
+        $this->property->accept($mock);
+    }
+
     function testGetName()
     {
         $name = $this->property->getName();

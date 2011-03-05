@@ -95,6 +95,15 @@ class Read_ReadTest_NodeReadMethodsTest extends jackalope_baseCase
     }
     //isSame implicitely tested in the path/parent tests
 
+    public function testAccept()
+    {
+        $mock = $this->getMock('PHPCR\ItemVisitorInterface', array('visit'));
+        $mock->expects($this->once())
+            ->method('visit')
+            ->with($this->equalTo($this->node));
+
+        $this->node->accept($mock);
+    }
 
     /*** node specific methods ***/
     public function testGetNodeAbsolutePath()
