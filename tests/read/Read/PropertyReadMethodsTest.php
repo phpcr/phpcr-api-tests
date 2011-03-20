@@ -101,6 +101,8 @@ class Read_Read_PropertyReadMethodsTest extends jackalope_baseCase
 
     /*** property specific methods ***/
 
+    //TODO: check for all properties if the type is correctly read from backend
+
     public function testGetNativeValue()
     {
         $val = $this->property->getNativeValue();
@@ -313,12 +315,13 @@ class Read_Read_PropertyReadMethodsTest extends jackalope_baseCase
 
     public function testGetNode()
     {
-        $this->markTestIncomplete('TODO: Have a property referencing another node (weak, strong + path).');
-/*
-        $property->getNode();
+        $property = $this->node->getProperty('numberPropertyNode/jcr:content/ref');
+        $idnode = $this->node->getNode('idExample');
+
+        $this->assertEquals(\PHPCR\PropertyType::REFERENCE, $property->getType(), "Property has wrong type");
+        $target = $property->getNode();
         $this->assertType('PHPCR\NodeInterface', $node);
         $this->assertEquals($node, $this->node);
-*/
     }
 
     public function testGetNodeMulti()
@@ -366,12 +369,12 @@ class Read_Read_PropertyReadMethodsTest extends jackalope_baseCase
     /** PATH property, the path references another property */
     public function testGetProperty()
     {
-        $this->markTestIncomplete('TODO: Have a property referencing another property (weak, strong + path).');
+        $this->markTestIncomplete('TODO: Have a property referencing another property (path).');
     }
 
     public function testGetPropertyMulti()
     {
-        $this->markTestIncomplete('TODO: Have a property referencing another property (weak, strong + path).');
+        $this->markTestIncomplete('TODO: Have a property referencing another property (path).');
         /*
         $arr = $this->multiProperty->getProperty();
         $this->assertType('array', $arr);
@@ -433,64 +436,72 @@ class Read_Read_PropertyReadMethodsTest extends jackalope_baseCase
     {
         $node = $this->node->getNode('index.txt/jcr:content');
         $node->setProperty('newString', 'foobar', \PHPCR\PropertyType::STRING);
-        $this->assertEquals(\PHPCR\PropertyType::STRING, $node->getProperty('newString')->getType());
+        $this->assertEquals(\PHPCR\PropertyType::STRING, $node->getProperty('newString')->getType(), 'Wrong type');
     }
 
     public function testGetTypeBinary()
     {
         $node = $this->node->getNode('index.txt/jcr:content');
         $node->setProperty('newBin', 'foobar', \PHPCR\PropertyType::BINARY);
-        $this->assertEquals(\PHPCR\PropertyType::BINARY, $node->getProperty('newBin')->getType());
+        $this->assertEquals(\PHPCR\PropertyType::BINARY, $node->getProperty('newBin')->getType(), 'Wrong type');
     }
 
     public function testGetTypeLong()
     {
         $node = $this->node->getNode('index.txt/jcr:content');
         $node->setProperty('newLong', 3, \PHPCR\PropertyType::LONG);
-        $this->assertEquals(\PHPCR\PropertyType::LONG, $node->getProperty('newLong')->getType());
+        $this->assertEquals(\PHPCR\PropertyType::LONG, $node->getProperty('newLong')->getType(), 'Wrong type');
     }
 
     public function testGetTypeDouble()
     {
         $node = $this->node->getNode('index.txt/jcr:content');
         $node->setProperty('newDouble', 3.5, \PHPCR\PropertyType::DOUBLE);
-        $this->assertEquals(\PHPCR\PropertyType::DOUBLE, $node->getProperty('newDouble')->getType());
+        $this->assertEquals(\PHPCR\PropertyType::DOUBLE, $node->getProperty('newDouble')->getType(), 'Wrong type');
     }
 
     public function testGetTypeDate()
     {
         $node = $this->node->getNode('index.txt/jcr:content');
         $node->setProperty('newDate', '2009-04-27T13:01:04.758+02:00', \PHPCR\PropertyType::DATE);
-        $this->assertEquals(\PHPCR\PropertyType::DATE, $node->getProperty('newDate')->getType());
+        $this->assertEquals(\PHPCR\PropertyType::DATE, $node->getProperty('newDate')->getType(), 'Wrong type');
     }
 
     public function testGetTypeBoolean()
     {
         $node = $this->node->getNode('index.txt/jcr:content');
         $node->setProperty('newBool', true, \PHPCR\PropertyType::BOOLEAN);
-        $this->assertEquals(\PHPCR\PropertyType::BOOLEAN, $node->getProperty('newBool')->getType());
+        $this->assertEquals(\PHPCR\PropertyType::BOOLEAN, $node->getProperty('newBool')->getType(), 'Wrong type');
     }
 
     public function testGetTypeName()
     {
         $node = $this->node->getNode('index.txt/jcr:content');
         $node->setProperty('newName', 'foobar', \PHPCR\PropertyType::NAME);
-        $this->assertEquals(\PHPCR\PropertyType::NAME, $node->getProperty('newName')->getType());
+        $this->assertEquals(\PHPCR\PropertyType::NAME, $node->getProperty('newName')->getType(), 'Wrong type');
     }
 
     public function testGetTypePath()
     {
         $node = $this->node->getNode('index.txt/jcr:content');
         $node->setProperty('newPath', 'foobar', \PHPCR\PropertyType::PATH);
-        $this->assertEquals(\PHPCR\PropertyType::PATH, $node->getProperty('newPath')->getType());
+        $this->assertEquals(\PHPCR\PropertyType::PATH, $node->getProperty('newPath')->getType(), 'Wrong type');
     }
 
     public function testGetTypeReference()
     {
         $node = $this->node->getNode('index.txt/jcr:content');
-        $node->setProperty('newRef', 'foobar', \PHPCR\PropertyType::REFERENCE);
-        $this->assertEquals(\PHPCR\PropertyType::REFERENCE, $node->getProperty('newRef')->getType());
+        $node->setProperty('newRef', '842e61c0-09ab-42a9-87c0-308ccc90e6f4', \PHPCR\PropertyType::REFERENCE);
+        $this->assertEquals(\PHPCR\PropertyType::REFERENCE, $node->getProperty('newRef')->getType(), 'Wrong type');
     }
+
+    public function testGetTypeWeakReference()
+    {
+        $node = $this->node->getNode('index.txt/jcr:content');
+        $node->setProperty('newWRef', '842e61c0-09ab-42a9-87c0-308ccc90e6f4', \PHPCR\PropertyType::WEAKREFERENCE);
+        $this->assertEquals(\PHPCR\PropertyType::WEAKREFERENCE, $node->getProperty('newRef')->getType(), 'Wrong type');
+    }
+
     public function testIterator() {
         $this->assertTraversableImplemented($this->valProperty);
 

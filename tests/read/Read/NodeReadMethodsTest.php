@@ -202,6 +202,13 @@ class Read_ReadTest_NodeReadMethodsTest extends jackalope_baseCase
         $this->node->getProperty('foobar');
     }
 
+    public function testGetPropertyOfOtherNode()
+    {
+        $prop = $this->node->getProperty('numberPropertyNode/jcr:content/ref');
+        $this->assertType('PHPCR\PropertyInterface', $prop);
+        $this->assertEquals('/tests_read_access_base/numberPropertyNode/jcr:content/ref', $prop->getPath());
+    }
+
     /**
      * @expectedException \PHPCR\RepositoryException
      */
@@ -300,29 +307,55 @@ class Read_ReadTest_NodeReadMethodsTest extends jackalope_baseCase
 
     public function testGetReferencesAll()
     {
-        $ref = $this->rootNode->getNode('tests_read_access_base/idExample');
-        $iterator = $ref->getReferences();
+        $this->markTestIncomplete('TODO: Implement Node::getReferences');
+        $target = $this->rootNode->getNode('tests_read_access_base/idExample');
+        $source = $this->rootNode->getProperty('tests_read_access_base/numberPropertyNode/jcr:content/ref');
+
+        $iterator = $target->getReferences();
         $this->assertType('Iterator', $iterator);
 
-        $this->markTestIncomplete('TODO: Have a referenced node');
-
-/*
-        JRnode->setProperty with a JRnode ref returns nothing, seems to be broken
-        $ref = $this->rootNode->getNode('tests_read_access_base/idExample');
-        $this->node->setProperty('testRef', $ref);
-*/
+        //there is exactly one node with reference to idExample.
+        $this->assertEquals(1, count($iterator), "Wrong number of references to idExample");
+        foreach($iterator as $prop) {
+            $this->assertType('\PHPCR\PropertyInterface', $prop);
+            $this->assertEquals($source, $prop);
+        }
     }
 
     public function testGetReferencesName()
     {
-        $this->markTestIncomplete('TODO: Have a referenced node and referencer with name');
+        $this->markTestIncomplete('TODO: Implement Node::getReferences');
+        $target = $this->rootNode->getNode('tests_read_access_base/idExample');
+        $source = $this->rootNode->getNode('tests_read_access_base/numberPropertyNode/jcr:content');
+
+        $iterator = $target->getReferences('ref');
+        $this->assertType('Iterator', $iterator);
+
+        //there is exactly one node with reference to idExample.
+        $this->assertEquals(1, count($iterator), "Wrong number of references with name ref to idExample");
+        foreach($iterator as $node) {
+            $this->assertType('\PHPCR\PropertyInterface', $prop);
+            $this->assertEquals($source, $prop);
+        }
+
+        $this->assertType('PHPCR\NodeInterface', $reference);
+        $this->assertEquals($reference, $target);
+    }
+
+    public function testGetReferencesNonexistingName()
+    {
+        $this->markTestIncomplete('TODO: Implement Node::getReferences');
+        $target = $this->rootNode->getNode('tests_read_access_base/idExample');
+        $iterator = $target->getReferences('notexisting');
+        $this->assertType('Iterator', $iterator);
+        $this->assertEquals(0, count($iterator), "Wrong number of references with name notexisting to idExample");
     }
 
     public function testGetWeakReferencesAll()
     {
+        $this->markTestIncomplete('TODO: Have a weakly referenced node');
         $iterator = $this->node->getWeakReferences();
         $this->assertType('Iterator', $iterator);
-        $this->markTestIncomplete('TODO: Have a weakly referenced node');
     }
 
     public function testGetWeakReferencesName()

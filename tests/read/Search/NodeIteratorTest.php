@@ -27,11 +27,11 @@ class Read_Search_NodeIteratorTest extends jackalope_baseCase
 
         foreach ($this->nodeIterator as $node)
         {
-            $this->assertInstanceOf('Jackalope\Node', $node); // Test if the return element is an istance of row
+            $this->assertInstanceOf('PHPCR\NodeInterface', $node); // Test if the return element is an istance of row
             $count++;
         }
 
-        $this->assertEquals(4, $count);
+        $this->assertEquals(4, $count, 'wrong number of elements in iterator');
     }
 
     public function testSeekable()
