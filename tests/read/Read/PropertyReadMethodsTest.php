@@ -318,11 +318,15 @@ class Read_Read_PropertyReadMethodsTest extends jackalope_baseCase
         $property = $this->node->getProperty('numberPropertyNode/jcr:content/ref');
         $idnode = $this->node->getNode('idExample');
 
+        //TODO: is the type wrong because we import a document view? would it work with system view?
+
         $this->assertEquals(\PHPCR\PropertyType::REFERENCE, $property->getType(), "Property has wrong type");
         $target = $property->getNode();
-        $this->assertType('PHPCR\NodeInterface', $node);
-        $this->assertEquals($node, $this->node);
+        $this->assertType('PHPCR\NodeInterface', $target);
+        $this->assertEquals($target, $idnode);
     }
+
+    //TODO: testGetNodeWeak, testGetNodePath
 
     public function testGetNodeMulti()
     {

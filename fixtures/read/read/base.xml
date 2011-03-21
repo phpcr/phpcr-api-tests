@@ -1,17 +1,209 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tests_read_access_base xmlns:test="http://liip.to/jackalope" xmlns:nt="http://www.jcp.org/jcr/nt/1.0" xmlns:rep="internal" xmlns:crx="http://www.day.com/crx/1.0" xmlns:vlt="http://www.day.com/jcr/vault/1.0" xmlns:lx="http://flux-cms.org/2.0" xmlns:sv="http://www.jcp.org/jcr/sv/1.0" xmlns:mix="http://www.jcp.org/jcr/mix/1.0" xmlns:fn="http://www.w3.org/2005/xpath-functions" xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:sling="http://sling.apache.org/jcr/sling/1.0" xmlns:fn_old="http://www.w3.org/2004/10/xpath-functions" xmlns:xs="http://www.w3.org/2001/XMLSchema" jcr:primaryType="nt:folder" jcr:created="2009-04-27T13:00:54.082+02:00">
-    <index.txt jcr:primaryType="nt:file" jcr:created="2009-04-27T13:01:04.758+02:00">
-        <jcr:content jcr:primaryType="nt:unstructured" jcr:data="aDEuIENoYXB0ZXIgMSBUaXRsZQoKCiogZm9vCiogYmFyCioqIGZvbzIKKiogZm9vMwoqIGZvbzAKCnx8IGhlYWRlciB8fCBiYXIgfHwKfCBoIHwgaiB8IAoKW0Zvb3wgaHR0cDovL2xpaXAuY2hdCgp7Y29kZX0KaGVsbG8gd29ybGQKe2NvZGV9CgojIGZvbwojIGIKCgpoMi4gU2VjdGlvbiAxLjEgVGl0bGUKCgpTdWJzZWN0aW9uIDEuMS4xIFRpdGxlCn5+fn5+fn5+fn5+fn5+fn5+fn5+fn4KClNlY3Rpb24gMS4yIFRpdGxlCi0tLS0tLS0tLS0tLS0tLS0tCgpDaGFwdGVyIDIgVGl0bGUKPT09PT09PT09PT09PT09Cg==" jcr:lastModified="2009-04-27T13:01:07.472+02:00" jcr:mimeType="text/plain"/>
-    </index.txt>
-    <idExample  jcr:primaryType="nt:file" jcr:mixinTypes="mix:referenceable" jcr:uuid="842e61c0-09ab-42a9-87c0-308ccc90e6f4" jcr:created="2009-04-27T13:01:04.758+02:00">
-        <jcr:content jcr:primaryType="nt:unstructured" jcr:data="aDEuIENoYXB0ZXIgMSBUaXRsZQoKCiogZm9vCiogYmFyCioqIGZvbzIKKiogZm9vMwoqIGZvbzAKCnx8IGhlYWRlciB8fCBiYXIgfHwKfCBoIHwgaiB8IAoKW0Zvb3wgaHR0cDovL2xpaXAuY2hdCgp7Y29kZX0KaGVsbG8gd29ybGQKe2NvZGV9CgojIGZvbwojIGIKCgpoMi4gU2VjdGlvbiAxLjEgVGl0bGUKCgpTdWJzZWN0aW9uIDEuMS4xIFRpdGxlCn5+fn5+fn5+fn5+fn5+fn5+fn5+fn4KClNlY3Rpb24gMS4yIFRpdGxlCi0tLS0tLS0tLS0tLS0tLS0tCgpDaGFwdGVyIDIgVGl0bGUKPT09PT09PT09PT09PT09Cg==" jcr:lastModified="2009-04-27T13:01:07.472+02:00" jcr:mimeType="text/plain"/>
-    </idExample>
-    <test:namespacedNode jcr:primaryType="nt:folder" />
-    <emptyExample jcr:primaryType="nt:folder"/>
-    <multiValueProperty jcr:primaryType="nt:folder" jcr:mixinTypes="mix:referenceable mix:versionable">
-        <deepnode jcr:primaryType="nt:folder"/>
-    </multiValueProperty>
-    <numberPropertyNode  jcr:primaryType="nt:file" jcr:created="2009-04-27T13:01:04.758+02:00">
-        <jcr:content jcr:primaryType="nt:unstructured" ref="842e61c0-09ab-42a9-87c0-308ccc90e6f4" foo="bar" yesOrNo="true" longNumber="999" jcr:data="aDEuIENoYXB0ZXIgMSBUaXRsZQoKCiogZm9vCiogYmFyCioqIGZvbzIKKiogZm9vMwoqIGZvbzAKCnx8IGhlYWRlciB8fCBiYXIgfHwKfCBoIHwgaiB8IAoKW0Zvb3wgaHR0cDovL2xpaXAuY2hdCgp7Y29kZX0KaGVsbG8gd29ybGQKe2NvZGV9CgojIGZvbwojIGIKCgpoMi4gU2VjdGlvbiAxLjEgVGl0bGUKCgpTdWJzZWN0aW9uIDEuMS4xIFRpdGxlCn5+fn5+fn5+fn5+fn5+fn5+fn5+fn4KClNlY3Rpb24gMS4yIFRpdGxlCi0tLS0tLS0tLS0tLS0tLS0tCgpDaGFwdGVyIDIgVGl0bGUKPT09PT09PT09PT09PT09Cg==" jcr:lastModified="2009-04-27T13:01:07.472+02:00" jcr:mimeType="text/plain"/>
-    </numberPropertyNode>
-</tests_read_access_base>
+<sv:node xmlns:crx="http://www.day.com/crx/1.0"
+         xmlns:lx="http://flux-cms.org/2.0"
+         xmlns:test="http://liip.to/jackalope"
+         xmlns:mix="http://www.jcp.org/jcr/mix/1.0"
+         xmlns:sling="http://sling.apache.org/jcr/sling/1.0"
+         xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
+         xmlns:fn_old="http://www.w3.org/2004/10/xpath-functions"
+         xmlns:fn="http://www.w3.org/2005/xpath-functions"
+         xmlns:vlt="http://www.day.com/jcr/vault/1.0"
+         xmlns:xs="http://www.w3.org/2001/XMLSchema"
+         xmlns:new_prefix="http://a_new_namespace"
+         xmlns:jcr="http://www.jcp.org/jcr/1.0"
+         xmlns:sv="http://www.jcp.org/jcr/sv/1.0"
+         xmlns:rep="internal"
+
+         sv:name="tests_read_access_base">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>nt:folder</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:created" sv:type="Date">
+        <sv:value>2011-03-21T14:34:20.431+01:00</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:createdBy" sv:type="String">
+        <sv:value>admin</sv:value>
+    </sv:property>
+
+    <sv:node sv:name="index.txt">
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+            <sv:value>nt:file</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:created" sv:type="Date">
+            <sv:value>2011-03-21T14:34:20.432+01:00</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:createdBy" sv:type="String">
+            <sv:value>admin</sv:value>
+        </sv:property>
+
+        <sv:node sv:name="jcr:content">
+            <sv:property sv:name="jcr:primaryType" sv:type="Name">
+                <sv:value>nt:unstructured</sv:value>
+            </sv:property>
+            <sv:property sv:name="jcr:data" sv:type="String">
+                <sv:value>aDEuIENoYXB0ZXIgMSBUaXRsZQoKCiogZm9vCiogYmFyCioqIGZvbzIKKiogZm9vMwoqIGZvbzAKCnx8IGhlYWRlciB8fCBiYXIgfHwKfCBoIHwgaiB8IAoKW0Zvb3wgaHR0cDovL2xpaXAuY2hdCgp7Y29kZX0KaGVsbG8gd29ybGQKe2NvZGV9CgojIGZvbwojIGIKCgpoMi4gU2VjdGlvbiAxLjEgVGl0bGUKCgpTdWJzZWN0aW9uIDEuMS4xIFRpdGxlCn5+fn5+fn5+fn5+fn5+fn5+fn5+fn4KClNlY3Rpb24gMS4yIFRpdGxlCi0tLS0tLS0tLS0tLS0tLS0tCgpDaGFwdGVyIDIgVGl0bGUKPT09PT09PT09PT09PT09Cg==</sv:value>
+            </sv:property>
+            <sv:property sv:name="jcr:lastModified" sv:type="String">
+                <sv:value>2009-04-27T13:01:07.472+02:00</sv:value>
+            </sv:property>
+            <sv:property sv:name="jcr:mimeType" sv:type="String">
+                <sv:value>text/plain</sv:value>
+            </sv:property>
+        </sv:node>
+    </sv:node>
+
+    <sv:node sv:name="idExample">
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+            <sv:value>nt:file</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+            <sv:value>mix:referenceable</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:uuid" sv:type="String">
+            <sv:value>842e61c0-09ab-42a9-87c0-308ccc90e6f4</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:created" sv:type="Date">
+            <sv:value>2011-03-21T14:34:20.445+01:00</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:createdBy" sv:type="String">
+            <sv:value>admin</sv:value>
+        </sv:property>
+
+        <sv:node sv:name="jcr:content">
+            <sv:property sv:name="jcr:primaryType" sv:type="Name">
+                <sv:value>nt:unstructured</sv:value>
+            </sv:property>
+            <sv:property sv:name="jcr:data" sv:type="String">
+                <sv:value>aDEuIENoYXB0ZXIgMSBUaXRsZQoKCiogZm9vCiogYmFyCioqIGZvbzIKKiogZm9vMwoqIGZvbzAKCnx8IGhlYWRlciB8fCBiYXIgfHwKfCBoIHwgaiB8IAoKW0Zvb3wgaHR0cDovL2xpaXAuY2hdCgp7Y29kZX0KaGVsbG8gd29ybGQKe2NvZGV9CgojIGZvbwojIGIKCgpoMi4gU2VjdGlvbiAxLjEgVGl0bGUKCgpTdWJzZWN0aW9uIDEuMS4xIFRpdGxlCn5+fn5+fn5+fn5+fn5+fn5+fn5+fn4KClNlY3Rpb24gMS4yIFRpdGxlCi0tLS0tLS0tLS0tLS0tLS0tCgpDaGFwdGVyIDIgVGl0bGUKPT09PT09PT09PT09PT09Cg==</sv:value>
+            </sv:property>
+            <sv:property sv:name="jcr:lastModified" sv:type="String">
+                <sv:value>2009-04-27T13:01:07.472+02:00</sv:value>
+            </sv:property>
+
+            <sv:property sv:name="jcr:mimeType" sv:type="String">
+                <sv:value>text/plain</sv:value>
+            </sv:property>
+        </sv:node>
+    </sv:node>
+
+    <sv:node sv:name="test:namespacedNode">
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+            <sv:value>nt:folder</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:created" sv:type="Date">
+            <sv:value>2011-03-21T14:34:20.450+01:00</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:createdBy" sv:type="String">
+            <sv:value>admin</sv:value>
+        </sv:property>
+    </sv:node>
+
+    <sv:node sv:name="emptyExample">
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+            <sv:value>nt:folder</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:created" sv:type="Date">
+            <sv:value>2011-03-21T14:34:20.450+01:00</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:createdBy" sv:type="String">
+            <sv:value>admin</sv:value>
+        </sv:property>
+    </sv:node>
+
+    <sv:node sv:name="multiValueProperty">
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+            <sv:value>nt:folder</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+            <sv:value>mix:referenceable</sv:value>
+            <sv:value>mix:versionable</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:uuid" sv:type="String">
+            <sv:value>14e18ef3-be20-4985-bee9-7bb4763b31de</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:baseVersion" sv:type="Reference">
+            <sv:value>51b8dc5b-5f0d-49db-8ae2-39a74abb549c</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:created" sv:type="Date">
+            <sv:value>2011-03-21T14:34:20.451+01:00</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:createdBy" sv:type="String">
+            <sv:value>admin</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+            <sv:value>true</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:predecessors" sv:type="Reference">
+            <sv:value>51b8dc5b-5f0d-49db-8ae2-39a74abb549c</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:versionHistory" sv:type="Reference">
+            <sv:value>e9a6150e-fbc1-4762-91da-f170472f14b7</sv:value>
+        </sv:property>
+
+        <sv:node sv:name="deepnode">
+
+            <sv:property sv:name="jcr:primaryType" sv:type="Name">
+                <sv:value>nt:folder</sv:value>
+            </sv:property>
+
+            <sv:property sv:name="jcr:created" sv:type="Date">
+                <sv:value>2011-03-21T14:34:20.452+01:00</sv:value>
+            </sv:property>
+
+            <sv:property sv:name="jcr:createdBy" sv:type="String">
+                <sv:value>admin</sv:value>
+            </sv:property>
+        </sv:node>
+    </sv:node>
+
+    <sv:node sv:name="numberPropertyNode">
+
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+            <sv:value>nt:file</sv:value>
+        </sv:property>
+
+        <sv:property sv:name="jcr:created" sv:type="Date">
+            <sv:value>2011-03-21T14:34:20.452+01:00</sv:value>
+        </sv:property>
+
+        <sv:property sv:name="jcr:createdBy" sv:type="String">
+            <sv:value>admin</sv:value>
+        </sv:property>
+
+        <sv:node sv:name="jcr:content">
+
+            <sv:property sv:name="jcr:primaryType" sv:type="Name">
+                <sv:value>nt:unstructured</sv:value>
+            </sv:property>
+
+            <sv:property sv:name="foo" sv:type="String">
+                <sv:value>bar</sv:value>
+            </sv:property>
+
+            <sv:property sv:name="jcr:data" sv:type="String">
+
+                <sv:value>aDEuIENoYXB0ZXIgMSBUaXRsZQoKCiogZm9vCiogYmFyCioqIGZvbzIKKiogZm9vMwoqIGZvbzAKCnx8IGhlYWRlciB8fCBiYXIgfHwKfCBoIHwgaiB8IAoKW0Zvb3wgaHR0cDovL2xpaXAuY2hdCgp7Y29kZX0KaGVsbG8gd29ybGQKe2NvZGV9CgojIGZvbwojIGIKCgpoMi4gU2VjdGlvbiAxLjEgVGl0bGUKCgpTdWJzZWN0aW9uIDEuMS4xIFRpdGxlCn5+fn5+fn5+fn5+fn5+fn5+fn5+fn4KClNlY3Rpb24gMS4yIFRpdGxlCi0tLS0tLS0tLS0tLS0tLS0tCgpDaGFwdGVyIDIgVGl0bGUKPT09PT09PT09PT09PT09Cg==</sv:value>
+            </sv:property>
+
+            <sv:property sv:name="jcr:lastModified" sv:type="String">
+                <sv:value>2009-04-27T13:01:07.472+02:00</sv:value>
+            </sv:property>
+
+            <sv:property sv:name="jcr:mimeType" sv:type="String">
+                <sv:value>text/plain</sv:value>
+            </sv:property>
+
+            <sv:property sv:name="longNumber" sv:type="String">
+                <sv:value>999</sv:value>
+            </sv:property>
+
+            <sv:property sv:name="ref" sv:type="Reference">
+                <sv:value>842e61c0-09ab-42a9-87c0-308ccc90e6f4</sv:value>
+            </sv:property>
+
+            <sv:property sv:name="yesOrNo" sv:type="String">
+                <sv:value>true</sv:value>
+            </sv:property>
+        </sv:node>
+    </sv:node>
+</sv:node>
