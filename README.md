@@ -70,6 +70,23 @@ tests/read contains tests for the base read functionality.
 tests/write contains tests for the base write functionality.
 
 ## TODO
+Some tests are missing, some are skipped although jackalope implements the 
+feature.
+Write operations are less tested than read operations. Should go through all
+tests and fix failing ones and implement missing ones.
+
+For write, check Session::save too and more complicated chained operations.
+
+I.e.: 
+
+ * move a not yet loaded node, then load it with the old path -> fail. with new path -> get it
+ * same with moving child nodes not yet loaded and calling Node::getChildren. and loaded as well.
+ * Test if order of write operations to backend is correct in larger batches. if i have
+ * /some/path/parent/node and set the path of "parent" to /some/other/path/parent and in the same session change the path of node to /some/path/parent/something/node, result will depend on the order.
+     * if you first move parent, then node, node ends up at the expected path.
+     * if you first move node, then parent, node will end up in /some/other/path/parent/something/node, because a node is moved with all its children.
+
+
 
 At the moment, the API tests assume that the storage backend is Jackrabbit.
 This should be refactored out of the test suite and replaced by a method in
