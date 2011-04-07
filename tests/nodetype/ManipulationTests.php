@@ -23,7 +23,7 @@ class Write_Manipulation_MoveMethodsTest extends jackalope_baseCase
      */
     protected function checkJackalope()
     {
-        if (! $this->workspace instanceof \Jackalope\Workspace) {
+        if (! $this->sharedFixture['session']->getWorkspace() instanceof \Jackalope\Workspace) {
             $this->markTestSkipped('This is a test for jackalope specific functionality');
         }
     }
@@ -63,6 +63,8 @@ class Write_Manipulation_MoveMethodsTest extends jackalope_baseCase
     public function testRegisterNodeTypesCndNoUpdate()
     {
         $this->checkJackalope();
+        $workspace = $this->sharedFixture['session']->getWorkspace();
+        $ntm = $workspace->getNodeTypeManager();
         $types = $ntm->registerNodeTypesCnd($this->cnd, false);
         $types = $ntm->registerNodeTypesCnd($this->cnd, false);
     }
