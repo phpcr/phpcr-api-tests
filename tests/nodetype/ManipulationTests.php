@@ -34,7 +34,7 @@ class Write_Manipulation_MoveMethodsTest extends jackalope_baseCase
           mixin
           - phpcr:prop (string)
           ";
-        $types = $ntm->registerNodeTypesCnd($cnd);
+        $types = $ntm->registerNodeTypesCnd($cnd, true);
         $this->assertEquals(2, count($types), 'Wrong number of nodes registered');
         list($name, $type) = each($types);
         $this->assertEquals('phpcr:managed', $name);
