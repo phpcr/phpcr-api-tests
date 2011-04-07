@@ -51,5 +51,7 @@ class Write_Manipulation_MoveMethodsTest extends jackalope_baseCase
          * we just read the created nodes from the server. reading everything
          * properly is to be tested in node type read tests.
          */
+        $this->setExpectedException('\PHPCR\NodeType\NodeTypeExistsException');
+        $types = $ntm->registerNodeTypesCnd($cnd, false);
     }
 }
