@@ -18,23 +18,26 @@ class Write_Manipulation_MoveMethodsTest extends jackalope_baseCase
 
 
     /**
+     * registerNodeTypesCnd is implementation specific.
+     * tests that test that method should only be executed when testing jackalope
+     */
+    protected function checkJackalope()
+    {
+        if (! $this->workspace instanceof \Jackalope\Workspace) {
+            $this->markTestSkipped('This is a test for jackalope specific functionality');
+        }
+    }
+
+    /**
      * @covers Jackalope\NodeTypeManager::registerNodeTypesCnd
      */
     public function testRegisterNodeTypesCnd()
     {
+        $this->checkJackalope();
         $workspace = $this->sharedFixture['session']->getWorkspace();
         $ntm = $workspace->getNodeTypeManager();
 
-        $cnd = "
-        <'phpcr'='http://www.doctrine-project.org/phpcr-odm'>
-         [phpcr:managed]
-          mixin
-          - phpcr:alias (string)
-          [phpcr:test]
-          mixin
-          - phpcr:prop (string)
-          ";
-        $types = $ntm->registerNodeTypesCnd($cnd, true);
+        $types = $ntm->registerNodeTypesCnd($this->cnd, true);
         $this->assertEquals(2, count($types), 'Wrong number of nodes registered');
         list($name, $type) = each($types);
         $this->assertEquals('phpcr:managed', $name);
@@ -51,7 +54,27 @@ class Write_Manipulation_MoveMethodsTest extends jackalope_baseCase
          * we just read the created nodes from the server. reading everything
          * properly is to be tested in node type read tests.
          */
-        $this->setExpectedException('\PHPCR\NodeType\NodeTypeExistsException');
-        $types = $ntm->registerNodeTypesCnd($cnd, false);
     }
+
+    /**
+     * @covers Jackalope\NodeTypeManager::registerNodeTypesCnd
+     * @expectedException \PHPCR\NodeType\NodeTypeExistsException
+     */
+    public function testRegisterNodeTypesCndNoUpdate()
+    {
+        $this->checkJackalope();
+        $types = $ntm->registerNodeTypesCnd($this->cnd, false);
+        $types = $ntm->registerNodeTypesCnd($this->cnd, false);
+    }
+
+    private $cnd = "
+        <'phpcr'='http://www.doctrine-project.org/phpcr-odm'>
+         [phpcr:managed]
+          mixin
+          - phpcr:alias (string)
+          [phpcr:test]
+          mixin
+          - phpcr:prop (string)
+          ";
+
 }
