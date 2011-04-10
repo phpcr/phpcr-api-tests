@@ -10,7 +10,7 @@ class Read_Search_QueryManagerTest extends jackalope_baseCase
     static public function setupBeforeClass()
     {
         parent::setupBeforeClass();
-        self::$staticSharedFixture['ie']->import('read/search/base.xml');
+        self::$staticSharedFixture['ie']->import('read/search/base');
         self::$staticSharedFixture['qm'] = self::$staticSharedFixture['session']->getWorkspace()->getQueryManager();
     }
 
@@ -30,7 +30,7 @@ class Read_Search_QueryManagerTest extends jackalope_baseCase
 
     public function testGetQuery()
     {
-        $this->sharedFixture['ie']->import('read/search/query.xml');
+        $this->sharedFixture['ie']->import('read/search/query');
         try {
             $qnode = $this->sharedFixture['session']->getRootNode()->getNode('queryNode');
             $this->assertType('PHPCR\NodeInterface', $qnode);
@@ -39,10 +39,10 @@ class Read_Search_QueryManagerTest extends jackalope_baseCase
             $this->assertTrue('PHPCR\Query\QueryInterface', $query);
         } catch(exception $e) {
             //FIXME: finally?
-            $this->sharedFixture['ie']->import('read/search/base.xml');
+            $this->sharedFixture['ie']->import('read/search/base');
             throw $e;
         }
-        $this->sharedFixture['ie']->import('read/search/base.xml');
+        $this->sharedFixture['ie']->import('read/search/base');
     }
     /**
      * @expectedException PHPCR\Query\InvalidQueryException

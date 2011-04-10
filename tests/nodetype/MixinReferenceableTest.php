@@ -12,7 +12,7 @@ class NodeType_MixinReferenceableTest extends jackalope_baseCase
     static public function setupBeforeClass()
     {
         parent::setupBeforeClass();
-        self::$staticSharedFixture['ie']->import('nodetype/base.xml');
+        self::$staticSharedFixture['ie']->import('nodetype/base');
     }
 
     /**

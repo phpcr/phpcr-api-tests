@@ -17,7 +17,6 @@ abstract class jackalope_baseCase extends PHPUnit_Framework_TestCase
     protected $node = null;
 
     protected $config;
-    protected $configKeys = array('jcr.url', 'jcr.user', 'jcr.pass', 'jcr.workspace', 'jcr.transport');
     protected $sharedFixture = array();
     protected static $staticSharedFixture = null;
 
@@ -30,12 +29,13 @@ abstract class jackalope_baseCase extends PHPUnit_Framework_TestCase
     public static function setupBeforeClass()
     {
         self::$staticSharedFixture = array();
-        $configKeys = array('jcr.url', 'jcr.user', 'jcr.pass', 'jcr.workspace', 'jcr.transport');
-        foreach ($configKeys as $cfgKey) {
-            self::$staticSharedFixture['config'][substr($cfgKey, 4)] = $GLOBALS[$cfgKey];
+        foreach ($GLOBALS AS $cfgKey => $cfgValue) {
+            if (strpos($cfgKey, "jcr.") === 0) {
+                self::$staticSharedFixture['config'][substr($cfgKey, 4)] = $cfgValue;
+            }
         }
         self::$staticSharedFixture['session'] = getJCRSession(self::$staticSharedFixture['config']);
-        self::$staticSharedFixture['ie'] = new jackalope_importexport(dirname(__FILE__) . "/../fixtures/");
+        self::$staticSharedFixture['ie'] = getFixtureLoader(self::$staticSharedFixture['config']);
         self::$staticSharedFixture['qm'] = self::$staticSharedFixture['session']->getWorkspace()->getQueryManager();
     }
 
@@ -72,8 +72,10 @@ abstract class jackalope_baseCase extends PHPUnit_Framework_TestCase
         $this->sharedFixture = self::$staticSharedFixture;
 
         date_default_timezone_set('Europe/Zurich');
-        foreach ($this->configKeys as $cfgKey) {
-            $this->config[substr($cfgKey, 4)] = $GLOBALS[$cfgKey];
+        foreach ($GLOBALS AS $cfgKey => $cfgValue) {
+            if (strpos($cfgKey, "jcr.") === 0) {
+                $this->config[substr($cfgKey, 4)] = $cfgValue;
+            }
         }
 
         $this->rootNode = $this->sharedFixture['session']->getNode('/');

@@ -10,7 +10,7 @@ class Write_Manipulation_DeleteMethodsTest extends jackalope_baseCase
     static public function setupBeforeClass()
     {
         parent::setupBeforeClass();
-        self::$staticSharedFixture['ie']->import('write/manipulation/delete.xml');
+        self::$staticSharedFixture['ie']->import('write/manipulation/delete');
     }
 
     public function setUp()

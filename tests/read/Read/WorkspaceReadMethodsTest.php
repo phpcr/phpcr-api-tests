@@ -16,7 +16,7 @@ class Read_Read_WorkspaceReadMethodsTest extends jackalope_baseCase
     static public function  setupBeforeClass()
     {
         parent::setupBeforeClass();
-        self::$staticSharedFixture['ie']->import('read/read/base.xml');
+        self::$staticSharedFixture['ie']->import('read/read/base');
     }
 
     //4.5 Workspace Read Methods

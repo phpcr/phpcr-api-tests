@@ -17,7 +17,7 @@ class Read_ReadTest_NodeReadMethodsTest extends jackalope_baseCase
     static public function  setupBeforeClass()
     {
         parent::setupBeforeClass();
-        self::$staticSharedFixture['ie']->import('read/read/base.xml');
+        self::$staticSharedFixture['ie']->import('read/read/base');
     }
 
     public function setUp()

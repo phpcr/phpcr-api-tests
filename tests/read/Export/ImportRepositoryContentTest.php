@@ -7,7 +7,7 @@ class Read_Export_ImportRepositoryContentTest extends jackalope_baseCase
     static public function setupBeforeClass()
     {
         parent::setupBeforeClass();
-        self::$staticSharedFixture['ie']->import('read/export/base.xml');
+        self::$staticSharedFixture['ie']->import('read/export/base');
     }
 
     public function testImportXML()

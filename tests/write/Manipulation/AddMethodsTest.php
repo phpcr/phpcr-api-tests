@@ -13,7 +13,7 @@ class Write_Manipulation_AddMethodsTest extends jackalope_baseCase
     static public function setupBeforeClass()
     {
         parent::setupBeforeClass();
-        self::$staticSharedFixture['ie']->import('write/manipulation/add.xml');
+        self::$staticSharedFixture['ie']->import('write/manipulation/add');
     }
 
     public function setUp()
