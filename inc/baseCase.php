@@ -80,13 +80,17 @@ abstract class jackalope_baseCase extends PHPUnit_Framework_TestCase
 
         $this->rootNode = $this->sharedFixture['session']->getNode('/');
 
+        /* we create the fixtures in one go
+         * the data must all exist under a node /tests_something
+         * with one tree per test
+         * jackrabbit always puts in a node jcr:system, so we look for nodes under root with the name tests_* only
+         */
         $this->node = null;
-        $children = $this->rootNode->getNodes();
-        // first node seems to be always jcr:system?
-        $child = next($children);
+        $children = $this->rootNode->getNodes("tests_*");
+        $child = current($children);
         if(false !== $child){
             $this->node = $child->hasNode($this->getName()) ? $child->getNode($this->getName()) : null;
-        }        
+        }
     }
 
     /*************************************************************************
