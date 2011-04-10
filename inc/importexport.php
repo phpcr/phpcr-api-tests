@@ -26,7 +26,6 @@ interface phpcrApiTestSuiteImportExportFixtureInterface
      * @return void
      */
     public function import($fixture);
-    public function exportdocument($file);
 }
 
 /**
