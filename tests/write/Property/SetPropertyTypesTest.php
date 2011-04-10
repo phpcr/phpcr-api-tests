@@ -12,7 +12,7 @@ class Write_Property_SetPropertyTypesTest extends jackalope_baseCase
     static public function setupBeforeClass()
     {
         parent::setupBeforeClass();
-        self::$staticSharedFixture['ie']->import('write/value/base.xml');
+        self::$staticSharedFixture['ie']->import('write/value/base');
     }
 
     public function setUp()

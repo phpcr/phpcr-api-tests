@@ -1,6 +1,35 @@
 <?php
 
 /**
+ * Basic interface that is to be implemented by Implementations willing to test
+ * against the API testsuite.
+ */
+interface phpcrApiTestSuiteImportExportFixtureInterface
+{
+    /**
+     * Required fixtures (see fixtures/ folder for the necessary data)
+     *
+     * nodetype/base
+     * read/access/base
+     * read/export/base
+     * read/read/base
+     * read/search/base
+     * read/search/query
+     * version/base
+     * write/manipulation/add
+     * write/manipulation/copy
+     * write/manipulation/delete
+     * write/manipulation/move
+     * write/value/base
+     *
+     * @param string
+     * @return void
+     */
+    public function import($fixture);
+    public function exportdocument($file);
+}
+
+/**
  * Handles basic importing and exporting of fixtures trough
  * the java binary jack.jar
  *
@@ -13,7 +42,7 @@
  *      <var name="jcr.transport" value="davex" />
  *    </php>
  */
-class jackalope_importexport
+class jackrabbit_importexport implements phpcrApiTestSuiteImportExportFixtureInterface
 {
 
     protected $fixturePath;
@@ -73,7 +102,7 @@ class jackalope_importexport
      */
     public function import($fixture)
     {
-        $fixture = $this->fixturePath . $fixture;
+        $fixture = $this->fixturePath . $fixture . ".xml";
         if (!is_readable($fixture)) {
             throw new Exception('Fixture not found at: ' . $fixture);
         }

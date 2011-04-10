@@ -13,7 +13,7 @@ class Write_Manipulation_CopyMethodsTest extends jackalope_baseCase
     static public function setupBeforeClass()
     {
         parent::setupBeforeClass();
-        self::$staticSharedFixture['ie']->import('write/manipulation/copy.xml');
+        self::$staticSharedFixture['ie']->import('write/manipulation/copy');
     }
 
     protected function setUp()

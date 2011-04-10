@@ -17,7 +17,7 @@ class Read_Read_PropertyReadMethodsTest extends jackalope_baseCase
     static public function  setupBeforeClass()
     {
         parent::setupBeforeClass();
-        self::$staticSharedFixture['ie']->import('read/read/base.xml');
+        self::$staticSharedFixture['ie']->import('read/read/base');
     }
 
     public function setUp()

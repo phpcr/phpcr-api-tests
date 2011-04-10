@@ -11,7 +11,7 @@ class Write_Manipulation_MoveMethodsTest extends jackalope_baseCase
     static public function setupBeforeClass()
     {
         parent::setupBeforeClass();
-        self::$staticSharedFixture['ie']->import('write/manipulation/move.xml');
+        self::$staticSharedFixture['ie']->import('write/manipulation/move');
     }
 
     protected function setUp()

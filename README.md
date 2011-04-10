@@ -1,4 +1,6 @@
-# Jackalope API tests
+# PHPCR API tests
+
+Although generically useable this checkout comes with fixtures and data for the Jackalope API tests.
 
 [http://liip.to/jackalope](http://liip.to/jackalope)
 
@@ -8,23 +10,45 @@
 
 ## Usage
 
-The jackalope-api-tests is a suite to test compliance for implementations of
+The phpcr-api-tests is a suite to test compliance for implementations of
 the java content repository specification.
-[https://github.com/jackalope/phpcr](https://github.com/jackalope/phpcr)
+[https://github.com/phpcr/phpcr](https://github.com/phpcr/phpcr)
 
 You need to provide a couple of files in order to let the tests detect your
 implementation:
 
-* Copy phpunit.xml.sample to phpunit.xml and adapt if necessary.
-* Write your own bootstrap file. Have a look at inc/bootstrap.php.sample
+* Copy phpunit.xml.sample to phpunit.xml and adapt if necessary. All <php /> vars beginning
+  with "jcr." are copied to the configuration array that is passed to the functions `getJCRSession`,
+  `getRepository` and `getFixtureLoader`.
+* Write your own bootstrap file. Have a look at inc/bootstrap.php.sample. You have to implement the following methods:
+    ** getJCRSession()
+    ** getRepository()
+    ** getSimpleCredentials()
+    ** getFixtureLoader()
+* Implement data for all the necessary fixtures. See the "fixtures/" folder for a Jackrabbit XML export
+  of the fixture data. You have to adapt this data to your implementation and load them when requested.
 
 Once you are done, run phpunit inside of the root directory. If you use a
 standard php installation, this is usually along the lines of
 
     $ phpunit tests/read/ReadTest.php
 
+### Required Fixtures
 
-## Setup
+* nodetype/base
+* read/access/base
+* read/export/base
+* read/read/base
+* read/search/base
+* read/search/query
+* version/base
+* write/manipulation/add
+* write/manipulation/copy
+* write/manipulation/delete
+* write/manipulation/move
+* write/value/base
+
+## Jackrabbit/Jackalope Setup
 
 ### Setting up submodules
 

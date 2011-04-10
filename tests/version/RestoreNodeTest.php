@@ -12,7 +12,7 @@ class Version_RestoreNodeTest extends jackalope_baseCase
     static public function setupBeforeClass()
     {
         parent::setupBeforeClass();
-        self::$staticSharedFixture['ie']->import('version/base.xml');
+        self::$staticSharedFixture['ie']->import('version/base');
     }
     
     public function setUp()

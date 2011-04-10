@@ -6,7 +6,7 @@
  * This is a temporary solution untill our java solution is properly
  * working.
  */
-class jackalope_importexport
+class jackalope_importexport implements phpcrApiTestSuiteImportExportFixtureInterface
 {
     protected $fixturePath;
     protected $session;
@@ -33,7 +33,7 @@ class jackalope_importexport
 
     public function import($fixture)
     {
-        $fixture = $this->fixturePath . $fixture;
+        $fixture = $this->fixturePath . $fixture . ".xml";
         if (!is_readable($fixture)) {
             throw new Exception('Fixture not found at: ' . $fixture);
         }
