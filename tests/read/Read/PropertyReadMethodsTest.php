@@ -122,7 +122,7 @@ class Read_Read_PropertyReadMethodsTest extends jackalope_baseCase
         $expectedStr = date('o-m-d\T');
         $str = $this->property->getString();
         $this->assertType('string', $str);
-        $this->assertEquals(0, strpos($str, $expectedStr));
+        $this->assertStringStartsWith($expectedStr, $str, "jcr:created should start with a date, when converted from date to string.");
 
         $str = $this->valProperty->getString();
         $this->assertType('string', $str);
