@@ -95,7 +95,7 @@ class Write_Property_SetPropertyTypesTest extends jackalope_baseCase
     {
         $node = $this->sharedFixture['session']->getRootNode()->getNode('tests_write_value_base/numberPropertyNode/jcr:content');
         $value = $this->node->setProperty('x', $node, \PHPCR\PropertyType::WEAKREFERENCE);
-        die($value->getString());
+        $this->fail("Exception should be thrown, but ". $value->getString() . " was returned.");
     }
     public function testCreateValueStringType()
     {
