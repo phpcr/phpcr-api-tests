@@ -191,25 +191,25 @@ class Write_Manipulation_AddMethodsTest extends jackalope_baseCase
     public function testAddMixinOnNewNode()
     {
         $newNode = $this->node->addNode('parent', 'nt:unstructured');
-        $newNode->addMixin('mix:versionable');
+        $newNode->addMixin('mix:created');
         $session = $this->saveAndRenewSession();
         $savedNode = $session->getNode($newNode->getPath());
         $resultTypes = array();
         foreach ($savedNode->getMixinNodeTypes() as $type) {
             $resultTypes[] = $type->getName();
         }
-        $this->assertEquals(array('mix:versionable'), $resultTypes, 'Property mixins should contain mix:versionable');
+        $this->assertEquals(array('mix:created'), $resultTypes, 'Node mixins should contain mix:created');
     }
 
     public function testAddMixinOnExistingNode()
     {
-        $this->node->addMixin('mix:versionable');
+        $this->node->addMixin('mix:created');
         $session = $this->saveAndRenewSession();
         $savedNode = $session->getNode($this->node->getPath());
         $resultTypes = array();
         foreach ($savedNode->getMixinNodeTypes() as $type) {
             $resultTypes[] = $type->getName();
         }
-        $this->assertEquals(array('mix:versionable'), $resultTypes, 'Property mixins should contain mix:versionable');
+        $this->assertEquals(array('mix:created'), $resultTypes, 'Node mixins should contain mix:created');
     }
 }
