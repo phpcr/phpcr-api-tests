@@ -31,6 +31,7 @@ implementation:
 Once you are done, run phpunit inside of the root directory. If you use a
 standard php installation, this is usually along the lines of
 
+
     $ phpunit tests/read/ReadTest.php
 
 ### Required Fixtures
@@ -47,6 +48,19 @@ standard php installation, this is usually along the lines of
 * write/manipulation/delete
 * write/manipulation/move
 * write/value/base
+
+### Using jackrabbit_importexport for load your own fixtures
+
+The class jackrabbit_importexport can be used to import fixtures in xml format. It relies on jack.jar.
+The class can be plugged in Symfony2 autoload mechanism through autoload.php, which can be used to feed
+a MapFileClassLoader istance. E.g:
+
+```php
+$phpcr_loader = new MapFileClassLoader(
+  __DIR__.'/../vendor/doctrine-phpcr-odm/lib/vendor/jackalope/api-test/suite/inc/autoload.php'
+);
+$phpcr_loader->register();
+```
 
 ## Jackrabbit/Jackalope Setup
 
