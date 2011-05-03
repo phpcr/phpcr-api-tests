@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Basic interface that is to be implemented by Implementations willing to test
  * against the API testsuite.
