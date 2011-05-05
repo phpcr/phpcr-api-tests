@@ -2,6 +2,15 @@
 
 Although generically useable this checkout comes with fixtures and data for the Jackalope API tests.
 
+TODO
+
+* clean out the jackalope references and move all jackalope specific stuff (the .jars and so on)
+into the jackalope api-tests folder. These tests should be clean. The only relevant folders are
+tests and fixtures, plus the .sample files, the rest should go out of this.
+* convert all fixtures into system view to have the expected types
+* implement missing tests and fix wrong tests if any
+
+
 [http://liip.to/jackalope](http://liip.to/jackalope)
 
 * ebi at liip.ch
@@ -35,6 +44,10 @@ standard php installation, this is usually along the lines of
     $ phpunit tests/read/ReadTest.php
 
 ### Required Fixtures
+
+The fixtures are provided in the JCR system view format.
+Some of them are also in the document view, but we should convert them to get
+strong typing.
 
 * nodetype/base
 * read/access/base
