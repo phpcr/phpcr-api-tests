@@ -55,7 +55,7 @@ class Write_Manipulation_AddMethodsTest extends jackalope_baseCase
 
         $this->assertNotNull($newNode, 'Node newFileNode was not created');
         $this->assertTrue($newNode->isNew(), 'Node newFileNode is not marked dirty');
-        $this->sharedFixture['session']->getObjectManager()->save();
+        $this->sharedFixture['session']->save();
         $this->assertFalse($newNode->isNew(), 'Node newFileNode was not saved');
 
         $this->renewSession();
@@ -76,7 +76,7 @@ class Write_Manipulation_AddMethodsTest extends jackalope_baseCase
         $node = $this->node->addNode('unstructuredNode', 'nt:unstructured');
         $node->setProperty('test', 'val');
 
-        $this->sharedFixture['session']->getObjectManager()->save();
+        $this->sharedFixture['session']->save();
         $this->assertFalse($node->isNew(), 'Node was not saved');
 
         $this->renewSession();
@@ -87,7 +87,7 @@ class Write_Manipulation_AddMethodsTest extends jackalope_baseCase
 
         $node->setProperty('test2', 'val2');
 
-        $this->sharedFixture['session']->getObjectManager()->save();
+        $this->sharedFixture['session']->save();
         $this->assertFalse($node->isNew(), 'Node was not saved');
         $this->assertFalse($node->getProperty('test2')->isNew(), 'Property was not saved');
         $this->renewSession();
@@ -101,7 +101,7 @@ class Write_Manipulation_AddMethodsTest extends jackalope_baseCase
         $node = $this->node->addNode('unstructuredNode2', 'nt:unstructured');
         $node->setProperty('test', array('val', 'val2'));
 
-        $this->sharedFixture['session']->getObjectManager()->save();
+        $this->sharedFixture['session']->save();
         $this->assertFalse($node->isNew(), 'Node was not saved');
 
         $this->renewSession();
@@ -112,7 +112,7 @@ class Write_Manipulation_AddMethodsTest extends jackalope_baseCase
 
         $node->setProperty('test2', array('val3', 'val4'));
 
-        $this->sharedFixture['session']->getObjectManager()->save();
+        $this->sharedFixture['session']->save();
         $this->assertFalse($node->isNew(), 'Node was not saved');
         $this->assertFalse($node->getProperty('test2')->isNew(), 'Property was not saved');
         $this->renewSession();

@@ -71,14 +71,14 @@ class Write_Manipulation_DeleteMethodsTest extends jackalope_baseCase
     public function testRemoveNodeFromBackend()
     {
         $node = $this->rootNode->addNode('toBeDeleted', 'nt:unstructured');
-        $this->sharedFixture['session']->getObjectManager()->save();
+        $this->sharedFixture['session']->save();
 
         $this->renewSession();
 
         $node = $this->sharedFixture['session']->getNode('/toBeDeleted');
 
         $node->remove();
-        $this->sharedFixture['session']->getObjectManager()->save();
+        $this->sharedFixture['session']->save();
 
         $this->renewSession();
 
@@ -90,7 +90,7 @@ class Write_Manipulation_DeleteMethodsTest extends jackalope_baseCase
     public function testRemovePropertyFromBackend()
     {
         $this->rootNode->setProperty('toBeDeletedProperty', 'TEMP');
-        $this->sharedFixture['session']->getObjectManager()->save();
+        $this->sharedFixture['session']->save();
 
         $this->renewSession();
 
@@ -98,7 +98,7 @@ class Write_Manipulation_DeleteMethodsTest extends jackalope_baseCase
         $this->assertEquals('TEMP', $node->getPropertyValue('toBeDeletedProperty'), 'Property was not created');
 
         $node->getProperty('toBeDeletedProperty')->remove();
-        $this->sharedFixture['session']->getObjectManager()->save();
+        $this->sharedFixture['session']->save();
 
         $this->renewSession();
 
