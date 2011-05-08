@@ -103,14 +103,14 @@ class Read_Read_PropertyReadMethodsTest extends jackalope_baseCase
 
     //TODO: check for all properties if the type is correctly read from backend
 
-    public function testGetNativeValue()
+    public function testGetValue()
     {
-        $val = $this->property->getNativeValue();
+        $val = $this->property->getValue();
         $this->assertType('DateTime', $val);
     }
-    public function testGetNativeValueMulti()
+    public function testGetValueMulti()
     {
-        $vals = $this->multiProperty->getNativeValue();
+        $vals = $this->multiProperty->getValue();
         $this->assertType('array', $vals);
         foreach ($vals as $val) {
             $this->assertNotNull($val);
@@ -283,7 +283,7 @@ class Read_Read_PropertyReadMethodsTest extends jackalope_baseCase
     {
         $this->assertFalse($this->property->getBoolean()); //everything except "true" is false
         $prop = $this->node->getNode('numberPropertyNode/jcr:content')->getProperty('yesOrNo');
-        $this->assertSame($prop->getNativeValue(), 'true');
+        $this->assertSame($prop->getValue(), 'true');
         $this->assertTrue($prop->getBoolean());
     }
 

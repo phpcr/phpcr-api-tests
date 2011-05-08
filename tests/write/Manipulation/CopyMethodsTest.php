@@ -139,7 +139,7 @@ class Write_Manipulation_CopyMethodsTest extends jackalope_baseCase
         // make sure child node was copied
         $this->assertTrue($sess->nodeExists($dst.'/srcFile'));
         // make sure things were updated
-        $this->assertEquals('123', $sess->getProperty($dst.'/updateFile/jcr:data')->getNativeValue());
+        $this->assertEquals('123', $sess->getProperty($dst.'/updateFile/jcr:data')->getValue());
     }
 
 }
