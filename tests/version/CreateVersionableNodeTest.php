@@ -14,14 +14,14 @@ class Version_CreateVersionableNodeTest extends jackalope_baseCase
         parent::setupBeforeClass();
         self::$staticSharedFixture['ie']->import('version/base');
     }
-    
+
     public function setUp()
     {
         parent::setUp();
         $this->node = $this->sharedFixture['session']->getNode('/tests_version_base/versionable');
         $this->vm = $this->sharedFixture['session']->getWorkspace()->getVersionManager();
     }
-    
+
     public function testAddVersionableMixin()
     {
         $this->node->addMixin("mix:versionable");
@@ -29,8 +29,7 @@ class Version_CreateVersionableNodeTest extends jackalope_baseCase
         foreach ($this->node->getMixinNodeTypes() as $mix) {
             $mixins[] = $mix->getName();
         }
-        
-        
+
         $this->assertContains("mix:versionable", $mixins, "Node doesn't have mix:versionable mixin");
         $this->sharedFixture['session']->save();
         //get the node again from the server
@@ -38,7 +37,7 @@ class Version_CreateVersionableNodeTest extends jackalope_baseCase
         $this->assertContains("mix:versionable", $mixins, "Node doesn't have mix:versionable mixin");
         $this->assertTrue( $this->node->getProperty("jcr:isCheckedOut")->getBoolean(),"jcr:isCheckout is not true");
     }
-    
+
     public function testCheckinVersion() {
         $ws = $this->sharedFixture['session']->getWorkspace();
         $vm = $ws->getVersionManager();
@@ -67,5 +66,5 @@ class Version_CreateVersionableNodeTest extends jackalope_baseCase
         $this->sharedFixture['session']->save();
 
     }
-    
+
 }
