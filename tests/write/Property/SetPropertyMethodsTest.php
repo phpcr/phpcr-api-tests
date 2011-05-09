@@ -85,6 +85,12 @@ class Write_Property_SetPropertyMethodsTest extends jackalope_baseCase
         $this->assertTrue($this->node->getProperty('multivalue')->isMultiple());
     }
 
+    public function testNewNodeSetProperty()
+    {
+        $n = $this->node->addNode('child');
+        $prop = $n->setProperty('p', 'abc');
+    }
+
     //TODO: is this all creation modes? the types are tested in SetPropertyTypes
 
     //TODO: Session::hasPendingChanges
