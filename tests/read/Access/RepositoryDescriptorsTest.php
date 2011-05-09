@@ -3,7 +3,7 @@ require_once(dirname(__FILE__) . '/../../../inc/baseCase.php');
 
 class Read_Access_RepositoryDescriptorsTest extends jackalope_baseCase
 {
-    protected $path = 'read/read';
+    //don't care about fixtures
 
     //Those constants need to be defined in the bootstrap file
     protected $expectedDescriptors = array(

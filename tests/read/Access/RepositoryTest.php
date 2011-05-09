@@ -3,7 +3,7 @@ require_once(dirname(__FILE__) . '/../../../inc/baseCase.php');
 
 class Read_Access_RepositoryTest extends jackalope_baseCase
 {
-    protected $path = 'read/read';
+    //don't care about fixtures
 
     // 4.1 Repository
     public function testRepository()

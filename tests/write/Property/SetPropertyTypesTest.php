@@ -41,7 +41,7 @@ class Write_Property_SetPropertyTypesTest extends jackalope_baseCase
     {
         $bin = $this->node->setProperty('newBinary', 'foobar', PHPCR\PropertyType::BINARY);
         $this->assertEquals(\PHPCR\PropertyType::BINARY, $bin->getType());
-        $this->assertEquals('foobar', $bin->getBinary());
+        $this->assertEquals('foobar', stream_get_contents($bin->getBinary()));
     }
     public function testCreateValueInt()
     {

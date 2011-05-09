@@ -142,9 +142,8 @@ class Read_Read_PropertyReadMethodsTest extends jackalope_baseCase
     {
         $bin = $this->valProperty->getBinary();
         $str = $this->valProperty->getString();
-        $this->assertEquals($bin, $str);
-        $this->markTestIncomplete('TODO: reenable this test as soon as we use PHPCR\BinaryInterface');
-        // $this->assertEquals($bin->getSize(), strlen($str));
+        $this->assertEquals(stream_get_contents($bin), $str);
+        $this->assertEquals($this->valProperty->getLength(), strlen($str));
     }
 
     public function testGetBinaryMulti()
@@ -397,6 +396,8 @@ class Read_Read_PropertyReadMethodsTest extends jackalope_baseCase
     {
         $node = $this->node->getNode('index.txt/jcr:content');
         $node->setProperty('newBinary', 'foobar', \PHPCR\PropertyType::BINARY);
+        $property = $node->getProperty('newBinary');
+        $this->assertSame(\PHPCR\PropertyType::BINARY, $property->getType(), 'wrong property type');
         $this->assertEquals(6, $node->getProperty('newBinary')->getLength());
     }
 

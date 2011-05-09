@@ -3,6 +3,8 @@ require_once(dirname(__FILE__) . '/../../../inc/baseCase.php');
 
 class Read_Access_CredentialsTest extends jackalope_baseCase
 {
+    //don't care about fixtures
+
     const CR_USER = 'foo';
     const CR_PASS = 'bar';
 
