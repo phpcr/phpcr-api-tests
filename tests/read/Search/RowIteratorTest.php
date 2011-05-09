@@ -36,7 +36,7 @@ class Read_Search_RowIteratorTest extends jackalope_baseCase
             }
         }
 
-        $this->assertEquals(9, $count);
+        $this->assertEquals(12, $count);
     }
 
     public function testSeekable()

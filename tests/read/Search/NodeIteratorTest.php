@@ -11,6 +11,7 @@ class Read_Search_NodeIteratorTest extends jackalope_baseCase
     {
         parent::setupBeforeClass();
         self::$staticSharedFixture['qm'] = self::$staticSharedFixture['session']->getWorkspace()->getQueryManager();
+        self::$staticSharedFixture['ie']->import('read/search/base');
     }
 
     public function setUp()
@@ -36,15 +37,13 @@ class Read_Search_NodeIteratorTest extends jackalope_baseCase
 
     public function testSeekable()
     {
-        $seekNodeName = '/tests_read_access_base/index.txt/jcr:content';
+        $seekNodeName = '/tests_read_search_base/index.txt/jcr:content';
 
         $nodes = array();
         foreach ($this->nodeIterator as $nodeName => $node) {
             $nodes[$nodeName] = $node;
         }
-
         $this->nodeIterator->seek($seekNodeName);
-
         $this->assertEquals($nodes[$seekNodeName], $this->nodeIterator->current());
     }
 

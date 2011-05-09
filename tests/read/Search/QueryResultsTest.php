@@ -56,7 +56,7 @@ class Read_Search_QueryResultsTest extends jackalope_baseCase
             $this->assertInstanceOf('PHPCR\NodeInterface', $node);
             $count++;
         }
-        $this->assertEquals(3, $count);
+        $this->assertEquals(4, $count);
     }
 
     public function testGetSelectorNames()
@@ -78,6 +78,6 @@ class Read_Search_QueryResultsTest extends jackalope_baseCase
                 $count++;
             }
         }
-        $this->assertEquals(9, $count);
+        $this->assertEquals(12, $count);
     }
 }
