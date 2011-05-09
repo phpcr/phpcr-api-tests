@@ -187,29 +187,4 @@ class Write_Manipulation_AddMethodsTest extends jackalope_baseCase
         $session = $this->saveAndRenewSession();
         $this->assertTrue($session->nodeExists('/tests_write_manipulation_add/testAddNodeChild/parent/child'), 'Child node not found [Backend]');
     }
-
-    public function testAddMixinOnNewNode()
-    {
-        $newNode = $this->node->addNode('parent', 'nt:unstructured');
-        $newNode->addMixin('mix:created');
-        $session = $this->saveAndRenewSession();
-        $savedNode = $session->getNode($newNode->getPath());
-        $resultTypes = array();
-        foreach ($savedNode->getMixinNodeTypes() as $type) {
-            $resultTypes[] = $type->getName();
-        }
-        $this->assertEquals(array('mix:created'), $resultTypes, 'Node mixins should contain mix:created');
-    }
-
-    public function testAddMixinOnExistingNode()
-    {
-        $this->node->addMixin('mix:created');
-        $session = $this->saveAndRenewSession();
-        $savedNode = $session->getNode($this->node->getPath());
-        $resultTypes = array();
-        foreach ($savedNode->getMixinNodeTypes() as $type) {
-            $resultTypes[] = $type->getName();
-        }
-        $this->assertEquals(array('mix:created'), $resultTypes, 'Node mixins should contain mix:created');
-    }
 }

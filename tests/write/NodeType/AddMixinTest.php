@@ -36,21 +36,49 @@ class Write_NodeType_AddMixinTest extends jackalope_baseCase
         $this->saveAndRenewSession();
     }
 
-    /**
-     * Test we can assign any of the existing mixin types to a node.
-     */
-    public function testAddMixin()
-    {
-        $valid_mixins = array(
+    public static $mixins = array(
             "mix:created", "mix:etag", "mix:language", "mix:lastModified", "mix:lifecycle",
-            "mix:lockable", "mix:mimeType", "mix:referenceable", "mix:shareable", 
+            "mix:lockable", "mix:mimeType", "mix:referenceable", "mix:shareable",
             "mix:simpleVersionable", "mix:title", "mix:versionable", "rep:AccessControllable",
             "rep:Impersonatable", "rep:RetentionManageable", "rep:VersionReference");
 
-        foreach($valid_mixins as $mixin) {
-            $this->testNode->addMixin($mixin);
-            $this->assertTrue($this->testNode->isNodeType($mixin));
+    public static function mixinTypes() {
+        $ret = array();
+        foreach(self::$mixins as $mixin) {
+            $ret[] = array($mixin);
         }
+        return $ret;
+    }
+
+    /**
+     * @dataProvider mixinTypes
+     */
+    public function testAddMixinOnNewNode($mixin)
+    {
+        $newNode = $this->testNode->addNode('parent-'.strtr($mixin, ':', '-'), 'nt:unstructured');
+        $newNode->addMixin($mixin);
+        $session = $this->saveAndRenewSession();
+        $savedNode = $session->getNode($newNode->getPath());
+        $resultTypes = array();
+        foreach ($savedNode->getMixinNodeTypes() as $type) {
+            $resultTypes[] = $type->getName();
+        }
+        $this->assertContains($mixin, $resultTypes, "Node mixins should contain $mixin");
+    }
+
+    /**
+     * @dataProvider mixinTypes
+     */
+    public function testAddMixinOnExistingNode($mixin)
+    {
+        $this->testNode->addMixin($mixin);
+        $session = $this->saveAndRenewSession();
+        $savedNode = $session->getNode($this->testNode->getPath());
+        $resultTypes = array();
+        foreach ($savedNode->getMixinNodeTypes() as $type) {
+            $resultTypes[] = $type->getName();
+        }
+        $this->assertContains($mixin, $resultTypes, "Node mixins should contain $mixin");
     }
 
     /**
