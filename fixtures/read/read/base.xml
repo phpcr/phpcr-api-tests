@@ -14,7 +14,7 @@
          xmlns:sv="http://www.jcp.org/jcr/sv/1.0"
          xmlns:rep="internal"
 
-         sv:name="tests_read_access_base">
+         sv:name="tests_read_read_base">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>nt:folder</sv:value>
     </sv:property>

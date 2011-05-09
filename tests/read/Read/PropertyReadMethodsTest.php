@@ -23,9 +23,9 @@ class Read_Read_PropertyReadMethodsTest extends jackalope_baseCase
     public function setUp()
     {
         parent::setUp();
-        $this->node = $this->rootNode->getNode('tests_read_access_base');
+        $this->node = $this->rootNode->getNode('tests_read_read_base');
         $this->property = $this->node->getProperty('jcr:created');
-        $this->valProperty = $this->sharedFixture['session']->getRootNode()->getNode('tests_read_access_base/numberPropertyNode/jcr:content')->getProperty('foo');
+        $this->valProperty = $this->sharedFixture['session']->getRootNode()->getNode('tests_read_read_base/numberPropertyNode/jcr:content')->getProperty('foo');
         $this->multiProperty = $this->node->getNode('multiValueProperty')->getProperty('jcr:mixinTypes');
         $this->dateProperty = $this->node->getNode('index.txt/jcr:content')->getProperty('jcr:lastModified');
     }
@@ -64,7 +64,7 @@ class Read_Read_PropertyReadMethodsTest extends jackalope_baseCase
     public function testGetPath()
     {
         $path = $this->property->getPath();
-        $this->assertEquals('/tests_read_access_base/jcr:created', $path);
+        $this->assertEquals('/tests_read_read_base/jcr:created', $path);
     }
     public function testGetSession()
     {

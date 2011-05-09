@@ -19,7 +19,7 @@ class Read_Read_BinaryReadMethodsTest extends jackalope_baseCase
     {
         // All those tests are disabled because at this point, we dont implement PHPCR\BinaryInterface, maybee later for performance improvements.
         parent::setUp();
-        $this->node = $this->sharedFixture['session']->getRootNode()->getNode('tests_read_access_base/numberPropertyNode/jcr:content');
+        $this->node = $this->sharedFixture['session']->getRootNode()->getNode('tests_read_read_base/numberPropertyNode/jcr:content');
         $this->binaryProperty = $this->node->getProperty('jcr:data');
         $this->binary = $this->binaryProperty->getBinary();
         $this->assertTrue(is_resource($this->binary));
