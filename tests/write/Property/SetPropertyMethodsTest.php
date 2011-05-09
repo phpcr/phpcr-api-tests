@@ -74,7 +74,17 @@ class Write_Property_SetPropertyMethodsTest extends jackalope_baseCase
         $this->node->setProperty('newLongNumber', 102.5, \PHPCR\PropertyType::LONG);
         $this->assertEquals(102, $this->node->getProperty('newLongNumber')->getLong());
         $this->assertEquals(\PHPCR\PropertyType::LONG, $this->node->getProperty('newLongNumber')->getType());
+        $this->assertFalse($this->node->getProperty('newLongNumber')->isMultiple());
     }
+
+    public function testSetPropertyMultivalue()
+    {
+        $this->node->setProperty('multivalue', array(1, 2, 3));
+        $this->assertEquals(array(1,2,3), $this->node->getPropertyValue('multivalue'));
+        $this->assertEquals(\PHPCR\PropertyType::LONG, $this->node->getProperty('multivalue')->getType());
+        $this->assertTrue($this->node->getProperty('multivalue')->isMultiple());
+    }
+
     //TODO: is this all creation modes? the types are tested in SetPropertyTypes
 
     //TODO: Session::hasPendingChanges
