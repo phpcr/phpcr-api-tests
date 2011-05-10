@@ -316,7 +316,7 @@ class Read_ReadTest_NodeReadMethodsTest extends jackalope_baseCase
 
         //there is exactly one node with reference to idExample.
         $this->assertEquals(1, count($iterator), "Wrong number of references to idExample");
-        foreach($iterator as $prop) {
+        foreach ($iterator as $prop) {
             $this->assertType('\PHPCR\PropertyInterface', $prop);
             $this->assertEquals($source, $prop);
         }
@@ -333,7 +333,7 @@ class Read_ReadTest_NodeReadMethodsTest extends jackalope_baseCase
 
         //there is exactly one node with reference to idExample.
         $this->assertEquals(1, count($iterator), "Wrong number of references with name ref to idExample");
-        foreach($iterator as $node) {
+        foreach ($iterator as $node) {
             $this->assertType('\PHPCR\PropertyInterface', $prop);
             $this->assertEquals($source, $prop);
         }
@@ -432,7 +432,7 @@ class Read_ReadTest_NodeReadMethodsTest extends jackalope_baseCase
     public function testIterator() {
         $this->assertTraversableImplemented($this->node);
         $results = false;
-        foreach($this->node as $name => $child) {
+        foreach ($this->node as $name => $child) {
             $results = true;
             $this->assertInternalType('string', $name);
             $this->assertType('\PHPCR\NodeInterface', $child);

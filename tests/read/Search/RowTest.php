@@ -31,8 +31,7 @@ class Read_Search_RowTest extends jackalope_baseCase
     {
         $count = 0;
 
-        foreach ($this->row as $name => $value)
-        {
+        foreach ($this->row as $name => $value) {
             $this->assertNotNull($name);
             $this->assertNotNull($value);
             $count++;
@@ -45,7 +44,7 @@ class Read_Search_RowTest extends jackalope_baseCase
     {
         $values = $this->row->getValues();
 
-        foreach($values as $value) {
+        foreach ($values as $value) {
             $this->assertNotNull($value);
         }
     }

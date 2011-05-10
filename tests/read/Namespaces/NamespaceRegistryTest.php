@@ -36,7 +36,7 @@ class Read_Namespaces_NamespaceRegistryTest extends jackalope_baseCase
 
     public function testGetURI()
     {
-        foreach($this->nsBuiltIn as $prefix => $uri) {
+        foreach ($this->nsBuiltIn as $prefix => $uri) {
             $ret = $this->nr->getURI($prefix);
             $this->assertEquals($uri, $ret);
         }
@@ -60,7 +60,7 @@ class Read_Namespaces_NamespaceRegistryTest extends jackalope_baseCase
 
     public function testGetPrefix()
     {
-        foreach($this->nsBuiltIn as $prefix => $uri) {
+        foreach ($this->nsBuiltIn as $prefix => $uri) {
             $ret = $this->nr->getPrefix($uri);
             $this->assertEquals($prefix, $ret);
         }
@@ -117,7 +117,7 @@ class Read_Namespaces_NamespaceRegistryTest extends jackalope_baseCase
     public function testIterator() {
         $this->assertTraversableImplemented($this->nr);
         $results = 0;
-        foreach($this->nr as $prefix => $url) {
+        foreach ($this->nr as $prefix => $url) {
             $results++;
             $this->assertInternalType('string', $prefix);
             $this->assertInternalType('string', $url);

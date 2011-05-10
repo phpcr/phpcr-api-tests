@@ -41,7 +41,7 @@ class Read_Namespaces_SessionNamespaceRemappingTest extends jackalope_baseCase
     {
         $ret = $this->sharedFixture['session']->getNamespacePrefixes();
         $this->assertType('array', $ret);
-        foreach($this->nsBuiltIn as $prefix => $uri) {
+        foreach ($this->nsBuiltIn as $prefix => $uri) {
             $this->assertContains($prefix, $ret);
         }
     }

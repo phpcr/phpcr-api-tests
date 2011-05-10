@@ -44,7 +44,7 @@ class Write_NodeType_AddMixinTest extends jackalope_baseCase
 
     public static function mixinTypes() {
         $ret = array();
-        foreach(self::$mixins as $mixin) {
+        foreach (self::$mixins as $mixin) {
             $ret[] = array($mixin);
         }
         return $ret;

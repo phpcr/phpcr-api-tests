@@ -43,14 +43,18 @@ class Read_Read_PropertyTypesTest extends jackalope_baseCase
     static public function dataValueFromName()
     {
         $data = array();
-        foreach(self::$names as $key => $value) $data[] = array($key,$value);
+        foreach (self::$names as $key => $value) {
+            $data[] = array($key,$value);
+        }
         return $data;
     }
 
     static public function dataValueFromType()
     {
         $data = array();
-        foreach(self::$types as $key => $value) $data[] = array($key,$value);
+        foreach (self::$types as $key => $value) {
+            $data[] = array($key,$value);
+        }
         return $data;
     }
 

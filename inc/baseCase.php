@@ -88,7 +88,7 @@ abstract class jackalope_baseCase extends PHPUnit_Framework_TestCase
         $this->node = null;
         $children = $this->rootNode->getNodes("tests_*");
         $child = current($children);
-        if(false !== $child){
+        if (false !== $child) {
             $this->node = $child->hasNode($this->getName()) ? $child->getNode($this->getName()) : null;
         }
     }

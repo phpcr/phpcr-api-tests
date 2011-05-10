@@ -133,7 +133,7 @@ class Read_Read_PropertyReadMethodsTest extends jackalope_baseCase
     {
         $arr = $this->multiProperty->getString();
         $this->assertType('array', $arr);
-        foreach($arr as $v) {
+        foreach ($arr as $v) {
             $this->assertType('string', $v);
         }
     }
@@ -163,7 +163,7 @@ class Read_Read_PropertyReadMethodsTest extends jackalope_baseCase
     {
         $arr = $this->multiProperty->getLong();
         $this->assertType('array', $arr);
-        foreach($arr as $v) {
+        foreach ($arr as $v) {
             $this->assertType('integer', $v);
         }
     }
@@ -196,7 +196,7 @@ class Read_Read_PropertyReadMethodsTest extends jackalope_baseCase
     {
         $arr = $this->multiProperty->getDouble();
         $this->assertType('array', $arr);
-        foreach($arr as $v) {
+        foreach ($arr as $v) {
             $this->assertType('float', $v);
         }
     }
@@ -249,7 +249,7 @@ class Read_Read_PropertyReadMethodsTest extends jackalope_baseCase
 
         $arr = $this->multiDateProperty->getDate();
         $this->assertType('array', $arr);
-        foreach($arr as $v) {
+        foreach ($arr as $v) {
             $this->assertType('DateTime', $v);
         }
     }
@@ -290,7 +290,7 @@ class Read_Read_PropertyReadMethodsTest extends jackalope_baseCase
     {
         $arr = $this->multiProperty->getBoolean();
         $this->assertType('array', $arr);
-        foreach($arr as $v) {
+        foreach ($arr as $v) {
             $this->assertType('boolean', $v);
         }
     }
@@ -333,7 +333,7 @@ class Read_Read_PropertyReadMethodsTest extends jackalope_baseCase
         /*
         $arr = $this->multiProperty->getNode();
         $this->assertType('array', $arr);
-        foreach($arr as $v) {
+        foreach ($arr as $v) {
             $this->assertType('PHPCR\NodeInterface', $v);
         }
         */
@@ -381,7 +381,7 @@ class Read_Read_PropertyReadMethodsTest extends jackalope_baseCase
         /*
         $arr = $this->multiProperty->getProperty();
         $this->assertType('array', $arr);
-        foreach($arr as $v) {
+        foreach ($arr as $v) {
             $this->assertType('PHPCR\PropertyInterface', $v);
         }
         */
@@ -511,7 +511,7 @@ class Read_Read_PropertyReadMethodsTest extends jackalope_baseCase
         $this->assertTraversableImplemented($this->valProperty);
 
         $results = 0;
-        foreach($this->valProperty as $value) {
+        foreach ($this->valProperty as $value) {
             $results++;
             $this->assertType('string', $value);
             $this->assertEquals('bar', $value);
@@ -524,7 +524,7 @@ class Read_Read_PropertyReadMethodsTest extends jackalope_baseCase
         $this->assertTraversableImplemented($this->multiProperty);
         $expected = array('mix:referenceable', 'mix:versionable');
         $returned = array();
-        foreach($this->multiProperty as $value) {
+        foreach ($this->multiProperty as $value) {
             $returned[] = $value;
         }
         $this->assertEquals($expected, $returned);
