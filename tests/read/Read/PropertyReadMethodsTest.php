@@ -141,6 +141,7 @@ class Read_Read_PropertyReadMethodsTest extends jackalope_baseCase
     public function testGetBinary()
     {
         $bin = $this->valProperty->getBinary();
+        $this->assertTrue(is_resource($bin));
         $str = $this->valProperty->getString();
         $this->assertEquals(stream_get_contents($bin), $str);
         $this->assertEquals($this->valProperty->getLength(), strlen($str));
@@ -280,10 +281,13 @@ class Read_Read_PropertyReadMethodsTest extends jackalope_baseCase
 
     public function testGetBoolean()
     {
-        $this->assertFalse($this->property->getBoolean()); //everything except "true" is false
+        $this->assertTrue($this->property->getBoolean());
         $prop = $this->node->getNode('numberPropertyNode/jcr:content')->getProperty('yesOrNo');
         $this->assertSame($prop->getValue(), 'true');
         $this->assertTrue($prop->getBoolean());
+
+        $prop = $this->sharedFixture['session']->getRootNode()->getNode('tests_read_read_base/index.txt/jcr:content')->getProperty('zeronumber');
+        $this->assertFalse($prop->getBoolean());
     }
 
     public function testGetBooleanMulti()

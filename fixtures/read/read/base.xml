@@ -49,6 +49,9 @@
             <sv:property sv:name="jcr:mimeType" sv:type="String">
                 <sv:value>text/plain</sv:value>
             </sv:property>
+            <sv:property sv:name="zeronumber" sv:type="Long">
+                <sv:value>0</sv:value>
+            </sv:property>
         </sv:node>
     </sv:node>
 
