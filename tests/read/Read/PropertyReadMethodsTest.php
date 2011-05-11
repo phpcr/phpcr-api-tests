@@ -222,8 +222,8 @@ class Read_Read_PropertyReadMethodsTest extends jackalope_baseCase
     {
         $prop = $this->node->getNode('numberPropertyNode/jcr:content')->getProperty('longNumber');
         $num = $prop->getDecimal();
-        //we do not have an equivalent to java.math.BigDecimal. PHPCR just uses plain float
-        $this->assertType('float', $num);
+        //we do not have an equivalent to java.math.BigDecimal. PHPCR uses strings suitable for BC Math
+        $this->assertType('string', $num);
         $this->assertEquals(999, $num);
     }
 
@@ -232,8 +232,9 @@ class Read_Read_PropertyReadMethodsTest extends jackalope_baseCase
      */
     public function testGetDoubleAndDecimalSame()
     {
-        $double = $this->valProperty->getDouble();
-        $decimal = $this->valProperty->getDecimal();
+        $prop = $this->node->getNode('numberPropertyNode/jcr:content')->getProperty('longNumber');
+        $double = $prop->getDouble();
+        $decimal = $prop->getDecimal();
         $this->assertEquals($double, $decimal);
     }
 
