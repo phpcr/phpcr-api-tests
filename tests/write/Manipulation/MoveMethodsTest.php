@@ -180,6 +180,9 @@ class Write_Manipulation_MoveMethodsTest extends jackalope_baseCase
 
     public function testSessionMoveAdded()
     {
+        //relies on the base class setup trick to have the node populated from the fixtures
+        $this->assertInstanceOf('PHPCR\NodeInterface', $this->node);
+
         $session = $this->sharedFixture['session'];
 
         $this->node->addNode('newNode', 'nt:unstructured');
@@ -203,6 +206,9 @@ class Write_Manipulation_MoveMethodsTest extends jackalope_baseCase
      */
     public function testSessionMoveChildAdded()
     {
+        //relies on the base class setup trick to have the node populated from the fixtures
+        $this->assertInstanceOf('PHPCR\NodeInterface', $this->node);
+
         $session = $this->sharedFixture['session'];
 
         $newNode = $this->node->addNode('newNode', 'nt:unstructured');

@@ -20,6 +20,8 @@ class Write_Manipulation_AddMethodsTest extends jackalope_baseCase
     {
         $this->renewSession();
         parent::setUp();
+        //all tests in this suite rely on the trick to have the node populated from the fixtures
+        $this->assertInstanceOf('PHPCR\NodeInterface', $this->node);
     }
 
     /**

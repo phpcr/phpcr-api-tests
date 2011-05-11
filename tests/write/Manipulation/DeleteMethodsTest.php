@@ -24,6 +24,9 @@ class Write_Manipulation_DeleteMethodsTest extends jackalope_baseCase
      */
     public function testRemoveItemNode()
     {
+        //relies on the base class setup trick to have the node populated from the fixtures
+        $this->assertInstanceOf('PHPCR\NodeInterface', $this->node);
+
         $parent = $this->node->getParent();
         $this->assertTrue($parent->hasNode('testRemoveItemNode'));
         $this->sharedFixture['session']->removeItem('/tests_write_manipulation_delete/testRemoveItemNode');
@@ -35,11 +38,15 @@ class Write_Manipulation_DeleteMethodsTest extends jackalope_baseCase
      */
     public function testRemoveItemProperty()
     {
+        //relies on the base class setup trick to have the node populated from the fixtures
+        $this->assertInstanceOf('PHPCR\NodeInterface', $this->node);
+
         $property = $this->node->getProperty('longNumber');
         $this->assertTrue($this->node->hasProperty('longNumber'));
         $this->sharedFixture['session']->removeItem('/tests_write_manipulation_delete/testRemoveItemProperty/longNumber');
         $this->assertFalse($this->node->hasProperty('longNumber'));
     }
+
     /**
      * @covers \PHPCR\SessionInterface::removeItem
      * @expectedException \PHPCR\ConstraintViolationException
@@ -48,7 +55,11 @@ class Write_Manipulation_DeleteMethodsTest extends jackalope_baseCase
     {
         //not only remove item but also save session, as check might only be done on save
         $this->markTestIncomplete('TODO: figure out how to provoke that error');
+
+        //relies on the base class setup trick to have the node populated from the fixtures
+        $this->assertInstanceOf('PHPCR\NodeInterface', $this->node);
     }
+
     /**
      * @covers \PHPCR\SessionInterface::removeItem
      * @expectedException \PHPCR\PathNotFoundException
@@ -62,6 +73,9 @@ class Write_Manipulation_DeleteMethodsTest extends jackalope_baseCase
      */
     public function testRemoveNode()
     {
+        //relies on the base class setup trick to have the node populated from the fixtures
+        $this->assertInstanceOf('PHPCR\NodeInterface', $this->node);
+
         $parent = $this->node->getParent();
         $this->assertTrue($parent->hasNode('testRemoveNode'));
         $this->node->remove();
@@ -112,6 +126,9 @@ class Write_Manipulation_DeleteMethodsTest extends jackalope_baseCase
      */
     public function testRemoveProperty()
     {
+        //relies on the base class setup trick to have the node populated from the fixtures
+        $this->assertInstanceOf('PHPCR\NodeInterface', $this->node);
+
         $property = $this->node->getProperty('longNumber');
         $this->assertTrue($this->node->hasProperty('longNumber'));
         $property->remove();
@@ -123,6 +140,9 @@ class Write_Manipulation_DeleteMethodsTest extends jackalope_baseCase
      */
     public function testNodeRemoveProperty()
     {
+        //relies on the base class setup trick to have the node populated from the fixtures
+        $this->assertInstanceOf('PHPCR\NodeInterface', $this->node);
+
         $this->assertTrue($this->node->hasProperty('longNumber'));
         $this->node->setProperty('longNumber', null);
         $this->assertFalse($this->node->hasProperty('longNumber'));
@@ -136,7 +156,11 @@ class Write_Manipulation_DeleteMethodsTest extends jackalope_baseCase
     {
 //        $this->node->setProperty('inexistent', null);
         $this->markTestIncomplete('TODO: figure out what should happen when inexistant property is removed');
+
+        //relies on the base class setup trick to have the node populated from the fixtures
+        $this->assertInstanceOf('PHPCR\NodeInterface', $this->node);
     }
+
     /**
      * @covers \PHPCR\NodeInterface::setProperty
      * @expectedException \PHPCR\ConstraintViolationException
@@ -145,6 +169,9 @@ class Write_Manipulation_DeleteMethodsTest extends jackalope_baseCase
     {
         //not only remove item but also save session, as check might only be done on save
         $this->markTestIncomplete('TODO: figure out how to provoke that error');
+
+        //relies on the base class setup trick to have the node populated from the fixtures
+        $this->assertInstanceOf('PHPCR\NodeInterface', $this->node);
     }
     /**
      * @covers \PHPCR\NodeInterface::remove
@@ -153,6 +180,9 @@ class Write_Manipulation_DeleteMethodsTest extends jackalope_baseCase
      */
     public function testGetRemovedNodeSession()
     {
+        //relies on the base class setup trick to have the node populated from the fixtures
+        $this->assertInstanceOf('PHPCR\NodeInterface', $this->node);
+
         $path = $this->node->getPath();
         $this->node->remove();
         $this->sharedFixture['session']->getNode($path);
@@ -164,6 +194,9 @@ class Write_Manipulation_DeleteMethodsTest extends jackalope_baseCase
      */
     public function testGetRemovedNodeNode()
     {
+        //relies on the base class setup trick to have the node populated from the fixtures
+        $this->assertInstanceOf('PHPCR\NodeInterface', $this->node);
+
         $parent = $this->node->getParent();
         $name = $this->node->getName();
         $this->node->remove();
@@ -176,6 +209,9 @@ class Write_Manipulation_DeleteMethodsTest extends jackalope_baseCase
      */
     public function testGetRemovedPropertySession()
     {
+        //relies on the base class setup trick to have the node populated from the fixtures
+        $this->assertInstanceOf('PHPCR\NodeInterface', $this->node);
+
         $property = $this->node->getProperty('prop');
         $path = $property->getPath();
         $property->remove();
@@ -188,6 +224,9 @@ class Write_Manipulation_DeleteMethodsTest extends jackalope_baseCase
      */
     public function testGetRemovedPropertyNode()
     {
+        //relies on the base class setup trick to have the node populated from the fixtures
+        $this->assertInstanceOf('PHPCR\NodeInterface', $this->node);
+
         $property = $this->node->getProperty('prop');
         $name = $property->getName();
         $property->remove();
@@ -199,6 +238,9 @@ class Write_Manipulation_DeleteMethodsTest extends jackalope_baseCase
      */
     public function testRemoveRemovedNode()
     {
+        //relies on the base class setup trick to have the node populated from the fixtures
+        $this->assertInstanceOf('PHPCR\NodeInterface', $this->node);
+
         $path = $this->node->getPath();
         $this->node->remove();
         $this->sharedFixture['session']->removeItem($path);
@@ -208,6 +250,9 @@ class Write_Manipulation_DeleteMethodsTest extends jackalope_baseCase
      */
     public function testAddNodeOverRemoved()
     {
+        //relies on the base class setup trick to have the node populated from the fixtures
+        $this->assertInstanceOf('PHPCR\NodeInterface', $this->node);
+
         $name = $this->node->getName();
         $path = $this->node->getPath();
         $parent = $this->node->getParent();
