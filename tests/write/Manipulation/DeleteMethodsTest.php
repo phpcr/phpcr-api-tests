@@ -24,6 +24,7 @@ class Write_Manipulation_DeleteMethodsTest extends jackalope_baseCase
      */
     public function testRemoveItemNode()
     {
+        $this->assertTrue(is_object($this->node));
         $parent = $this->node->getParent();
         $this->assertTrue($parent->hasNode('testRemoveItemNode'));
         $this->sharedFixture['session']->removeItem('/tests_write_manipulation_delete/testRemoveItemNode');
@@ -35,6 +36,7 @@ class Write_Manipulation_DeleteMethodsTest extends jackalope_baseCase
      */
     public function testRemoveItemProperty()
     {
+        $this->assertTrue(is_object($this->node));
         $property = $this->node->getProperty('longNumber');
         $this->assertTrue($this->node->hasProperty('longNumber'));
         $this->sharedFixture['session']->removeItem('/tests_write_manipulation_delete/testRemoveItemProperty/longNumber');
@@ -62,6 +64,7 @@ class Write_Manipulation_DeleteMethodsTest extends jackalope_baseCase
      */
     public function testRemoveNode()
     {
+        $this->assertTrue(is_object($this->node));
         $parent = $this->node->getParent();
         $this->assertTrue($parent->hasNode('testRemoveNode'));
         $this->node->remove();
@@ -112,6 +115,7 @@ class Write_Manipulation_DeleteMethodsTest extends jackalope_baseCase
      */
     public function testRemoveProperty()
     {
+        $this->assertTrue(is_object($this->node));
         $property = $this->node->getProperty('longNumber');
         $this->assertTrue($this->node->hasProperty('longNumber'));
         $property->remove();
@@ -123,6 +127,7 @@ class Write_Manipulation_DeleteMethodsTest extends jackalope_baseCase
      */
     public function testNodeRemoveProperty()
     {
+        $this->assertTrue(is_object($this->node));
         $this->assertTrue($this->node->hasProperty('longNumber'));
         $this->node->setProperty('longNumber', null);
         $this->assertFalse($this->node->hasProperty('longNumber'));
@@ -153,6 +158,7 @@ class Write_Manipulation_DeleteMethodsTest extends jackalope_baseCase
      */
     public function testGetRemovedNodeSession()
     {
+        $this->assertTrue(is_object($this->node));
         $path = $this->node->getPath();
         $this->node->remove();
         $this->sharedFixture['session']->getNode($path);
@@ -164,6 +170,7 @@ class Write_Manipulation_DeleteMethodsTest extends jackalope_baseCase
      */
     public function testGetRemovedNodeNode()
     {
+        $this->assertTrue(is_object($this->node));
         $parent = $this->node->getParent();
         $name = $this->node->getName();
         $this->node->remove();
@@ -176,6 +183,7 @@ class Write_Manipulation_DeleteMethodsTest extends jackalope_baseCase
      */
     public function testGetRemovedPropertySession()
     {
+        $this->assertTrue(is_object($this->node));
         $property = $this->node->getProperty('prop');
         $path = $property->getPath();
         $property->remove();
@@ -188,6 +196,7 @@ class Write_Manipulation_DeleteMethodsTest extends jackalope_baseCase
      */
     public function testGetRemovedPropertyNode()
     {
+        $this->assertTrue(is_object($this->node));
         $property = $this->node->getProperty('prop');
         $name = $property->getName();
         $property->remove();
@@ -199,6 +208,7 @@ class Write_Manipulation_DeleteMethodsTest extends jackalope_baseCase
      */
     public function testRemoveRemovedNode()
     {
+        $this->assertTrue(is_object($this->node));
         $path = $this->node->getPath();
         $this->node->remove();
         $this->sharedFixture['session']->removeItem($path);
@@ -208,6 +218,7 @@ class Write_Manipulation_DeleteMethodsTest extends jackalope_baseCase
      */
     public function testAddNodeOverRemoved()
     {
+        $this->assertTrue(is_object($this->node));
         $name = $this->node->getName();
         $path = $this->node->getPath();
         $parent = $this->node->getParent();
