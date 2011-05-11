@@ -180,6 +180,7 @@ class Write_Manipulation_MoveMethodsTest extends jackalope_baseCase
 
     public function testSessionMoveAdded()
     {
+        $this->assertTrue(is_object($this->node));
         $session = $this->sharedFixture['session'];
 
         $this->node->addNode('newNode', 'nt:unstructured');
@@ -203,6 +204,7 @@ class Write_Manipulation_MoveMethodsTest extends jackalope_baseCase
      */
     public function testSessionMoveChildAdded()
     {
+        $this->assertTrue (is_object($this->node)); 
         $session = $this->sharedFixture['session'];
 
         $newNode = $this->node->addNode('newNode', 'nt:unstructured');

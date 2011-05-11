@@ -30,6 +30,7 @@ class Write_Manipulation_AddMethodsTest extends jackalope_baseCase
     {
         $this->markTestSkipped('Find a case where the parent type specifies the type for this node'); //with nt:folder, this is also not working with the java jackrabbit, so it seems not to be an implementation issue
         // should take the primaryType of emptyExample
+        $this->assertTrue(is_object($this->node));
         $this->node->addNode('newNode');
         $this->assertNotNull($this->sharedFixture['session']->getNode($this->node->getPath() . '/newNode'), 'Node newNode was not created');
     }
@@ -40,12 +41,14 @@ class Write_Manipulation_AddMethodsTest extends jackalope_baseCase
     public function testAddNodeWithPath()
     {
         // should take the primaryType of <testAddNodeWithPath />
+        $this->assertTrue(is_object($this->node));
         $this->node->addNode('test:namespacedNode/newNode', 'nt:unstructured');
         $this->assertNotNull($this->sharedFixture['session']->getNode($this->node->getPath() . '/test:namespacedNode/newNode'), 'Node newNode was not created');
     }
 
     public function testAddNodeFileType()
     {
+        $this->assertTrue(is_object($this->node));
         $this->node->addNode('newFileNode', 'nt:file');
         $newNode = $this->sharedFixture['session']->getNode($this->node->getPath() . '/newFileNode');
         $contentNode = $newNode->addNode('jcr:content', 'nt:resource');
@@ -67,12 +70,14 @@ class Write_Manipulation_AddMethodsTest extends jackalope_baseCase
 
     public function testAddNodeUnstructuredType()
     {
+        $this->assertTrue(is_object($this->node));
         $this->node->addNode('newUnstructuredNode', 'nt:unstructured');
         $this->assertNotNull($this->sharedFixture['session']->getNode($this->node->getPath() . '/newUnstructuredNode'), 'Node newUnstructuredNode was not created');
     }
 
     public function testAddPropertyOnUnstructured()
     {
+        $this->assertTrue(is_object($this->node));
         $node = $this->node->addNode('unstructuredNode', 'nt:unstructured');
         $node->setProperty('test', 'val');
 
@@ -98,6 +103,7 @@ class Write_Manipulation_AddMethodsTest extends jackalope_baseCase
 
     public function testAddMultiValuePropertyOnUnstructured()
     {
+        $this->assertTrue(is_object($this->node));
         $node = $this->node->addNode('unstructuredNode2', 'nt:unstructured');
         $node->setProperty('test', array('val', 'val2'));
 
@@ -128,6 +134,7 @@ class Write_Manipulation_AddMethodsTest extends jackalope_baseCase
      */
     public function testAddNodeMissingType()
     {
+        $this->assertTrue(is_object($this->node));
         $this->node->addNode('newNode');
     }
     /**
@@ -135,6 +142,7 @@ class Write_Manipulation_AddMethodsTest extends jackalope_baseCase
      */
     public function testAddNodeWithInexistingType()
     {
+        $this->assertTrue(is_object($this->node));
         $this->node->addNode('newFileNode', 'inexistenttype');
         $this->assertNotNull($this->sharedFixture['session']->getNode($this->node->getPath() . '/newFileNode'), 'Node newFileNode was not created');
     }
@@ -144,6 +152,7 @@ class Write_Manipulation_AddMethodsTest extends jackalope_baseCase
      */
     public function testAddNodeExisting()
     {
+        $this->assertTrue(is_object($this->node));
         $name = $this->node->getName();
         $parent = $this->node->getParent();
         $parent->addNode($name, 'nt:unstructured');
@@ -155,6 +164,7 @@ class Write_Manipulation_AddMethodsTest extends jackalope_baseCase
      */
     public function testAddNodePathNotFound()
     {
+        $this->assertTrue(is_object($this->node));
         $parent = $this->node->addNode('nonExistent/newNode', 'nt:unstructured');
     }
 
@@ -165,6 +175,7 @@ class Write_Manipulation_AddMethodsTest extends jackalope_baseCase
      */
     public function testAddNodeToProperty()
     {
+        $this->assertTrue(is_object($this->node));
         $this->node->addNode('prop/failNode', 'nt:unstructured');
     }
 
@@ -173,11 +184,13 @@ class Write_Manipulation_AddMethodsTest extends jackalope_baseCase
      */
     public function testAddNodeWithIndex()
     {
+        $this->assertTrue(is_object($this->node));
         $this->node->addNode('name[3]', 'nt:unstructured');
     }
 
     public function testAddNodeChild()
     {
+        $this->assertTrue(is_object($this->node));
         $newNode = $this->node->addNode('parent', 'nt:unstructured');
         $newNode->addNode('child', 'nt:unstructured');
 
@@ -186,5 +199,32 @@ class Write_Manipulation_AddMethodsTest extends jackalope_baseCase
         // dispatch to backend
         $session = $this->saveAndRenewSession();
         $this->assertTrue($session->nodeExists('/tests_write_manipulation_add/testAddNodeChild/parent/child'), 'Child node not found [Backend]');
+    }
+
+    public function testAddMixinOnNewNode()
+    {
+        $this->assertTrue(is_object($this->node));
+        $newNode = $this->node->addNode('parent', 'nt:unstructured');
+        $newNode->addMixin('mix:created');
+        $session = $this->saveAndRenewSession();
+        $savedNode = $session->getNode($newNode->getPath());
+        $resultTypes = array();
+        foreach ($savedNode->getMixinNodeTypes() as $type) {
+            $resultTypes[] = $type->getName();
+        }
+        $this->assertEquals(array('mix:created'), $resultTypes, 'Node mixins should contain mix:created');
+    }
+
+    public function testAddMixinOnExistingNode()
+    {
+        $this->assertTrue(is_object($this->node));
+        $this->node->addMixin('mix:created');
+        $session = $this->saveAndRenewSession();
+        $savedNode = $session->getNode($this->node->getPath());
+        $resultTypes = array();
+        foreach ($savedNode->getMixinNodeTypes() as $type) {
+            $resultTypes[] = $type->getName();
+        }
+        $this->assertEquals(array('mix:created'), $resultTypes, 'Node mixins should contain mix:created');
     }
 }
