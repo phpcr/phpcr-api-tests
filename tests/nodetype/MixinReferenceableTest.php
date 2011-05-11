@@ -15,6 +15,11 @@ class NodeType_MixinReferenceableTest extends jackalope_baseCase
         self::$staticSharedFixture['ie']->import('nodetype/base');
     }
 
+    public function setUp()
+    {
+        $this->renewSession();
+    }
+
     /**
      * Test that a node without mix:referenceable type cannot be referenced
      * @expectedException PHPCR\ValueFormatException

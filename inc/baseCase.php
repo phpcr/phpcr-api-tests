@@ -29,6 +29,7 @@ abstract class jackalope_baseCase extends PHPUnit_Framework_TestCase
     public static function setupBeforeClass()
     {
         self::$staticSharedFixture = array();
+        date_default_timezone_set('Europe/Zurich');
         foreach ($GLOBALS AS $cfgKey => $cfgValue) {
             if (strpos($cfgKey, "jcr.") === 0) {
                 self::$staticSharedFixture['config'][substr($cfgKey, 4)] = $cfgValue;
@@ -70,14 +71,6 @@ abstract class jackalope_baseCase extends PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->sharedFixture = self::$staticSharedFixture;
-
-        date_default_timezone_set('Europe/Zurich');
-        foreach ($GLOBALS AS $cfgKey => $cfgValue) {
-            if (strpos($cfgKey, "jcr.") === 0) {
-                $this->config[substr($cfgKey, 4)] = $cfgValue;
-            }
-        }
-
         $this->rootNode = $this->sharedFixture['session']->getNode('/');
 
         /* we create the fixtures in one go

@@ -7,40 +7,23 @@ require_once(dirname(__FILE__) . '/../../../inc/baseCase.php');
  */
 class Write_NodeType_AddMixinTest extends jackalope_baseCase
 {
-    protected $testNode;
-
-    protected $testNodeName = '___test__';
-
-    static public function setupBeforeClass()
-    {
-        parent::setupBeforeClass();
-    }
-
     public function setUp()
     {
-        parent::setUp();
+        self::$staticSharedFixture['ie']->import('read/read/base'); //TODO: this is quite slow. adjust fixtures to the magic method name system and move this into setupBeforeClass
         $this->renewSession();
-
-        $session = $this->sharedFixture['session'];
-        $path = "/" . $this->testNodeName;
-        if ($session->itemExists($path)) {
-            $this->testNode = $session->getNode($path);
-        } else {
-            $this->testNode = $session->getRootNode()->addNode($this->testNodeName);
-            $session->save();
-        }
+        parent::setUp();
+        $this->node = $this->rootNode->getNode('tests_read_read_base/numberPropertyNode');
     }
 
-    public function tearDown()
-    {
-        $this->saveAndRenewSession();
-    }
-
+    /**
+     * the mix: types are predefined types. 
+     * 
+     * we only use those that do not depend on optional features.
+     */
     public static $mixins = array(
-            "mix:created", "mix:etag", "mix:language", "mix:lastModified", "mix:lifecycle",
-            "mix:lockable", "mix:mimeType", "mix:referenceable", "mix:shareable",
-            "mix:simpleVersionable", "mix:title", "mix:versionable", "rep:AccessControllable",
-            "rep:Impersonatable", "rep:RetentionManageable", "rep:VersionReference");
+            "mix:etag", "mix:language", "mix:lastModified", "mix:mimeType",
+            "mix:referenceable", "mix:shareable", "mix:title"
+            );
 
     public static function mixinTypes() {
         $ret = array();
@@ -55,7 +38,7 @@ class Write_NodeType_AddMixinTest extends jackalope_baseCase
      */
     public function testAddMixinOnNewNode($mixin)
     {
-        $newNode = $this->testNode->addNode('parent-'.strtr($mixin, ':', '-'), 'nt:unstructured');
+        $newNode = $this->rootNode->addNode('parent-'.strtr($mixin, ':', '-'), 'nt:unstructured');
         $newNode->addMixin($mixin);
         $session = $this->saveAndRenewSession();
         $savedNode = $session->getNode($newNode->getPath());
@@ -71,24 +54,33 @@ class Write_NodeType_AddMixinTest extends jackalope_baseCase
      */
     public function testAddMixinOnExistingNode($mixin)
     {
-        $this->testNode->addMixin($mixin);
+        $this->node->addMixin($mixin);
         $session = $this->saveAndRenewSession();
-        $savedNode = $session->getNode($this->testNode->getPath());
+        $savedNode = $session->getNode($this->node->getPath());
         $resultTypes = array();
         foreach ($savedNode->getMixinNodeTypes() as $type) {
             $resultTypes[] = $type->getName();
         }
+        //var_dump($resultTypes);die;
         $this->assertContains($mixin, $resultTypes, "Node mixins should contain $mixin");
+    }
+
+    /**
+     * @expectedException \PHPCR\NodeType\ConstraintViolationException
+     */
+    public function testAddMixinPrimaryType()
+    {
+        $this->node->addMixin('nt:unstructured');
+        $this->saveAndRenewSession();
     }
 
     /**
      * Test that assigning an unexisting mixin type to a node will fail
      * @expectedException \PHPCR\NodeType\NoSuchNodeTypeException
-     * @expectedExceptionMessage The mixin type 'mix:unexisting' does not exist
      */
-    public function testAddMixinUnexisting()
+    public function testAddMixinNonexisting()
     {
-        $this->testNode->addMixin('mix:unexisting');
+        $this->node->addMixin('mix:nonexisting');
         $this->saveAndRenewSession();
     }
 }
