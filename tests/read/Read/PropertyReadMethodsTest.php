@@ -288,7 +288,8 @@ class Read_Read_PropertyReadMethodsTest extends jackalope_baseCase
         $this->assertTrue($prop->getBoolean());
 
         $prop = $this->sharedFixture['session']->getRootNode()->getNode('tests_read_read_base/index.txt/jcr:content')->getProperty('zeronumber');
-        $this->assertFalse($prop->getBoolean());
+        $this->assertFalse($prop->getBoolean(), 'this boolean property should be false');
+        $this->assertTrue(! $prop->getString(), 'boolean false as string should be false');
     }
 
     public function testGetBooleanMulti()
