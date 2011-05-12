@@ -63,7 +63,7 @@ class Write_Property_SetPropertyTypesTest extends jackalope_baseCase
         $value = $this->node->setProperty('x', true);
         $this->assertEquals(\PHPCR\PropertyType::BOOLEAN, $value->getType(), 'wrong type');
         $this->assertTrue($value->getBoolean(), 'boolean not true');
-        $this->assertSame('true', $value->getString(), 'wrong string value'); //boolean converted to string must be the word true
+        $this->assertEqual($value->getString(), true, 'wrong string value'); //boolean converted to string must equal to true
         $this->assertSame(1, $value->getLong(), 'wrong integer value');
     }
     public function testCreateValueNode()
