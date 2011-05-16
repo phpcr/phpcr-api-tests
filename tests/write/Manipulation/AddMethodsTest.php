@@ -21,7 +21,7 @@ class Write_Manipulation_AddMethodsTest extends jackalope_baseCase
         $this->renewSession();
         parent::setUp();
         //all tests in this suite rely on the trick to have the node populated from the fixtures
-        $this->assertInstanceOf('PHPCR\NodeInterface', $this->node);
+        $this->assertInstanceOf('PHPCR\NodeInterface', $this->node, "Something went wrong with fixture loading");
     }
 
     /**
@@ -171,6 +171,19 @@ class Write_Manipulation_AddMethodsTest extends jackalope_baseCase
     }
 
     /**
+     * try to add a property of the wrong type
+     *
+     * @expectedException \PHPCR\NodeType\ConstraintViolationException
+     */
+    public function testAddPropertyWrongType()
+    {
+        $file = $this->node->addNode('file', 'nt:file');
+        $data = $file->addNode('jcr:content', 'nt:resource');
+        $data->setProperty('jcr:data', 'abc', \PHPCR\PropertyType::STRING);
+        $this->saveAndRenewSession();
+    }
+
+    /**
      * @expectedException \PHPCR\RepositoryException
      */
     public function testAddNodeWithIndex()
@@ -189,4 +202,22 @@ class Write_Manipulation_AddMethodsTest extends jackalope_baseCase
         $session = $this->saveAndRenewSession();
         $this->assertTrue($session->nodeExists('/tests_write_manipulation_add/testAddNodeChild/parent/child'), 'Child node not found [Backend]');
     }
+
+    /**
+     * a more complex case with child nodes and properties
+     */
+    public function testAddNodeAndChildNode()
+    {
+        $parent = $this->node->addNode('parent', 'nt:folder');
+        $child = $parent->addNode('child', 'nt:file');
+        $content = $child->addNode('jcr:content', 'nt:resource');
+        $content->setProperty('jcr:data', '1234', \PHPCR\PropertyType::BINARY);
+        $path = $child->getPath();
+
+        $this->saveAndRenewSession();
+
+        $child = $this->sharedFixture['session']->getNode($path);
+        $this->assertInstanceOf('PHPCR\NodeInterface', $child);
+    }
+
 }

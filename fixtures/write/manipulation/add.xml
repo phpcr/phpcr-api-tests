@@ -8,6 +8,7 @@
     </testAddNodeWithPath>
     <testAddNodeFileType jcr:primaryType="nt:folder"/>
     <testAddNodeUnstructuredType jcr:primaryType="nt:folder"/>
+    <testAddNodeAndChildNode/>
     <testAddPropertyOnUnstructured />
     <testAddMultiValuePropertyOnUnstructured />
     <testAddNodeMissingType jcr:primaryType="nt:folder" />
@@ -16,9 +17,9 @@
     <testAddNodePathNotFound />
     <testAddNodeToProperty prop="125" />
     <testAddNodeWithIndex />
+    <testAddPropertyWrongType/>
     <testAddNodeChild />
     <testAddMixinOnNewNode />
     <testAddMixinOnExistingNode />
 
 </tests_write_manipulation_add>
-
