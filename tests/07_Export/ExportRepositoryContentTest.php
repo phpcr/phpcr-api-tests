@@ -7,7 +7,7 @@ class Export_7_ExportRepositoryContentTest extends jackalope_baseCase
     static public function setupBeforeClass()
     {
         parent::setupBeforeClass();
-        self::$staticSharedFixture['ie']->import('read/export/base');
+        self::$staticSharedFixture['ie']->import('general/base');
     }
 
     public function testExportSystemView()

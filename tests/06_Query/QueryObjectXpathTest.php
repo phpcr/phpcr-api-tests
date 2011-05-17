@@ -67,7 +67,7 @@ class Query_6_QueryObjectXpathTest extends jackalope_baseCase
     /** changes repository state */
     public function testGetStoredQueryPath()
     {
-        $this->sharedFixture['ie']->import('read/search/query');
+        $this->sharedFixture['ie']->import('general/query');
         try {
             $qnode = $this->sharedFixture['session']->getRootNode()->getNode('queryNode');
             $this->assertType('PHPCR\NodeInterface', $qnode);
@@ -80,7 +80,7 @@ class Query_6_QueryObjectXpathTest extends jackalope_baseCase
             $this->assertEquals('/queryNode', $p);
         } catch(exception $e) {
             //FIXME: finally?
-            $this->sharedFixture['ie']->import('read/search/base');
+            $this->sharedFixture['ie']->import('general/base');
             throw $e;
         }
         $this->sharedFixture['ie']->import('read/search/base');
