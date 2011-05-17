@@ -3,11 +3,10 @@
 require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
 
 /**
- * Test the NoteTypeManager
- *
+ * Test the NoteTypeManager §8
  *
  */
-class NodeTypeManagement_NodeTypeManagerTest extends jackalope_baseCase
+class NodeTypeDiscovery_NodeTypeDiscoveryTest extends jackalope_baseCase
 {
     private $nodeTypeManager;
 

@@ -3,7 +3,7 @@
 require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
 
 /**
- * Covering jcr-2.8.3 spec $10.6
+ * Covering jcr-2.8.3 spec $10.9
  */
 class Writing_DeleteMethodsTest extends jackalope_baseCase
 {

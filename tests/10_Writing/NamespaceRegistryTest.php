@@ -1,8 +1,8 @@
 <?php
-require_once(dirname(__FILE__) . '/../../../inc/baseCase.php');
+require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
 
 //6.3.1 Namespace Registry
-class Read_Namespaces_NamespaceRegistryTest extends jackalope_baseCase
+class Writing_NamespaceRegistryTest extends jackalope_baseCase
 {
     protected $workspace;
     protected $nr; //the NamespaceRegistry
