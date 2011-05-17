@@ -9,10 +9,10 @@ class Writing_10_NodeTypeAssignementTest extends jackalope_baseCase
 {
     public function setUp()
     {
-        self::$staticSharedFixture['ie']->import('read/read/base'); //TODO: this is quite slow. adjust fixtures to the magic method name system and move this into setupBeforeClass
+        self::$staticSharedFixture['ie']->import('general/base'); //TODO: this is quite slow. adjust fixtures to the magic method name system and move this into setupBeforeClass
         $this->renewSession();
         parent::setUp();
-        $this->node = $this->rootNode->getNode('tests_read_read_base/numberPropertyNode');
+        $this->node = $this->rootNode->getNode('tests_general_base/numberPropertyNode');
     }
 
     /**

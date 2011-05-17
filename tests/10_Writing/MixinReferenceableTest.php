@@ -12,7 +12,7 @@ class Writing_10_MixinReferenceableTest extends jackalope_baseCase
     static public function setupBeforeClass()
     {
         parent::setupBeforeClass();
-        self::$staticSharedFixture['ie']->import('nodetype/base');
+        self::$staticSharedFixture['ie']->import('10_Writing/nodetype');
     }
 
     public function setUp()

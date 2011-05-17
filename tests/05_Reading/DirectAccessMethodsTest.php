@@ -17,7 +17,7 @@ class Reading_5_DirectAccessMethodsTest extends jackalope_baseCase
     static public function  setupBeforeClass()
     {
         parent::setupBeforeClass();
-        self::$staticSharedFixture['ie']->import('read/read/base');
+        self::$staticSharedFixture['ie']->import('general/base');
     }
 
     //5.1.1
@@ -39,15 +39,15 @@ class Reading_5_DirectAccessMethodsTest extends jackalope_baseCase
     //5.1.3, 5.1.6
     public function testGetItem()
     {
-        $node = $this->sharedFixture['session']->getItem('/tests_read_read_base');
+        $node = $this->sharedFixture['session']->getItem('/tests_general_base');
         $this->assertType('PHPCR\NodeInterface', $node);
-        $this->assertEquals($node->getName(), 'tests_read_read_base');
+        $this->assertEquals($node->getName(), 'tests_general_base');
 
-        $node = $this->sharedFixture['session']->getItem('/tests_read_read_base/index.txt');
+        $node = $this->sharedFixture['session']->getItem('/tests_general_base/index.txt');
         $this->assertType('PHPCR\NodeInterface', $node);
         $this->assertEquals($node->getName(), 'index.txt');
 
-        $prop = $this->sharedFixture['session']->getItem('/tests_read_read_base/numberPropertyNode/jcr:content/foo');
+        $prop = $this->sharedFixture['session']->getItem('/tests_general_base/numberPropertyNode/jcr:content/foo');
         $this->assertType('PHPCR\PropertyInterface', $prop);
         $this->assertEquals($prop->getName(), 'foo');
         $this->assertEquals($prop->getString(), 'bar');
@@ -55,11 +55,11 @@ class Reading_5_DirectAccessMethodsTest extends jackalope_baseCase
     //5.1.3, 5.1.6
     public function testGetNode()
     {
-        $node = $this->sharedFixture['session']->getNode('/tests_read_read_base/numberPropertyNode');
+        $node = $this->sharedFixture['session']->getNode('/tests_general_base/numberPropertyNode');
         $this->assertType('PHPCR\NodeInterface', $node);
         $this->assertEquals('numberPropertyNode', $node->getName());
 
-        $node = $this->sharedFixture['session']->getNode('/tests_read_read_base/index.txt');
+        $node = $this->sharedFixture['session']->getNode('/tests_general_base/index.txt');
         $this->assertType('PHPCR\NodeInterface', $node);
         $this->assertEquals('index.txt', $node->getName());
     }
@@ -69,7 +69,7 @@ class Reading_5_DirectAccessMethodsTest extends jackalope_baseCase
      */
     public function testGetNodeInvalid()
     {
-        $this->sharedFixture['session']-> getNode('/tests_read_read_base/idExample/jcr:primaryType');
+        $this->sharedFixture['session']-> getNode('/tests_general_base/idExample/jcr:primaryType');
     }
     /**
      * Get something that is a node and not a property
@@ -77,13 +77,13 @@ class Reading_5_DirectAccessMethodsTest extends jackalope_baseCase
      */
     public function testGetPropertyInvalid()
     {
-        $this->sharedFixture['session']-> getProperty('/tests_read_read_base/idExample');
+        $this->sharedFixture['session']-> getProperty('/tests_general_base/idExample');
     }
 
     //5.1.3, 5.1.6
     public function testGetProperty()
     {
-        $prop = $this->sharedFixture['session']->getProperty('/tests_read_read_base/idExample/jcr:primaryType');
+        $prop = $this->sharedFixture['session']->getProperty('/tests_general_base/idExample/jcr:primaryType');
         $this->assertType('PHPCR\PropertyInterface', $prop);
         $this->assertEquals($prop->getName(), 'jcr:primaryType');
         $this->assertEquals($prop->getString(), 'nt:file');
@@ -95,7 +95,7 @@ class Reading_5_DirectAccessMethodsTest extends jackalope_baseCase
      */
     public function testGetItemRelativePathException()
     {
-        $node = $this->sharedFixture['session']->getItem('tests_read_read_base');
+        $node = $this->sharedFixture['session']->getItem('tests_general_base');
     }
 
     /**
@@ -117,7 +117,7 @@ class Reading_5_DirectAccessMethodsTest extends jackalope_baseCase
      //5.1.2
     public function testItemExists()
     {
-        $this->assertTrue($this->sharedFixture['session']->itemExists('/tests_read_read_base'));
+        $this->assertTrue($this->sharedFixture['session']->itemExists('/tests_general_base'));
         $this->assertFalse($this->sharedFixture['session']->itemExists('/foobar'));
     }
     /**
@@ -125,7 +125,7 @@ class Reading_5_DirectAccessMethodsTest extends jackalope_baseCase
      */
     public function testItemExistsRelativePath()
     {
-        $this->sharedFixture['session']->itemExists('tests_read_read_base');
+        $this->sharedFixture['session']->itemExists('tests_general_base');
     }
     /**
      * @expectedException \PHPCR\RepositoryException
@@ -138,17 +138,17 @@ class Reading_5_DirectAccessMethodsTest extends jackalope_baseCase
 
     public function testNodeExists()
     {
-        $this->assertTrue($this->sharedFixture['session']->nodeExists('/tests_read_read_base'));
+        $this->assertTrue($this->sharedFixture['session']->nodeExists('/tests_general_base'));
         $this->assertFalse($this->sharedFixture['session']->nodeExists('/foobar'));
         //a property is not a node
-        $this->assertFalse($this->sharedFixture['session']->nodeExists('/tests_read_read_base/numberPropertyNode/jcr:content/foo'));
+        $this->assertFalse($this->sharedFixture['session']->nodeExists('/tests_general_base/numberPropertyNode/jcr:content/foo'));
     }
     /**
      * @expectedException \PHPCR\RepositoryException
      */
     public function testNodeExistsRelativePath()
     {
-        $this->sharedFixture['session']->nodeExists('tests_read_read_base');
+        $this->sharedFixture['session']->nodeExists('tests_general_base');
     }
     /**
      * @expectedException \PHPCR\RepositoryException
@@ -160,16 +160,16 @@ class Reading_5_DirectAccessMethodsTest extends jackalope_baseCase
 
     public function testPropertyExists()
     {
-        $this->assertTrue($this->sharedFixture['session']->propertyExists('/tests_read_read_base/numberPropertyNode/jcr:content/foo'));
+        $this->assertTrue($this->sharedFixture['session']->propertyExists('/tests_general_base/numberPropertyNode/jcr:content/foo'));
         //a node is not a property
-        $this->assertFalse($this->sharedFixture['session']->propertyExists('/tests_read_read_base'));
+        $this->assertFalse($this->sharedFixture['session']->propertyExists('/tests_general_base'));
     }
     /**
      * @expectedException \PHPCR\RepositoryException
      */
     public function testPropertyExistsRelativePath()
     {
-        $this->sharedFixture['session']->propertyExists('tests_read_read_base/numberPropertyNode/jcr:content/foo');
+        $this->sharedFixture['session']->propertyExists('tests_general_base/numberPropertyNode/jcr:content/foo');
     }
     /**
      * @expectedException \PHPCR\RepositoryException
@@ -183,7 +183,7 @@ class Reading_5_DirectAccessMethodsTest extends jackalope_baseCase
     {
         $node = $this->sharedFixture['session']->getNodeByIdentifier('842e61c0-09ab-42a9-87c0-308ccc90e6f4');
         $this->assertType('PHPCR\NodeInterface', $node);
-        $this->assertEquals('/tests_read_read_base/idExample', $node->getPath());
+        $this->assertEquals('/tests_general_base/idExample', $node->getPath());
     }
 
     /**
@@ -228,8 +228,8 @@ class Reading_5_DirectAccessMethodsTest extends jackalope_baseCase
 
     public function testCheckPermission()
     {
-        $this->sharedFixture['session']->checkPermission('/tests_read_read_base', 'read');
-        $this->sharedFixture['session']->checkPermission('/tests_read_read_base/numberPropertyNode/jcr:content/foo', 'read');
+        $this->sharedFixture['session']->checkPermission('/tests_general_base', 'read');
+        $this->sharedFixture['session']->checkPermission('/tests_general_base/numberPropertyNode/jcr:content/foo', 'read');
     }
     /**
      * @expectedException \PHPCR\AccessControlException
@@ -237,21 +237,21 @@ class Reading_5_DirectAccessMethodsTest extends jackalope_baseCase
     public function testCheckPermissionAccessControlException()
     {
         $this->markTestIncomplete('TODO: how to produce a permission exception?');
-        $this->sharedFixture['session']->checkPermission('/tests_read_read_base/numberPropertyNode/jcr:content/foo', 'add_node');
+        $this->sharedFixture['session']->checkPermission('/tests_general_base/numberPropertyNode/jcr:content/foo', 'add_node');
     }
     public function testHasPermission()
     {
-        $this->assertTrue($this->sharedFixture['session']->hasPermission('/tests_read_read_base', 'read'));
-        $this->assertTrue($this->sharedFixture['session']->hasPermission('/tests_read_read_base/numberPropertyNode/jcr:content/foo', 'read'));
-        $this->assertTrue($this->sharedFixture['session']->hasPermission('/tests_read_read_base/numberPropertyNode/jcr:content/foo', 'add_node')); //we have permission, but this node is not capable of the operation
+        $this->assertTrue($this->sharedFixture['session']->hasPermission('/tests_general_base', 'read'));
+        $this->assertTrue($this->sharedFixture['session']->hasPermission('/tests_general_base/numberPropertyNode/jcr:content/foo', 'read'));
+        $this->assertTrue($this->sharedFixture['session']->hasPermission('/tests_general_base/numberPropertyNode/jcr:content/foo', 'add_node')); //we have permission, but this node is not capable of the operation
     }
 
     public function testHasCapability()
     {
-        $node = $this->sharedFixture['session']->getNode('/tests_read_read_base');
+        $node = $this->sharedFixture['session']->getNode('/tests_general_base');
         $this->assertTrue($this->sharedFixture['session']->hasCapability('getReferences', $node, array()), 'Does not have getReferences capability');
         $this->assertTrue($this->sharedFixture['session']->hasCapability('getProperty', $node, array('foo')), '2');
-        $property = $this->sharedFixture['session']->getProperty('/tests_read_read_base/numberPropertyNode/jcr:content/foo');
+        $property = $this->sharedFixture['session']->getProperty('/tests_general_base/numberPropertyNode/jcr:content/foo');
         $this->assertTrue($this->sharedFixture['session']->hasCapability('getNode', $property, array()), '3');
         //$this->assertFalse($this->sharedFixture['session']->hasCapability('inexistentXXX', $property, array()), '4');
         //actually, the repository is not required to know, it can always say that the info can not be determined and return true. this makes me think that this method is pretty useless...

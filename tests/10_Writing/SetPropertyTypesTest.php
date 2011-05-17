@@ -12,7 +12,7 @@ class Writing_10_SetPropertyTypesTest extends jackalope_baseCase
     static public function setupBeforeClass()
     {
         parent::setupBeforeClass();
-        self::$staticSharedFixture['ie']->import('write/value/base');
+        self::$staticSharedFixture['ie']->import('10_Writing/nodetype');
     }
 
     public function setUp()
@@ -20,8 +20,8 @@ class Writing_10_SetPropertyTypesTest extends jackalope_baseCase
         parent::setUp();
 
         $this->renewSession();
-        $this->node = $this->sharedFixture['session']->getNode('/tests_write_value_base/numberPropertyNode/jcr:content');
-        $this->property = $this->sharedFixture['session']->getProperty('/tests_write_value_base/numberPropertyNode/jcr:content/longNumber');
+        $this->node = $this->sharedFixture['session']->getNode('/tests_nodetype_base/numberPropertyNode/jcr:content');
+        $this->property = $this->sharedFixture['session']->getProperty('/tests_nodetype_base/numberPropertyNode/jcr:content/longNumber');
     }
 
     //TODO: have this for all types in PropertyType and each with and without the explicit type parameter. also test node->getPropertyValue for correct type
@@ -68,14 +68,14 @@ class Writing_10_SetPropertyTypesTest extends jackalope_baseCase
     }
     public function testCreateValueNode()
     {
-        $node = $this->sharedFixture['session']->getNode('/tests_write_value_base/multiValueProperty');
+        $node = $this->sharedFixture['session']->getNode('/tests_nodetype_base/multiValueProperty');
         $value = $this->node->setProperty('x', $node);
         $this->assertEquals(\PHPCR\PropertyType::REFERENCE, $value->getType(), 'wrong type');
         $this->assertEquals($node->getIdentifier(), $value->getString(), 'different uuid');
     }
     public function testCreateValueNodeWeak()
     {
-        $node = $this->sharedFixture['session']->getRootNode()->getNode('tests_write_value_base/multiValueProperty');
+        $node = $this->sharedFixture['session']->getRootNode()->getNode('tests_nodetype_base/multiValueProperty');
         $value = $this->node->setProperty('x', $node, \PHPCR\PropertyType::WEAKREFERENCE);
         $this->assertEquals(\PHPCR\PropertyType::WEAKREFERENCE, $value->getType());
         $this->assertEquals($node->getIdentifier(), $value->getString());
@@ -85,7 +85,7 @@ class Writing_10_SetPropertyTypesTest extends jackalope_baseCase
      */
     public function testCreateValueNodeNonReferencable()
     {
-        $node = $this->sharedFixture['session']->getRootNode()->getNode('tests_write_value_base/numberPropertyNode/jcr:content');
+        $node = $this->sharedFixture['session']->getRootNode()->getNode('tests_nodetype_base/numberPropertyNode/jcr:content');
         $value = $this->node->setProperty('x', $node);
     }
     /**
@@ -93,7 +93,7 @@ class Writing_10_SetPropertyTypesTest extends jackalope_baseCase
      */
     public function testCreateValueNodeNonReferencableWeak()
     {
-        $node = $this->sharedFixture['session']->getRootNode()->getNode('tests_write_value_base/numberPropertyNode/jcr:content');
+        $node = $this->sharedFixture['session']->getRootNode()->getNode('tests_nodetype_base/numberPropertyNode/jcr:content');
         $value = $this->node->setProperty('x', $node, \PHPCR\PropertyType::WEAKREFERENCE);
         $this->fail("Exception should be thrown, but ". $value->getString() . " was returned.");
     }

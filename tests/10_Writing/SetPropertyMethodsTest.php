@@ -13,14 +13,14 @@ class Writing_10_SetPropertyMethodsTest extends jackalope_baseCase
     static public function setupBeforeClass()
     {
         parent::setupBeforeClass();
-        self::$staticSharedFixture['ie']->import('write/value/base');
+        self::$staticSharedFixture['ie']->import('10_Writing/nodetype');
     }
 
     public function setUp()
     {
         parent::setUp();
-        $this->node = $this->sharedFixture['session']->getNode('/tests_write_value_base/numberPropertyNode/jcr:content');
-        $this->property = $this->sharedFixture['session']->getProperty('/tests_write_value_base/numberPropertyNode/jcr:content/longNumber');
+        $this->node = $this->sharedFixture['session']->getNode('/tests_nodetype_base/numberPropertyNode/jcr:content');
+        $this->property = $this->sharedFixture['session']->getProperty('/tests_nodetype_base/numberPropertyNode/jcr:content/longNumber');
     }
 
     /**

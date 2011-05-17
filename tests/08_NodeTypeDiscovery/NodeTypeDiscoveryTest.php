@@ -13,7 +13,7 @@ class NodeTypeDiscovery_8_NodeTypeDiscoveryTest extends jackalope_baseCase
     static public function setupBeforeClass()
     {
         parent::setupBeforeClass();
-        self::$staticSharedFixture['ie']->import('nodetype/base');
+        self::$staticSharedFixture['ie']->import('general/base');
     }
 
     public function setUp() {

@@ -12,7 +12,7 @@ class Versioning_15_CreateVersionableNodeTest extends jackalope_baseCase
     static public function setupBeforeClass()
     {
         parent::setupBeforeClass();
-        self::$staticSharedFixture['ie']->import('version/base');
+        self::$staticSharedFixture['ie']->import('15_Versioning/base');
     }
 
     public function setUp()

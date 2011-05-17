@@ -17,15 +17,15 @@ class Reading_5_PropertyReadMethodsTest extends jackalope_baseCase
     static public function  setupBeforeClass()
     {
         parent::setupBeforeClass();
-        self::$staticSharedFixture['ie']->import('read/read/base');
+        self::$staticSharedFixture['ie']->import('general/base');
     }
 
     public function setUp()
     {
         parent::setUp();
-        $this->node = $this->rootNode->getNode('tests_read_read_base');
+        $this->node = $this->rootNode->getNode('tests_general_base');
         $this->property = $this->node->getProperty('jcr:created');
-        $this->valProperty = $this->sharedFixture['session']->getRootNode()->getNode('tests_read_read_base/numberPropertyNode/jcr:content')->getProperty('foo');
+        $this->valProperty = $this->sharedFixture['session']->getRootNode()->getNode('tests_general_base/numberPropertyNode/jcr:content')->getProperty('foo');
         $this->multiProperty = $this->node->getNode('multiValueProperty')->getProperty('jcr:mixinTypes');
         $this->dateProperty = $this->node->getNode('index.txt/jcr:content')->getProperty('jcr:lastModified');
     }
@@ -64,7 +64,7 @@ class Reading_5_PropertyReadMethodsTest extends jackalope_baseCase
     public function testGetPath()
     {
         $path = $this->property->getPath();
-        $this->assertEquals('/tests_read_read_base/jcr:created', $path);
+        $this->assertEquals('/tests_general_base/jcr:created', $path);
     }
     public function testGetSession()
     {
@@ -287,7 +287,7 @@ class Reading_5_PropertyReadMethodsTest extends jackalope_baseCase
         $this->assertSame($prop->getValue(), 'true');
         $this->assertTrue($prop->getBoolean());
 
-        $prop = $this->sharedFixture['session']->getRootNode()->getNode('tests_read_read_base/index.txt/jcr:content')->getProperty('zeronumber');
+        $prop = $this->sharedFixture['session']->getRootNode()->getNode('tests_general_base/index.txt/jcr:content')->getProperty('zeronumber');
         $this->assertFalse($prop->getBoolean(), 'this boolean property should be false');
         $this->assertTrue(! $prop->getString(), 'boolean false as string should be false');
     }

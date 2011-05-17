@@ -15,14 +15,14 @@ class Reading_5_BinaryReadMethodsTest extends jackalope_baseCase
     static public function  setupBeforeClass()
     {
         parent::setupBeforeClass();
-        self::$staticSharedFixture['ie']->import('read/read/base');
+        self::$staticSharedFixture['ie']->import('general/base');
     }
 
     public function setUp()
     {
         // All those tests are disabled because at this point, we dont implement PHPCR\BinaryInterface, maybee later for performance improvements.
         parent::setUp();
-        $this->node = $this->sharedFixture['session']->getRootNode()->getNode('tests_read_read_base/numberPropertyNode/jcr:content');
+        $this->node = $this->sharedFixture['session']->getRootNode()->getNode('tests_general_base/numberPropertyNode/jcr:content');
         $this->binaryProperty = $this->node->getProperty('jcr:data');
         $this->binary = $this->binaryProperty->getBinary();
         $this->assertTrue(is_resource($this->binary));

@@ -13,7 +13,7 @@ class Writing_10_AddMethodsTest extends jackalope_baseCase
     static public function setupBeforeClass()
     {
         parent::setupBeforeClass();
-        self::$staticSharedFixture['ie']->import('write/manipulation/add');
+        self::$staticSharedFixture['ie']->import('10_Writing/add');
     }
 
     public function setUp()

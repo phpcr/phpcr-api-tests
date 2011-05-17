@@ -17,14 +17,14 @@ class Reading_5_NodeReadMethodsTest extends jackalope_baseCase
     static public function  setupBeforeClass()
     {
         parent::setupBeforeClass();
-        self::$staticSharedFixture['ie']->import('read/read/base');
+        self::$staticSharedFixture['ie']->import('general/base');
     }
 
     public function setUp()
     {
         parent::setUp();
         $this->rootNode = $this->sharedFixture['session']->getRootNode();
-        $this->node = $this->rootNode->getNode('tests_read_read_base');
+        $this->node = $this->rootNode->getNode('tests_general_base');
         $this->deepnode = $this->node->getNode('multiValueProperty')->getNode('deepnode');
     }
 
@@ -66,7 +66,7 @@ class Reading_5_NodeReadMethodsTest extends jackalope_baseCase
     {
         $name = $this->node->getName();
         $this->assertNotNull($name);
-        $this->assertEquals('tests_read_read_base', $name);
+        $this->assertEquals('tests_general_base', $name);
     }
     public function testGetParent()
     {
@@ -77,7 +77,7 @@ class Reading_5_NodeReadMethodsTest extends jackalope_baseCase
     public function testGetPath()
     {
         $path = $this->deepnode->getPath();
-        $this->assertEquals('/tests_read_read_base/multiValueProperty/deepnode', $path);
+        $this->assertEquals('/tests_general_base/multiValueProperty/deepnode', $path);
     }
     public function testGetSession()
     {
@@ -108,16 +108,16 @@ class Reading_5_NodeReadMethodsTest extends jackalope_baseCase
     /*** node specific methods ***/
     public function testGetNodeAbsolutePath()
     {
-        $node = $this->rootNode->getNode('/tests_read_read_base');
+        $node = $this->rootNode->getNode('/tests_general_base');
         $this->assertType('PHPCR\NodeInterface', $node);
-        $this->assertEquals('tests_read_read_base', $node->getName());
+        $this->assertEquals('tests_general_base', $node->getName());
     }
 
     public function testGetNodeRelativePath()
     {
-        $node = $this->rootNode->getNode('tests_read_read_base');
+        $node = $this->rootNode->getNode('tests_general_base');
         $this->assertType('PHPCR\NodeInterface', $node);
-        $this->assertEquals('tests_read_read_base', $node->getName());
+        $this->assertEquals('tests_general_base', $node->getName());
     }
 
     /**
@@ -138,7 +138,7 @@ class Reading_5_NodeReadMethodsTest extends jackalope_baseCase
 
     public function testGetNodes()
     {
-        $node1 = $this->rootNode->getNode('tests_read_read_base');
+        $node1 = $this->rootNode->getNode('tests_general_base');
         $iterator = $this->rootNode->getNodes();
         $this->assertType('Iterator', $iterator);
     }
@@ -163,7 +163,7 @@ class Reading_5_NodeReadMethodsTest extends jackalope_baseCase
 
     public function testGetNodesPatternAdvanced()
     {
-        $this->node = $this->rootNode->getNode('tests_read_read_base');
+        $this->node = $this->rootNode->getNode('tests_general_base');
         $iterator = $this->node->getNodes("test:* | idExample");
         $this->nodes = array();
         foreach ($iterator as $n) {
@@ -175,7 +175,7 @@ class Reading_5_NodeReadMethodsTest extends jackalope_baseCase
     }
     public function testGetNodesNameGlobs()
     {
-        $node = $this->rootNode->getNode('/tests_read_read_base');
+        $node = $this->rootNode->getNode('/tests_general_base');
         $iterator = $node->getNodes(array('idExample', 'test:*', 'jcr:*'));
         $nodes = array();
         foreach ($iterator as $n) {
@@ -206,7 +206,7 @@ class Reading_5_NodeReadMethodsTest extends jackalope_baseCase
     {
         $prop = $this->node->getProperty('numberPropertyNode/jcr:content/ref');
         $this->assertType('PHPCR\PropertyInterface', $prop);
-        $this->assertEquals('/tests_read_read_base/numberPropertyNode/jcr:content/ref', $prop->getPath());
+        $this->assertEquals('/tests_general_base/numberPropertyNode/jcr:content/ref', $prop->getPath());
     }
 
     /**
@@ -264,7 +264,7 @@ class Reading_5_NodeReadMethodsTest extends jackalope_baseCase
     {
         $node = $this->node->getNode('index.txt')->getPrimaryItem();
         $this->assertType('PHPCR\NodeInterface', $node);
-        $this->assertEquals('/tests_read_read_base/index.txt/jcr:content', $node->getPath());
+        $this->assertEquals('/tests_general_base/index.txt/jcr:content', $node->getPath());
     }
 
     /**
@@ -308,8 +308,8 @@ class Reading_5_NodeReadMethodsTest extends jackalope_baseCase
     public function testGetReferencesAll()
     {
         $this->markTestIncomplete('TODO: Implement Node::getReferences');
-        $target = $this->rootNode->getNode('tests_read_read_base/idExample');
-        $source = $this->rootNode->getProperty('tests_read_read_base/numberPropertyNode/jcr:content/ref');
+        $target = $this->rootNode->getNode('tests_general_base/idExample');
+        $source = $this->rootNode->getProperty('tests_general_base/numberPropertyNode/jcr:content/ref');
 
         $iterator = $target->getReferences();
         $this->assertType('Iterator', $iterator);
@@ -325,8 +325,8 @@ class Reading_5_NodeReadMethodsTest extends jackalope_baseCase
     public function testGetReferencesName()
     {
         $this->markTestIncomplete('TODO: Implement Node::getReferences');
-        $target = $this->rootNode->getNode('tests_read_read_base/idExample');
-        $source = $this->rootNode->getNode('tests_read_read_base/numberPropertyNode/jcr:content');
+        $target = $this->rootNode->getNode('tests_general_base/idExample');
+        $source = $this->rootNode->getNode('tests_general_base/numberPropertyNode/jcr:content');
 
         $iterator = $target->getReferences('ref');
         $this->assertType('Iterator', $iterator);
@@ -345,7 +345,7 @@ class Reading_5_NodeReadMethodsTest extends jackalope_baseCase
     public function testGetReferencesNonexistingName()
     {
         $this->markTestIncomplete('TODO: Implement Node::getReferences');
-        $target = $this->rootNode->getNode('tests_read_read_base/idExample');
+        $target = $this->rootNode->getNode('tests_general_base/idExample');
         $iterator = $target->getReferences('notexisting');
         $this->assertType('Iterator', $iterator);
         $this->assertEquals(0, count($iterator), "Wrong number of references with name notexisting to idExample");
