@@ -5,7 +5,7 @@ require_once(dirname(__FILE__) . '/../../../inc/baseCase.php');
 /**
  * Test adding mixin to nodes.
  */
-class Write_NodeType_AddMixinTest extends jackalope_baseCase
+class Writing_10_AddMixinTest extends jackalope_baseCase
 {
     public function setUp()
     {

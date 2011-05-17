@@ -5,7 +5,7 @@ require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
 /** test the javax.jcr.Row interface
  *  todo: getNode, getPath, getScore
  */
-class Query_RowTest extends jackalope_baseCase
+class Query_6_RowTest extends jackalope_baseCase
 {
     private $row;
 

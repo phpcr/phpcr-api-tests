@@ -2,7 +2,7 @@
 require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
 
 //6.6.8 Query API
-class Query_QueryResultsTest extends jackalope_baseCase
+class Query_6_QueryResultsTest extends jackalope_baseCase
 {
     public static $expect = array("jcr:createdBy","jcr:created","jcr:primaryType","jcr:path","jcr:score");
     public $query;

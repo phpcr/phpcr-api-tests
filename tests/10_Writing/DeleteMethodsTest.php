@@ -5,7 +5,7 @@ require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
 /**
  * Covering jcr-2.8.3 spec $10.9
  */
-class Writing_DeleteMethodsTest extends jackalope_baseCase
+class Writing_10_DeleteMethodsTest extends jackalope_baseCase
 {
     static public function setupBeforeClass()
     {

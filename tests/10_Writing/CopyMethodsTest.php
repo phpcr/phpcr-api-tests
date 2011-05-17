@@ -5,7 +5,7 @@ require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
 /**
  * Covering jcr-283 spec $10.7
  */
-class Writing_CopyMethodsTest extends jackalope_baseCase
+class Writing_10_CopyMethodsTest extends jackalope_baseCase
 {
     protected $ws;
 

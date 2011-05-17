@@ -8,7 +8,7 @@ require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
  *  Versioning: getVersionManager
  *  level2: WorkspaceWriteMethods: clone, copy, createWorkspace, deleteWorkspace, getImportContentHandler, importXML, move
  */
-class Reading_WorkspaceReadMethodsTest extends jackalope_baseCase
+class Connecting_4_WorkspaceReadMethodsTest extends jackalope_baseCase
 {
     protected $path = 'read/read';
     protected $workspace;

@@ -5,7 +5,7 @@ require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
  * test javax.jcr.QueryManager interface
  * todo: getQOMFactory
  */
-class Query_QueryManagerTest extends jackalope_baseCase
+class Query_6_QueryManagerTest extends jackalope_baseCase
 {
     static public function setupBeforeClass()
     {

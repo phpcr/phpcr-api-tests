@@ -6,7 +6,7 @@ require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
  * Test the NoteTypeManager §8
  *
  */
-class NodeTypeDiscovery_NodeTypeDiscoveryTest extends jackalope_baseCase
+class NodeTypeDiscovery_8_NodeTypeDiscoveryTest extends jackalope_baseCase
 {
     private $nodeTypeManager;
 

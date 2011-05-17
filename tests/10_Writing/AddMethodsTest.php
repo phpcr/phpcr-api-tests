@@ -7,7 +7,7 @@ use PHPCR\PropertyType as Type;
 /**
  * Covering jcr-283 spec $10.4
  */
-class Writing_AddMethodsTest extends jackalope_baseCase
+class Writing_10_AddMethodsTest extends jackalope_baseCase
 {
 
     static public function setupBeforeClass()

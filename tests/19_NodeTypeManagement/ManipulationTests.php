@@ -7,7 +7,7 @@ require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
  *
  * (only a few tests, lots is tested by unit tests)
  */
-class NodeTypeManagement_MoveMethodsTest extends jackalope_baseCase
+class NodeTypeManagement_19_MoveMethodsTest extends jackalope_baseCase
 {
 
     protected function setUp()

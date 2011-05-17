@@ -4,7 +4,7 @@ require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
 
 // 6.2.4 Property Read Methods
 
-class Reading_PropertyTypesTest extends jackalope_baseCase
+class Reading_5_PropertyTypesTest extends jackalope_baseCase
 {
     /** key = numeric type constant names as defined by api
      *  value = expected value of the TYPENAME_<TYPE> constants

@@ -3,7 +3,7 @@
 require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
 
 //6.6.8 Query API
-class Query_NodeIteratorTest extends jackalope_baseCase
+class Query_6_NodeIteratorTest extends jackalope_baseCase
 {
     public $nodeIterator;
 

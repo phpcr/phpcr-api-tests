@@ -2,7 +2,7 @@
 require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
 
 //6.3.3 Session Namespace Remapping
-class Reading_SessionNamespaceRemappingTest extends jackalope_baseCase
+class Reading_5_SessionNamespaceRemappingTest extends jackalope_baseCase
 {
     protected $nsBuiltIn = array('jcr' => 'http://www.jcp.org/jcr/1.0',
                                  'nt'  => 'http://www.jcp.org/jcr/nt/1.0',

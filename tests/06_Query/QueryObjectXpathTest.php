@@ -6,7 +6,7 @@ require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
  *
  * setLimit, setOffset, bindValue, getBindVariableNames
  */
-class Query_QueryObjectXpathTest extends jackalope_baseCase
+class Query_6_QueryObjectXpathTest extends jackalope_baseCase
 {
     public function testExecute()
     {

@@ -7,7 +7,7 @@ require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
  *
  * PropertyWriteMethods: isModified, refresh, save, remove, setValue (in many variants)
  */
-class Reading_PropertyReadMethodsTest extends jackalope_baseCase
+class Reading_5_PropertyReadMethodsTest extends jackalope_baseCase
 {
     protected $rootNode;
     protected $node;

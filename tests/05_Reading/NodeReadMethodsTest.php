@@ -1,14 +1,14 @@
 <?php
 require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
 
-/** test javax.jcr.Node read methods (read)
+/** test javax.jcr.Node read methods (read) §5.6
  *
  * todo: getCorrespondingNodePath, getDefinition, getMixinNodeTypes, getPrimaryNodeType, isNodeType
  *
  * NodeWriteMethods (level2): addMixin, addNode, canAddMixin, isCheckedOut, isLocked, orderBefore, removeMixin, removeShare, removeSharedSet, setPrimaryType, setProperty, update. Base Item write methods: isModified, refresh, save, remove
  * Lifecycle: followLifecycleTransition, getAllowedLifecycleTransistions
  */
-class Reading_NodeReadMethodsTest extends jackalope_baseCase
+class Reading_5_NodeReadMethodsTest extends jackalope_baseCase
 {
     protected $rootNode;
     protected $node;

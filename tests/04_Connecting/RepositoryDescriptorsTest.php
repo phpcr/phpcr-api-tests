@@ -1,7 +1,7 @@
 <?php
 require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
 
-class Connecting_RepositoryDescriptorsTest extends jackalope_baseCase
+class Connecting_4_RepositoryDescriptorsTest extends jackalope_baseCase
 {
     //don't care about fixtures
 

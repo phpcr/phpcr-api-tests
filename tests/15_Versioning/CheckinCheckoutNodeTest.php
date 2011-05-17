@@ -7,7 +7,7 @@ require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
 *
 * Covering jcr-2.8.3 spec $15.1
 */
-class Versioning_CheckinCheckoutNodeTest extends jackalope_baseCase
+class Versioning_15_CheckinCheckoutNodeTest extends jackalope_baseCase
 {
     static public function setupBeforeClass()
     {

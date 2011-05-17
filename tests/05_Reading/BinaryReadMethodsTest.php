@@ -3,7 +3,10 @@ require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
 
 // According to PHPCR\BinaryInterface
 
-class Reading_BinaryReadMethodsTest extends jackalope_baseCase
+/**
+ * §5.10.5
+ */
+class Reading_5_BinaryReadMethodsTest extends jackalope_baseCase
 {
     protected $node;
     public $binary;
