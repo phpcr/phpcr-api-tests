@@ -1,6 +1,6 @@
 <?php
 
-require_once(dirname(__FILE__) . '/../../../inc/baseCase.php');
+require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
 
 /**
  * Test adding mixin to nodes.
