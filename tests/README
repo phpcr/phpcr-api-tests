@@ -1,2 +1,12 @@
-The structure of this folder reflects the structure of the JCR 2.0 Specification document.
+The structure of this folder reflects the structure of the "JCR 2.0 Specification"
+document (see http://www.day.com/specs/jcr/2.0/index.html).
 
+The naming convention for new test classes is the following: XXX_YY_FeatureTest
+where:
+
+    * XXX is the name of the chapter
+    * YY is the chapter number
+    * Feature is the name of the tested feature
+
+For example the test of the Jackalope credentials belongs to chapter 4 (Connecting).
+Thus it should be named: Connecting_4_CredentialsTest
