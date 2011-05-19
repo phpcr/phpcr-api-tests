@@ -2,7 +2,9 @@
 
 require_once('QueryBaseCase.php');
 
-//6.6.8 Query API
+/**
+ * $ 6.11.1 Row View - Iterator part
+ */
 class Query_6_RowIteratorTest extends QueryBaseCase
 {
     public $rowIterator;

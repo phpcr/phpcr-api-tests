@@ -2,8 +2,10 @@
 
 require_once('QueryBaseCase.php');
 
-//6.6.8 Query API
-class Query_6_NodeIteratorTest extends QueryBaseCase
+/**
+ * test the query result node view $ 6.11.2
+ */
+class Query_6_NodeViewTest extends QueryBaseCase
 {
     public $nodeIterator;
 
@@ -19,7 +21,7 @@ class Query_6_NodeIteratorTest extends QueryBaseCase
         $count = 0;
 
         foreach ($this->nodeIterator as $node) {
-            $this->assertInstanceOf('PHPCR\NodeInterface', $node); // Test if the return element is an istance of row
+            $this->assertInstanceOf('PHPCR\NodeInterface', $node); // Test if the return element is an istance of node
             $count++;
         }
 

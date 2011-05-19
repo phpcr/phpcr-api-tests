@@ -2,8 +2,8 @@
 
 require_once('QueryBaseCase.php');
 
-/** test the javax.jcr.Row interface
- *  todo: getNode, getPath, getScore
+/**
+ * $ 6.11.1 Table View - Row part
  */
 class Query_6_RowTest extends QueryBaseCase
 {

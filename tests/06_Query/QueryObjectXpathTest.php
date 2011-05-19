@@ -2,15 +2,17 @@
 require_once('QueryBaseCase.php');
 
 /**
- * test the javax.jcr.Query interface
+ * test the Query interface. $ 6.9
  *
  * setLimit, setOffset, bindValue, getBindVariableNames
+ *
+ * TODO: this is for xpath, which is not mandatory in JCR 2.0
  */
 class Query_6_QueryObjectXpathTest extends QueryBaseCase
 {
     public function setUp()
     {
-        //$this->markTestSkipped('TODO: should we add support for xpath again?');
+        $this->markTestSkipped('TODO: should we add support for xpath again?');
         parent::setUp();
     }
     public function testExecute()

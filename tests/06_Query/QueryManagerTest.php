@@ -2,8 +2,9 @@
 require_once('QueryBaseCase.php');
 
 /**
- * test javax.jcr.QueryManager interface
- * todo: getQOMFactory
+ * tests for the query manager, $ 6.8
+ *
+ * TODO: getQOMFactory
  */
 class Query_6_QueryManagerTest extends QueryBaseCase
 {

@@ -1,7 +1,9 @@
 <?php
 require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
 
-
+/**
+ * a base class for all query tests
+ */
 abstract class QueryBaseCase extends jackalope_baseCase
 {
     /**
