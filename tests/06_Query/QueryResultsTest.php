@@ -1,23 +1,15 @@
 <?php
-require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
+require_once('QueryBaseCase.php');
 
 //6.6.8 Query API
-class Query_6_QueryResultsTest extends jackalope_baseCase
+class Query_6_QueryResultsTest extends QueryBaseCase
 {
     public static $expect = array("jcr:createdBy","jcr:created","jcr:primaryType","jcr:path","jcr:score");
-    public $query;
-
-    public static function setupBeforeClass()
-    {
-        parent::setupBeforeClass();
-        self::$staticSharedFixture['qm'] = self::$staticSharedFixture['session']->getWorkspace()->getQueryManager();
-    }
 
     public function setUp()
     {
         parent::setUp();
 
-        $this->query = $this->sharedFixture['qm']->createQuery("SELECT * FROM [nt:unstructured]", \PHPCR\Query\QueryInterface::JCR_SQL2);
         $this->qr = $this->query->execute();
         //sanity check
         $this->assertInstanceOf('PHPCR\Query\QueryResultInterface', $this->qr);

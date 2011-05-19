@@ -1,13 +1,18 @@
 <?php
-require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
+require_once('QueryBaseCase.php');
 
 /**
  * test the javax.jcr.Query interface
  *
  * setLimit, setOffset, bindValue, getBindVariableNames
  */
-class Query_6_QueryObjectXpathTest extends jackalope_baseCase
+class Query_6_QueryObjectXpathTest extends QueryBaseCase
 {
+    public function setUp()
+    {
+        //$this->markTestSkipped('TODO: should we add support for xpath again?');
+        parent::setUp();
+    }
     public function testExecute()
     {
         $query = $this->sharedFixture['qm']->createQuery('//idExample[jcr:mimeType="text/plain"]', 'xpath');

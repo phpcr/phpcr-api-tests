@@ -1,26 +1,19 @@
 <?php
 
-require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
+require_once('QueryBaseCase.php');
 
 /** test the javax.jcr.Row interface
  *  todo: getNode, getPath, getScore
  */
-class Query_6_RowTest extends jackalope_baseCase
+class Query_6_RowTest extends QueryBaseCase
 {
     private $row;
-
-    public static function setupBeforeClass()
-    {
-        parent::setupBeforeClass();
-        self::$staticSharedFixture['qm'] = self::$staticSharedFixture['session']->getWorkspace()->getQueryManager();
-    }
 
     public function setUp()
     {
         parent::setUp();
 
-        $query = $this->sharedFixture['qm']->createQuery("SELECT * FROM [nt:unstructured]", \PHPCR\Query\QueryInterface::JCR_SQL2);
-        $rows = $query->execute()->getRows();
+        $rows = $this->query->execute()->getRows();
 
         $rows->rewind();
         $this->row = $rows->current();

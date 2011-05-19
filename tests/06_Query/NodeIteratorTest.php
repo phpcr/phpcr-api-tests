@@ -1,25 +1,17 @@
 <?php
 
-require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
+require_once('QueryBaseCase.php');
 
 //6.6.8 Query API
-class Query_6_NodeIteratorTest extends jackalope_baseCase
+class Query_6_NodeIteratorTest extends QueryBaseCase
 {
     public $nodeIterator;
-
-    public static function setupBeforeClass()
-    {
-        parent::setupBeforeClass();
-        self::$staticSharedFixture['qm'] = self::$staticSharedFixture['session']->getWorkspace()->getQueryManager();
-        self::$staticSharedFixture['ie']->import('general/base');
-    }
 
     public function setUp()
     {
         parent::setUp();
 
-        $query = $this->sharedFixture['qm']->createQuery("SELECT * FROM [nt:unstructured]", \PHPCR\Query\QueryInterface::JCR_SQL2);
-        $this->nodeIterator = $query->execute()->getNodes();
+        $this->nodeIterator = $this->query->execute()->getNodes();
     }
 
     public function testIterator()

@@ -1,17 +1,15 @@
 <?php
-require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
+require_once('QueryBaseCase.php');
 
 /**
  * test javax.jcr.QueryManager interface
  * todo: getQOMFactory
  */
-class Query_6_QueryManagerTest extends jackalope_baseCase
+class Query_6_QueryManagerTest extends QueryBaseCase
 {
-    static public function setupBeforeClass()
+    public static function setupBeforeClass()
     {
-        parent::setupBeforeClass();
-        self::$staticSharedFixture['ie']->import('general/query');
-        self::$staticSharedFixture['qm'] = self::$staticSharedFixture['session']->getWorkspace()->getQueryManager();
+        parent::setupBeforeClass('general/query');
     }
 
     public function testCreateQuery()
