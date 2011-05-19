@@ -55,6 +55,7 @@ abstract class jackalope_baseCase extends PHPUnit_Framework_TestCase
         }
         self::$staticSharedFixture['session'] = getJCRSession(self::$staticSharedFixture['config']);
         $this->sharedFixture['session'] = self::$staticSharedFixture['session'];
+        return $this->sharedFixture['session'];
     }
 
     /**
