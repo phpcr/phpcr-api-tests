@@ -17,10 +17,23 @@ abstract class jackalope_baseCase extends PHPUnit_Framework_TestCase
     protected $node = null;
 
     protected $config;
-    protected $sharedFixture = array();
+
+    /**
+     * Populated in the setupBeforeClass method.
+     *
+     * Contains the fields
+     * - session (the PHPCR Session)
+     * - ie (the import export instance)
+     */
     protected static $staticSharedFixture = null;
 
-    /** the bootstrap.php from the client can throw PHPCR\RepositoryException
+    /**
+     * Same as staticSharedFixture, loaded in setUp for your convenience
+     */
+    protected $sharedFixture = array();
+
+    /**
+     * the bootstrap.php from the client can throw PHPCR\RepositoryException
      * with this message to tell assertSession when getJCRSession has been called
      * with parameters not supported by this implementation (like credentials null)
      */
@@ -114,7 +127,8 @@ abstract class jackalope_baseCase extends PHPUnit_Framework_TestCase
         $this->assertType('PHPCR\SessionInterface', $ses);
         return $ses;
     }
+    /** assert that this is an object that is traversable */
     protected function assertTraversableImplemented($obj) {
-        $this->assertTrue($obj instanceof \Iterator || $obj instanceof \IteratorAggregate, 'To provide a traversable, you have to either implement Iterator or IteratorAggregate');
+        $this->assertTrue($obj instanceof \Iterator || $obj instanceof \IteratorAggregate, 'To provide Traversable, you have to either implement Iterator or IteratorAggregate');
     }
 }

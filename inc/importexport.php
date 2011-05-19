@@ -6,22 +6,12 @@
 interface phpcrApiTestSuiteImportExportFixtureInterface
 {
     /**
-     * Required fixtures (see fixtures/ folder for the necessary data)
+     * Load fixture data into your implementation to prepare for a test.
      *
-     * nodetype/base
-     * read/access/base
-     * read/export/base
-     * read/read/base
-     * read/search/base
-     * read/search/query
-     * version/base
-     * write/manipulation/add
-     * write/manipulation/copy
-     * write/manipulation/delete
-     * write/manipulation/move
-     * write/value/base
+     * The list of possible fixture names is in the README file.
+     * Default fixtures in the jcr system view format live folder fixtures/
      *
-     * @param string
+     * @param string $fixture the fixtures "name", i.e. "general/base"
      * @return void
      */
     public function import($fixture);
@@ -30,6 +20,7 @@ interface phpcrApiTestSuiteImportExportFixtureInterface
 /**
  * Handles basic importing and exporting of fixtures trough
  * the java binary jack.jar
+ * TODO: move this to jackalope
  *
  * Connection parameters for jackrabbit have to be set in the $GLOBALS array (i.e. in phpunit.xml)
  *     <php>
