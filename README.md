@@ -34,6 +34,8 @@ the java content repository specification.
 You need to provide a couple of files in order to let the tests detect your
 implementation:
 
+TODO: configuration should be handled by bootstrap and not by baseClass
+
 * Copy phpunit.xml.sample to phpunit.xml and adapt if necessary. All <php /> vars beginning
   with "jcr." are copied to the configuration array that is passed to the functions `getJCRSession`,
   `getRepository` and `getFixtureLoader`.
@@ -111,6 +113,18 @@ For the read-only tests, we have just two fixture files that cover all cases.
 For the write tests, we have one fixture per file with nodes named after the
 test names, which baseCase::setUp puts into $this->node. This way, each test
 has its own "root" node and does not influence the other tests.
+
+To add or adjust fixtures, you can use jackrabbit and the jack.jar tool to
+import and export data: http://github.com/jackalope/jackrabbit-importexport
+See the readme file of jack for details.
+Jack.jar has a default configuration to look for jackrabbit at localhost on
+default port with default username and password.
+To export data in system view, use:
+
+  java -jar /path/to/jack.jar export dump.xml repository-base-xpath=/tests_x_y
+
+Jack dumps the file on one single line. You can format that for better reading:
+
 
 
 ## Note on JCR
