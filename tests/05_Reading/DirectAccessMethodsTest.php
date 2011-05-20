@@ -51,6 +51,10 @@ class Reading_5_DirectAccessMethodsTest extends phpcr_suite_baseCase
         $this->assertInstanceOf('PHPCR\PropertyInterface', $prop);
         $this->assertEquals($prop->getName(), 'foo');
         $this->assertEquals($prop->getString(), 'bar');
+        $prop = $this->sharedFixture['session']->getItem('/tests_general_base/numberPropertyNode/jcr:content/specialChars');
+        $this->assertType('PHPCR\PropertyInterface', $prop);
+        $this->assertEquals($prop->getName(), 'specialChars');
+        $this->assertEquals($prop->getString(), 'üöäøéáñâêèàçæëìíîïþ');
     }
 
     //5.1.3, 5.1.6

@@ -73,4 +73,24 @@ class Query_6_QueryResultsTest extends QueryBaseCase
         }
         $this->assertEquals(12, $count);
     }
+
+    public function testReadPropertyContentFromResults()
+    {
+        $nodes = $this->qr->getNodes();
+        $seekNodeName = '/tests_general_base/numberPropertyNode/jcr:content';
+        $nodes->seek($seekNodeName);
+        $node = $nodes->current();
+
+        $this->assertType('PHPCR\NodeInterface', $node);
+
+        $prop = $node->getProperty('foo');
+        $this->assertType('PHPCR\PropertyInterface', $prop);
+        $this->assertEquals($prop->getName(), 'foo');
+        $this->assertEquals($prop->getString(), 'bar');
+
+        $prop = $node->getProperty('specialChars');
+        $this->assertType('PHPCR\PropertyInterface', $prop);
+        $this->assertEquals($prop->getName(), 'specialChars');
+        $this->assertEquals($prop->getString(), 'üöäøéáñâêèàçæëìíîïþ');
+    }
 }

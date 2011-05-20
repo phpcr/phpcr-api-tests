@@ -207,6 +207,13 @@
             <sv:property sv:name="yesOrNo" sv:type="String">
                 <sv:value>true</sv:value>
             </sv:property>
+
+            <sv:property sv:name="specialChars" sv:type="String">
+                <sv:value>üöäøéáñâêèàçæëìíîïþ</sv:value>
+            </sv:property>
+
         </sv:node>
+
     </sv:node>
+
 </sv:node>
