@@ -7,7 +7,7 @@ require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
  *
  * Covering jcr-2.8.3 spec $10.4.2
  */
-class Writing_10_SetPropertyMethodsTest extends jackalope_baseCase
+class Writing_10_SetPropertyMethodsTest extends phpcr_suite_baseCase
 {
 
     static public function setupBeforeClass()
@@ -39,7 +39,7 @@ class Writing_10_SetPropertyMethodsTest extends jackalope_baseCase
     {
         $this->assertTrue($this->node->hasProperty('longNumber'));
         $property = $this->node->setProperty('longNumber', 1024);
-        $this->assertType('PHPCR\PropertyInterface', $property);
+        $this->assertInstanceOf('PHPCR\PropertyInterface', $property);
         $this->assertEquals(1024, $this->node->getProperty('longNumber')->getLong());
     }
 
@@ -50,7 +50,7 @@ class Writing_10_SetPropertyMethodsTest extends jackalope_baseCase
     public function testSetPropertyNew()
     {
         $property = $this->node->setProperty('newLongNumber', 1024);
-        $this->assertType('PHPCR\PropertyInterface', $property);
+        $this->assertInstanceOf('PHPCR\PropertyInterface', $property);
         $this->assertEquals(1024, $this->node->getProperty('newLongNumber')->getLong());
     }
 

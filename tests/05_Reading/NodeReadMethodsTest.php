@@ -8,7 +8,7 @@ require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
  * NodeWriteMethods (level2): addMixin, addNode, canAddMixin, isCheckedOut, isLocked, orderBefore, removeMixin, removeShare, removeSharedSet, setPrimaryType, setProperty, update. Base Item write methods: isModified, refresh, save, remove
  * Lifecycle: followLifecycleTransition, getAllowedLifecycleTransistions
  */
-class Reading_5_NodeReadMethodsTest extends jackalope_baseCase
+class Reading_5_NodeReadMethodsTest extends phpcr_suite_baseCase
 {
     protected $rootNode;
     protected $node;
@@ -82,7 +82,7 @@ class Reading_5_NodeReadMethodsTest extends jackalope_baseCase
     public function testGetSession()
     {
         $sess = $this->node->getSession();
-        $this->assertType('PHPCR\SessionInterface', $sess);
+        $this->assertInstanceOf('PHPCR\SessionInterface', $sess);
         //how to further check if we got the right session?
     }
     public function testIsNew()
@@ -109,14 +109,14 @@ class Reading_5_NodeReadMethodsTest extends jackalope_baseCase
     public function testGetNodeAbsolutePath()
     {
         $node = $this->rootNode->getNode('/tests_general_base');
-        $this->assertType('PHPCR\NodeInterface', $node);
+        $this->assertInstanceOf('PHPCR\NodeInterface', $node);
         $this->assertEquals('tests_general_base', $node->getName());
     }
 
     public function testGetNodeRelativePath()
     {
         $node = $this->rootNode->getNode('tests_general_base');
-        $this->assertType('PHPCR\NodeInterface', $node);
+        $this->assertInstanceOf('PHPCR\NodeInterface', $node);
         $this->assertEquals('tests_general_base', $node->getName());
     }
 
@@ -140,7 +140,7 @@ class Reading_5_NodeReadMethodsTest extends jackalope_baseCase
     {
         $node1 = $this->rootNode->getNode('tests_general_base');
         $iterator = $this->rootNode->getNodes();
-        $this->assertType('Iterator', $iterator);
+        $this->assertInstanceOf('Iterator', $iterator);
     }
     /**
      * @expectedException \PHPCR\RepositoryException
@@ -191,7 +191,7 @@ class Reading_5_NodeReadMethodsTest extends jackalope_baseCase
     public function testGetProperty()
     {
         $prop = $this->node->getProperty('jcr:created');
-        $this->assertType('PHPCR\PropertyInterface', $prop);
+        $this->assertInstanceOf('PHPCR\PropertyInterface', $prop);
     }
 
     /**
@@ -205,7 +205,7 @@ class Reading_5_NodeReadMethodsTest extends jackalope_baseCase
     public function testGetPropertyOfOtherNode()
     {
         $prop = $this->node->getProperty('numberPropertyNode/jcr:content/ref');
-        $this->assertType('PHPCR\PropertyInterface', $prop);
+        $this->assertInstanceOf('PHPCR\PropertyInterface', $prop);
         $this->assertEquals('/tests_general_base/numberPropertyNode/jcr:content/ref', $prop->getPath());
     }
 
@@ -220,7 +220,7 @@ class Reading_5_NodeReadMethodsTest extends jackalope_baseCase
     public function testGetPropertiesAll()
     {
         $iterator = $this->node->getProperties();
-        $this->assertType('Iterator', $iterator);
+        $this->assertInstanceOf('Iterator', $iterator);
         $props = array();
         foreach ($iterator as $prop) {
             array_push($props, $prop->getName());
@@ -231,7 +231,7 @@ class Reading_5_NodeReadMethodsTest extends jackalope_baseCase
     public function testGetPropertiesPattern()
     {
         $iterator = $this->node->getProperties('jcr:cr*');
-        $this->assertType('Iterator', $iterator);
+        $this->assertInstanceOf('Iterator', $iterator);
         $props = array();
         foreach ($iterator as $prop) {
             array_push($props, $prop->getName());
@@ -243,7 +243,7 @@ class Reading_5_NodeReadMethodsTest extends jackalope_baseCase
     public function testGetPropertiesNameGlobs()
     {
         $iterator = $this->node->getProperties(array('jcr:cr*', 'jcr:prim*'));
-        $this->assertType('Iterator', $iterator);
+        $this->assertInstanceOf('Iterator', $iterator);
         $props = array();
         foreach ($iterator as $prop) {
             array_push($props, $prop->getName());
@@ -263,7 +263,7 @@ class Reading_5_NodeReadMethodsTest extends jackalope_baseCase
     public function testGetPrimaryItem()
     {
         $node = $this->node->getNode('index.txt')->getPrimaryItem();
-        $this->assertType('PHPCR\NodeInterface', $node);
+        $this->assertInstanceOf('PHPCR\NodeInterface', $node);
         $this->assertEquals('/tests_general_base/index.txt/jcr:content', $node->getPath());
     }
 
@@ -312,12 +312,12 @@ class Reading_5_NodeReadMethodsTest extends jackalope_baseCase
         $source = $this->rootNode->getProperty('tests_general_base/numberPropertyNode/jcr:content/ref');
 
         $iterator = $target->getReferences();
-        $this->assertType('Iterator', $iterator);
+        $this->assertInstanceOf('Iterator', $iterator);
 
         //there is exactly one node with reference to idExample.
         $this->assertEquals(1, count($iterator), "Wrong number of references to idExample");
         foreach ($iterator as $prop) {
-            $this->assertType('\PHPCR\PropertyInterface', $prop);
+            $this->assertInstanceOf('\PHPCR\PropertyInterface', $prop);
             $this->assertEquals($source, $prop);
         }
     }
@@ -329,16 +329,16 @@ class Reading_5_NodeReadMethodsTest extends jackalope_baseCase
         $source = $this->rootNode->getNode('tests_general_base/numberPropertyNode/jcr:content');
 
         $iterator = $target->getReferences('ref');
-        $this->assertType('Iterator', $iterator);
+        $this->assertInstanceOf('Iterator', $iterator);
 
         //there is exactly one node with reference to idExample.
         $this->assertEquals(1, count($iterator), "Wrong number of references with name ref to idExample");
         foreach ($iterator as $node) {
-            $this->assertType('\PHPCR\PropertyInterface', $prop);
+            $this->assertInstanceOf('\PHPCR\PropertyInterface', $prop);
             $this->assertEquals($source, $prop);
         }
 
-        $this->assertType('PHPCR\NodeInterface', $reference);
+        $this->assertInstanceOf('PHPCR\NodeInterface', $reference);
         $this->assertEquals($reference, $target);
     }
 
@@ -347,7 +347,7 @@ class Reading_5_NodeReadMethodsTest extends jackalope_baseCase
         $this->markTestIncomplete('TODO: Implement Node::getReferences');
         $target = $this->rootNode->getNode('tests_general_base/idExample');
         $iterator = $target->getReferences('notexisting');
-        $this->assertType('Iterator', $iterator);
+        $this->assertInstanceOf('Iterator', $iterator);
         $this->assertEquals(0, count($iterator), "Wrong number of references with name notexisting to idExample");
     }
 
@@ -355,7 +355,7 @@ class Reading_5_NodeReadMethodsTest extends jackalope_baseCase
     {
         $this->markTestIncomplete('TODO: Have a weakly referenced node');
         $iterator = $this->node->getWeakReferences();
-        $this->assertType('Iterator', $iterator);
+        $this->assertInstanceOf('Iterator', $iterator);
     }
 
     public function testGetWeakReferencesName()
@@ -365,7 +365,7 @@ class Reading_5_NodeReadMethodsTest extends jackalope_baseCase
     public function testGetSharedSetUnreferenced()
     {
         $iterator = $this->node->getSharedSet();
-        $this->assertType('Iterator', $iterator);
+        $this->assertInstanceOf('Iterator', $iterator);
         $this->assertTrue($iterator->valid());
         $node = $iterator->current();
         $this->assertEquals($node, $this->node);
@@ -435,7 +435,7 @@ class Reading_5_NodeReadMethodsTest extends jackalope_baseCase
         foreach ($this->node as $name => $child) {
             $results = true;
             $this->assertInternalType('string', $name);
-            $this->assertType('\PHPCR\NodeInterface', $child);
+            $this->assertInstanceOf('\PHPCR\NodeInterface', $child);
             $this->assertEquals($name, $child->getName());
         }
         $this->assertTrue($results, 'Iterator had no elements');

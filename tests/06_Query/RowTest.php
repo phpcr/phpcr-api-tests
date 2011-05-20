@@ -59,7 +59,7 @@ class Query_6_RowTest extends QueryBaseCase
 
     public function testGetNode()
     {
-        $this->assertInstanceOf('Jackalope\Node', $this->row->getNode());
+        $this->assertInstanceOf('PHPCR\NodeInterface', $this->row->getNode());
     }
 
     public function testGetPath()

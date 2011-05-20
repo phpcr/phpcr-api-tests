@@ -4,7 +4,7 @@ require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
 /**
  * a base class for all query tests
  */
-abstract class QueryBaseCase extends jackalope_baseCase
+abstract class QueryBaseCase extends phpcr_suite_baseCase
 {
     /**
      * in addition to base stuff, prepare the query manager and load general/query fixture

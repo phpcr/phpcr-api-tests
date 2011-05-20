@@ -7,7 +7,7 @@ require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
  *
  * Covering jcr-2.8.3 spec $10.10.3
  */
-class Writing_10_MixinReferenceableTest extends jackalope_baseCase
+class Writing_10_MixinReferenceableTest extends phpcr_suite_baseCase
 {
     static public function setupBeforeClass()
     {
@@ -51,7 +51,7 @@ class Writing_10_MixinReferenceableTest extends jackalope_baseCase
         $source_node->setProperty('reference', $referenced_node, \PHPCR\PropertyType::WEAKREFERENCE);
         $this->sharedFixture['session']->save();
 
-        $this->assertType('PHPCR\NodeInterface', $source_node->getPropertyValue('reference'));
+        $this->assertInstanceOf('PHPCR\NodeInterface', $source_node->getPropertyValue('reference'));
     }
 
     /**

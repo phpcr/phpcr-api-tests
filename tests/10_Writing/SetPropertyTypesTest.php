@@ -6,7 +6,7 @@ require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
  *
  * Covering jcr-2.8.3 spec $10.4.2
  */
-class Writing_10_SetPropertyTypesTest extends jackalope_baseCase
+class Writing_10_SetPropertyTypesTest extends phpcr_suite_baseCase
 {
 
     static public function setupBeforeClass()

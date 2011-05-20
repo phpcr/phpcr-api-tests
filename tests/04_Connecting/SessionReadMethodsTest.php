@@ -12,7 +12,7 @@ require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
  *  Access Control: getAccessControlManager
  */
 
-class Reading_4_SessionReadMethodsTest extends jackalope_baseCase
+class Reading_4_SessionReadMethodsTest extends phpcr_suite_baseCase
 {
     static public function  setupBeforeClass()
     {
@@ -24,7 +24,7 @@ class Reading_4_SessionReadMethodsTest extends jackalope_baseCase
     public function testGetRepository()
     {
         $rep = $this->sharedFixture['session']->getRepository();
-        $this->assertType('PHPCR\RepositoryInterface', $rep);
+        $this->assertInstanceOf('PHPCR\RepositoryInterface', $rep);
     }
 
     //4.4.1
@@ -42,7 +42,7 @@ class Reading_4_SessionReadMethodsTest extends jackalope_baseCase
         $cr->setAttribute('foo', 'bar');
         $session = $this->assertSession($this->sharedFixture['config'], $cr);
         $attrs = $session->getAttributeNames();
-        $this->assertType('array', $attrs);
+        $this->assertInternalType('array', $attrs);
         $this->assertContains('foo', $attrs);
     }
 
@@ -60,6 +60,6 @@ class Reading_4_SessionReadMethodsTest extends jackalope_baseCase
     public function testGetWorkspace()
     {
         $workspace = $this->sharedFixture['session']->getWorkspace();
-        $this->assertType('PHPCR\WorkspaceInterface', $workspace);
+        $this->assertInstanceOf('PHPCR\WorkspaceInterface', $workspace);
     }
 }

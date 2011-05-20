@@ -6,7 +6,7 @@ require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
 /**
  * §5.10.5
  */
-class Reading_5_BinaryReadMethodsTest extends jackalope_baseCase
+class Reading_5_BinaryReadMethodsTest extends phpcr_suite_baseCase
 {
     protected $node;
     public $binary;

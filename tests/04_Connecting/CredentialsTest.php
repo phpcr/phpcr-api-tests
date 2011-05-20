@@ -1,7 +1,7 @@
 <?php
 require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
 
-class Connecting_4_CredentialsTest extends jackalope_baseCase
+class Connecting_4_CredentialsTest extends phpcr_suite_baseCase
 {
     //don't care about fixtures
 
@@ -37,7 +37,7 @@ class Connecting_4_CredentialsTest extends jackalope_baseCase
         $cr->setAttribute($attrName, $attrValue);
         $this->assertEquals($attrValue, $cr->getAttribute($attrName));
         $attrs = $cr->getAttributeNames();
-        $this->assertType('array', $attrs);
+        $this->assertInternalType('array', $attrs);
         $this->assertContains($attrName, $attrs);
         $cr->removeAttribute($attrName);
         $this->assertNull($cr->getAttribute($attrName));

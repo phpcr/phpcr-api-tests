@@ -1,7 +1,7 @@
 <?php
 require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
 
-class Connecting_4_RepositoryDescriptorsTest extends jackalope_baseCase
+class Connecting_4_RepositoryDescriptorsTest extends phpcr_suite_baseCase
 {
     //don't care about fixtures
 
@@ -29,7 +29,7 @@ class Connecting_4_RepositoryDescriptorsTest extends jackalope_baseCase
     {
         $rep = getRepository($this->sharedFixture['config']);
         $keys = $rep->getDescriptorKeys();
-        $this->assertType('array', $keys);
+        $this->assertInternalType('array', $keys);
         $this->assertFalse(empty($keys));
         foreach ($this->expectedDescriptors as $descriptor) {
             $this->assertContains($descriptor, $keys);
@@ -42,7 +42,7 @@ class Connecting_4_RepositoryDescriptorsTest extends jackalope_baseCase
         $rep = getRepository($this->sharedFixture['config']);
         foreach ($this->expectedDescriptors as $descriptor) {
             $str = $rep->getDescriptor($descriptor);
-            $this->assertType('string', $str);
+            $this->assertInternalType('string', $str);
             $this->assertFalse(empty($str));
         }
     }

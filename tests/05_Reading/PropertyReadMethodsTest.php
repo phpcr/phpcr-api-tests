@@ -7,7 +7,7 @@ require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
  *
  * PropertyWriteMethods: isModified, refresh, save, remove, setValue (in many variants)
  */
-class Reading_5_PropertyReadMethodsTest extends jackalope_baseCase
+class Reading_5_PropertyReadMethodsTest extends phpcr_suite_baseCase
 {
     protected $rootNode;
     protected $node;
@@ -35,18 +35,18 @@ class Reading_5_PropertyReadMethodsTest extends jackalope_baseCase
     {
         $ancestor = $this->multiProperty->getAncestor(0);
         $this->assertNotNull($ancestor);
-        $this->assertType('PHPCR\ItemInterface', $ancestor);
+        $this->assertInstanceOf('PHPCR\ItemInterface', $ancestor);
         $this->assertTrue($this->rootNode->isSame($ancestor));
 
         $ancestor = $this->multiProperty->getAncestor(1);
         $this->assertNotNull($ancestor);
-        $this->assertType('PHPCR\ItemInterface', $ancestor);
+        $this->assertInstanceOf('PHPCR\ItemInterface', $ancestor);
         $this->assertTrue($this->node->isSame($ancestor));
 
         //self
         $ancestor = $this->multiProperty->getAncestor($this->multiProperty->getDepth());
         $this->assertNotNull($ancestor);
-        $this->assertType('PHPCR\ItemInterface', $ancestor);
+        $this->assertInstanceOf('PHPCR\ItemInterface', $ancestor);
         $this->assertTrue($this->multiProperty->isSame($ancestor));
     }
     function testGetDepthProperty()
@@ -69,7 +69,7 @@ class Reading_5_PropertyReadMethodsTest extends jackalope_baseCase
     public function testGetSession()
     {
         $sess = $this->property->getSession();
-        $this->assertType('PHPCR\SessionInterface', $sess);
+        $this->assertInstanceOf('PHPCR\SessionInterface', $sess);
         //how to further check if we got the right session?
     }
     public function testIsNew()
@@ -106,12 +106,12 @@ class Reading_5_PropertyReadMethodsTest extends jackalope_baseCase
     public function testGetValue()
     {
         $val = $this->property->getValue();
-        $this->assertType('DateTime', $val);
+        $this->assertInstanceOf('DateTime', $val);
     }
     public function testGetValueMulti()
     {
         $vals = $this->multiProperty->getValue();
-        $this->assertType('array', $vals);
+        $this->assertInternalType('array', $vals);
         foreach ($vals as $val) {
             $this->assertNotNull($val);
         }
@@ -121,20 +121,20 @@ class Reading_5_PropertyReadMethodsTest extends jackalope_baseCase
     {
         $expectedStr = date('o-m-d\T');
         $str = $this->property->getString();
-        $this->assertType('string', $str);
+        $this->assertInternalType('string', $str);
         $this->assertStringStartsWith($expectedStr, $str, "jcr:created should start with a date, when converted from date to string.");
 
         $str = $this->valProperty->getString();
-        $this->assertType('string', $str);
+        $this->assertInternalType('string', $str);
         $this->assertEquals('bar', $str);
     }
 
     public function testGetStringMulti()
     {
         $arr = $this->multiProperty->getString();
-        $this->assertType('array', $arr);
+        $this->assertInternalType('array', $arr);
         foreach ($arr as $v) {
-            $this->assertType('string', $v);
+            $this->assertInternalType('string', $v);
         }
     }
 
@@ -156,16 +156,16 @@ class Reading_5_PropertyReadMethodsTest extends jackalope_baseCase
     {
         $prop = $this->node->getNode('numberPropertyNode/jcr:content')->getProperty('longNumber');
         $num = $prop->getLong();
-        $this->assertType('int', $num);
+        $this->assertInternalType('integer', $num);
         $this->assertEquals(999, $num);
     }
 
     public function testGetLongMulti()
     {
         $arr = $this->multiProperty->getLong();
-        $this->assertType('array', $arr);
+        $this->assertInternalType('array', $arr);
         foreach ($arr as $v) {
-            $this->assertType('integer', $v);
+            $this->assertInternalType('integer', $v);
         }
     }
 
@@ -189,16 +189,16 @@ class Reading_5_PropertyReadMethodsTest extends jackalope_baseCase
     {
         $nv = $this->node->getNode('numberPropertyNode/jcr:content')->getProperty('longNumber');
         $number = $nv->getDouble();
-        $this->assertType('float', $number);
+        $this->assertInternalType('float', $number);
         $this->assertEquals(999, $number);
     }
 
     public function testGetDoubleMulti()
     {
         $arr = $this->multiProperty->getDouble();
-        $this->assertType('array', $arr);
+        $this->assertInternalType('array', $arr);
         foreach ($arr as $v) {
-            $this->assertType('float', $v);
+            $this->assertInternalType('float', $v);
         }
     }
 
@@ -223,7 +223,7 @@ class Reading_5_PropertyReadMethodsTest extends jackalope_baseCase
         $prop = $this->node->getNode('numberPropertyNode/jcr:content')->getProperty('longNumber');
         $num = $prop->getDecimal();
         //we do not have an equivalent to java.math.BigDecimal. PHPCR uses strings suitable for BC Math
-        $this->assertType('string', $num);
+        $this->assertInternalType('string', $num);
         $this->assertEquals(999, $num);
     }
 
@@ -241,7 +241,7 @@ class Reading_5_PropertyReadMethodsTest extends jackalope_baseCase
     public function testGetDate()
     {
         $date = $this->dateProperty->getDate();
-        $this->assertType('DateTime', $date);
+        $this->assertInstanceOf('DateTime', $date);
         $this->assertEquals(1240830067, $date->format('U'));
     }
 
@@ -250,9 +250,9 @@ class Reading_5_PropertyReadMethodsTest extends jackalope_baseCase
         $this->markTestIncomplete('TODO: we need a property definition that can hold multiple dates');
 
         $arr = $this->multiDateProperty->getDate();
-        $this->assertType('array', $arr);
+        $this->assertInternalType('array', $arr);
         foreach ($arr as $v) {
-            $this->assertType('DateTime', $v);
+            $this->assertInstanceOf('DateTime', $v);
         }
     }
 
@@ -295,9 +295,9 @@ class Reading_5_PropertyReadMethodsTest extends jackalope_baseCase
     public function testGetBooleanMulti()
     {
         $arr = $this->multiProperty->getBoolean();
-        $this->assertType('array', $arr);
+        $this->assertInternalType('array', $arr);
         foreach ($arr as $v) {
-            $this->assertType('boolean', $v);
+            $this->assertInternalType('boolean', $v);
         }
     }
 
@@ -327,7 +327,7 @@ class Reading_5_PropertyReadMethodsTest extends jackalope_baseCase
 
         $this->assertEquals(\PHPCR\PropertyType::REFERENCE, $property->getType(), "Property has wrong type");
         $target = $property->getNode();
-        $this->assertType('PHPCR\NodeInterface', $target);
+        $this->assertInstanceOf('PHPCR\NodeInterface', $target);
         $this->assertEquals($target, $idnode);
     }
 
@@ -338,9 +338,9 @@ class Reading_5_PropertyReadMethodsTest extends jackalope_baseCase
         $this->markTestIncomplete('TODO: Have a property referencing another node (weak, strong + path).');
         /*
         $arr = $this->multiProperty->getNode();
-        $this->assertType('array', $arr);
+        $this->assertInternalType('array', $arr);
         foreach ($arr as $v) {
-            $this->assertType('PHPCR\NodeInterface', $v);
+            $this->assertInstanceOf('PHPCR\NodeInterface', $v);
         }
         */
     }
@@ -386,9 +386,9 @@ class Reading_5_PropertyReadMethodsTest extends jackalope_baseCase
         $this->markTestIncomplete('TODO: Have a property referencing another property (path).');
         /*
         $arr = $this->multiProperty->getProperty();
-        $this->assertType('array', $arr);
+        $this->assertInternalType('array', $arr);
         foreach ($arr as $v) {
-            $this->assertType('PHPCR\PropertyInterface', $v);
+            $this->assertInstanceOf('PHPCR\PropertyInterface', $v);
         }
         */
     }
@@ -519,7 +519,7 @@ class Reading_5_PropertyReadMethodsTest extends jackalope_baseCase
         $results = 0;
         foreach ($this->valProperty as $value) {
             $results++;
-            $this->assertType('string', $value);
+            $this->assertInternalType('string', $value);
             $this->assertEquals('bar', $value);
         }
 

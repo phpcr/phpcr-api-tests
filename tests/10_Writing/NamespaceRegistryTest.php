@@ -2,7 +2,7 @@
 require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
 
 //6.3.1 Namespace Registry
-class Writing_10_NamespaceRegistryTest extends jackalope_baseCase
+class Writing_10_NamespaceRegistryTest extends phpcr_suite_baseCase
 {
     protected $workspace;
     protected $nr; //the NamespaceRegistry
@@ -22,14 +22,14 @@ class Writing_10_NamespaceRegistryTest extends jackalope_baseCase
     public function testGetPrefixes()
     {
         $ret = $this->nr->getPrefixes();
-        $this->assertType('array', $ret);
+        $this->assertInternalType('array', $ret);
         $this->assertTrue(count($ret) >= count($this->nsBuiltIn));
     }
 
     public function testGetURIs()
     {
         $ret = $this->nr->getURIs();
-        $this->assertType('array', $ret);
+        $this->assertInternalType('array', $ret);
         $this->assertTrue(count($ret) >= count($this->nsBuiltIn));
         //we test in getURI / getPrefix if the names match
     }

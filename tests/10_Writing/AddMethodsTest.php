@@ -7,7 +7,7 @@ use PHPCR\PropertyType as Type;
 /**
  * Covering jcr-283 spec $10.4
  */
-class Writing_10_AddMethodsTest extends jackalope_baseCase
+class Writing_10_AddMethodsTest extends phpcr_suite_baseCase
 {
 
     static public function setupBeforeClass()
@@ -24,10 +24,6 @@ class Writing_10_AddMethodsTest extends jackalope_baseCase
         $this->assertInstanceOf('PHPCR\NodeInterface', $this->node, "Something went wrong with fixture loading");
     }
 
-    /**
-     * @covers Jackalope\Node::addNode
-     * @covers Jackalope\Session::getNode
-     */
     public function testAddNode()
     {
         $this->markTestSkipped('Find a case where the parent type specifies the type for this node'); //with nt:folder, this is also not working with the java jackrabbit, so it seems not to be an implementation issue
@@ -35,10 +31,7 @@ class Writing_10_AddMethodsTest extends jackalope_baseCase
         $this->node->addNode('newNode');
         $this->assertNotNull($this->sharedFixture['session']->getNode($this->node->getPath() . '/newNode'), 'Node newNode was not created');
     }
-    /**
-     * @covers Jackalope\Node::addNode
-     * @covers Jackalope\Session::getNode
-     */
+
     public function testAddNodeWithPath()
     {
         // should take the primaryType of <testAddNodeWithPath />
@@ -123,9 +116,7 @@ class Writing_10_AddMethodsTest extends jackalope_baseCase
         $this->assertEquals(array('val3', 'val4'), $node->getPropertyValue('test2'), 'Property was not added correctly');
     }
 
-
     /**
-     * @covers Jackalope\Node::addNode
      * @expectedException \PHPCR\NodeType\ConstraintViolationException
      */
     public function testAddNodeMissingType()

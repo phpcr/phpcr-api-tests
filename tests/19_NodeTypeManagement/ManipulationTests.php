@@ -7,7 +7,7 @@ require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
  *
  * (only a few tests, lots is tested by unit tests)
  */
-class NodeTypeManagement_19_MoveMethodsTest extends jackalope_baseCase
+class NodeTypeManagement_19_MoveMethodsTest extends phpcr_suite_baseCase
 {
 
     protected function setUp()
@@ -41,10 +41,10 @@ class NodeTypeManagement_19_MoveMethodsTest extends jackalope_baseCase
         $this->assertEquals(2, count($types), 'Wrong number of nodes registered');
         list($name, $type) = each($types);
         $this->assertEquals('phpcr:managed', $name);
-        $this->assertType('PHPCR\NodeType\NodeTypeDefinitionInterface', $type);
+        $this->assertInstanceOf('PHPCR\NodeType\NodeTypeDefinitionInterface', $type);
         list($name, $type) = each($types);
         $this->assertEquals('phpcr:test', $name);
-        $this->assertType('PHPCR\NodeType\NodeTypeDefinitionInterface', $type);
+        $this->assertInstanceOf('PHPCR\NodeType\NodeTypeDefinitionInterface', $type);
         $props = $type->getDeclaredPropertyDefinitions();
         $this->assertEquals(1, count($props), 'Wrong number of properties in phpcr:test');
         $this->assertEquals('phpcr:prop', $props[0]->getName());

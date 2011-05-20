@@ -5,7 +5,7 @@ require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
 /**
  * Covering jcr-2.8.3 spec $10.6
  */
-class Writing_10_MoveMethodsTest extends jackalope_baseCase
+class Writing_10_MoveMethodsTest extends phpcr_suite_baseCase
 {
 
     static public function setupBeforeClass()
@@ -20,10 +20,6 @@ class Writing_10_MoveMethodsTest extends jackalope_baseCase
         parent::setUp();
     }
 
-
-    /**
-     * @covers Jackalope\Session::move
-     */
     public function testSessionMove()
     {
         $session = $this->sharedFixture['session'];
@@ -47,7 +43,6 @@ class Writing_10_MoveMethodsTest extends jackalope_baseCase
 
     /**
      * Makes sure that UUID is not modified during a move for mix:referencable nodes
-     * @covers Jackalope\Session::move
      */
     public function testSessionMoveReferencable()
     {
@@ -308,9 +303,7 @@ class Writing_10_MoveMethodsTest extends jackalope_baseCase
         $session->save();
     }
 
-
     /**
-     * @covers Jackalope\Session::move
      * @expectedException \PHPCR\ItemExistsException
      */
     public function testSessionMoveDstExists()
@@ -324,7 +317,6 @@ class Writing_10_MoveMethodsTest extends jackalope_baseCase
         $session->move($src, $dst);
         $session->save();
     }
-
 
     public function testWorkspaceMove()
     {

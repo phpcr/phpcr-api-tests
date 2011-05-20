@@ -1,7 +1,7 @@
 <?php
 require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
 
-class Connecting_4_RepositoryTest extends jackalope_baseCase
+class Connecting_4_RepositoryTest extends phpcr_suite_baseCase
 {
     //don't care about fixtures
 
@@ -9,7 +9,7 @@ class Connecting_4_RepositoryTest extends jackalope_baseCase
     public function testRepository()
     {
         $rep = getRepository($this->sharedFixture['config']);
-        $this->assertType('PHPCR\RepositoryInterface', $rep);
+        $this->assertInstanceOf('PHPCR\RepositoryInterface', $rep);
     }
 
     public function testLoginSession()

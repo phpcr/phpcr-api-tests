@@ -19,7 +19,7 @@ class Query_6_QueryObjectXpathTest extends QueryBaseCase
     {
         $query = $this->sharedFixture['qm']->createQuery('//idExample[jcr:mimeType="text/plain"]', 'xpath');
         $qr = $query->execute();
-        $this->assertType('PHPCR\Query\QueryResultInterface', $qr);
+        $this->assertInstanceOf('PHPCR\Query\QueryResultInterface', $qr);
         //content of result is tested in QueryResults
     }
 
@@ -77,10 +77,10 @@ class Query_6_QueryObjectXpathTest extends QueryBaseCase
         $this->sharedFixture['ie']->import('general/query');
         try {
             $qnode = $this->sharedFixture['session']->getRootNode()->getNode('queryNode');
-            $this->assertType('PHPCR\NodeInterface', $qnode);
+            $this->assertInstanceOf('PHPCR\NodeInterface', $qnode);
 
             $query = $this->sharedFixture['qm']->getQuery($qnode);
-            $this->assertType('PHPCR\Query\QueryInterface', $query);
+            $this->assertInstanceOf('PHPCR\Query\QueryInterface', $query);
             //same as QueryManager::testGetQuery
 
             $p = $query->getStoredQueryPath();

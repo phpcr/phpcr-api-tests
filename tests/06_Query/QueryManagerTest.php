@@ -8,7 +8,7 @@ require_once('QueryBaseCase.php');
  */
 class Query_6_QueryManagerTest extends QueryBaseCase
 {
-    public static function setupBeforeClass($ignore = '')
+    public static function setupBeforeClass()
     {
         parent::setupBeforeClass('general/query');
     }
@@ -16,7 +16,7 @@ class Query_6_QueryManagerTest extends QueryBaseCase
     public function testCreateQuery()
     {
         $ret = $this->sharedFixture['qm']->createQuery(null, PHPCR\Query\QueryInterface::JCR_SQL2);
-        $this->assertType('PHPCR\Query\QueryInterface', $ret);
+        $this->assertInstanceOf('PHPCR\Query\QueryInterface', $ret);
     }
 
     /**
@@ -32,7 +32,7 @@ class Query_6_QueryManagerTest extends QueryBaseCase
         $this->sharedFixture['ie']->import('general/query');
         try {
             $qnode = $this->sharedFixture['session']->getRootNode()->getNode('queryNode');
-            $this->assertType('PHPCR\NodeInterface', $qnode);
+            $this->assertInstanceOf('PHPCR\NodeInterface', $qnode);
 
             $query = $this->sharedFixture['qm']->getQuery($qnode);
             $this->assertTrue('PHPCR\Query\QueryInterface', $query);
@@ -54,7 +54,7 @@ class Query_6_QueryManagerTest extends QueryBaseCase
     public function testGetSupportedQueryLanguages()
     {
         $ret = $this->sharedFixture['qm']->getSupportedQueryLanguages();
-        $this->assertType('array', $ret);
+        $this->assertInternalType('array', $ret);
         $this->assertContains('JCR-SQL2', $ret);
         $this->assertContains('JCR-JQOM', $ret);
     }

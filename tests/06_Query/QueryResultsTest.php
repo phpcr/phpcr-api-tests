@@ -46,7 +46,6 @@ class Query_6_QueryResultsTest extends QueryBaseCase
         $count = 0;
 
         foreach ($nodes as $node) {
-            //$this->assertInstanceOf('Jackalope\Node', $node);
             $this->assertInstanceOf('PHPCR\NodeInterface', $node);
             $count++;
         }
@@ -66,7 +65,7 @@ class Query_6_QueryResultsTest extends QueryBaseCase
         $count = 0;
 
         foreach ($this->qr as $key => $row) {
-            $this->assertInstanceOf('Jackalope\Query\Row', $row); // Test if the return element is an istance of row
+            $this->assertInstanceOf('PHPCR\Query\RowInterface', $row); // Test if the return element is an instance of row
 
             foreach ($row as $columnName => $value) { // Test if we can iterate over the columns inside a row
                 $count++;

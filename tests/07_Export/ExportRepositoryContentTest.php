@@ -2,7 +2,7 @@
 require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
 
 //7 Export Repository Content
-class Export_7_ExportRepositoryContentTest extends jackalope_baseCase
+class Export_7_ExportRepositoryContentTest extends phpcr_suite_baseCase
 {
     static public function setupBeforeClass()
     {

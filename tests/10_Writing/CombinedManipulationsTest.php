@@ -7,7 +7,7 @@ use PHPCR\PropertyType as Type;
 /**
  * test sequences of adding / moving / removing stuff inside a transaction
  */
-class Writing_10_CombinedManipulationsTest extends jackalope_baseCase
+class Writing_10_CombinedManipulationsTest extends phpcr_suite_baseCase
 {
     public function setUp()
     {

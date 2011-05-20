@@ -8,7 +8,7 @@ require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
  *  Versioning: getVersionManager
  *  level2: WorkspaceWriteMethods: clone, copy, createWorkspace, deleteWorkspace, getImportContentHandler, importXML, move
  */
-class Connecting_4_WorkspaceReadMethodsTest extends jackalope_baseCase
+class Connecting_4_WorkspaceReadMethodsTest extends phpcr_suite_baseCase
 {
     protected $path = 'read/read';
     protected $workspace;
@@ -42,7 +42,7 @@ class Connecting_4_WorkspaceReadMethodsTest extends jackalope_baseCase
     public function testGetQueryManager()
     {
         $qm = $this->workspace->getQueryManager();
-        $this->assertType('PHPCR\Query\QueryManagerInterface', $qm);
+        $this->assertInstanceOf('PHPCR\Query\QueryManagerInterface', $qm);
     }
 
     /**
@@ -56,7 +56,7 @@ class Connecting_4_WorkspaceReadMethodsTest extends jackalope_baseCase
     public function testGetNamespaceRegistry()
     {
         $nr = $this->workspace->getNamespaceRegistry();
-        $this->assertType('PHPCR\NamespaceRegistryInterface', $nr);
+        $this->assertInstanceOf('PHPCR\NamespaceRegistryInterface', $nr);
     }
 
     /**
@@ -70,7 +70,7 @@ class Connecting_4_WorkspaceReadMethodsTest extends jackalope_baseCase
     public function testGetNodeTypeManager()
     {
         $ntm = $this->workspace->getNodeTypeManager();
-        $this->assertType('PHPCR\NodeType\NodeTypeManagerInterface', $ntm);
+        $this->assertInstanceOf('PHPCR\NodeType\NodeTypeManagerInterface', $ntm);
     }
 
     /**
@@ -85,7 +85,7 @@ class Connecting_4_WorkspaceReadMethodsTest extends jackalope_baseCase
     public function testGetAccessibleWorkspaceNames()
     {
         $names = $this->workspace->getAccessibleWorkspaceNames();
-        $this->assertType('array', $names);
+        $this->assertInternalType('array', $names);
         $this->assertContains($this->sharedFixture['config']['workspace'], $names);
     }
 

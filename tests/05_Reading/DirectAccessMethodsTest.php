@@ -12,7 +12,7 @@ require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
  *  Access Control: getAccessControlManager
  */
 
-class Reading_5_DirectAccessMethodsTest extends jackalope_baseCase
+class Reading_5_DirectAccessMethodsTest extends phpcr_suite_baseCase
 {
     static public function  setupBeforeClass()
     {
@@ -24,7 +24,7 @@ class Reading_5_DirectAccessMethodsTest extends jackalope_baseCase
     public function testGetRootNode()
     {
         $node = $this->sharedFixture['session']->getRootNode();
-        $this->assertType('PHPCR\NodeInterface', $node);
+        $this->assertInstanceOf('PHPCR\NodeInterface', $node);
         $this->assertEquals($node->getPath(), '/');
     }
 
@@ -40,27 +40,28 @@ class Reading_5_DirectAccessMethodsTest extends jackalope_baseCase
     public function testGetItem()
     {
         $node = $this->sharedFixture['session']->getItem('/tests_general_base');
-        $this->assertType('PHPCR\NodeInterface', $node);
+        $this->assertInstanceOf('PHPCR\NodeInterface', $node);
         $this->assertEquals($node->getName(), 'tests_general_base');
 
         $node = $this->sharedFixture['session']->getItem('/tests_general_base/index.txt');
-        $this->assertType('PHPCR\NodeInterface', $node);
+        $this->assertInstanceOf('PHPCR\NodeInterface', $node);
         $this->assertEquals($node->getName(), 'index.txt');
 
         $prop = $this->sharedFixture['session']->getItem('/tests_general_base/numberPropertyNode/jcr:content/foo');
-        $this->assertType('PHPCR\PropertyInterface', $prop);
+        $this->assertInstanceOf('PHPCR\PropertyInterface', $prop);
         $this->assertEquals($prop->getName(), 'foo');
         $this->assertEquals($prop->getString(), 'bar');
     }
+
     //5.1.3, 5.1.6
     public function testGetNode()
     {
         $node = $this->sharedFixture['session']->getNode('/tests_general_base/numberPropertyNode');
-        $this->assertType('PHPCR\NodeInterface', $node);
+        $this->assertInstanceOf('PHPCR\NodeInterface', $node);
         $this->assertEquals('numberPropertyNode', $node->getName());
 
         $node = $this->sharedFixture['session']->getNode('/tests_general_base/index.txt');
-        $this->assertType('PHPCR\NodeInterface', $node);
+        $this->assertInstanceOf('PHPCR\NodeInterface', $node);
         $this->assertEquals('index.txt', $node->getName());
     }
     /**
@@ -84,7 +85,7 @@ class Reading_5_DirectAccessMethodsTest extends jackalope_baseCase
     public function testGetProperty()
     {
         $prop = $this->sharedFixture['session']->getProperty('/tests_general_base/idExample/jcr:primaryType');
-        $this->assertType('PHPCR\PropertyInterface', $prop);
+        $this->assertInstanceOf('PHPCR\PropertyInterface', $prop);
         $this->assertEquals($prop->getName(), 'jcr:primaryType');
         $this->assertEquals($prop->getString(), 'nt:file');
     }
@@ -182,7 +183,7 @@ class Reading_5_DirectAccessMethodsTest extends jackalope_baseCase
     public function testGetNodeByIdentifier()
     {
         $node = $this->sharedFixture['session']->getNodeByIdentifier('842e61c0-09ab-42a9-87c0-308ccc90e6f4');
-        $this->assertType('PHPCR\NodeInterface', $node);
+        $this->assertInstanceOf('PHPCR\NodeInterface', $node);
         $this->assertEquals('/tests_general_base/idExample', $node->getPath());
     }
 
@@ -222,7 +223,7 @@ class Reading_5_DirectAccessMethodsTest extends jackalope_baseCase
         $ses = $this->assertSession($this->sharedFixture['config']);
         $this->assertTrue($ses->isLive());
         $ses->logout();
-        $this->assertType('PHPCR\SessionInterface', $ses);
+        $this->assertInstanceOf('PHPCR\SessionInterface', $ses);
         $this->assertFalse($ses->isLive());
     }
 

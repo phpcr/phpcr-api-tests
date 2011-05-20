@@ -6,7 +6,7 @@ if (method_exists('PHPUnit_Util_Filter', 'addDirectoryToFilter')) {
     require_once 'PHPUnit/Framework.php';
 }
 
-abstract class jackalope_baseCase extends PHPUnit_Framework_TestCase
+abstract class phpcr_suite_baseCase extends PHPUnit_Framework_TestCase
 {
     protected $path = ''; // Describes the path to the test
 
@@ -107,7 +107,7 @@ abstract class jackalope_baseCase extends PHPUnit_Framework_TestCase
     protected function assertSimpleCredentials($user, $password)
     {
         $cr = getSimpleCredentials($user, $password);
-        $this->assertType('PHPCR\CredentialsInterface', $cr);
+        $this->assertInstanceOf('PHPCR\CredentialsInterface', $cr);
         return $cr;
     }
 
@@ -117,13 +117,13 @@ abstract class jackalope_baseCase extends PHPUnit_Framework_TestCase
         try {
             $ses = getJCRSession($cfg, $credentials);
         } catch(PHPCR\RepositoryException $e) {
-            if ($e->getMessage() == jackalope_baseCase::NOTSUPPORTEDLOGIN) {
+            if ($e->getMessage() == phpcr_suite_baseCase::NOTSUPPORTEDLOGIN) {
                 $this->markTestSkipped('This implementation does not support this type of login.');
             } else {
                 throw $e;
             }
         }
-        $this->assertType('PHPCR\SessionInterface', $ses);
+        $this->assertInstanceOf('PHPCR\SessionInterface', $ses);
         return $ses;
     }
     /** assert that this is an object that is traversable */

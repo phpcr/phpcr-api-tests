@@ -22,8 +22,8 @@ class Query_6_RowIteratorTest extends QueryBaseCase
         $count = 0;
 
         foreach ($this->rowIterator as $key => $row) {
-            $this->assertInstanceOf('Jackalope\Query\Row', $row); // Test if the return element is an istance of row
-            $this->assertInstanceOf('Jackalope\Node', $row->getNode()); //Test if we can get the node of a certain row
+            $this->assertInstanceOf('PHPCR\Query\RowInterface', $row); // Test if the return element is an istance of row
+            $this->assertInstanceOf('PHPCR\NodeInterface', $row->getNode()); //Test if we can get the node of a certain row
             $this->assertEquals(3, count($row->getValues())); // test if we can get all the values of a row
 
             foreach ($row as $key => $value) { // Test if we can iterate over the columns inside a row

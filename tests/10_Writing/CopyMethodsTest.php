@@ -5,7 +5,7 @@ require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
 /**
  * Covering jcr-283 spec $10.7
  */
-class Writing_10_CopyMethodsTest extends jackalope_baseCase
+class Writing_10_CopyMethodsTest extends phpcr_suite_baseCase
 {
     protected $ws;
 
@@ -24,9 +24,6 @@ class Writing_10_CopyMethodsTest extends jackalope_baseCase
         $this->ws = $this->sharedFixture['session']->getWorkspace();
     }
 
-    /**
-     * @covers Jackalope\Workspace::copy
-     */
     public function testWorkspaceCopy()
     {
         $src = '/tests_write_manipulation_copy/testWorkspaceCopy/srcNode';
@@ -57,9 +54,6 @@ class Writing_10_CopyMethodsTest extends jackalope_baseCase
         $this->ws->copy($src, $dst, 'inexistentworkspace');
     }
 
-    /**
-     * @covers Jackalope\Workspace::copy
-     */
     public function testWorkspaceCopyBackend()
     {
         $this->markTestIncomplete('TODO: just do');
