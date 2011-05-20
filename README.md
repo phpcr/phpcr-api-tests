@@ -117,14 +117,6 @@ has its own "root" node and does not influence the other tests.
 To add or adjust fixtures, you can use jackrabbit and the jack.jar tool to
 import and export data: http://github.com/jackalope/jackrabbit-importexport
 See the readme file of jack for details.
-Jack.jar has a default configuration to look for jackrabbit at localhost on
-default port with default username and password.
-To export data in system view, use:
-
-  java -jar /path/to/jack.jar export dump.xml repository-base-xpath=/tests_x_y
-
-Jack dumps the file on one single line. You can format that for better reading:
-
 
 
 ## Note on JCR
