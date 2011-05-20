@@ -46,7 +46,7 @@ class Versioning_15_CreateVersionableNodeTest extends phpcr_suite_baseCase
         $node->setProperty('foo', 'bar');
         $vm->checkin("/tests_version_base/versioned");
         $history = $vm->getVersionHistory("/tests_version_base/versioned");
-        $this->AssertEquals(count($history->getAllVersions()), 2);
+        $this->assertEquals(count($history->getAllVersions()), 2);
     }
 
     /**

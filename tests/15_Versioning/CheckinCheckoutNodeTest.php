@@ -14,21 +14,21 @@ class Versioning_15_CheckinCheckoutNodeTest extends phpcr_suite_baseCase
         parent::setupBeforeClass();
         self::$staticSharedFixture['ie']->import('15_Versioning/base');
     }
-    
+
     public function setUp()
     {
         parent::setUp();
         $this->node = $this->sharedFixture['session']->getNode('/tests_version_base/versionable');
         $this->vm = $this->sharedFixture['session']->getWorkspace()->getVersionManager();
     }
-    
+
     public function testCheckinVersion() {
         $this->vm->checkout("/tests_version_base/versioned");
         $node = $this->sharedFixture['session']->getNode('/tests_version_base/versioned');
         $node->setProperty('foo', 'bar');
         $this->vm->checkin("/tests_version_base/versioned");
         $history = $this->vm->getVersionHistory("/tests_version_base/versioned");
-        $this->AssertEquals(count($history->getAllVersions()), 2);
+        $this->assertEquals(2, count($history->getAllVersions()));
     }
 
     /**
@@ -42,9 +42,22 @@ class Versioning_15_CheckinCheckoutNodeTest extends phpcr_suite_baseCase
         $this->sharedFixture['session']->save();
         $newNode = $this->vm->checkin("/tests_version_base/versioned");
 
+        //try to save a checked in node
         $node->setProperty('foo', 'bar2');
         $this->sharedFixture['session']->save();
 
     }
-    
+
+    public function testCheckpoint() {
+        $this->vm->checkout("/tests_version_base/versioned");
+        $this->vm->checkpoint("/tests_version_base/versioned");
+
+        $node = $this->sharedFixture['session']->getNode('/tests_version_base/versioned');
+
+        $node->setProperty('foo', 'babar');
+        $this->sharedFixture['session']->save();
+        $newNode = $this->vm->checkin("/tests_version_base/versioned");
+
+    }
+
 }
