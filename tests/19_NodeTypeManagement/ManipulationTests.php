@@ -70,7 +70,7 @@ class NodeTypeManagement_19_MoveMethodsTest extends phpcr_suite_baseCase
     }
 
     private $cnd = "
-        <'phpcr'='http://www.doctrine-project.org/phpcr-odm'>
+        <'phpcr'='http://www.doctrine-project.org/projects/phpcr_odm'>
          [phpcr:managed]
           mixin
           - phpcr:alias (string)
