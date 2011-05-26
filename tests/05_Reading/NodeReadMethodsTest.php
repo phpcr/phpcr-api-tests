@@ -305,6 +305,9 @@ class Reading_5_NodeReadMethodsTest extends phpcr_suite_baseCase
         $this->markTestIncomplete('TODO: Figure how to produce this error');
     }
 
+    /**
+     * @group getReferences
+     */
     public function testGetReferencesAll()
     {
         $this->markTestIncomplete('TODO: Implement Node::getReferences');
@@ -322,6 +325,25 @@ class Reading_5_NodeReadMethodsTest extends phpcr_suite_baseCase
         }
     }
 
+    /**
+     * Test that getReferences() on a non-referenced node will return no references
+     * @group getReferences
+     */
+    public function testGetReferencesOnNonReferencedNode()
+    {
+        $this->markTestIncomplete('TODO: Implement Node::getReferences');
+        $target = $this->rootNode->getNode('tests_general_base/numberPropertyNode');
+
+        $iterator = $target->getReferences();
+        $this->assertInstanceOf('Iterator', $iterator);
+
+        //there is no node with reference to numberPropertyNode.
+        $this->assertEquals(0, count($iterator), "Wrong number of references to numberPropertyNode");
+    }
+
+    /**
+     * @group getReferences
+     */
     public function testGetReferencesName()
     {
         $this->markTestIncomplete('TODO: Implement Node::getReferences');
