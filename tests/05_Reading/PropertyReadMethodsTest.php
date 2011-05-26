@@ -413,35 +413,14 @@ class Reading_5_PropertyReadMethodsTest extends phpcr_suite_baseCase
         $this->markTestIncomplete('TODO: This should return -1 but how can I reproduce?');
     }
 
-    /**
-     * @expectedException \PHPCR\ValueFormatException
-     */
-    public function testGetLengthValueFormatExceptionMulti()
+    public function testGetLengthMultivalue()
     {
-        $this->multiProperty->getLength();
+        $this->assertEquals(array(17, 15), $this->multiProperty->getLength());
     }
 
-    public function testGetLengths()
-    {
-        $this->assertEquals(array(17, 15), $this->multiProperty->getLengths());
-    }
-
-    public function testGetLengthsBinary()
+    public function testGetLengthMultivalueBinary()
     {
         $this->markTestIncomplete('TODO: Figure how multivalue binary properties can be set');
-    }
-
-    public function testGetLengthsUnsuccessfull()
-    {
-        $this->markTestIncomplete('TODO: This should return -1 but how can I reproduce?');
-    }
-
-    /**
-     * @expectedException \PHPCR\ValueFormatException
-     */
-    public function testGetLengthsValueFormatExceptionMulti()
-    {
-        $this->property->getLengths();
     }
 
     public function testGetTypeString()
