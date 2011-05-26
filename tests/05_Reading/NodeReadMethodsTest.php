@@ -433,12 +433,14 @@ class Reading_5_NodeReadMethodsTest extends phpcr_suite_baseCase
         $this->assertFalse($this->node->hasProperty('foobar'));
     }
 
-    /**
-     * @expectedException \PHPCR\RepositoryException
-     */
-    public function testHasPropertyRepositoryException()
+    public function testHasPropertyAbsolutePathTrue()
     {
-        $this->assertTrue($this->node->hasProperty('/foobar'));
+        $this->assertTrue($this->node->hasProperty($this->node->getPath().'/jcr:created'));
+    }
+
+    public function testHasPropertyAbsolutePathFalse()
+    {
+        $this->assertFalse($this->node->hasProperty('/foobar'));
     }
 
     public function testHasPropertiesTrue()
