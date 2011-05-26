@@ -248,7 +248,7 @@ class Reading_5_NodeReadMethodsTest extends phpcr_suite_baseCase
         foreach ($iterator as $prop) {
             array_push($props, $prop->getName());
         }
-        $this->assertContains('jcr:created', $props); //TODO: this should have been fixed in current jackrabbit http://issues.apache.org/jira/browse/JCR-2060
+        $this->assertContains('jcr:created', $props);
         $this->assertContains('jcr:primaryType', $props);
     }
 
@@ -443,13 +443,17 @@ class Reading_5_NodeReadMethodsTest extends phpcr_suite_baseCase
 
     public function testHasPropertiesTrue()
     {
-        $this->assertTrue($this->node->hasProperties('index.txt'));
+        $this->assertTrue($this->node->hasProperties());
     }
 
+    /*
+     *
+     * this can not happen, every node has the jcr:primaryType
     public function testHasPropertiesFalse()
     {
         $this->markTestIncomplete('TODO: Figure how to create a node even without jcr:primaryType');
     }
+    */
 
     public function testIterator() {
         $this->assertTraversableImplemented($this->node);
