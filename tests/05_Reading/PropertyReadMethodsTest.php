@@ -232,6 +232,7 @@ class Reading_5_PropertyReadMethodsTest extends phpcr_suite_baseCase
      */
     public function testGetDoubleAndDecimalSame()
     {
+        //TODO: this is wrong, decimal must be a string that can be handled with the bc_math extension
         $prop = $this->node->getNode('numberPropertyNode/jcr:content')->getProperty('longNumber');
         $double = $prop->getDouble();
         $decimal = $prop->getDecimal();
@@ -284,7 +285,7 @@ class Reading_5_PropertyReadMethodsTest extends phpcr_suite_baseCase
     {
         $this->assertTrue($this->property->getBoolean());
         $prop = $this->node->getNode('numberPropertyNode/jcr:content')->getProperty('yesOrNo');
-        $this->assertSame($prop->getValue(), 'true');
+        $this->assertSame('true', $prop->getValue());
         $this->assertTrue($prop->getBoolean());
 
         $prop = $this->sharedFixture['session']->getRootNode()->getNode('tests_general_base/index.txt/jcr:content')->getProperty('zeronumber');
@@ -523,7 +524,7 @@ class Reading_5_PropertyReadMethodsTest extends phpcr_suite_baseCase
             $this->assertEquals('bar', $value);
         }
 
-        $this->assertTrue($results==1, 'Single value iterator must have exactly one entry');
+        $this->assertEquals(1, $results, 'Single value iterator must have exactly one entry');
     }
 
     public function testIteratorMulti() {

@@ -35,7 +35,7 @@ class Query_6_QueryManagerTest extends QueryBaseCase
             $this->assertInstanceOf('PHPCR\NodeInterface', $qnode);
 
             $query = $this->sharedFixture['qm']->getQuery($qnode);
-            $this->assertTrue('PHPCR\Query\QueryInterface', $query);
+            $this->assertInstanceOf('PHPCR\Query\QueryInterface', $query);
         } catch(exception $e) {
             //FIXME: finally?
             $this->sharedFixture['ie']->import('general/query');

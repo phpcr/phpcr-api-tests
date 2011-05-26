@@ -25,7 +25,7 @@ class Reading_5_DirectAccessMethodsTest extends phpcr_suite_baseCase
     {
         $node = $this->sharedFixture['session']->getRootNode();
         $this->assertInstanceOf('PHPCR\NodeInterface', $node);
-        $this->assertEquals($node->getPath(), '/');
+        $this->assertEquals( '/', $node->getPath());
     }
 
     /**
@@ -41,20 +41,20 @@ class Reading_5_DirectAccessMethodsTest extends phpcr_suite_baseCase
     {
         $node = $this->sharedFixture['session']->getItem('/tests_general_base');
         $this->assertInstanceOf('PHPCR\NodeInterface', $node);
-        $this->assertEquals($node->getName(), 'tests_general_base');
+        $this->assertEquals('tests_general_base', $node->getName());
 
         $node = $this->sharedFixture['session']->getItem('/tests_general_base/index.txt');
         $this->assertInstanceOf('PHPCR\NodeInterface', $node);
-        $this->assertEquals($node->getName(), 'index.txt');
+        $this->assertEquals('index.txt', $node->getName());
 
         $prop = $this->sharedFixture['session']->getItem('/tests_general_base/numberPropertyNode/jcr:content/foo');
         $this->assertInstanceOf('PHPCR\PropertyInterface', $prop);
-        $this->assertEquals($prop->getName(), 'foo');
-        $this->assertEquals($prop->getString(), 'bar');
+        $this->assertEquals('foo', $prop->getName());
+        $this->assertEquals('bar', $prop->getString());
         $prop = $this->sharedFixture['session']->getItem('/tests_general_base/numberPropertyNode/jcr:content/specialChars');
-        $this->assertType('PHPCR\PropertyInterface', $prop);
-        $this->assertEquals($prop->getName(), 'specialChars');
-        $this->assertEquals($prop->getString(), 'üöäøéáñâêèàçæëìíîïþ');
+        $this->assertInstanceOf('PHPCR\PropertyInterface', $prop);
+        $this->assertEquals('specialChars', $prop->getName());
+        $this->assertEquals('üöäøéáñâêèàçæëìíîïþ', $prop->getString());
     }
 
     //5.1.3, 5.1.6
@@ -90,8 +90,8 @@ class Reading_5_DirectAccessMethodsTest extends phpcr_suite_baseCase
     {
         $prop = $this->sharedFixture['session']->getProperty('/tests_general_base/idExample/jcr:primaryType');
         $this->assertInstanceOf('PHPCR\PropertyInterface', $prop);
-        $this->assertEquals($prop->getName(), 'jcr:primaryType');
-        $this->assertEquals($prop->getString(), 'nt:file');
+        $this->assertEquals('jcr:primaryType', $prop->getName());
+        $this->assertEquals('nt:file', $prop->getString());
     }
 
     /**
@@ -255,10 +255,10 @@ class Reading_5_DirectAccessMethodsTest extends phpcr_suite_baseCase
     {
         $node = $this->sharedFixture['session']->getNode('/tests_general_base');
         $this->assertTrue($this->sharedFixture['session']->hasCapability('getReferences', $node, array()), 'Does not have getReferences capability');
-        $this->assertTrue($this->sharedFixture['session']->hasCapability('getProperty', $node, array('foo')), '2');
+        $this->assertTrue($this->sharedFixture['session']->hasCapability('getProperty', $node, array('foo')));
         $property = $this->sharedFixture['session']->getProperty('/tests_general_base/numberPropertyNode/jcr:content/foo');
-        $this->assertTrue($this->sharedFixture['session']->hasCapability('getNode', $property, array()), '3');
-        //$this->assertFalse($this->sharedFixture['session']->hasCapability('inexistentXXX', $property, array()), '4');
+        $this->assertTrue($this->sharedFixture['session']->hasCapability('getNode', $property, array()));
+        //$this->assertFalse($this->sharedFixture['session']->hasCapability('inexistentXXX', $property, array()));
         //actually, the repository is not required to know, it can always say that the info can not be determined and return true. this makes me think that this method is pretty useless...
     }
 }

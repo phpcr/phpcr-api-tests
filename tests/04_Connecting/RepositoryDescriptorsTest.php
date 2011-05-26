@@ -30,7 +30,7 @@ class Connecting_4_RepositoryDescriptorsTest extends phpcr_suite_baseCase
         $rep = getRepository($this->sharedFixture['config']);
         $keys = $rep->getDescriptorKeys();
         $this->assertInternalType('array', $keys);
-        $this->assertFalse(empty($keys));
+        $this->assertNotEmpty($keys);
         foreach ($this->expectedDescriptors as $descriptor) {
             $this->assertContains($descriptor, $keys);
         }
@@ -43,7 +43,7 @@ class Connecting_4_RepositoryDescriptorsTest extends phpcr_suite_baseCase
         foreach ($this->expectedDescriptors as $descriptor) {
             $str = $rep->getDescriptor($descriptor);
             $this->assertInternalType('string', $str);
-            $this->assertFalse(empty($str));
+            $this->assertNotEmpty($str);
         }
     }
 

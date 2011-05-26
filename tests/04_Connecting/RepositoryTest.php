@@ -15,7 +15,7 @@ class Connecting_4_RepositoryTest extends phpcr_suite_baseCase
     public function testLoginSession()
     {
         $ses = $this->assertSession($this->sharedFixture['config']);
-        $this->assertEquals($ses->getWorkspace()->getName(), $this->sharedFixture['config']['workspace']);
+        $this->assertEquals($this->sharedFixture['config']['workspace'], $ses->getWorkspace()->getName());
     }
 
     public function testDefaultWorkspace()
@@ -24,7 +24,7 @@ class Connecting_4_RepositoryTest extends phpcr_suite_baseCase
         unset($cfg['workspace']);
         $ses = $this->assertSession($cfg);
         //This will produce a false-positive if your configured workspace is the default one
-        $this->assertNotEquals($ses->getWorkspace()->getName(), $this->sharedFixture['config']['workspace']);
+        $this->assertNotEquals($this->sharedFixture['config']['workspace'], $ses->getWorkspace()->getName());
     }
 
     /** external authentication */
@@ -34,7 +34,7 @@ class Connecting_4_RepositoryTest extends phpcr_suite_baseCase
         unset($cfg['user']);
         unset($cfg['pass']);
         $ses = $this->assertSession($cfg);
-        $this->assertEquals($ses->getWorkspace()->getName(), $this->sharedFixture['config']['workspace']);
+        $this->assertEquals($this->sharedFixture['config']['workspace'], $ses->getWorkspace()->getName());
     }
 
     public function testNoLoginAndWorkspace()
@@ -44,7 +44,7 @@ class Connecting_4_RepositoryTest extends phpcr_suite_baseCase
         unset($cfg['pass']);
         unset($cfg['workspace']);
         $ses = $this->assertSession($cfg);
-        $this->assertNotEquals($ses->getWorkspace()->getName(), $this->sharedFixture['config']['workspace']);
+        $this->assertNotEquals($this->sharedFixture['config']['workspace'], $ses->getWorkspace()->getName());
     }
 
     /**

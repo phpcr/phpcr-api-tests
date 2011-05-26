@@ -80,11 +80,11 @@ class Writing_10_NamespaceRegistryTest extends phpcr_suite_baseCase
         $prefix = 'new_prefix';
         $prefix2 = 'my_prefix';
         $this->nr->registerNamespace($prefix, $uri);
-        $this->assertEquals($this->nr->getPrefix($uri), $prefix);
-        $this->assertEquals($this->nr->getURI($prefix), $uri);
+        $this->assertEquals($prefix, $this->nr->getPrefix($uri));
+        $this->assertEquals($uri, $this->nr->getURI($prefix));
         $this->nr->registerNamespace($prefix2, $uri);
-        $this->assertEquals($this->nr->getPrefix($uri), $prefix2);
-        $this->assertEquals($this->nr->getURI($prefix2), $uri);
+        $this->assertEquals($prefix2, $this->nr->getPrefix($uri));
+        $this->assertEquals($uri, $this->nr->getURI($prefix2));
 
         $this->markTestSkipped('TODO: has this signature changed or is jackrabbit just wrong? expects uri instead of prefix');
         $this->nr->unregisterNamespace($prefix2);
@@ -121,7 +121,7 @@ class Writing_10_NamespaceRegistryTest extends phpcr_suite_baseCase
             $results++;
             $this->assertInternalType('string', $prefix);
             $this->assertInternalType('string', $url);
-            $this->assertEquals($this->nr->getURI($prefix), $url);
+            $this->assertEquals($url, $this->nr->getURI($prefix));
         }
         $this->assertTrue($results>3, 'Not enough namespaces');
     }

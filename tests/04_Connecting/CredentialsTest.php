@@ -26,7 +26,7 @@ class Connecting_4_CredentialsTest extends phpcr_suite_baseCase
     {
         $cr = $this->assertSimpleCredentials(self::CR_USER, self::CR_PASS);
         $pass = $cr->getPassword();
-        $this->assertSame($pass, 'bar');
+        $this->assertSame('bar', $pass);
     }
 
     public function testAttributes()

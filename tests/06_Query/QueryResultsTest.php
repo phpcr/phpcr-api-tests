@@ -81,16 +81,16 @@ class Query_6_QueryResultsTest extends QueryBaseCase
         $nodes->seek($seekNodeName);
         $node = $nodes->current();
 
-        $this->assertType('PHPCR\NodeInterface', $node);
+        $this->assertInstanceOf('PHPCR\NodeInterface', $node);
 
         $prop = $node->getProperty('foo');
-        $this->assertType('PHPCR\PropertyInterface', $prop);
-        $this->assertEquals($prop->getName(), 'foo');
-        $this->assertEquals($prop->getString(), 'bar');
+        $this->assertInstanceOf('PHPCR\PropertyInterface', $prop);
+        $this->assertEquals('foo', $prop->getName());
+        $this->assertEquals('bar', $prop->getString());
 
         $prop = $node->getProperty('specialChars');
-        $this->assertType('PHPCR\PropertyInterface', $prop);
-        $this->assertEquals($prop->getName(), 'specialChars');
-        $this->assertEquals($prop->getString(), 'üöäøéáñâêèàçæëìíîïþ');
+        $this->assertInstanceOf('PHPCR\PropertyInterface', $prop);
+        $this->assertEquals('specialChars', $prop->getName());
+        $this->assertEquals('üöäøéáñâêèàçæëìíîïþ', $prop->getString());
     }
 }

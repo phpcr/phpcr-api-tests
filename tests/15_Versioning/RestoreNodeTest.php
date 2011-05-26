@@ -44,19 +44,19 @@ class Versioning_15_RestoreNodeTest extends phpcr_suite_baseCase
 
         $node = $this->sharedFixture['session']->getNode('/tests_version_base/versioned');
         // Read the OLD value out of the var and fill the cache
-        $this->assertEquals($node->getProperty('foo')->getValue(), 'bar3');
+        $this->assertEquals('bar3', $node->getProperty('foo')->getValue());
 
         // Restore the 1.0 value aka 'bar'
         $this->vm->restore(true, "1.0", "/tests_version_base/versioned");
 
         // Read the NEW value and test if the cache has been cleared.
         $node = $this->sharedFixture['session']->getNode('/tests_version_base/versioned');
-        $this->assertEquals($node->getProperty('foo')->getValue(), 'bar');
+        $this->assertEquals('bar', $node->getProperty('foo')->getValue());
 
          // Read the NEW value out of the var after the session is renewed and the cache clear
         $this->renewSession();
         $node = $this->sharedFixture['session']->getNode('/tests_version_base/versioned');
-        $this->assertEquals($node->getProperty('foo')->getValue(), 'bar');
+        $this->assertEquals('bar', $node->getProperty('foo')->getValue());
 
     }
 

@@ -181,7 +181,7 @@ class Reading_5_NodeReadMethodsTest extends phpcr_suite_baseCase
         foreach ($iterator as $n) {
             array_push($nodes, $n->getName());
         }
-        $this->assertTrue(count($nodes) == 2);
+        $this->assertEquals(2, count($nodes));
         $this->assertContains('idExample', $nodes);
         $this->assertContains('test:namespacedNode', $nodes);
         $this->assertNotContains('jcr:content', $nodes); //jrc:content is not immediate child

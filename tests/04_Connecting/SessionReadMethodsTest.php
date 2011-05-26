@@ -53,7 +53,7 @@ class Reading_4_SessionReadMethodsTest extends phpcr_suite_baseCase
         $cr->setAttribute('foo', 'bar');
         $session = $this->assertSession($this->sharedFixture['config'], $cr);
         $val = $session->getAttribute('foo');
-        $this->assertSame($val, 'bar');
+        $this->assertSame('bar', $val);
     }
 
     //4.5.1
