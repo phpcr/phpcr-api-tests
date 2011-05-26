@@ -28,15 +28,6 @@ class Reading_5_SessionNamespaceRemappingTest extends phpcr_suite_baseCase
         $this->sharedFixture['session']->setNamespacePrefix('xmlwhatever', 'http://www.jcp.org/jcr/mix/1.0');
     }
 
-    /**
-     * @expectedException \PHPCR\NamespaceException
-     */
-    public function testSetNamespaceUnregistered()
-    {
-        $this->markTestSkipped('TODO: jackrabbit just adds the namespace URI if it is not yet existing. Spec tells us "A NamespaceException will also be thrown if the specified uri is not among those registered in the NamespaceRegistry."');
-        //$this->sharedFixture['session']->setNamespacePrefix('whatever', 'http://nonexistent/1.0');
-    }
-
     public function testGetNamespacePrefixes()
     {
         $ret = $this->sharedFixture['session']->getNamespacePrefixes();
