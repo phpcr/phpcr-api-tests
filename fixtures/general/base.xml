@@ -40,10 +40,14 @@
             <sv:property sv:name="jcr:primaryType" sv:type="Name">
                 <sv:value>nt:unstructured</sv:value>
             </sv:property>
-            <sv:property sv:name="jcr:data" sv:type="String">
+            <sv:property sv:name="jcr:data" sv:type="Binary">
                 <sv:value>aDEuIENoYXB0ZXIgMSBUaXRsZQoKCiogZm9vCiogYmFyCioqIGZvbzIKKiogZm9vMwoqIGZvbzAKCnx8IGhlYWRlciB8fCBiYXIgfHwKfCBoIHwgaiB8IAoKW0Zvb3wgaHR0cDovL2xpaXAuY2hdCgp7Y29kZX0KaGVsbG8gd29ybGQKe2NvZGV9CgojIGZvbwojIGIKCgpoMi4gU2VjdGlvbiAxLjEgVGl0bGUKCgpTdWJzZWN0aW9uIDEuMS4xIFRpdGxlCn5+fn5+fn5+fn5+fn5+fn5+fn5+fn4KClNlY3Rpb24gMS4yIFRpdGxlCi0tLS0tLS0tLS0tLS0tLS0tCgpDaGFwdGVyIDIgVGl0bGUKPT09PT09PT09PT09PT09Cg==</sv:value>
             </sv:property>
-            <sv:property sv:name="jcr:lastModified" sv:type="String">
+            <sv:property sv:name="multidata" sv:type="Binary">
+                <sv:value>aDEuIENoYXB0ZXIgMSBUaXRsZQoKCiogZm9vCiogYmFyCioqIGZvbzIKKiogZm9vMwoqIGZvbzAKCnx8IGhlYWRlciB8fCBiYXIgfHwKfCBoIHwgaiB8IAoKW0Zvb3wgaHR0cDovL2xpaXAuY2hdCgp7Y29kZX0KaGVsbG8gd29ybGQKe2NvZGV9CgojIGZvbwojIGIKCgpoMi4gU2VjdGlvbiAxLjEgVGl0bGUKCgpTdWJzZWN0aW9uIDEuMS4xIFRpdGxlCn5+fn5+fn5+fn5+fn5+fn5+fn5+fn4KClNlY3Rpb24gMS4yIFRpdGxlCi0tLS0tLS0tLS0tLS0tLS0tCgpDaGFwdGVyIDIgVGl0bGUKPT09PT09PT09PT09PT09Cg==</sv:value>
+                <sv:value>aDEuIENoYXB0ZXIgMSBUaXRsZQoKCiogZm9vCiogYmFyCioqIGZvbzIKKiogZm9vMwoqIGZvbzAKCnx8IGhlYWRlciB8fCBiYXIgfHwKfCBoIHwgaiB8IAoKW0Zvb3wgaHR0cDovL2xpaXAuY2hdCgp7Y29kZX0KaGVsbG8gd29ybGQKe2NvZGV9CgojIGZvbwojIGIKCgpoMi4gU2VjdGlvbiAxLjEgVGl0bGUKCgpTdWJzZWN0aW9uIDEuMS4xIFRpdGxlCn5+fn5+fn5+fn5+fn5+fn5+fn5+fn4KClNlY3Rpb24gMS4yIFRpdGxlCi0tLS0tLS0tLS0tLS0tLS0tCgpDaGFwdGVyIDIgVGl0bGUKPT09PT09PT09PT09PT09Cg==</sv:value>
+            </sv:property>
+            <sv:property sv:name="jcr:lastModified" sv:type="Date">
                 <sv:value>2009-04-27T13:01:07.472+02:00</sv:value>
             </sv:property>
             <sv:property sv:name="jcr:mimeType" sv:type="String">
@@ -51,6 +55,14 @@
             </sv:property>
             <sv:property sv:name="zeronumber" sv:type="Long">
                 <sv:value>0</sv:value>
+            </sv:property>
+            <sv:property sv:name="mydateprop" sv:type="Date">
+                <sv:value>2011-04-21T14:34:20.431+01:00</sv:value>
+            </sv:property>
+            <sv:property sv:name="multidate" sv:type="Date">
+                <sv:value>2011-04-22T14:34:20.000+01:00</sv:value>
+                <sv:value>2011-10-23T14:34:20.000+01:00</sv:value>
+                <sv:value>2010-10-23T14:34:20.000+01:00</sv:value>
             </sv:property>
         </sv:node>
     </sv:node>
@@ -79,7 +91,7 @@
             <sv:property sv:name="jcr:data" sv:type="String">
                 <sv:value>aDEuIENoYXB0ZXIgMSBUaXRsZQoKCiogZm9vCiogYmFyCioqIGZvbzIKKiogZm9vMwoqIGZvbzAKCnx8IGhlYWRlciB8fCBiYXIgfHwKfCBoIHwgaiB8IAoKW0Zvb3wgaHR0cDovL2xpaXAuY2hdCgp7Y29kZX0KaGVsbG8gd29ybGQKe2NvZGV9CgojIGZvbwojIGIKCgpoMi4gU2VjdGlvbiAxLjEgVGl0bGUKCgpTdWJzZWN0aW9uIDEuMS4xIFRpdGxlCn5+fn5+fn5+fn5+fn5+fn5+fn5+fn4KClNlY3Rpb24gMS4yIFRpdGxlCi0tLS0tLS0tLS0tLS0tLS0tCgpDaGFwdGVyIDIgVGl0bGUKPT09PT09PT09PT09PT09Cg==</sv:value>
             </sv:property>
-            <sv:property sv:name="jcr:lastModified" sv:type="String">
+            <sv:property sv:name="jcr:lastModified" sv:type="Date">
                 <sv:value>2009-04-27T13:01:07.472+02:00</sv:value>
             </sv:property>
 
@@ -184,11 +196,10 @@
             </sv:property>
 
             <sv:property sv:name="jcr:data" sv:type="String">
-
                 <sv:value>aDEuIENoYXB0ZXIgMSBUaXRsZQoKCiogZm9vCiogYmFyCioqIGZvbzIKKiogZm9vMwoqIGZvbzAKCnx8IGhlYWRlciB8fCBiYXIgfHwKfCBoIHwgaiB8IAoKW0Zvb3wgaHR0cDovL2xpaXAuY2hdCgp7Y29kZX0KaGVsbG8gd29ybGQKe2NvZGV9CgojIGZvbwojIGIKCgpoMi4gU2VjdGlvbiAxLjEgVGl0bGUKCgpTdWJzZWN0aW9uIDEuMS4xIFRpdGxlCn5+fn5+fn5+fn5+fn5+fn5+fn5+fn4KClNlY3Rpb24gMS4yIFRpdGxlCi0tLS0tLS0tLS0tLS0tLS0tCgpDaGFwdGVyIDIgVGl0bGUKPT09PT09PT09PT09PT09Cg==</sv:value>
             </sv:property>
 
-            <sv:property sv:name="jcr:lastModified" sv:type="String">
+            <sv:property sv:name="jcr:lastModified" sv:type="Date">
                 <sv:value>2009-04-27T13:01:07.472+02:00</sv:value>
             </sv:property>
 
@@ -202,6 +213,28 @@
 
             <sv:property sv:name="ref" sv:type="Reference">
                 <sv:value>842e61c0-09ab-42a9-87c0-308ccc90e6f4</sv:value>
+            </sv:property>
+
+            <sv:property sv:name="multiref" sv:type="Reference">
+                <sv:value>842e61c0-09ab-42a9-87c0-308ccc90e6f4</sv:value>
+                <sv:value>14e18ef3-be20-4985-bee9-7bb4763b31de</sv:value>
+            </sv:property>
+
+            <sv:property sv:name="invalidweak" sv:type="WeakReference">
+                <sv:value>842e61c0-09ab-42a9-87c0-000000000000</sv:value>
+            </sv:property>
+
+            <sv:property sv:name="invalidPath" sv:type="Path">
+                <sv:value>/not/existing</sv:value>
+            </sv:property>
+
+            <sv:property sv:name="propertyPath" sv:type="Path">
+                <sv:value>../valProperty</sv:value>
+            </sv:property>
+
+            <sv:property sv:name="multiPropertyPath" sv:type="Path">
+                <sv:value>../valProperty</sv:value>
+                <sv:value>../../../index.txt/jcr:content/mydateprop</sv:value>
             </sv:property>
 
             <sv:property sv:name="yesOrNo" sv:type="String">
