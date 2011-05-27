@@ -86,7 +86,14 @@ class Writing_10_NamespaceRegistryTest extends phpcr_suite_baseCase
         $this->assertEquals($prefix2, $this->nr->getPrefix($uri));
         $this->assertEquals($uri, $this->nr->getURI($prefix2));
 
-        $this->markTestSkipped('TODO: has this signature changed or is jackrabbit just wrong? expects uri instead of prefix');
+        $session = $this->renewSession();
+        $nr = $session->getWorkspace()->getNamespaceRegistry();
+        $this->assertEquals($uri, $nr->getURI($prefix2));
+
+
+        if ($this->nr instanceof Jackalope\NamespaceRegistry) {
+            $this->markTestSkipped('Jackrabbit does not support unregistering namespaces');
+        }
         $this->nr->unregisterNamespace($prefix2);
         $this->assertNotContains($prefix2, $this->nr->getPrefixes());
         $this->assertNotContains($uri, $this->nr->getURIs());
