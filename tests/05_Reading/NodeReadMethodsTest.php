@@ -310,7 +310,6 @@ class Reading_5_NodeReadMethodsTest extends phpcr_suite_baseCase
      */
     public function testGetReferencesAll()
     {
-        $this->markTestIncomplete('TODO: Implement Node::getReferences');
         $target = $this->rootNode->getNode('tests_general_base/idExample');
         $source = $this->rootNode->getProperty('tests_general_base/numberPropertyNode/jcr:content/ref');
 
@@ -331,7 +330,6 @@ class Reading_5_NodeReadMethodsTest extends phpcr_suite_baseCase
      */
     public function testGetReferencesOnNonReferencedNode()
     {
-        $this->markTestIncomplete('TODO: Implement Node::getReferences');
         $target = $this->rootNode->getNode('tests_general_base/numberPropertyNode');
 
         $iterator = $target->getReferences();
@@ -346,22 +344,22 @@ class Reading_5_NodeReadMethodsTest extends phpcr_suite_baseCase
      */
     public function testGetReferencesName()
     {
-        $this->markTestIncomplete('TODO: Implement Node::getReferences');
         $target = $this->rootNode->getNode('tests_general_base/idExample');
-        $source = $this->rootNode->getNode('tests_general_base/numberPropertyNode/jcr:content');
+        $source = $this->rootNode->getProperty('tests_general_base/numberPropertyNode/jcr:content/ref');
 
         $iterator = $target->getReferences('ref');
         $this->assertInstanceOf('Iterator', $iterator);
 
         //there is exactly one node with reference to idExample.
         $this->assertEquals(1, count($iterator), "Wrong number of references with name ref to idExample");
-        foreach ($iterator as $node) {
+        foreach ($iterator as $prop) {
             $this->assertInstanceOf('\PHPCR\PropertyInterface', $prop);
             $this->assertEquals($source, $prop);
-        }
 
-        $this->assertInstanceOf('PHPCR\NodeInterface', $reference);
-        $this->assertEquals($reference, $target);
+            $reference = $prop->getNode();
+            $this->assertInstanceOf('PHPCR\NodeInterface', $reference);
+            $this->assertEquals($reference, $target);
+        }
     }
 
     public function testGetReferencesNonexistingName()
