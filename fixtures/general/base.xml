@@ -229,12 +229,12 @@
             </sv:property>
 
             <sv:property sv:name="propertyPath" sv:type="Path">
-                <sv:value>../valProperty</sv:value>
+                <sv:value>foo</sv:value>
             </sv:property>
 
             <sv:property sv:name="multiPropertyPath" sv:type="Path">
-                <sv:value>../valProperty</sv:value>
-                <sv:value>../../../index.txt/jcr:content/mydateprop</sv:value>
+                <sv:value>foo</sv:value>
+                <sv:value>../../index.txt/jcr:content/mydateprop</sv:value>
             </sv:property>
 
             <sv:property sv:name="yesOrNo" sv:type="String">

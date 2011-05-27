@@ -100,9 +100,6 @@ class Reading_5_PropertyReadMethodsTest extends phpcr_suite_baseCase
 
     /*** property specific methods ***/
 
-    /**
-     * @group pick
-     */
     public function testGetValue()
     {
         $this->assertEquals(\PHPCR\PropertyType::DATE, $this->dateProperty->getType(), 'Expecting date type');
@@ -370,11 +367,14 @@ class Reading_5_PropertyReadMethodsTest extends phpcr_suite_baseCase
         $weak->getNode();
     }
 
-    /** PATH property, the path references another property */
+    /**
+     * PATH property, the path references another property
+     */
     public function testGetProperty()
     {
         $propertyPath = $this->node->getNode('numberPropertyNode/jcr:content')->getProperty('propertyPath');
         $property = $propertyPath->getProperty();
+        $this->assertEquals('/tests_general_base/numberPropertyNode/jcr:content/foo', $property->getPath());
         $this->assertSame($this->valProperty, $property);
     }
 
@@ -382,7 +382,14 @@ class Reading_5_PropertyReadMethodsTest extends phpcr_suite_baseCase
     {
         $propertyPath = $this->node->getNode('numberPropertyNode/jcr:content')->getProperty('multiPropertyPath');
         $properties = $propertyPath->getProperty();
-        $expect = array($this->valProperty, $this->dateProperty);
+        $this->assertEquals(2, count($properties));
+        foreach($properties as $prop) {
+            $this->assertInstanceOf('PHPCR\PropertyInterface', $prop);
+        }
+        $this->assertEquals('/tests_general_base/numberPropertyNode/jcr:content/foo', $properties[0]->getPath());
+        $this->assertEquals('/tests_general_base/index.txt/jcr:content/mydateprop', $properties[1]->getPath());
+
+        $expected = array($this->valProperty, $this->dateProperty);
         $this->assertSame($expected, $properties);
     }
 
