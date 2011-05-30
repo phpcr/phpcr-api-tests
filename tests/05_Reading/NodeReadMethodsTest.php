@@ -363,26 +363,81 @@ class Reading_5_NodeReadMethodsTest extends phpcr_suite_baseCase
         }
     }
 
+    /**
+     * @group getReferences
+     */
     public function testGetReferencesNonexistingName()
     {
-        $this->markTestIncomplete('TODO: Implement Node::getReferences');
         $target = $this->rootNode->getNode('tests_general_base/idExample');
         $iterator = $target->getReferences('notexisting');
         $this->assertInstanceOf('Iterator', $iterator);
         $this->assertEquals(0, count($iterator), "Wrong number of references with name notexisting to idExample");
     }
 
+    /**
+     * @group getWeakReferences
+     */
     public function testGetWeakReferencesAll()
     {
-        $this->markTestIncomplete('TODO: Have a weakly referenced node');
-        $iterator = $this->node->getWeakReferences();
+        $target = $this->rootNode->getNode('tests_general_base/idExample/jcr:content/weakreference_target');
+        $source[] = $this->rootNode->getProperty('tests_general_base/idExample/jcr:content/weakreference_source1/ref1');
+        $source[] = $this->rootNode->getProperty('tests_general_base/idExample/jcr:content/weakreference_source2/ref2');
+
+        $iterator = $target->getWeakReferences();
         $this->assertInstanceOf('Iterator', $iterator);
+
+        $this->assertEquals(2, count($iterator), "Wrong number of weak references to weakreference_target");
+        foreach ($iterator as $prop) {
+            $this->assertInstanceOf('\PHPCR\PropertyInterface', $prop);
+            $this->assertTrue(in_array($prop, $source));
+        }
     }
 
+    /**
+     * @group getWeakReferences
+     */
     public function testGetWeakReferencesName()
     {
-        $this->markTestIncomplete('TODO: Have a weakly referenced node and referencer with name');
+        $target = $this->rootNode->getNode('tests_general_base/idExample/jcr:content/weakreference_target');
+        $source = $this->rootNode->getProperty('tests_general_base/idExample/jcr:content/weakreference_source1/ref1');
+
+        $iterator = $target->getWeakReferences('ref1');
+        $this->assertInstanceOf('Iterator', $iterator);
+
+        $this->assertEquals(1, count($iterator), "Wrong number of weak references to weakreference_target");
+        foreach ($iterator as $prop) {
+            $this->assertInstanceOf('\PHPCR\PropertyInterface', $prop);
+            $this->assertEquals($prop, $source);
+        }
     }
+
+    /**
+     * @group getWeakReferences
+     */
+    public function testGetWeakReferencesNonExistingName()
+    {
+        $target = $this->rootNode->getNode('tests_general_base/idExample/jcr:content/weakreference_target');
+
+        $iterator = $target->getWeakReferences('unexisting_name');
+        $this->assertInstanceOf('Iterator', $iterator);
+
+        $this->assertEquals(0, count($iterator), "Wrong number of weak references to weakreference_target");
+    }
+
+    /**
+     * @group getWeakReferences
+     */
+    public function testGetWeakReferencesOnNonReferencedNode()
+    {
+        $target = $this->rootNode->getNode('tests_general_base/numberPropertyNode');
+
+        $iterator = $target->getReferences();
+        $this->assertInstanceOf('Iterator', $iterator);
+
+        //there is no node with reference to numberPropertyNode.
+        $this->assertEquals(0, count($iterator), "Wrong number of references to numberPropertyNode");
+    }
+
     public function testGetSharedSetUnreferenced()
     {
         $iterator = $this->node->getSharedSet();
