@@ -311,16 +311,17 @@ class Reading_5_NodeReadMethodsTest extends phpcr_suite_baseCase
     public function testGetReferencesAll()
     {
         $target = $this->rootNode->getNode('tests_general_base/idExample');
-        $source = $this->rootNode->getProperty('tests_general_base/numberPropertyNode/jcr:content/ref');
+        $source[] = $this->rootNode->getProperty('tests_general_base/numberPropertyNode/jcr:content/ref');
+        $source[] = $this->rootNode->getProperty('tests_general_base/numberPropertyNode/jcr:content/multiref');
 
         $iterator = $target->getReferences();
         $this->assertInstanceOf('Iterator', $iterator);
 
-        //there is exactly one node with reference to idExample.
-        $this->assertEquals(1, count($iterator), "Wrong number of references to idExample");
+        //there are two nodes with reference to idExample.
+        $this->assertEquals(2, count($iterator), "Wrong number of references to idExample");
         foreach ($iterator as $prop) {
             $this->assertInstanceOf('\PHPCR\PropertyInterface', $prop);
-            $this->assertEquals($source, $prop);
+            $this->assertTrue(in_array($prop, $source));
         }
     }
 
