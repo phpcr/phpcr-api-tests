@@ -23,7 +23,7 @@ class Writing_10_MixinReferenceableTest extends phpcr_suite_baseCase
     /**
      * Test that a node without mix:referenceable type cannot be referenced
      * @expectedException PHPCR\ValueFormatException
-     * @expectedExceptionMessage Node /tests_nodetype_base/nonreferenceable/jcr:content is not referencable
+     * @expectedExceptionMessage Node /tests_nodetype_base/nonreferenceable is not referencable
      */
     public function testReferenceOnNonReferenceableNode()
     {
@@ -42,7 +42,7 @@ class Writing_10_MixinReferenceableTest extends phpcr_suite_baseCase
     public function testReferenceOnNewlyReferenceableNode()
     {
         // Load a non-referenceable node and make it referenceable
-        $referenced_node = $this->sharedFixture['session']->getNode('/tests_nodetype_base/nodetogetref');
+        $referenced_node = $this->sharedFixture['session']->getNode('/tests_nodetype_base/idExample');
         $referenced_node->addMixin('mix:referenceable');
         $this->sharedFixture['session']->save();
 
