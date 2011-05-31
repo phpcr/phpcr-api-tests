@@ -14,7 +14,7 @@ class Query_6_RowIteratorTest extends QueryBaseCase
         parent::setUp();
 
         $this->rowIterator = $this->query->execute()->getRows();
-        $this->assertEquals(4, count($this->rowIterator));
+        $this->assertEquals(7, count($this->rowIterator));
     }
 
     public function testIterator()
@@ -31,12 +31,12 @@ class Query_6_RowIteratorTest extends QueryBaseCase
             }
         }
 
-        $this->assertEquals(12, $count);
+        $this->assertEquals(21, $count);
     }
 
     public function testSeekable()
     {
-        $position = 1;
+        $position = 2;
 
         $rows = array();
         foreach ($this->rowIterator as $row) {

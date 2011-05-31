@@ -49,7 +49,7 @@ class Query_6_QueryResultsTest extends QueryBaseCase
             $this->assertInstanceOf('PHPCR\NodeInterface', $node);
             $count++;
         }
-        $this->assertEquals(4, $count);
+        $this->assertEquals(7, $count);
     }
 
     public function testGetSelectorNames()
@@ -71,7 +71,7 @@ class Query_6_QueryResultsTest extends QueryBaseCase
                 $count++;
             }
         }
-        $this->assertEquals(12, $count);
+        $this->assertEquals(21, $count);
     }
 
     public function testReadPropertyContentFromResults()
