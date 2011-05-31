@@ -69,6 +69,34 @@ class NodeTypeManagement_19_MoveMethodsTest extends phpcr_suite_baseCase
         $types = $ntm->registerNodeTypesCnd($this->cnd, false);
     }
 
+    public function testPrimaryItem()
+    {
+        $this->checkJackalope();
+
+        // Create the node type
+        $session = $this->sharedFixture['session'];
+        $ntm = $session->getWorkspace()->getNodeTypeManager();
+        $ntm->registerNodeTypesCnd($this->primary_item_cnd, true);
+
+        // Create a node of that type
+        $root = $session->getRootNode();
+
+        if ($root->hasNode('test_node')) {
+            $node = $root->getNode('test_node');
+            $node->remove();
+            $session->save();
+        }
+
+        $node = $root->addNode('test_node', 'phpcr:primary_item_test');
+        $node->setProperty("phpcr:content", 'test');
+        $session->save();
+
+        // Check the primary item of the new node
+        $primary = $node->getPrimaryItem();
+        $this->assertInstanceOf('PHPCR\ItemInterface', $node);
+        $this->assertEquals('phpcr:content', $primary->getName());
+    }
+
     private $cnd = "
         <'phpcr'='http://www.doctrine-project.org/projects/phpcr_odm'>
          [phpcr:managed]
@@ -79,4 +107,10 @@ class NodeTypeManagement_19_MoveMethodsTest extends phpcr_suite_baseCase
           - phpcr:prop (string)
           ";
 
+    private $primary_item_cnd = "
+        <'phpcr'='http://www.doctrine-project.org/projects/phpcr_odm'>
+        [phpcr:primary_item_test]
+        - phpcr:content (string)
+        primary
+        ";
 }
