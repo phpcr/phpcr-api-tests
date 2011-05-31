@@ -253,13 +253,8 @@ class Reading_5_NodeReadMethodsTest extends phpcr_suite_baseCase
     }
 
     /**
-     * @expectedException \PHPCR\RepositoryError
+     * @group getPrimaryItem
      */
-    public function testGetPropertiesRepositoryError()
-    {
-        $this->markTestIncomplete('TODO: Figure how to produce this error');
-    }
-
     public function testGetPrimaryItem()
     {
         $node = $this->node->getNode('index.txt')->getPrimaryItem();
@@ -269,6 +264,7 @@ class Reading_5_NodeReadMethodsTest extends phpcr_suite_baseCase
 
     /**
      * @expectedException \PHPCR\ItemNotFoundException
+     * @group getPrimaryItem
      */
     public function testGetPrimaryItemItemNotFound()
     {
@@ -277,9 +273,13 @@ class Reading_5_NodeReadMethodsTest extends phpcr_suite_baseCase
 
     /**
      * @expectedException \PHPCR\RepositoryException
+     * @group getPrimaryItem
      */
     public function testGetPrimaryItemRepositoryException()
     {
+        // To cause this error, an exception must be thrown by one of the following calls:
+        // Session.getWorkspace, Workspace.getNodeTypeManager, NodeTypeManager.getPrimaryNodeType
+        // NodeType.getPrimaryItemName, Session.getItem
         $this->markTestIncomplete('TODO: Figure how to produce this error');
     }
 
