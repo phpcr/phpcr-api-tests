@@ -9,8 +9,24 @@ require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
 class Reading_5_BinaryReadMethodsTest extends phpcr_suite_baseCase
 {
     protected $node;
-    public $binary;
-    private $binarystring = 'aDEuIENoYXB0ZXIgMSBUaXRsZQoKCiogZm9vCiogYmFyCioqIGZvbzIKKiogZm9vMwoqIGZvbzAKCnx8IGhlYWRlciB8fCBiYXIgfHwKfCBoIHwgaiB8IAoKW0Zvb3wgaHR0cDovL2xpaXAuY2hdCgp7Y29kZX0KaGVsbG8gd29ybGQKe2NvZGV9CgojIGZvbwojIGIKCgpoMi4gU2VjdGlvbiAxLjEgVGl0bGUKCgpTdWJzZWN0aW9uIDEuMS4xIFRpdGxlCn5+fn5+fn5+fn5+fn5+fn5+fn5+fn4KClNlY3Rpb24gMS4yIFRpdGxlCi0tLS0tLS0tLS0tLS0tLS0tCgpDaGFwdGVyIDIgVGl0bGUKPT09PT09PT09PT09PT09Cg==';
+    private $binarystring = 'aDEuIENoYXB0ZXIgMSBUaXRsZQoKKiBmb28KKiBiYXIKKiogZm9vMgoqKiBmb28zCiogZm9vMAoKfHwgaGVhZGVyIHx8IGJhciB8fAp8IGggfCBqIHwKCntjb2RlfQpoZWxsbyB3b3JsZAp7Y29kZX0KCiMgZm9vCg==';
+    private $decodedstring = 'h1. Chapter 1 Title
+
+* foo
+* bar
+** foo2
+** foo3
+* foo0
+
+|| header || bar ||
+| h | j |
+
+{code}
+hello world
+{code}
+
+# foo
+';
 
     static public function  setupBeforeClass()
     {
@@ -24,18 +40,37 @@ class Reading_5_BinaryReadMethodsTest extends phpcr_suite_baseCase
         parent::setUp();
         $this->node = $this->sharedFixture['session']->getRootNode()->getNode('tests_general_base/numberPropertyNode/jcr:content');
         $this->binaryProperty = $this->node->getProperty('jcr:data');
-        $this->binary = $this->binaryProperty->getBinary();
-        $this->assertTrue(is_resource($this->binary));
+        $this->assertEquals(PHPCR\PropertyType::BINARY, $this->binaryProperty->getType());
     }
 
     public function testReadBinaryValue()
     {
-        $this->assertEquals($this->binarystring, stream_get_contents($this->binary));
+        $binary = $this->binaryProperty->getBinary();
+        $this->assertTrue(is_resource($binary));
+        $this->assertEquals($this->decodedstring, stream_get_contents($binary));
     }
 
     public function testGetLength()
     {
         $size = $this->binaryProperty->getLength();
-        $this->assertEquals(392, $size);
+        $this->assertEquals(strlen($this->decodedstring), $size);
+    }
+
+    public function testIterateBinaryValues()
+    {
+        foreach($this->binaryProperty as $value) {
+            $this->assertEquals($this->decodedstring, stream_get_contents($value));
+        }
+    }
+
+    public function testGetLengthMultivalue()
+    {
+        $node = $this->sharedFixture['session']->getRootNode()->getNode('tests_general_base/index.txt/jcr:content');
+        $binaryMulti = $node->getProperty('multidata');
+        $sizes = $binaryMulti->getLength();
+        $this->assertInternalType('array', $sizes);
+        foreach($sizes as $size) {
+            $this->assertEquals(strlen($this->decodedstring), $size);
+        }
     }
 }

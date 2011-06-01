@@ -398,23 +398,13 @@ class Reading_5_PropertyReadMethodsTest extends phpcr_suite_baseCase
         $this->assertEquals(29, $this->dateProperty->getLength());
     }
 
-    public function testGetLengthBinary()
-    {
-        $property = $this->node->getProperty('index.txt/jcr:content/jcr:data');
-        $this->assertSame(\PHPCR\PropertyType::BINARY, $property->getType(), 'expecting binary property type');
-        $this->assertEquals(292, $property->getLength());
-    }
+    //binary length is tested in BinaryReadMethodsTest
 
-    // testGetLengthUnsuccessfull (return -1 on getLength "should never happen" so no test
+    // testGetLengthUnsuccessfull (return -1 on getLength) "should never happen" so no test
 
     public function testGetLengthMultivalue()
     {
         $this->assertEquals(array(17, 15), $this->multiProperty->getLength());
-    }
-
-    public function testGetLengthMultivalueBinary()
-    {
-        $this->markTestIncomplete('TODO: Figure out how the fixture must look for jackrabbit to import multivalue binaries');
     }
 
     //FIXME: we most definitely should not create properties here but read existing ones!
