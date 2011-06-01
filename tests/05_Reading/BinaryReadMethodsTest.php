@@ -47,6 +47,31 @@ hello world
         $binary = $this->binaryProperty->getBinary();
         $this->assertTrue(is_resource($binary));
         $this->assertEquals($this->decodedstring, stream_get_contents($binary));
+
+        // stream must start when getting again
+        $binary = $this->binaryProperty->getBinary();
+        $this->assertTrue(is_resource($binary));
+        $this->assertEquals($this->decodedstring, stream_get_contents($binary), 'Stream must begin at start again on second read');
+
+        // stream must not be the same
+        fclose($binary);
+        $binary = $this->binaryProperty->getBinary();
+        $this->assertTrue(is_resource($binary));
+        $this->assertEquals($this->decodedstring, stream_get_contents($binary), 'Stream must be different for each call, fclose should not matter');
+    }
+
+    public function testIterateBinaryValue()
+    {
+        foreach($this->binaryProperty as $value) {
+            $this->assertEquals($this->decodedstring, stream_get_contents($value));
+        }
+    }
+
+    public function testReadBinaryValueAsString()
+    {
+        $s = $this->binaryProperty->getString();
+        $this->assertInternalType('string', $s);
+        $this->assertEquals($this->decodedstring, $s);
     }
 
     public function testGetLength()
@@ -64,14 +89,22 @@ hello world
         $vals = $binaryMulti->getValue();
         $this->assertInternalType('array', $vals);
         foreach($vals as $value) {
+            $this->assertTrue(is_resource($value));
             $this->assertEquals($this->decodedstring, stream_get_contents($value));
         }
     }
 
-    public function testIterateBinaryValues()
+    public function testReadBinaryValuesAsString()
     {
-        foreach($this->binaryProperty as $value) {
-            $this->assertEquals($this->decodedstring, stream_get_contents($value));
+        $node = $this->sharedFixture['session']->getRootNode()->getNode('tests_general_base/index.txt/jcr:content');
+        $binaryMulti = $node->getProperty('multidata');
+        $this->assertTrue($binaryMulti->isMultiple());
+        $this->assertEquals(\PHPCR\PropertyType::BINARY, $binaryMulti->getType());
+        $vals = $binaryMulti->getString();
+        $this->assertInternalType('array', $vals);
+        foreach($vals as $value) {
+            $this->assertInternalType('string', $value);
+            $this->assertEquals($this->decodedstring, $value);
         }
     }
 
