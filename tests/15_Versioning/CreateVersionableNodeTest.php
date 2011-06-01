@@ -31,7 +31,9 @@ class Versioning_15_CreateVersionableNodeTest extends phpcr_suite_baseCase
         }
 
         $this->assertContains("mix:versionable", $mixins, "Node doesn't have mix:versionable mixin");
-        $this->sharedFixture['session']->save();
+        // For now, the session must be renewed otherwise the node is read from cache and will not have
+        // the jcr:isCheckedOut property. This is not the expected behaviour.
+        $this->saveAndRenewSession();
         //get the node again from the server
         $this->node = $this->sharedFixture['session']->getNode('/tests_version_base/versionable');
         $this->assertContains("mix:versionable", $mixins, "Node doesn't have mix:versionable mixin");
