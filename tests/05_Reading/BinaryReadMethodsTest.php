@@ -9,7 +9,6 @@ require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
 class Reading_5_BinaryReadMethodsTest extends phpcr_suite_baseCase
 {
     protected $node;
-    private $binarystring = 'aDEuIENoYXB0ZXIgMSBUaXRsZQoKKiBmb28KKiBiYXIKKiogZm9vMgoqKiBmb28zCiogZm9vMAoKfHwgaGVhZGVyIHx8IGJhciB8fAp8IGggfCBqIHwKCntjb2RlfQpoZWxsbyB3b3JsZAp7Y29kZX0KCiMgZm9vCg==';
     private $decodedstring = 'h1. Chapter 1 Title
 
 * foo
@@ -54,6 +53,19 @@ hello world
     {
         $size = $this->binaryProperty->getLength();
         $this->assertEquals(strlen($this->decodedstring), $size);
+    }
+
+    public function testReadBinaryValues()
+    {
+        $node = $this->sharedFixture['session']->getRootNode()->getNode('tests_general_base/index.txt/jcr:content');
+        $binaryMulti = $node->getProperty('multidata');
+        $this->assertTrue($binaryMulti->isMultiple());
+        $this->assertEquals(\PHPCR\PropertyType::BINARY, $binaryMulti->getType());
+        $vals = $binaryMulti->getValue();
+        $this->assertInternalType('array', $vals);
+        foreach($vals as $value) {
+            $this->assertEquals($this->decodedstring, stream_get_contents($value));
+        }
     }
 
     public function testIterateBinaryValues()
