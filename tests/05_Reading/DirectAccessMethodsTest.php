@@ -184,9 +184,6 @@ class Reading_5_DirectAccessMethodsTest extends phpcr_suite_baseCase
         $this->sharedFixture['session']->propertyExists('//');
     }
 
-    /**
-     * @group x
-     */
     public function testGetNodeByIdentifier()
     {
         $node = $this->sharedFixture['session']->getNodeByIdentifier('842e61c0-09ab-42a9-87c0-308ccc90e6f4');
