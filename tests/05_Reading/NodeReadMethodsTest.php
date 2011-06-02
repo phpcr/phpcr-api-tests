@@ -252,6 +252,33 @@ class Reading_5_NodeReadMethodsTest extends phpcr_suite_baseCase
         $this->assertContains('jcr:primaryType', $props);
     }
 
+    public function testGetPropertiesValuesAll()
+    {
+        $node = $this->rootNode->getNode('/tests_general_base/idExample/jcr:content/weakreference_source1');
+        $props = $node->getPropertiesValues();
+        $this->assertInternalType('array', $props);
+        $this->assertArrayHasKey('ref1', $props);
+        $this->assertInstanceOf('PHPCR\NodeInterface', $props['ref1']);
+    }
+
+    public function testGetPropertiesValuesAllNoDereference()
+    {
+        $node = $this->rootNode->getNode('/tests_general_base/idExample/jcr:content/weakreference_source1');
+        $props = $node->getPropertiesValues(null,false);
+        $this->assertInternalType('array', $props);
+        $this->assertArrayHasKey('ref1', $props);
+        $this->assertEquals('13543fc6-1abf-4708-bfcc-e49511754b40', $props['ref1']);
+    }
+
+    public function testGetPropertiesValuesGlob()
+    {
+        $node = $this->rootNode->getNode('/tests_general_base/idExample/jcr:content/weakreference_source1');
+        $props = $node->getPropertiesValues("jcr:*");
+        $this->assertInternalType('array', $props);
+        $this->assertArrayHasKey('jcr:primaryType', $props);
+        $this->assertEquals(1, count($props));
+    }
+
     /**
      * @group getPrimaryItem
      */
