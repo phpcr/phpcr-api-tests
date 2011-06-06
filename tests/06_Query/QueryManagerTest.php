@@ -29,6 +29,10 @@ class Query_6_QueryManagerTest extends QueryBaseCase
 
     public function testGetQuery()
     {
+        if ($this->sharedFixture['session'] instanceof \Jackalope\Session) {
+            $this->markTestSkipped('QueryManager.getQuery is not yet implemented in Jackalope');
+        }
+
         $this->sharedFixture['ie']->import('general/query');
         try {
             $qnode = $this->sharedFixture['session']->getRootNode()->getNode('queryNode');
@@ -48,6 +52,10 @@ class Query_6_QueryManagerTest extends QueryBaseCase
      */
     public function testGetQueryInvalid()
     {
+        if ($this->sharedFixture['session'] instanceof \Jackalope\Session) {
+            $this->markTestSkipped('QueryManager.getQuery is not yet implemented in Jackalope');
+        }
+
         $this->sharedFixture['qm']->getQuery($this->sharedFixture['session']->getRootNode());
     }
 

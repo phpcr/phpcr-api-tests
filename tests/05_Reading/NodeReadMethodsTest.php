@@ -467,6 +467,10 @@ class Reading_5_NodeReadMethodsTest extends phpcr_suite_baseCase
 
     public function testGetSharedSetUnreferenced()
     {
+        if ($this->sharedFixture['session'] instanceof \Jackalope\Session) {
+            $this->markTestSkipped('Node.getSharedSet is not yet implemented in Jackalope');
+        }
+
         $iterator = $this->node->getSharedSet();
         $this->assertInstanceOf('Iterator', $iterator);
         $this->assertTrue($iterator->valid());
