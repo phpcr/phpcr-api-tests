@@ -124,6 +124,18 @@ class Writing_10_SetPropertyMethodsTest extends phpcr_suite_baseCase
         $this->assertEquals('abc', $prop->getString());
     }
 
+    public function testRemoveProperty()
+    {
+        $session = $this->sharedFixture['session'];
+        $this->assertTrue($session->propertyExists($this->propPath));
+
+        $node = $session->getNode($this->nodePath);
+        $node->setProperty('longNumber', null);
+
+        $this->saveAndRenewSession();
+        $this->assertFalse($session->propertyExists($this->propPath));
+    }
+
     //TODO: is this all creation modes? the types are tested in SetPropertyTypes
 
     //TODO: Session::hasPendingChanges
