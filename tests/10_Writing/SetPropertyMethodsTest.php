@@ -116,7 +116,7 @@ class Writing_10_SetPropertyMethodsTest extends phpcr_suite_baseCase
         $this->assertTrue($session->nodeExists($this->nodePath . '/child'));
         $this->assertTrue($session->propertyExists($this->nodePath . '/child/p'));
 
-        $node = $this->sharedFixture['session']->getNode($this->nodePath . '/child');
+        $node = $session->getNode($this->nodePath . '/child');
         $prop = $node->getProperty('p');
 
         $this->assertInstanceOf('\PHPCR\PropertyInterface', $prop);
