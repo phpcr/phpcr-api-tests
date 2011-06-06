@@ -9,6 +9,8 @@ require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
  */
 class Writing_10_SetPropertyMethodsTest extends phpcr_suite_baseCase
 {
+    protected $nodePath = '/tests_nodetype_base/numberPropertyNode/jcr:content';
+    protected $propPath = '/tests_nodetype_base/numberPropertyNode/jcr:content/longNumber';
 
     static public function setupBeforeClass()
     {
@@ -19,8 +21,8 @@ class Writing_10_SetPropertyMethodsTest extends phpcr_suite_baseCase
     public function setUp()
     {
         parent::setUp();
-        $this->node = $this->sharedFixture['session']->getNode('/tests_nodetype_base/numberPropertyNode/jcr:content');
-        $this->property = $this->sharedFixture['session']->getProperty('/tests_nodetype_base/numberPropertyNode/jcr:content/longNumber');
+        $this->node = $this->sharedFixture['session']->getNode($this->nodePath);
+        $this->property = $this->sharedFixture['session']->getProperty($this->propPath);
     }
 
     /**
@@ -29,7 +31,10 @@ class Writing_10_SetPropertyMethodsTest extends phpcr_suite_baseCase
     public function testSetValue()
     {
         $this->property->setValue(1024);
-        $this->assertEquals(1024, $this->property->getLong());
+
+        $this->saveAndRenewSession();
+        $prop = $this->sharedFixture['session']->getProperty($this->propPath);
+        $this->assertEquals(1024, $prop->getLong());
     }
 
     /**
@@ -39,8 +44,11 @@ class Writing_10_SetPropertyMethodsTest extends phpcr_suite_baseCase
     {
         $this->assertTrue($this->node->hasProperty('longNumber'));
         $property = $this->node->setProperty('longNumber', 1024);
-        $this->assertInstanceOf('PHPCR\PropertyInterface', $property);
-        $this->assertEquals(1024, $this->node->getProperty('longNumber')->getLong());
+
+        $this->saveAndRenewSession();
+        $prop = $this->sharedFixture['session']->getNode($this->nodePath)->getProperty('longNumber');
+        $this->assertInstanceOf('PHPCR\PropertyInterface', $prop);
+        $this->assertEquals(1024, $prop->getLong());
     }
 
 
@@ -50,8 +58,11 @@ class Writing_10_SetPropertyMethodsTest extends phpcr_suite_baseCase
     public function testSetPropertyNew()
     {
         $property = $this->node->setProperty('newLongNumber', 1024);
-        $this->assertInstanceOf('PHPCR\PropertyInterface', $property);
-        $this->assertEquals(1024, $this->node->getProperty('newLongNumber')->getLong());
+
+        $this->saveAndRenewSession();
+        $prop = $this->sharedFixture['session']->getNode($this->nodePath)->getProperty('newLongNumber');
+        $this->assertInstanceOf('PHPCR\PropertyInterface', $prop);
+        $this->assertEquals(1024, $prop->getLong());
     }
 
     /**
@@ -61,8 +72,11 @@ class Writing_10_SetPropertyMethodsTest extends phpcr_suite_baseCase
     public function testSetPropertyWithType()
     {
         $this->node->setProperty('longNumber', 1024.5, \PHPCR\PropertyType::LONG);
-        $this->assertEquals(1024, $this->node->getProperty('longNumber')->getLong());
-        $this->assertEquals(\PHPCR\PropertyType::LONG, $this->node->getProperty('longNumber')->getType());
+
+        $this->saveAndRenewSession();
+        $prop = $this->sharedFixture['session']->getNode($this->nodePath)->getProperty('longNumber');
+        $this->assertEquals(1024, $prop->getLong());
+        $this->assertEquals(\PHPCR\PropertyType::LONG, $prop->getType());
     }
 
     /**
@@ -72,23 +86,42 @@ class Writing_10_SetPropertyMethodsTest extends phpcr_suite_baseCase
     public function testSetPropertyNewWithType()
     {
         $this->node->setProperty('newLongNumber', 102.5, \PHPCR\PropertyType::LONG);
-        $this->assertEquals(102, $this->node->getProperty('newLongNumber')->getLong());
-        $this->assertEquals(\PHPCR\PropertyType::LONG, $this->node->getProperty('newLongNumber')->getType());
-        $this->assertFalse($this->node->getProperty('newLongNumber')->isMultiple());
+
+        $this->saveAndRenewSession();
+        $prop = $this->sharedFixture['session']->getNode($this->nodePath)->getProperty('newLongNumber');
+        $this->assertEquals(102, $prop->getLong());
+        $this->assertEquals(\PHPCR\PropertyType::LONG, $prop->getType());
+        $this->assertFalse($prop->isMultiple());
     }
 
     public function testSetPropertyMultivalue()
     {
         $this->node->setProperty('multivalue', array(1, 2, 3));
+
+        $this->saveAndRenewSession();
+        $node = $this->sharedFixture['session']->getNode($this->nodePath);
+        $prop = $node->getProperty('multivalue');
         $this->assertEquals(array(1,2,3), $this->node->getPropertyValue('multivalue'));
-        $this->assertEquals(\PHPCR\PropertyType::LONG, $this->node->getProperty('multivalue')->getType());
-        $this->assertTrue($this->node->getProperty('multivalue')->isMultiple());
+        $this->assertEquals(\PHPCR\PropertyType::LONG, $prop->getType());
+        $this->assertTrue($prop->isMultiple());
     }
 
     public function testNewNodeSetProperty()
     {
-        $n = $this->node->addNode('child');
-        $prop = $n->setProperty('p', 'abc');
+        $session = $this->sharedFixture['session'];
+        $node = $this->node->addNode('child');
+        $prop = $node->setProperty('p', 'abc');
+
+        $this->saveAndRenewSession();
+        $this->assertTrue($session->nodeExists($this->nodePath . '/child'));
+        $this->assertTrue($session->propertyExists($this->nodePath . '/child/p'));
+
+        $node = $this->sharedFixture['session']->getNode($this->nodePath . '/child');
+        $prop = $node->getProperty('p');
+
+        $this->assertInstanceOf('\PHPCR\PropertyInterface', $prop);
+        $this->assertEquals(\PHPCR\PropertyType::STRING, $prop->getType());
+        $this->assertEquals('abc', $prop->getString());
     }
 
     //TODO: is this all creation modes? the types are tested in SetPropertyTypes
