@@ -1,0 +1,8 @@
+Missing tests for
+
+NodeDefinitionInterface
+NodeDefinitionTemplateInterface
+NodeTypeDefinitionInterface
+NodeTypeTemplateInterface
+PropertyDefinitionInterface
+PropertyDefinitionTemplateInterface
