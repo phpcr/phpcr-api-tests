@@ -5,6 +5,10 @@ require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
 /**
  * Testing whether node property manipulations work correctly
  *
+ * For every test we do the assertions twice:
+ *   - Once after the property has been set in memory
+ *   - Once after renewing the session and reading the property from the backend
+ *
  * Covering jcr-2.8.3 spec $10.4.2
  */
 class Writing_10_SetPropertyMethodsTest extends phpcr_suite_baseCase
@@ -31,6 +35,7 @@ class Writing_10_SetPropertyMethodsTest extends phpcr_suite_baseCase
     public function testSetValue()
     {
         $this->property->setValue(1024);
+        $this->assertEquals(1024, $this->property->getLong());
 
         $this->saveAndRenewSession();
         $prop = $this->sharedFixture['session']->getProperty($this->propPath);
@@ -44,6 +49,8 @@ class Writing_10_SetPropertyMethodsTest extends phpcr_suite_baseCase
     {
         $this->assertTrue($this->node->hasProperty('longNumber'));
         $property = $this->node->setProperty('longNumber', 1024);
+        $this->assertInstanceOf('PHPCR\PropertyInterface', $property);
+        $this->assertEquals(1024, $property->getLong());
 
         $this->saveAndRenewSession();
         $prop = $this->sharedFixture['session']->getNode($this->nodePath)->getProperty('longNumber');
@@ -58,6 +65,8 @@ class Writing_10_SetPropertyMethodsTest extends phpcr_suite_baseCase
     public function testSetPropertyNew()
     {
         $property = $this->node->setProperty('newLongNumber', 1024);
+        $this->assertInstanceOf('PHPCR\PropertyInterface', $property);
+        $this->assertEquals(1024, $property->getLong());
 
         $this->saveAndRenewSession();
         $prop = $this->sharedFixture['session']->getNode($this->nodePath)->getProperty('newLongNumber');
@@ -71,7 +80,9 @@ class Writing_10_SetPropertyMethodsTest extends phpcr_suite_baseCase
      */
     public function testSetPropertyWithType()
     {
-        $this->node->setProperty('longNumber', 1024.5, \PHPCR\PropertyType::LONG);
+        $prop = $this->node->setProperty('longNumber', 1024.5, \PHPCR\PropertyType::LONG);
+        $this->assertEquals(1024, $prop->getLong());
+        $this->assertEquals(\PHPCR\PropertyType::LONG, $prop->getType());
 
         $this->saveAndRenewSession();
         $prop = $this->sharedFixture['session']->getNode($this->nodePath)->getProperty('longNumber');
@@ -85,7 +96,10 @@ class Writing_10_SetPropertyMethodsTest extends phpcr_suite_baseCase
      */
     public function testSetPropertyNewWithType()
     {
-        $this->node->setProperty('newLongNumber', 102.5, \PHPCR\PropertyType::LONG);
+        $prop = $this->node->setProperty('newLongNumber', 102.5, \PHPCR\PropertyType::LONG);
+        $this->assertEquals(102, $prop->getLong());
+        $this->assertEquals(\PHPCR\PropertyType::LONG, $prop->getType());
+        $this->assertFalse($prop->isMultiple());
 
         $this->saveAndRenewSession();
         $prop = $this->sharedFixture['session']->getNode($this->nodePath)->getProperty('newLongNumber');
@@ -96,7 +110,10 @@ class Writing_10_SetPropertyMethodsTest extends phpcr_suite_baseCase
 
     public function testSetPropertyMultivalue()
     {
-        $this->node->setProperty('multivalue', array(1, 2, 3));
+        $prop = $this->node->setProperty('multivalue', array(1, 2, 3));
+        $this->assertEquals(array(1,2,3), $this->node->getPropertyValue('multivalue'));
+        $this->assertEquals(\PHPCR\PropertyType::LONG, $prop->getType());
+        $this->assertTrue($prop->isMultiple());
 
         $this->saveAndRenewSession();
         $node = $this->sharedFixture['session']->getNode($this->nodePath);
@@ -111,6 +128,11 @@ class Writing_10_SetPropertyMethodsTest extends phpcr_suite_baseCase
         $session = $this->sharedFixture['session'];
         $node = $this->node->addNode('child');
         $prop = $node->setProperty('p', 'abc');
+        $this->assertTrue($session->nodeExists($this->nodePath . '/child'));
+        $this->assertTrue($session->propertyExists($this->nodePath . '/child/p'));
+        $this->assertInstanceOf('\PHPCR\PropertyInterface', $prop);
+        $this->assertEquals(\PHPCR\PropertyType::STRING, $prop->getType());
+        $this->assertEquals('abc', $prop->getString());
 
         $this->saveAndRenewSession();
         $this->assertTrue($session->nodeExists($this->nodePath . '/child'));
@@ -122,6 +144,21 @@ class Writing_10_SetPropertyMethodsTest extends phpcr_suite_baseCase
         $this->assertInstanceOf('\PHPCR\PropertyInterface', $prop);
         $this->assertEquals(\PHPCR\PropertyType::STRING, $prop->getType());
         $this->assertEquals('abc', $prop->getString());
+    }
+
+    public function testPropertyDefinitionDynamicRebinding()
+    {
+        $this->assertEquals(\PHPCR\PropertyType::LONG, $this->property->getType());
+
+        // Re-bind property
+        $this->property->setValue(false, PHPCR\PropertyType::BOOLEAN);
+        $this->assertEquals(\PHPCR\PropertyType::BOOLEAN, $this->property->getType());
+        $this->assertEquals(false, $this->property->getBoolean());
+
+        $this->saveAndRenewSession();
+        $prop = $this->sharedFixture['session']->getProperty($this->propPath);
+        $this->assertEquals(\PHPCR\PropertyType::BOOLEAN, $prop->getType());
+        $this->assertEquals(false, $prop->getBoolean());
     }
 
     public function testRemoveProperty()
