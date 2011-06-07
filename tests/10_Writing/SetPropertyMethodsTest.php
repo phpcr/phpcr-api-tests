@@ -161,6 +161,14 @@ class Writing_10_SetPropertyMethodsTest extends phpcr_suite_baseCase
         $this->assertEquals(false, $prop->getBoolean());
     }
 
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testInvalidPropertyName()
+    {
+        $prop = $this->node->setProperty('invalid/name', 123);
+    }
+
     public function testRemoveProperty()
     {
         $session = $this->sharedFixture['session'];
