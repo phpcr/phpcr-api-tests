@@ -13,37 +13,127 @@ class Export_7_ExportRepositoryContentTest extends phpcr_suite_baseCase
     public function testExportSystemView()
     {
         $stream = fopen('php://memory', 'rwb+');
-        $this->sharedFixture['session']->exportSystemView('/tests_general_base', $stream, false, false);
+        $this->sharedFixture['session']->exportSystemView('/tests_export', $stream, false, false);
         rewind($stream);
-        $xml = stream_get_contents($stream);
-        $this->assertXmlStringEqualsXmlString(file_get_contents(__DIR__.'/../../fixtures/07_Export/systemview.xml'), $xml, true);
+        $output = new DOMDocument();
+        $output->loadXML(stream_get_contents($stream));
+        $expected = new DOMDocument();
+        $expected->preserveWhiteSpace = false;
+        $expected->load(__DIR__.'/../../fixtures/07_Export/systemview.xml');
+
+        $this->assertEquivalentSystem($expected->documentElement, $output->documentElement, new DOMXPath($output));
+    }
+
+    /**
+     * build a path to this node.
+     *
+     * for system view, including the name attributes in addition to the
+     * element names.
+     */
+    private function buildPath(DOMNode $n)
+    {
+        $ret = '';
+        while(! $n instanceof DOMDocument) {
+            if ($n instanceof DOMElement && in_array($n->tagName, array('sv:node', 'sv:property'))) {
+                $name = $n->attributes->getNamedItem('name');
+                if ($name == null) {
+                    $elem = 'sv:node(unnamed)';
+                } else {
+                    $elem = $n->tagName.'('.$name->value.')';
+                }
+            } else {
+                $elem = $n->nodeName;
+            }
+            $ret = $elem . '/' . $ret;
+            $n = $n->parentNode;
+        }
+        return "/$ret";
+    }
+
+    /**
+     * compare two system view documents.
+     *
+     * they must have the same properties and values, and the same child nodes,
+     * but the order is not necessarily the same, as it is not determined
+     */
+    private function assertEquivalentSystem(DOMElement $expected, DOMElement $output, DOMXPath $oxpath)
+    {
+        $this->assertEquals($expected->tagName, $output->tagName);
+
+        foreach($expected->attributes as $attr) {
+            //i.e. sv:name attribute
+            $oattr = $output->attributes->getNamedItem($attr->name);
+            $this->assertNotNull($oattr, 'missing attribute '.$attr->name);
+            $this->assertEquals($attr->value, $oattr->value, 'wrong attribute value');
+        }
+
+        if ($expected->tagName == 'sv:property') {
+            // properties have ordered sv:value children
+            if ($expected->attributes->getNamedItem('name')->value == 'jcr:created') {
+                $this->assertNotEmpty($output->textContent);
+            } else {
+                foreach($expected->childNodes as $index => $child) {
+                    $this->assertEquals('sv:value', $child->tagName);
+                    $o = $output->childNodes->item($index);
+                    $this->assertNotNull($o, "No child at $index in ".$this->buildPath($child));
+                    $this->assertEquals('sv:value', $o->tagName, 'Unexpected tag name at '.$this->buildPath($expected)."sv:value[$index]");
+                    $this->assertEquals($child->textContent, $o->textContent, 'Not the same text at '.$this->buildPath($output)."sv:value[$index]");
+                }
+            }
+        } else if ($expected->tagName == 'sv:node') {
+            // nodes have sv:node or sv:property children
+            foreach($expected->childNodes as $child) {
+                $this->assertContains($child->tagName, array('sv:property', 'sv:node'), 'unexpected child of sv:node');
+                $childname = $child->attributes->getNamedItem('name')->value;
+                $q = $oxpath->query($child->tagName.'[@sv:name="'.$childname.'"]', $output);
+                $this->assertEquals(1, $q->length, 'expected to find exactly one node named '.$childname.' under '.$this->buildPath($output));
+                $this->assertEquivalentSystem($child, $q->item(0), $oxpath);
+            }
+        }
     }
 
     public function testExportDocumentView()
     {
         $stream = fopen('php://memory', 'rwb+');
-        $this->sharedFixture['session']->exportDocumentView('/tests_general_base', $stream, false, false);
+        $this->sharedFixture['session']->exportDocumentView('/tests_export', $stream, false, false);
         rewind($stream);
-        $xml = stream_get_contents($stream);
-//var_dump($xml);
-        $this->assertXmlStringEqualsXmlString(file_get_contents(__DIR__.'/../../fixtures/07_Export/documentview.xml'), $xml, true);
+        $output = new DOMDocument();
+        $output->loadXML(stream_get_contents($stream));
+        $expected = new DOMDocument();
+        $expected->preserveWhiteSpace = false;
+        $expected->load(__DIR__.'/../../fixtures/07_Export/documentview.xml');
+
+        $this->assertEquivalentDocument($expected->documentElement, $output->documentElement, new DOMXPath($output));
     }
 
-    public function testExportSystemViewSax()
+    /**
+     * compare two document view documents.
+     *
+     * nodes are elements, properties attributes and must have equal names and values,
+     * but the order is not necessarily the same, as it is not determined
+     */
+    private function assertEquivalentDocument(DOMElement $expected, DOMElement $output, DOMXPath $oxpath)
     {
-        $this->markTestSkipped('TODO: SAX ContentHandler');
-        $xmlwriter = new XMLWriter();
-        $this->assertTrue($xmlwriter->openMemory());
-        $this->sharedFixture['session']->exportSystemView('/', $xmlwriter, false, false);
-        echo $xmlwriter->outputMemory(true);
-    }
-    public function testExportDocumentViewSax()
-    {
-        $this->markTestSkipped('TODO: SAX ContentHandler');
-        $xmlwriter = new XMLWriter();
-        $this->assertTrue($xmlwriter->openMemory());
-        $this->sharedFixture['session']->exportDocumentView('/', $xmlwriter, false, false);
-        echo $xmlwriter->outputMemory(true);
+        if ($expected instanceof DOMText) {
+            $this->assertEquals($expected->textContent, $output->textContent, 'Not the same text at '.$this->buildPath($expected));
+        } elseif ($expected instanceof DOMElement) {
+            $this->assertEquals($expected->tagName, $output->tagName);
 
+            foreach($expected->attributes as $attr) {
+                if ('jcr:created' == $attr->nodeName) {
+                    $this->assertNotEmpty($attr->value);
+                } else {
+                    $oattr = $output->attributes->getNamedItem($attr->name);
+                    $this->assertNotNull($oattr, 'missing attribute '.$attr->name.' at '.$this->buildPath($expected));
+                    $this->assertEquals($attr->value, $oattr->value, 'wrong attribute value at '.$this->buildPath($expected).'/'.$attr->name);
+                }
+            }
+
+            foreach($expected->childNodes as $child) {
+                $q = $oxpath->query($child->tagName, $output); //TODO: same-name siblings
+                $this->assertEquals(1, $q->length, 'expected to find exactly one node named '.$child->tagName.' under '.$this->buildPath($expected));
+                $this->assertEquivalentDocument($child, $q->item(0), $oxpath);
+            }
+        }
     }
 }
