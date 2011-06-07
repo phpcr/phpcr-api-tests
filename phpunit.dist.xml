@@ -1,0 +1,49 @@
+<phpunit backupGlobals="false"
+         backupStaticAttributes="false"
+         colors="false"
+         convertErrorsToExceptions="true"
+         convertNoticesToExceptions="true"
+         convertWarningsToExceptions="true"
+         processIsolation="false"
+         stopOnFailure="false"
+         syntaxCheck="true"
+         strict="true"
+         bootstrap="bootstrap.php">
+    <php>
+        <!-- set some globals for connection handling.
+           the following is an example of the jackalope-jackrabbit implementation -->
+        <var name="jcr.url" value="http://localhost:8080/server" />
+        <var name="jcr.user" value="admin" />
+        <var name="jcr.pass" value="admin" />
+        <var name="jcr.workspace" value="tests" />
+        <var name="jcr.transport" value="davex" />
+    </php>
+
+    <testsuites>
+        <testsuite name="all">
+            <directory>[name-of-directory-with-test-submodule]/tests/</directory>
+            <directory>[your-unit-tests-directory]</directory>
+        </testsuite>
+    </testsuites>
+
+    <!-- configuration for code coverage report -->
+    <filter>
+        <whitelist>
+            <directory>../</directory>
+
+            <exclude>
+                <!-- ignore the unit tests -->
+                <directory>../tests</directory>
+
+                <!-- ignore the api tests -->
+                <directory>.</directory>
+
+                <!-- ignore whats not implemented yet -->
+                <directory>../lib/phpcr/src/PHPCR/Lock</directory>
+                <directory>../lib/phpcr/src/PHPCR/Observation</directory>
+                <directory>../lib/phpcr/src/PHPCR/Retention</directory>
+                <directory>../lib/phpcr/src/PHPCR/Security</directory>
+            </exclude>
+        </whitelist>
+    </filter>
+</phpunit>

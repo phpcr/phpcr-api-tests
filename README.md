@@ -22,9 +22,6 @@ clean out the jackalope references and move all jackalope specific stuff (the .j
 into the jackalope api-tests folder. These tests should be clean. The only relevant folders are
 tests and fixtures, plus the .sample files, the rest should go out of this.
 
-TODO: convert all fixtures into system view to have the expected types
-
-
 ## Usage
 
 The phpcr-api-tests is a suite to test compliance for implementations of
@@ -34,17 +31,21 @@ the java content repository specification.
 You need to provide a couple of files in order to let the tests detect your
 implementation:
 
-TODO: configuration should be handled by bootstrap and not by baseClass
 
-* Copy phpunit.xml.sample to phpunit.xml and adapt if necessary. All <php /> vars beginning
-  with "jcr." are copied to the configuration array that is passed to the functions `getJCRSession`,
-  `getRepository` and `getFixtureLoader`.
-* Write your own bootstrap file. Have a look at inc/bootstrap.php.sample. You
+* Add the api tests as submodule of your project, for example in a folder tests/api
+* Copy phpunit.dist.xml to the parent folder of where you added the submodule,
+    rename it to phpunit.xml and adapt as necessary.
+* All <php /> vars beginning with "jcr." are copied to the configuration array
+    that is passed to the functions `getJCRSession`,
+    `getRepository` and `getFixtureLoader`.
+    TODO: configuration should be handled by bootstrap and not by baseClass
+* Write your own bootstrap file. Have a look at bootstrap.dist.php You
   have to implement the following methods:
     ** getJCRSession()
     ** getRepository()
     ** getSimpleCredentials()
     ** getFixtureLoader()
+    TODO: make this a class and move logic for configuration into the bootstrap
 * Implement data for all the necessary fixtures. See the "fixtures/" folder for
   a JCR XML system view export of the fixture data. If your implementation can
   not import this format, you will need to convert them into a suitable format.
@@ -64,18 +65,6 @@ The fixture loading passes strings without the file extension so you can roll
 your own fixtures if you want.
 The test suite provides default fixtures in the fixtures folder in the JCR
 system view export format. It is recommended to use those.
-
-Current list of fixtures (subject to be extended):
-
-* general/base
-* general/query
-* 10_Writing/add
-* 10_Writing/copy
-* 10_Writing/delete
-* 10_Writing/move
-* 10_Writing/nodetype
-* 15_Versioning/base
-
 
 
 ### Using jackrabbit_importexport for load your own fixtures

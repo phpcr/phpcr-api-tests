@@ -24,7 +24,8 @@ foreach ($necessaryConfigValues as $val) {
     }
 }
 
-/** autoloader: jackalope-api-tests relies on this autoloader.
+/** 
+ * autoloader: jackalope-api-tests relies on this autoloader.
  */
 function jackalopeApiTestsAutoload($class) {
     $incFile = dirname(__FILE__) . '/../lib/' . str_replace("_", DIRECTORY_SEPARATOR, $class).".php";
