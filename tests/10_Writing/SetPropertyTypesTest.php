@@ -30,10 +30,6 @@ class Writing_10_SetPropertyTypesTest extends phpcr_suite_baseCase
 
     //TODO: have this for all types in PropertyType and each with and without the explicit type parameter. also test node->getPropertyValue for correct type
 
-    public function testCreateBinary()
-    {
-        $this->markTestSkipped('Figure out how to work with binary');
-    }
     public function testCreateString()
     {
         $value = $this->node->setProperty('x', '10.6 test');
@@ -162,5 +158,73 @@ class Writing_10_SetPropertyTypesTest extends phpcr_suite_baseCase
         $value = $this->sharedFixture['session']->getProperty('/tests_nodetype_base/numberPropertyNode/jcr:content/x');
         $this->assertEquals(\PHPCR\PropertyType::DATE, $value->getType());
         $this->assertEquals(date('Y-m-d\TH:i:s.000P', $time), $value->getString());
+    }
+    public function testCreateValueUndefined()
+    {
+        $value = $this->node->setProperty('x', 'some value', \PHPCR\PropertyType::UNDEFINED);
+        $this->assertNotEquals(\PHPCR\PropertyType::UNDEFINED, $value->getType(), 'getType should never return UNDEFINED');
+
+        $this->saveAndRenewSession();
+        $value = $this->sharedFixture['session']->getProperty('/tests_nodetype_base/numberPropertyNode/jcr:content/x');
+        $this->assertNotEquals(\PHPCR\PropertyType::UNDEFINED, $value->getType(), 'getType should never return UNDEFINED');
+    }
+    public function testCreateValueName()
+    {
+        $value = $this->node->setProperty('x', 'jcr:name', \PHPCR\PropertyType::NAME);
+        $this->assertEquals(\PHPCR\PropertyType::NAME, $value->getType());
+        $this->assertEquals('jcr:name', $value->getString());
+
+        $this->saveAndRenewSession();
+        $value = $this->sharedFixture['session']->getProperty('/tests_nodetype_base/numberPropertyNode/jcr:content/x');
+        $this->assertEquals(\PHPCR\PropertyType::NAME, $value->getType());
+        $this->assertEquals('jcr:name', $value->getString());
+    }
+    /**
+     * @expectedException \PHPCR\ValueFormatException
+     */
+    public function testCreateValueNameInvalidName()
+    {
+        // "namespace" is not a registered namespace
+        $value = $this->node->setProperty('x', 'namespace:name', \PHPCR\PropertyType::NAME);
+        $this->saveAndRenewSession();
+    }
+    public function testCreateValuePath()
+    {
+        $value = $this->node->setProperty('x', '/some/path', \PHPCR\PropertyType::PATH);
+        $this->assertEquals(\PHPCR\PropertyType::PATH, $value->getType());
+        $this->assertEquals('/some/path', $value->getString());
+
+        $this->saveAndRenewSession();
+        $value = $this->sharedFixture['session']->getProperty('/tests_nodetype_base/numberPropertyNode/jcr:content/x');
+        $this->assertEquals(\PHPCR\PropertyType::PATH, $value->getType());
+        $this->assertEquals('/some/path', $value->getString());
+    }
+    /**
+     * @expectedException \PHPCR\ValueFormatException
+     */
+    public function testCreateValuePathInvalidPath()
+    {
+        // "Space"/ /" is not a valid path (space)
+        $value = $this->node->setProperty('x', '/ /', \PHPCR\PropertyType::PATH);
+        $this->saveAndRenewSession();
+    }
+    public function testCreateValueUri()
+    {
+        $value = $this->node->setProperty('x', 'http://some/uri', \PHPCR\PropertyType::URI);
+        $this->assertEquals(\PHPCR\PropertyType::URI, $value->getType());
+        $this->assertEquals('http://some/uri', $value->getString());
+
+        $this->saveAndRenewSession();
+        $value = $this->sharedFixture['session']->getProperty('/tests_nodetype_base/numberPropertyNode/jcr:content/x');
+        $this->assertEquals(\PHPCR\PropertyType::URI, $value->getType());
+        $this->assertEquals('http://some/uri', $value->getString());
+    }
+    /**
+     * @expectedException \PHPCR\ValueFormatException
+     */
+    public function testCreateValueUriInvalidUri()
+    {
+        $value = $this->node->setProperty('x', '\\This/is\invalid', \PHPCR\PropertyType::URI);
+        $this->saveAndRenewSession();
     }
 }
