@@ -1,18 +1,19 @@
 <?php
 require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
 
-/** test javax.cr.Session read methods (level 1)
- *  most of the pdf specification is in section 4.4 and 5.1
+/**
+ * Test Session read methods
  *
- *  ExportTest: importXML, getImportContentHandler, exportSystemView, exportDocumentView
- *  NamespacesTest: getNamespacePrefix, getNamespacePrefixes, getNamespaceURI, setNamespacePrefix
+ * exportSystemView, exportDocumentView are covered in chapter 7
+ * getNamespacePrefix, getNamespacePrefixes, getNamespaceURI, setNamespacePrefix are covered in SessionNamespaceRemappingTest
  *
- *  level2: SessionWriteMethods: hasPendingChanges, getValueFactory, move, refresh, removeItem, save
- *  Retention: getRetentionManager
- *  Access Control: getAccessControlManager
+ * session write methods are covered in chapter 10
+ * (hasPendingChanges, getValueFactory, move, refresh, removeItem, save)
+ *
+ * Retention: getRetentionManager
+ * Access Control: getAccessControlManager
  */
-
-class Reading_5_DirectAccessMethodsTest extends phpcr_suite_baseCase
+class Reading_5_SessionReadMethodsTest extends phpcr_suite_baseCase
 {
     static public function  setupBeforeClass()
     {

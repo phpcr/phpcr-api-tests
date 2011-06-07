@@ -1,12 +1,8 @@
 <?php
 require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
 
-/** test javax.jcr.Node read methods (read) §5.6
- *
- * todo: getCorrespondingNodePath, getDefinition, getMixinNodeTypes, getPrimaryNodeType, isNodeType
- *
- * NodeWriteMethods (level2): addMixin, addNode, canAddMixin, isCheckedOut, isLocked, orderBefore, removeMixin, removeShare, removeSharedSet, setPrimaryType, setProperty, update. Base Item write methods: isModified, refresh, save, remove
- * Lifecycle: followLifecycleTransition, getAllowedLifecycleTransistions
+/**
+ * test javax.jcr.Node read methods (read) §5.6
  */
 class Reading_5_NodeReadMethodsTest extends phpcr_suite_baseCase
 {
@@ -106,11 +102,10 @@ class Reading_5_NodeReadMethodsTest extends phpcr_suite_baseCase
     }
 
     /*** node specific methods ***/
+
     public function testGetNodeAbsolutePath()
     {
-        $node = $this->rootNode->getNode('/tests_general_base');
-        $this->assertInstanceOf('PHPCR\NodeInterface', $node);
-        $this->assertEquals('tests_general_base', $node->getName());
+        $this->rootNode->getNode('/tests_general_base');
     }
 
     public function testGetNodeRelativePath()
@@ -125,7 +120,7 @@ class Reading_5_NodeReadMethodsTest extends phpcr_suite_baseCase
      */
     public function testGetNodePathNotFoundException()
     {
-        $this->rootNode->getNode('/foobar');
+        $this->rootNode->getNode('foobar');
     }
 
     /**
@@ -492,6 +487,14 @@ class Reading_5_NodeReadMethodsTest extends phpcr_suite_baseCase
         $this->assertTrue($this->deepnode->hasNode('../../numberPropertyNode/jcr:content'));
     }
 
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testHasNodeAbsolutePathException()
+    {
+        $this->deepnode->hasNode('/tests_general_base');
+    }
+
     public function testHasNodeFalse()
     {
         $this->assertFalse($this->node->hasNode('foobar'));
@@ -518,14 +521,12 @@ class Reading_5_NodeReadMethodsTest extends phpcr_suite_baseCase
         $this->assertFalse($this->node->hasProperty('foobar'));
     }
 
-    public function testHasPropertyAbsolutePathTrue()
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testHasPropertyAbsolutePathException()
     {
-        $this->assertTrue($this->node->hasProperty($this->node->getPath().'/jcr:created'));
-    }
-
-    public function testHasPropertyAbsolutePathFalse()
-    {
-        $this->assertFalse($this->node->hasProperty('/foobar'));
+        $this->node->hasProperty('/tests_general_base/nt:primaryType');
     }
 
     public function testHasPropertiesTrue()
