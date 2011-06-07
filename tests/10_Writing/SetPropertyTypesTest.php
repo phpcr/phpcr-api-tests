@@ -32,13 +32,13 @@ class Writing_10_SetPropertyTypesTest extends phpcr_suite_baseCase
 
     public function testCreateString()
     {
-        $value = $this->node->setProperty('x', '10.6 test');
+        $value = $this->node->setProperty('propString', '10.6 test');
         $this->assertSame('10.6 test', $value->getString());
         $this->assertSame(10, $value->getLong());
         $this->assertEquals(\PHPCR\PropertyType::STRING, $value->getType());
 
         $this->saveAndRenewSession();
-        $value = $this->sharedFixture['session']->getProperty('/tests_nodetype_base/numberPropertyNode/jcr:content/x');
+        $value = $this->sharedFixture['session']->getProperty('/tests_nodetype_base/numberPropertyNode/jcr:content/propString');
         $this->assertSame('10.6 test', $value->getString());
         $this->assertSame(10, $value->getLong());
         $this->assertEquals(\PHPCR\PropertyType::STRING, $value->getType());
@@ -56,27 +56,27 @@ class Writing_10_SetPropertyTypesTest extends phpcr_suite_baseCase
     }
     public function testCreateValueInt()
     {
-        $value = $this->node->setProperty('x', 100);
+        $value = $this->node->setProperty('propInt', 100);
         $this->assertSame('100', $value->getString());
         $this->assertSame(100, $value->getLong());
         $this->assertEquals(\PHPCR\PropertyType::LONG, $value->getType());
 
         $this->saveAndRenewSession();
-        $value = $this->sharedFixture['session']->getProperty('/tests_nodetype_base/numberPropertyNode/jcr:content/x');
+        $value = $this->sharedFixture['session']->getProperty('/tests_nodetype_base/numberPropertyNode/jcr:content/propInt');
         $this->assertSame('100', $value->getString());
         $this->assertSame(100, $value->getLong());
         $this->assertEquals(\PHPCR\PropertyType::LONG, $value->getType());
     }
     public function testCreateValueDouble()
     {
-        $value = $this->node->setProperty('x', 10.6);
+        $value = $this->node->setProperty('propDouble', 10.6);
         $this->assertSame('10.6', $value->getString());
         $this->assertSame(10.6, $value->getDouble());
         $this->assertSame(10, $value->getLong());
         $this->assertEquals(\PHPCR\PropertyType::DOUBLE, $value->getType());
 
         $this->saveAndRenewSession();
-        $value = $this->sharedFixture['session']->getProperty('/tests_nodetype_base/numberPropertyNode/jcr:content/x');
+        $value = $this->sharedFixture['session']->getProperty('/tests_nodetype_base/numberPropertyNode/jcr:content/propDouble');
         $this->assertSame('10.6', $value->getString());
         $this->assertSame(10.6, $value->getDouble());
         $this->assertSame(10, $value->getLong());
@@ -84,14 +84,14 @@ class Writing_10_SetPropertyTypesTest extends phpcr_suite_baseCase
     }
     public function testCreateValueBoolean()
     {
-        $value = $this->node->setProperty('x', true);
+        $value = $this->node->setProperty('propBoolean', true);
         $this->assertEquals(\PHPCR\PropertyType::BOOLEAN, $value->getType(), 'wrong type');
         $this->assertTrue($value->getBoolean(), 'boolean not true');
         $this->assertTrue($value->getString() == true, 'wrong string value'); //boolean converted to string must be true
         $this->assertSame(1, $value->getLong(), 'wrong integer value');
 
         $this->saveAndRenewSession();
-        $value = $this->sharedFixture['session']->getProperty('/tests_nodetype_base/numberPropertyNode/jcr:content/x');
+        $value = $this->sharedFixture['session']->getProperty('/tests_nodetype_base/numberPropertyNode/jcr:content/propBoolean');
         $this->assertEquals(\PHPCR\PropertyType::BOOLEAN, $value->getType(), 'wrong type');
         $this->assertTrue($value->getBoolean(), 'boolean not true');
         $this->assertTrue($value->getString() == true, 'wrong string value'); //boolean converted to string must be true
@@ -100,24 +100,24 @@ class Writing_10_SetPropertyTypesTest extends phpcr_suite_baseCase
     public function testCreateValueNode()
     {
         $node = $this->sharedFixture['session']->getNode('/tests_nodetype_base/multiValueProperty');
-        $value = $this->node->setProperty('x', $node);
+        $value = $this->node->setProperty('propNode', $node);
         $this->assertEquals(\PHPCR\PropertyType::REFERENCE, $value->getType(), 'wrong type');
         $this->assertEquals($node->getIdentifier(), $value->getString(), 'different uuid');
 
         $this->saveAndRenewSession();
-        $value = $this->sharedFixture['session']->getProperty('/tests_nodetype_base/numberPropertyNode/jcr:content/x');
+        $value = $this->sharedFixture['session']->getProperty('/tests_nodetype_base/numberPropertyNode/jcr:content/propNode');
         $this->assertEquals(\PHPCR\PropertyType::REFERENCE, $value->getType(), 'wrong type');
         $this->assertEquals($node->getIdentifier(), $value->getString(), 'different uuid');
     }
     public function testCreateValueNodeWeak()
     {
         $node = $this->sharedFixture['session']->getRootNode()->getNode('tests_nodetype_base/multiValueProperty');
-        $value = $this->node->setProperty('x', $node, \PHPCR\PropertyType::WEAKREFERENCE);
+        $value = $this->node->setProperty('propNodeWeak', $node, \PHPCR\PropertyType::WEAKREFERENCE);
         $this->assertEquals(\PHPCR\PropertyType::WEAKREFERENCE, $value->getType());
         $this->assertEquals($node->getIdentifier(), $value->getString());
 
         $this->saveAndRenewSession();
-        $value = $this->sharedFixture['session']->getProperty('/tests_nodetype_base/numberPropertyNode/jcr:content/x');
+        $value = $this->sharedFixture['session']->getProperty('/tests_nodetype_base/numberPropertyNode/jcr:content/propNodeWeak');
         $this->assertEquals(\PHPCR\PropertyType::WEAKREFERENCE, $value->getType());
         $this->assertEquals($node->getIdentifier(), $value->getString());
     }
@@ -140,42 +140,42 @@ class Writing_10_SetPropertyTypesTest extends phpcr_suite_baseCase
     }
     public function testCreateValueStringType()
     {
-        $value = $this->node->setProperty('x', 33, \PHPCR\PropertyType::STRING);
+        $value = $this->node->setProperty('propString', 33, \PHPCR\PropertyType::STRING);
         $this->assertEquals(\PHPCR\PropertyType::STRING, $value->getType());
 
         $this->saveAndRenewSession();
-        $value = $this->sharedFixture['session']->getProperty('/tests_nodetype_base/numberPropertyNode/jcr:content/x');
+        $value = $this->sharedFixture['session']->getProperty('/tests_nodetype_base/numberPropertyNode/jcr:content/propString');
         $this->assertEquals(\PHPCR\PropertyType::STRING, $value->getType());
     }
     public function testCreateValueDateType()
     {
         $time = time();
-        $value = $this->node->setProperty('x', $time, \PHPCR\PropertyType::DATE);
+        $value = $this->node->setProperty('propDate', $time, \PHPCR\PropertyType::DATE);
         $this->assertEquals(\PHPCR\PropertyType::DATE, $value->getType());
         $this->assertEquals(date('Y-m-d\TH:i:s.000P', $time), $value->getString());
 
         $this->saveAndRenewSession();
-        $value = $this->sharedFixture['session']->getProperty('/tests_nodetype_base/numberPropertyNode/jcr:content/x');
+        $value = $this->sharedFixture['session']->getProperty('/tests_nodetype_base/numberPropertyNode/jcr:content/propDate');
         $this->assertEquals(\PHPCR\PropertyType::DATE, $value->getType());
         $this->assertEquals(date('Y-m-d\TH:i:s.000P', $time), $value->getString());
     }
     public function testCreateValueUndefined()
     {
-        $value = $this->node->setProperty('x', 'some value', \PHPCR\PropertyType::UNDEFINED);
+        $value = $this->node->setProperty('propUndefined', 'some value', \PHPCR\PropertyType::UNDEFINED);
         $this->assertNotEquals(\PHPCR\PropertyType::UNDEFINED, $value->getType(), 'getType should never return UNDEFINED');
 
         $this->saveAndRenewSession();
-        $value = $this->sharedFixture['session']->getProperty('/tests_nodetype_base/numberPropertyNode/jcr:content/x');
+        $value = $this->sharedFixture['session']->getProperty('/tests_nodetype_base/numberPropertyNode/jcr:content/propUndefined');
         $this->assertNotEquals(\PHPCR\PropertyType::UNDEFINED, $value->getType(), 'getType should never return UNDEFINED');
     }
     public function testCreateValueName()
     {
-        $value = $this->node->setProperty('x', 'jcr:name', \PHPCR\PropertyType::NAME);
+        $value = $this->node->setProperty('propName', 'jcr:name', \PHPCR\PropertyType::NAME);
         $this->assertEquals(\PHPCR\PropertyType::NAME, $value->getType());
         $this->assertEquals('jcr:name', $value->getString());
 
         $this->saveAndRenewSession();
-        $value = $this->sharedFixture['session']->getProperty('/tests_nodetype_base/numberPropertyNode/jcr:content/x');
+        $value = $this->sharedFixture['session']->getProperty('/tests_nodetype_base/numberPropertyNode/jcr:content/propName');
         $this->assertEquals(\PHPCR\PropertyType::NAME, $value->getType());
         $this->assertEquals('jcr:name', $value->getString());
     }
@@ -185,17 +185,17 @@ class Writing_10_SetPropertyTypesTest extends phpcr_suite_baseCase
     public function testCreateValueNameInvalidName()
     {
         // "namespace" is not a registered namespace
-        $value = $this->node->setProperty('x', 'namespace:name', \PHPCR\PropertyType::NAME);
+        $value = $this->node->setProperty('propName', 'namespace:name', \PHPCR\PropertyType::NAME);
         $this->saveAndRenewSession();
     }
     public function testCreateValuePath()
     {
-        $value = $this->node->setProperty('x', '/some/path', \PHPCR\PropertyType::PATH);
+        $value = $this->node->setProperty('propPath', '/some/path', \PHPCR\PropertyType::PATH);
         $this->assertEquals(\PHPCR\PropertyType::PATH, $value->getType());
         $this->assertEquals('/some/path', $value->getString());
 
         $this->saveAndRenewSession();
-        $value = $this->sharedFixture['session']->getProperty('/tests_nodetype_base/numberPropertyNode/jcr:content/x');
+        $value = $this->sharedFixture['session']->getProperty('/tests_nodetype_base/numberPropertyNode/jcr:content/propPath');
         $this->assertEquals(\PHPCR\PropertyType::PATH, $value->getType());
         $this->assertEquals('/some/path', $value->getString());
     }
@@ -205,17 +205,17 @@ class Writing_10_SetPropertyTypesTest extends phpcr_suite_baseCase
     public function testCreateValuePathInvalidPath()
     {
         // "Space"/ /" is not a valid path (space)
-        $value = $this->node->setProperty('x', '/ /', \PHPCR\PropertyType::PATH);
+        $value = $this->node->setProperty('propPath', '/ /', \PHPCR\PropertyType::PATH);
         $this->saveAndRenewSession();
     }
     public function testCreateValueUri()
     {
-        $value = $this->node->setProperty('x', 'http://some/uri', \PHPCR\PropertyType::URI);
+        $value = $this->node->setProperty('propUri', 'http://some/uri', \PHPCR\PropertyType::URI);
         $this->assertEquals(\PHPCR\PropertyType::URI, $value->getType());
         $this->assertEquals('http://some/uri', $value->getString());
 
         $this->saveAndRenewSession();
-        $value = $this->sharedFixture['session']->getProperty('/tests_nodetype_base/numberPropertyNode/jcr:content/x');
+        $value = $this->sharedFixture['session']->getProperty('/tests_nodetype_base/numberPropertyNode/jcr:content/propUri');
         $this->assertEquals(\PHPCR\PropertyType::URI, $value->getType());
         $this->assertEquals('http://some/uri', $value->getString());
     }
@@ -224,7 +224,7 @@ class Writing_10_SetPropertyTypesTest extends phpcr_suite_baseCase
      */
     public function testCreateValueUriInvalidUri()
     {
-        $value = $this->node->setProperty('x', '\\This/is\invalid', \PHPCR\PropertyType::URI);
+        $value = $this->node->setProperty('propUri', '\\This/is\invalid', \PHPCR\PropertyType::URI);
         $this->saveAndRenewSession();
     }
 }
