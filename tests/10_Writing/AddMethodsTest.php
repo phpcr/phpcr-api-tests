@@ -69,7 +69,8 @@ class Writing_10_AddMethodsTest extends phpcr_suite_baseCase
     public function testAddPropertyOnUnstructured()
     {
         $node = $this->node->addNode('unstructuredNode', 'nt:unstructured');
-        $node->setProperty('test', 'val');
+        $node->setProperty('testprop', 'val');
+        $node->setProperty('refprop', $this->node->getNode('ref'));
 
         $this->sharedFixture['session']->save();
         $this->assertFalse($node->isNew(), 'Node was not saved');
@@ -78,7 +79,7 @@ class Writing_10_AddMethodsTest extends phpcr_suite_baseCase
         $node = $this->sharedFixture['session']->getNode($this->node->getPath() . '/unstructuredNode');
 
         $this->assertNotNull($node, 'Node was not created');
-        $this->assertEquals('val', $node->getPropertyValue('test'), 'Property was not saved correctly');
+        $this->assertEquals('val', $node->getPropertyValue('testprop'), 'Property was not saved correctly');
 
         $node->setProperty('test2', 'val2');
 
