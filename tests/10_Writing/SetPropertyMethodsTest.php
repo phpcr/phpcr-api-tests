@@ -171,14 +171,16 @@ class Writing_10_SetPropertyMethodsTest extends phpcr_suite_baseCase
 
     public function testRemoveProperty()
     {
-        $session = $this->sharedFixture['session'];
-        $this->assertTrue($session->propertyExists($this->propPath));
+        $nodePath = '/tests_nodetype_base/index.txt/jcr:content';
 
-        $node = $session->getNode($this->nodePath);
-        $node->setProperty('longNumber', null);
+        $session = $this->sharedFixture['session'];
+        $this->assertTrue($session->propertyExists($nodePath . '/jcr:data'));
+
+        $node = $session->getNode($nodePath);
+        $node->setProperty('jcr:data', null);
 
         $this->saveAndRenewSession();
-        $this->assertFalse($session->propertyExists($this->propPath));
+        $this->assertFalse($session->propertyExists($nodePath . '/jcr:data'));
     }
 
     //TODO: is this all creation modes? the types are tested in SetPropertyTypes
