@@ -20,7 +20,12 @@ class Versioning_15_VersionTest extends phpcr_suite_baseCase
         self::$staticSharedFixture['ie']->import('15_Versioning/base');
 
         //have some versions
-        $vm = self::$staticSharedFixture['session']->getWorkspace()->getVersionManager();
+        try
+        {
+            $vm = self::$staticSharedFixture['session']->getWorkspace()->getVersionManager();
+        } catch (\PHPCR\UnSupportedRepositoryOperationException $e) {
+            return;
+        }
         $node = self::$staticSharedFixture['session']->getNode('/tests_version_base/versioned');
         $vm->checkpoint('/tests_version_base/versioned');
         $node->setProperty('foo', 'bar');
@@ -38,7 +43,12 @@ class Versioning_15_VersionTest extends phpcr_suite_baseCase
     public function setUp()
     {
         parent::setUp();
-        $this->vm = $this->sharedFixture['session']->getWorkspace()->getVersionManager();
+        try
+        {
+            $this->vm = $this->sharedFixture['session']->getWorkspace()->getVersionManager();
+        } catch (\PHPCR\UnSupportedRepositoryOperationException $e) {
+            $this->markTestSkipped("Versioning not supported: " . $e->getMessage());
+        }
 
         $this->version = $this->vm->getBaseVersion("/tests_version_base/versioned");
 
