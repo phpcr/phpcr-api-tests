@@ -21,7 +21,9 @@ class Sql2ParserTest extends \phpcr_suite_baseCase
     public function testColumnsAndSelector()
     {
         $sql2 = $this->queries['6.7.39.Colum.Mixed'];
-
+        if (!class_exists("Sql2ToQomQueryConverter")) {
+            $this->markTestSkipped("Missing Jackalope\Query\QOM\Converter\Sql2ToQomQueryConverter");
+        }
         $parser = new Sql2ToQomQueryConverter();
         $query = $parser->parse($sql2);
 

@@ -29,6 +29,9 @@ class QomToSql2ConverterTest extends \phpcr_suite_baseCase
 
     public function setUp()
     {
+        if (!class_exists("QomToSql2QueryConverter")) {
+            $this->markTestSkipped("Missing Jackalope\Query\QOM\Converter\QomToSql2QueryConverter");
+        }
         $this->parser = new QomToSql2QueryConverter(new Sql2Generator());
         $this->factory = new QOM\QueryObjectModelFactory();
         $this->queries = Sql2TestQueries::getQueries();

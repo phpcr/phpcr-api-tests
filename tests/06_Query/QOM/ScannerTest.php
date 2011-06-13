@@ -19,6 +19,10 @@ class ScannerTest extends \phpcr_suite_baseCase
         $this->tokens = array(
             'SELECT', '*', 'FROM','[nt:file]', 'INNER', 'JOIN', '[nt:folder]',
             'ON', 'ISSAMENODE', '(', 'sel1', ',', 'sel2', ',', '[/home]', ')');
+
+        if (!class_exists("Sql2Scanner")) {
+            $this->markTestSkipped("Missing Jackalope\Query\QOM\Converter\Sql2Scanner");
+        }
     }
 
     public function testConstructor()
