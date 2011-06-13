@@ -33,6 +33,7 @@ class Writing_10_SetPropertyTypesTest extends phpcr_suite_baseCase
     public function testCreateString()
     {
         $value = $this->node->setProperty('propString', '10.6 test');
+        $this->assertInstanceOf('PHPCR\PropertyInterface', $value);
         $this->assertSame('10.6 test', $value->getString());
         $this->assertSame(10, $value->getLong());
         $this->assertEquals(\PHPCR\PropertyType::STRING, $value->getType());
@@ -46,6 +47,7 @@ class Writing_10_SetPropertyTypesTest extends phpcr_suite_baseCase
     public function testCreateValueBinary()
     {
         $bin = $this->node->setProperty('newBinary', 'foobar', PHPCR\PropertyType::BINARY);
+        $this->assertInstanceOf('PHPCR\PropertyInterface', $value);
         $this->assertEquals(\PHPCR\PropertyType::BINARY, $bin->getType());
         $this->assertEquals('foobar', stream_get_contents($bin->getBinary()));
 
@@ -57,6 +59,7 @@ class Writing_10_SetPropertyTypesTest extends phpcr_suite_baseCase
     public function testCreateValueInt()
     {
         $value = $this->node->setProperty('propInt', 100);
+        $this->assertInstanceOf('PHPCR\PropertyInterface', $value);
         $this->assertSame('100', $value->getString());
         $this->assertSame(100, $value->getLong());
         $this->assertEquals(\PHPCR\PropertyType::LONG, $value->getType());
@@ -70,6 +73,7 @@ class Writing_10_SetPropertyTypesTest extends phpcr_suite_baseCase
     public function testCreateValueDouble()
     {
         $value = $this->node->setProperty('propDouble', 10.6);
+        $this->assertInstanceOf('PHPCR\PropertyInterface', $value);
         $this->assertSame('10.6', $value->getString());
         $this->assertSame(10.6, $value->getDouble());
         $this->assertSame(10, $value->getLong());
@@ -85,6 +89,7 @@ class Writing_10_SetPropertyTypesTest extends phpcr_suite_baseCase
     public function testCreateValueBoolean()
     {
         $value = $this->node->setProperty('propBoolean', true);
+        $this->assertInstanceOf('PHPCR\PropertyInterface', $value);
         $this->assertEquals(\PHPCR\PropertyType::BOOLEAN, $value->getType(), 'wrong type');
         $this->assertTrue($value->getBoolean(), 'boolean not true');
         $this->assertTrue($value->getString() == true, 'wrong string value'); //boolean converted to string must be true
@@ -101,6 +106,7 @@ class Writing_10_SetPropertyTypesTest extends phpcr_suite_baseCase
     {
         $node = $this->sharedFixture['session']->getNode('/tests_nodetype_base/multiValueProperty');
         $value = $this->node->setProperty('propNode', $node);
+        $this->assertInstanceOf('PHPCR\PropertyInterface', $value);
         $this->assertEquals(\PHPCR\PropertyType::REFERENCE, $value->getType(), 'wrong type');
         $this->assertEquals($node->getIdentifier(), $value->getString(), 'different uuid');
 
@@ -113,6 +119,8 @@ class Writing_10_SetPropertyTypesTest extends phpcr_suite_baseCase
     {
         $node = $this->sharedFixture['session']->getRootNode()->getNode('tests_nodetype_base/multiValueProperty');
         $value = $this->node->setProperty('propNodeWeak', $node, \PHPCR\PropertyType::WEAKREFERENCE);
+        $this->assertInstanceOf('PHPCR\NodeInterface', $node);
+        $this->assertInstanceOf('PHPCR\PropertyInterface', $value);
         $this->assertEquals(\PHPCR\PropertyType::WEAKREFERENCE, $value->getType());
         $this->assertEquals($node->getIdentifier(), $value->getString());
 
@@ -136,46 +144,55 @@ class Writing_10_SetPropertyTypesTest extends phpcr_suite_baseCase
     {
         $node = $this->sharedFixture['session']->getRootNode()->getNode('tests_nodetype_base/numberPropertyNode/jcr:content');
         $value = $this->node->setProperty('x', $node, \PHPCR\PropertyType::WEAKREFERENCE);
+        $this->assertInstanceOf('PHPCR\PropertyInterface', $value);
         $this->fail("Exception should be thrown, but ". $value->getString() . " was returned.");
     }
     public function testCreateValueStringType()
     {
         $value = $this->node->setProperty('propString', 33, \PHPCR\PropertyType::STRING);
+        $this->assertInstanceOf('PHPCR\PropertyInterface', $value);
         $this->assertEquals(\PHPCR\PropertyType::STRING, $value->getType());
 
         $this->saveAndRenewSession();
         $value = $this->sharedFixture['session']->getProperty('/tests_nodetype_base/numberPropertyNode/jcr:content/propString');
+        $this->assertInstanceOf('PHPCR\PropertyInterface', $value);
         $this->assertEquals(\PHPCR\PropertyType::STRING, $value->getType());
     }
     public function testCreateValueDateType()
     {
         $time = time();
         $value = $this->node->setProperty('propDate', $time, \PHPCR\PropertyType::DATE);
+        $this->assertInstanceOf('PHPCR\PropertyInterface', $value);
         $this->assertEquals(\PHPCR\PropertyType::DATE, $value->getType());
         $this->assertEquals(date('Y-m-d\TH:i:s.000P', $time), $value->getString());
 
         $this->saveAndRenewSession();
         $value = $this->sharedFixture['session']->getProperty('/tests_nodetype_base/numberPropertyNode/jcr:content/propDate');
+        $this->assertInstanceOf('PHPCR\PropertyInterface', $value);
         $this->assertEquals(\PHPCR\PropertyType::DATE, $value->getType());
         $this->assertEquals(date('Y-m-d\TH:i:s.000P', $time), $value->getString());
     }
     public function testCreateValueUndefined()
     {
         $value = $this->node->setProperty('propUndefined', 'some value', \PHPCR\PropertyType::UNDEFINED);
+        $this->assertInstanceOf('PHPCR\PropertyInterface', $value);
         $this->assertNotEquals(\PHPCR\PropertyType::UNDEFINED, $value->getType(), 'getType should never return UNDEFINED');
 
         $this->saveAndRenewSession();
         $value = $this->sharedFixture['session']->getProperty('/tests_nodetype_base/numberPropertyNode/jcr:content/propUndefined');
+        $this->assertInstanceOf('PHPCR\PropertyInterface', $value);
         $this->assertNotEquals(\PHPCR\PropertyType::UNDEFINED, $value->getType(), 'getType should never return UNDEFINED');
     }
     public function testCreateValueName()
     {
         $value = $this->node->setProperty('propName', 'jcr:name', \PHPCR\PropertyType::NAME);
+        $this->assertInstanceOf('PHPCR\PropertyInterface', $value);
         $this->assertEquals(\PHPCR\PropertyType::NAME, $value->getType());
         $this->assertEquals('jcr:name', $value->getString());
 
         $this->saveAndRenewSession();
         $value = $this->sharedFixture['session']->getProperty('/tests_nodetype_base/numberPropertyNode/jcr:content/propName');
+        $this->assertInstanceOf('PHPCR\PropertyInterface', $value);
         $this->assertEquals(\PHPCR\PropertyType::NAME, $value->getType());
         $this->assertEquals('jcr:name', $value->getString());
     }
@@ -191,11 +208,13 @@ class Writing_10_SetPropertyTypesTest extends phpcr_suite_baseCase
     public function testCreateValuePath()
     {
         $value = $this->node->setProperty('propPath', '/some/path', \PHPCR\PropertyType::PATH);
+        $this->assertInstanceOf('PHPCR\PropertyInterface', $value);
         $this->assertEquals(\PHPCR\PropertyType::PATH, $value->getType());
         $this->assertEquals('/some/path', $value->getString());
 
         $this->saveAndRenewSession();
         $value = $this->sharedFixture['session']->getProperty('/tests_nodetype_base/numberPropertyNode/jcr:content/propPath');
+        $this->assertInstanceOf('PHPCR\PropertyInterface', $value);
         $this->assertEquals(\PHPCR\PropertyType::PATH, $value->getType());
         $this->assertEquals('/some/path', $value->getString());
     }
@@ -211,11 +230,13 @@ class Writing_10_SetPropertyTypesTest extends phpcr_suite_baseCase
     public function testCreateValueUri()
     {
         $value = $this->node->setProperty('propUri', 'http://some/uri', \PHPCR\PropertyType::URI);
+        $this->assertInstanceOf('PHPCR\PropertyInterface', $value);
         $this->assertEquals(\PHPCR\PropertyType::URI, $value->getType());
         $this->assertEquals('http://some/uri', $value->getString());
 
         $this->saveAndRenewSession();
         $value = $this->sharedFixture['session']->getProperty('/tests_nodetype_base/numberPropertyNode/jcr:content/propUri');
+        $this->assertInstanceOf('PHPCR\PropertyInterface', $value);
         $this->assertEquals(\PHPCR\PropertyType::URI, $value->getType());
         $this->assertEquals('http://some/uri', $value->getString());
     }

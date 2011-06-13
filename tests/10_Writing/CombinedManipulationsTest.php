@@ -27,6 +27,7 @@ class Writing_10_CombinedManipulationsTest extends phpcr_suite_baseCase
         $this->assertInstanceOf('PHPCR\NodeInterface', $basenode);
         $node = $basenode->getNode('idExample');
         $this->assertInstanceOf('PHPCR\NodeInterface', $node);
+        $this->assertInstanceOf('PHPCR\NodeType\NodeTypeInterface', $node->getPrimaryNodeType());
         $this->assertSame('nt:file', $node->getPrimaryNodeType()->getName());
 
         $node->remove();
