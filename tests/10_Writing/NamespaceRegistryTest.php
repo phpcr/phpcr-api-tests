@@ -106,6 +106,7 @@ class Writing_10_NamespaceRegistryTest extends phpcr_suite_baseCase
     {
         $this->nr->registerNamespace('valid', $this->nsBuiltIn['jcr']);
     }
+
     /**
      * @expectedException \PHPCR\RepositoryException
      */
@@ -113,6 +114,7 @@ class Writing_10_NamespaceRegistryTest extends phpcr_suite_baseCase
     {
         $this->nr->registerNamespace('in:valid', 'http://a_new_namespace');
     }
+
     /**
      * @expectedException \PHPCR\NamespaceException
      */

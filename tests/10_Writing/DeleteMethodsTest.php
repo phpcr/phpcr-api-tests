@@ -68,6 +68,7 @@ class Writing_10_DeleteMethodsTest extends phpcr_suite_baseCase
     {
         $this->sharedFixture['session']->removeItem('/not/existing');
     }
+
     /**
      * @covers \PHPCR\ItemInterface::remove
      */
@@ -173,6 +174,7 @@ class Writing_10_DeleteMethodsTest extends phpcr_suite_baseCase
         //relies on the base class setup trick to have the node populated from the fixtures
         $this->assertInstanceOf('PHPCR\NodeInterface', $this->node);
     }
+
     /**
      * @covers \PHPCR\NodeInterface::remove
      * @covers \PHPCR\SessionInterface::getNode
@@ -187,6 +189,7 @@ class Writing_10_DeleteMethodsTest extends phpcr_suite_baseCase
         $this->node->remove();
         $this->sharedFixture['session']->getNode($path);
     }
+
     /**
      * @covers \PHPCR\NodeInterface::remove
      * @covers \PHPCR\NodeInterface::getNode
@@ -202,6 +205,7 @@ class Writing_10_DeleteMethodsTest extends phpcr_suite_baseCase
         $this->node->remove();
         $parent->getNode($name);
     }
+
     /**
      * @covers \PHPCR\NodeInterface::remove
      * @covers \PHPCR\SessionInterface::getNode
@@ -217,6 +221,7 @@ class Writing_10_DeleteMethodsTest extends phpcr_suite_baseCase
         $property->remove();
         $this->sharedFixture['session']->getProperty($path);
     }
+
     /**
      * @covers \PHPCR\NodeInterface::remove
      * @covers \PHPCR\NodeInterface::getNode
@@ -232,6 +237,7 @@ class Writing_10_DeleteMethodsTest extends phpcr_suite_baseCase
         $property->remove();
         $this->node->getProperty($name);
     }
+
     /**
      * try to remove a node that has already been removed in this session
      * @expectedException \PHPCR\PathNotFoundException
@@ -245,6 +251,7 @@ class Writing_10_DeleteMethodsTest extends phpcr_suite_baseCase
         $this->node->remove();
         $this->sharedFixture['session']->removeItem($path);
     }
+
     /**
      * add node at place where there already was an other
      */

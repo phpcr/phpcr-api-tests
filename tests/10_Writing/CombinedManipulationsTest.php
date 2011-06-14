@@ -40,6 +40,7 @@ class Writing_10_CombinedManipulationsTest extends phpcr_suite_baseCase
         $this->assertInstanceOf('PHPCR\NodeInterface', $node);
         $this->assertSame('nt:folder', $node->getPrimaryNodeType()->getName());
     }
+
     /*
      * add more:
      * move a not yet loaded node, then load it with the old path -> fail. with new path -> get it

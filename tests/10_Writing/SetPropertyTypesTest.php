@@ -44,6 +44,7 @@ class Writing_10_SetPropertyTypesTest extends phpcr_suite_baseCase
         $this->assertSame(10, $value->getLong());
         $this->assertEquals(\PHPCR\PropertyType::STRING, $value->getType());
     }
+
     public function testCreateValueBinary()
     {
         $bin = $this->node->setProperty('newBinary', 'foobar', PHPCR\PropertyType::BINARY);
@@ -56,6 +57,7 @@ class Writing_10_SetPropertyTypesTest extends phpcr_suite_baseCase
         $this->assertEquals(\PHPCR\PropertyType::BINARY, $bin->getType());
         $this->assertEquals('foobar', stream_get_contents($bin->getBinary()));
     }
+
     public function testCreateValueInt()
     {
         $value = $this->node->setProperty('propInt', 100);
@@ -70,6 +72,7 @@ class Writing_10_SetPropertyTypesTest extends phpcr_suite_baseCase
         $this->assertSame(100, $value->getLong());
         $this->assertEquals(\PHPCR\PropertyType::LONG, $value->getType());
     }
+
     public function testCreateValueDouble()
     {
         $value = $this->node->setProperty('propDouble', 10.6);
@@ -86,6 +89,7 @@ class Writing_10_SetPropertyTypesTest extends phpcr_suite_baseCase
         $this->assertSame(10, $value->getLong());
         $this->assertEquals(\PHPCR\PropertyType::DOUBLE, $value->getType());
     }
+
     public function testCreateValueBoolean()
     {
         $value = $this->node->setProperty('propBoolean', true);
@@ -102,6 +106,7 @@ class Writing_10_SetPropertyTypesTest extends phpcr_suite_baseCase
         $this->assertTrue($value->getString() == true, 'wrong string value'); //boolean converted to string must be true
         $this->assertSame(1, $value->getLong(), 'wrong integer value');
     }
+
     public function testCreateValueNode()
     {
         $node = $this->sharedFixture['session']->getNode('/tests_nodetype_base/multiValueProperty');
@@ -115,6 +120,7 @@ class Writing_10_SetPropertyTypesTest extends phpcr_suite_baseCase
         $this->assertEquals(\PHPCR\PropertyType::REFERENCE, $value->getType(), 'wrong type');
         $this->assertEquals($node->getIdentifier(), $value->getString(), 'different uuid');
     }
+
     public function testCreateValueNodeWeak()
     {
         $node = $this->sharedFixture['session']->getRootNode()->getNode('tests_nodetype_base/multiValueProperty');
@@ -129,6 +135,7 @@ class Writing_10_SetPropertyTypesTest extends phpcr_suite_baseCase
         $this->assertEquals(\PHPCR\PropertyType::WEAKREFERENCE, $value->getType());
         $this->assertEquals($node->getIdentifier(), $value->getString());
     }
+
     /**
      * @expectedException \PHPCR\ValueFormatException
      */
@@ -137,6 +144,7 @@ class Writing_10_SetPropertyTypesTest extends phpcr_suite_baseCase
         $node = $this->sharedFixture['session']->getRootNode()->getNode('tests_nodetype_base/numberPropertyNode/jcr:content');
         $value = $this->node->setProperty('x', $node);
     }
+
     /**
      * @expectedException \PHPCR\ValueFormatException
      */
@@ -145,6 +153,7 @@ class Writing_10_SetPropertyTypesTest extends phpcr_suite_baseCase
         $node = $this->sharedFixture['session']->getRootNode()->getNode('tests_nodetype_base/numberPropertyNode/jcr:content');
         $value = $this->node->setProperty('x', $node, \PHPCR\PropertyType::WEAKREFERENCE);
     }
+
     public function testCreateValueStringType()
     {
         $value = $this->node->setProperty('propString', 33, \PHPCR\PropertyType::STRING);
@@ -156,6 +165,7 @@ class Writing_10_SetPropertyTypesTest extends phpcr_suite_baseCase
         $this->assertInstanceOf('PHPCR\PropertyInterface', $value);
         $this->assertEquals(\PHPCR\PropertyType::STRING, $value->getType());
     }
+
     public function testCreateValueDateType()
     {
         $time = time();
@@ -170,6 +180,7 @@ class Writing_10_SetPropertyTypesTest extends phpcr_suite_baseCase
         $this->assertEquals(\PHPCR\PropertyType::DATE, $value->getType());
         $this->assertEquals(date('Y-m-d\TH:i:s.000P', $time), $value->getString());
     }
+
     public function testCreateValueUndefined()
     {
         $value = $this->node->setProperty('propUndefined', 'some value', \PHPCR\PropertyType::UNDEFINED);
@@ -181,6 +192,7 @@ class Writing_10_SetPropertyTypesTest extends phpcr_suite_baseCase
         $this->assertInstanceOf('PHPCR\PropertyInterface', $value);
         $this->assertNotEquals(\PHPCR\PropertyType::UNDEFINED, $value->getType(), 'getType should never return UNDEFINED');
     }
+
     public function testCreateValueName()
     {
         $value = $this->node->setProperty('propName', 'jcr:name', \PHPCR\PropertyType::NAME);
@@ -194,6 +206,7 @@ class Writing_10_SetPropertyTypesTest extends phpcr_suite_baseCase
         $this->assertEquals(\PHPCR\PropertyType::NAME, $value->getType());
         $this->assertEquals('jcr:name', $value->getString());
     }
+
     /**
      * @expectedException \PHPCR\ValueFormatException
      */
@@ -203,6 +216,7 @@ class Writing_10_SetPropertyTypesTest extends phpcr_suite_baseCase
         $value = $this->node->setProperty('propName', 'namespace:name', \PHPCR\PropertyType::NAME);
         $this->saveAndRenewSession();
     }
+
     public function testCreateValuePath()
     {
         $value = $this->node->setProperty('propPath', '/some/path', \PHPCR\PropertyType::PATH);
@@ -216,6 +230,7 @@ class Writing_10_SetPropertyTypesTest extends phpcr_suite_baseCase
         $this->assertEquals(\PHPCR\PropertyType::PATH, $value->getType());
         $this->assertEquals('/some/path', $value->getString());
     }
+
     /**
      * @expectedException \PHPCR\ValueFormatException
      */
@@ -225,6 +240,7 @@ class Writing_10_SetPropertyTypesTest extends phpcr_suite_baseCase
         $value = $this->node->setProperty('propPath', '/ /', \PHPCR\PropertyType::PATH);
         $this->saveAndRenewSession();
     }
+
     public function testCreateValueUri()
     {
         $value = $this->node->setProperty('propUri', 'http://some/uri', \PHPCR\PropertyType::URI);
@@ -238,6 +254,7 @@ class Writing_10_SetPropertyTypesTest extends phpcr_suite_baseCase
         $this->assertEquals(\PHPCR\PropertyType::URI, $value->getType());
         $this->assertEquals('http://some/uri', $value->getString());
     }
+
     /**
      * @expectedException \PHPCR\ValueFormatException
      */

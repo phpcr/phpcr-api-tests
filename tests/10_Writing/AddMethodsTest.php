@@ -124,6 +124,7 @@ class Writing_10_AddMethodsTest extends phpcr_suite_baseCase
     {
         $this->node->addNode('newNode');
     }
+
     /**
      * @expectedException \PHPCR\NodeType\NoSuchNodeTypeException
      */
