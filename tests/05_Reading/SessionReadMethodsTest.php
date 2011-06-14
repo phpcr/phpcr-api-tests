@@ -234,24 +234,53 @@ class Reading_5_SessionReadMethodsTest extends phpcr_suite_baseCase
 
     public function testCheckPermission()
     {
-        $this->sharedFixture['session']->checkPermission('/tests_general_base', 'read');
-        $this->sharedFixture['session']->checkPermission('/tests_general_base/numberPropertyNode/jcr:content/foo', 'read');
-    }
-    /**
-     * @expectedException \PHPCR\AccessControlException
-     */
-    public function testCheckPermissionAccessControlException()
-    {
-        $this->markTestIncomplete('TODO: how to produce a permission exception?');
-        $this->sharedFixture['session']->checkPermission('/tests_general_base/numberPropertyNode/jcr:content/foo', 'add_node');
+        // A test without assertion is automatically marked skipped so here we
+        // test no exception has occured
+        $flag = false;
+        try {
+            $this->sharedFixture['session']->checkPermission('/tests_general_base', 'read');
+        } catch (\PHPCR\Security\AccessControlException $ex) {
+            $flag = true;
+        }
+        $this->assertFalse($flag);
+
+        $flag = false;
+        try {
+            $this->sharedFixture['session']->checkPermission('/tests_general_base/numberPropertyNode/jcr:content/foo', 'read');
+        } catch (\PHPCR\Security\AccessControlException $ex) {
+            $flag = true;
+        }
+        $this->assertFalse($flag);
     }
     public function testHasPermission()
     {
         $this->assertTrue($this->sharedFixture['session']->hasPermission('/tests_general_base', 'read'));
         $this->assertTrue($this->sharedFixture['session']->hasPermission('/tests_general_base/numberPropertyNode/jcr:content/foo', 'read'));
+        // TODO: check a WTF, this is supposed to fail, right? yet it succeeds
+        //       if the test is moved after testCheckPermissionAccessControlException it fails
         $this->assertTrue($this->sharedFixture['session']->hasPermission('/tests_general_base/numberPropertyNode/jcr:content/foo', 'add_node')); //we have permission, but this node is not capable of the operation
     }
 
+    /**
+     * @expectedException \PHPCR\Security\AccessControlException
+     */
+    public function testCheckPermissionAccessControlException()
+    {
+        // Login as anonymous
+        if (isset(self::$staticSharedFixture['session'])) {
+            self::$staticSharedFixture['session']->logout();
+        }
+        $config = self::$staticSharedFixture['config'];
+        $config['user'] = 'anonymous';
+        self::$staticSharedFixture['session'] = getJCRSession($config);
+        $session = self::$staticSharedFixture['session'];
+
+        $session->checkPermission('/tests_general_base/numberPropertyNode/jcr:content/foo', 'add_node');
+        $session->logout();
+
+        // TODO: check if the session is correctly renewed...
+        $this->saveAndRenewSession();
+    }
     public function testHasCapability()
     {
         $node = $this->sharedFixture['session']->getNode('/tests_general_base');
