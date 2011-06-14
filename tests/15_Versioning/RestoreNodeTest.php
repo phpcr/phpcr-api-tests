@@ -18,7 +18,12 @@ class Versioning_15_RestoreNodeTest extends phpcr_suite_baseCase
     public function setUp()
     {
         parent::setUp();
-        $this->vm = $this->sharedFixture['session']->getWorkspace()->getVersionManager();
+        try
+        {
+            $this->vm = $this->sharedFixture['session']->getWorkspace()->getVersionManager();
+        } catch (\PHPCR\UnSupportedRepositoryOperationException $e) {
+            $this->markTestSkipped("Versioning not supported: " . $e->getMessage());
+        }
     }
 
     public function testRestoreversion() {
