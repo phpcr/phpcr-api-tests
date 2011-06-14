@@ -144,8 +144,6 @@ class Writing_10_SetPropertyTypesTest extends phpcr_suite_baseCase
     {
         $node = $this->sharedFixture['session']->getRootNode()->getNode('tests_nodetype_base/numberPropertyNode/jcr:content');
         $value = $this->node->setProperty('x', $node, \PHPCR\PropertyType::WEAKREFERENCE);
-        $this->assertInstanceOf('PHPCR\PropertyInterface', $value);
-        $this->fail("Exception should be thrown, but ". $value->getString() . " was returned.");
     }
     public function testCreateValueStringType()
     {
