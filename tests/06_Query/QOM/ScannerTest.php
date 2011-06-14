@@ -15,6 +15,10 @@ class ScannerTest extends \phpcr_suite_baseCase
     protected $tokens;
 
     public function setUp() {
+        if (!class_exists("Sql2Scanner")) {
+            $this->markTestSkipped("Missing Jackalope\Query\QOM\Converter\Sql2Scanner");
+        }
+
         $this->sql2 = 'SELECT * FROM [nt:file] INNER JOIN [nt:folder] ON ISSAMENODE(sel1, sel2, [/home])';
         $this->tokens = array(
             'SELECT', '*', 'FROM','[nt:file]', 'INNER', 'JOIN', '[nt:folder]',

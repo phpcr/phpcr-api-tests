@@ -20,7 +20,7 @@ class Export_7_ExportRepositoryContentTest extends phpcr_suite_baseCase
         $expected = new DOMDocument();
         $expected->preserveWhiteSpace = false;
         $expected->load(__DIR__.'/../../fixtures/07_Export/systemview.xml');
-
+        fclose($stream);
         $this->assertEquivalentSystem($expected->documentElement, $output->documentElement, new DOMXPath($output));
     }
 
@@ -102,7 +102,7 @@ class Export_7_ExportRepositoryContentTest extends phpcr_suite_baseCase
         $expected = new DOMDocument();
         $expected->preserveWhiteSpace = false;
         $expected->load(__DIR__.'/../../fixtures/07_Export/documentview.xml');
-
+        fclose($stream);
         $this->assertEquivalentDocument($expected->documentElement, $output->documentElement, new DOMXPath($output));
     }
 
