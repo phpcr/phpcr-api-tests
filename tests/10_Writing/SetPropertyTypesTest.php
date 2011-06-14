@@ -47,7 +47,7 @@ class Writing_10_SetPropertyTypesTest extends phpcr_suite_baseCase
     public function testCreateValueBinary()
     {
         $bin = $this->node->setProperty('newBinary', 'foobar', PHPCR\PropertyType::BINARY);
-        $this->assertInstanceOf('PHPCR\PropertyInterface', $value);
+        $this->assertInstanceOf('PHPCR\PropertyInterface', $bin);
         $this->assertEquals(\PHPCR\PropertyType::BINARY, $bin->getType());
         $this->assertEquals('foobar', stream_get_contents($bin->getBinary()));
 
