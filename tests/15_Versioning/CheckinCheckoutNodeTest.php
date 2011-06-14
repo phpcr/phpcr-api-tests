@@ -19,8 +19,7 @@ class Versioning_15_CheckinCheckoutNodeTest extends phpcr_suite_baseCase
     {
         parent::setUp();
         $this->node = $this->sharedFixture['session']->getNode('/tests_version_base/versionable');
-        try
-        {
+        try {
             $this->vm = $this->sharedFixture['session']->getWorkspace()->getVersionManager();
         } catch (\PHPCR\UnSupportedRepositoryOperationException $e) {
             $this->markTestSkipped("Versioning not supported: " . $e->getMessage());
