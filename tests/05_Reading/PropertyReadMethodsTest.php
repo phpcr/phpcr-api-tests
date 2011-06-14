@@ -163,6 +163,7 @@ class Reading_5_PropertyReadMethodsTest extends phpcr_suite_baseCase
         $bin = $prop->getValue();
         $this->assertTrue(is_resource($bin));
         $this->assertNotNull(stream_get_contents($bin));
+        fclose($bin);
     }
 
     public function testGetBinaryMulti()
