@@ -15,8 +15,7 @@ class Versioning_15_VersionHistoryTest extends phpcr_suite_baseCase
         self::$staticSharedFixture['ie']->import('15_Versioning/base');
 
         //have some versions
-        try
-        {
+        try {
             $vm = self::$staticSharedFixture['session']->getWorkspace()->getVersionManager();
         } catch (\PHPCR\UnSupportedRepositoryOperationException $e) {
             return;
