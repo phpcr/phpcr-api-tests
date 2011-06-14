@@ -14,16 +14,24 @@ class Sql2ParserTest extends \phpcr_suite_baseCase
 {
     protected $queries;
 
+    protected $parser;
+
     public function setUp() {
+        parent::setUp();
+
+        if (! $this->sharedFixture['session']->getWorkspace() instanceof \Jackalope\Workspace) {
+            $this->markTestSkipped('This is a test for Jackalope specific functionality');
+        }
+
         $this->queries = Sql2TestQueries::getQueries();
+        $this->parser = new Sql2ToQomQueryConverter(new QOM\QueryObjectModelFactory());
     }
 
     public function testColumnsAndSelector()
     {
         $sql2 = $this->queries['6.7.39.Colum.Mixed'];
 
-        $parser = new Sql2ToQomQueryConverter();
-        $query = $parser->parse($sql2);
+        $query = $this->parser->parse($sql2);
 
         $this->assertInstanceOf('\Jackalope\Query\QOM\QueryObjectModel', $query);
         $this->assertNull($query->getConstraint());

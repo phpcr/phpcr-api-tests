@@ -23,6 +23,12 @@ class ScannerTest extends \phpcr_suite_baseCase
 
     public function testConstructor()
     {
+        parent::setUp();
+
+        if (! $this->sharedFixture['session']->getWorkspace() instanceof \Jackalope\Workspace) {
+            $this->markTestSkipped('This is a test for Jackalope specific functionality');
+        }
+
         $scanner = new Sql2Scanner($this->sql2);
         $this->assertAttributeEquals($this->sql2, 'sql2', $scanner);
         $this->assertAttributeEquals($this->tokens, 'tokens', $scanner);

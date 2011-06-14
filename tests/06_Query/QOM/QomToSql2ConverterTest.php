@@ -29,6 +29,12 @@ class QomToSql2ConverterTest extends \phpcr_suite_baseCase
 
     public function setUp()
     {
+        parent::setUp();
+
+        if (! $this->sharedFixture['session']->getWorkspace() instanceof \Jackalope\Workspace) {
+            $this->markTestSkipped('This is a test for Jackalope specific functionality');
+        }
+
         $this->parser = new QomToSql2QueryConverter(new Sql2Generator());
         $this->factory = new QOM\QueryObjectModelFactory();
         $this->queries = Sql2TestQueries::getQueries();
