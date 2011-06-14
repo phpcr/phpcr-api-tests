@@ -1,13 +1,11 @@
 <?php
 
-namespace Jackalope\Tests\QOM;
-
 require_once(dirname(__FILE__) . '/../../../inc/baseCase.php');
 
-use Jackalope\Query\QOM\Converter\Sql2Scanner;
+use PHPCR\Util\QOM\Sql2Scanner;
 
 /**
- * Test for Jackalope\Query\QomParser
+ * Test for PHPCR\Util\QOM\Sql2Scanner
  */
 class ScannerTest extends \phpcr_suite_baseCase
 {
@@ -15,8 +13,10 @@ class ScannerTest extends \phpcr_suite_baseCase
     protected $tokens;
 
     public function setUp() {
-        if (!class_exists("Sql2Scanner")) {
-            $this->markTestSkipped("Missing Jackalope\Query\QOM\Converter\Sql2Scanner");
+        parent::setUp();
+
+        if (! $this->sharedFixture['session']->getWorkspace() instanceof \Jackalope\Workspace) {
+            $this->markTestSkipped('This is a test for Jackalope specific functionality');
         }
 
         $this->sql2 = 'SELECT * FROM [nt:file] INNER JOIN [nt:folder] ON ISSAMENODE(sel1, sel2, [/home])';
@@ -27,12 +27,6 @@ class ScannerTest extends \phpcr_suite_baseCase
 
     public function testConstructor()
     {
-        parent::setUp();
-
-        if (! $this->sharedFixture['session']->getWorkspace() instanceof \Jackalope\Workspace) {
-            $this->markTestSkipped('This is a test for Jackalope specific functionality');
-        }
-
         $scanner = new Sql2Scanner($this->sql2);
         $this->assertAttributeEquals($this->sql2, 'sql2', $scanner);
         $this->assertAttributeEquals($this->tokens, 'tokens', $scanner);

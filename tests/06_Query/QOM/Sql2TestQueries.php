@@ -1,7 +1,5 @@
 <?php
 
-namespace Jackalope\Tests\QOM;
-
 /**
 * Test queries for Sql2 language
 */

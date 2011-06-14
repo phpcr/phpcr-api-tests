@@ -1,27 +1,25 @@
 <?php
 
-namespace Jackalope\Tests\QOM;
-
 require_once(dirname(__FILE__) . '/../../../inc/baseCase.php');
 require_once('Sql2TestQueries.php');
 
 use Jackalope\Query\QOM;
-use Jackalope\Query\QOM\Converter\QomToSql2QueryConverter;
-use Jackalope\Query\QOM\Converter\Sql2Generator;
+use PHPCR\Util\QOM\QomToSql2QueryConverter;
+use PHPCR\Util\QOM\Sql2Generator;
 use PHPCR\Query\QOM\QueryObjectModelConstantsInterface as Constants;
 
 /**
- * Test for Jackalope\Query\QomParser
+ * Test for PHPCR\Util\QOM\QomToSql2QueryConverter
  */
 class QomToSql2ConverterTest extends \phpcr_suite_baseCase
 {
     /**
-     * @var \Jackalope\Query\QomParser
+     * @var \PHPCR\Util\QOM\QomToSql2QueryConverter
      */
     protected $parser;
 
     /**
-     * @var \Jackalope\Query\QOM\QueryObjectModelFactory
+     * @var \PHPCR\Query\QOM\QueryObjectModelFactoryInterface
      */
     protected $factory;
 
@@ -334,6 +332,16 @@ class QomToSql2ConverterTest extends \phpcr_suite_baseCase
 
     // -------------------------------------------------------------------------
 
+    /**
+     * Assert that a QOM query specified by its source, columns, constraint and orderings
+     * will be converted in the expected SQL2 query.
+     *
+     * @param string $expectedSql2 The expected SQL2 query
+     * @param \PHPCR\Query\QOM\SourceInterface $source The source of the QOM query
+     * @param array $columns The columns of the QOM query
+     * @param \PHPCR\Query\QOM\ContraintInterface $constraint The contraint of the QOM query
+     * @param array $ordering The orderings of the QOM query
+     */
     protected function assertQuery($expectedSql2, $source, $columns = array(), $constraint = null, $ordering = array())
     {
         $query = new QOM\QueryObjectModel($source, $constraint, $ordering, $columns);
