@@ -52,6 +52,19 @@ class Query_6_QueryResultsTest extends QueryBaseCase
         $this->assertEquals(7, $count);
     }
 
+    public function testGetNodesWithMultiCurl()
+    {
+        // This test gets the nodes in one burst (parallel) instead serial like testGetNodes()
+        $nodeIterator = $this->qr->getNodes();
+        $count = 0;
+        $nodes = $nodeIterator->getNodes();
+        foreach ($nodes as $node) {
+            $this->assertInstanceOf('PHPCR\NodeInterface', $node);
+            $count++;
+        }
+        $this->assertEquals(7, $count);
+    }
+
     public function testGetSelectorNames()
     {
         $selectorNames = $this->qr->getSelectorNames();
