@@ -3,7 +3,6 @@
 require_once(dirname(__FILE__) . '/../../../inc/baseCase.php');
 require_once('Sql2TestQueries.php');
 
-use Jackalope\Query\QOM;
 use PHPCR\Util\QOM\Sql2Scanner;
 use PHPCR\Util\QOM\Sql2ToQomQueryConverter;
 
@@ -16,12 +15,12 @@ class Sql2ParserTest extends \phpcr_suite_baseCase
     public function setUp() {
         parent::setUp();
 
-        if (! $this->sharedFixture['session']->getWorkspace() instanceof \Jackalope\Workspace) {
-            $this->markTestSkipped('This is a test for Jackalope specific functionality');
-        }
-
         $this->queries = Sql2TestQueries::getQueries();
-        $this->parser = new Sql2ToQomQueryConverter(new QOM\QueryObjectModelFactory());
+        try {
+            $this->parser = new Sql2ToQomQueryConverter($this->sharedFixture['session']->getWorkspace()->getQueryManager()->getQOMFactory());
+        } catch(\PHPCR\UnsupportedRepositoryException $e) {
+            $this->markTestSkipped('Repository does not support the QOM factory');
+        }
     }
 
     public function testColumnsAndSelector()

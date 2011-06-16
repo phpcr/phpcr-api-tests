@@ -30,11 +30,15 @@ class QomToSql2ConverterTest extends \phpcr_suite_baseCase
         parent::setUp();
 
         if (! $this->sharedFixture['session']->getWorkspace() instanceof \Jackalope\Workspace) {
-            $this->markTestSkipped('This is a test for Jackalope specific functionality');
+            $this->markTestSkipped('TODO: fix the dependency on jackalope and always use the factory');
         }
 
         $this->parser = new QomToSql2QueryConverter(new Sql2Generator());
-        $this->factory = new QOM\QueryObjectModelFactory();
+        try {
+            $this->factory = $this->sharedFixture['session']->getWorkspace()->getQueryManager()->getQOMFactory();
+        } catch(\PHPCR\UnsupportedRepositoryException $e) {
+            $this->markTestSkipped('Repository does not support the QOM factory');
+        }
         $this->queries = Sql2TestQueries::getQueries();
     }
 
@@ -68,14 +72,14 @@ class QomToSql2ConverterTest extends \phpcr_suite_baseCase
     {
         $left = $this->factory->selector('nt:file');
         $right = $this->factory->selector('nt:folder');
-        
+
         $condition = new QOM\SameNodeJoinCondition('sel1', 'sel2');
         $this->assertQuery($this->queries['6.7.9.SameNodeJoinCondition.Simple'], $this->factory->join($left, $right, Constants::JCR_JOIN_TYPE_INNER, $condition));
 
         //TODO: should path be surronded by quotes?
         $condition = new QOM\SameNodeJoinCondition('sel1', 'sel2', '/home');
         $this->assertQuery($this->queries['6.7.9.SameNodeJoinCondition.Path'], $this->factory->join($left, $right, Constants::JCR_JOIN_TYPE_INNER, $condition));
-        
+
     }
 
     /**

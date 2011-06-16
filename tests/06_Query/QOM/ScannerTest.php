@@ -15,10 +15,6 @@ class ScannerTest extends \phpcr_suite_baseCase
     public function setUp() {
         parent::setUp();
 
-        if (! $this->sharedFixture['session']->getWorkspace() instanceof \Jackalope\Workspace) {
-            $this->markTestSkipped('This is a test for Jackalope specific functionality');
-        }
-
         $this->sql2 = 'SELECT * FROM [nt:file] INNER JOIN [nt:folder] ON ISSAMENODE(sel1, sel2, [/home])';
         $this->tokens = array(
             'SELECT', '*', 'FROM','[nt:file]', 'INNER', 'JOIN', '[nt:folder]',
