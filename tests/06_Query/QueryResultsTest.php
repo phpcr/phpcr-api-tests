@@ -54,6 +54,7 @@ class Query_6_QueryResultsTest extends QueryBaseCase
 
     public function testGetNodesWithMultiCurl()
     {
+        $this->markTestSkipped();
         // This test gets the nodes in one burst (parallel) instead serial like testGetNodes()
         $nodeIterator = $this->qr->getNodes();
         $count = 0;
