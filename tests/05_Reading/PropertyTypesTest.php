@@ -49,15 +49,6 @@ class Reading_5_PropertyTypesTest extends phpcr_suite_baseCase
         return $data;
     }
 
-    static public function dataValueFromType()
-    {
-        $data = array();
-        foreach (self::$types as $key => $value) {
-            $data[] = array($key,$value);
-        }
-        return $data;
-    }
-
     /**
      * @dataProvider dataValueFromName
      */
@@ -72,13 +63,5 @@ class Reading_5_PropertyTypesTest extends phpcr_suite_baseCase
     public function testValueFromName($field, $name)
     {
         $this->assertEquals(constant("PHPCR\PropertyType::$field"), \PHPCR\PropertyType::valueFromName($name));
-    }
-
-    /**
-     * @dataProvider dataValueFromType
-     */
-    public function testValueFromType($field, $type)
-    {
-        $this->assertEquals(constant("PHPCR\PropertyType::$field"), \PHPCR\PropertyType::valueFromType($type));
     }
 }
