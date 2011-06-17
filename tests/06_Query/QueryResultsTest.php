@@ -52,27 +52,12 @@ class Query_6_QueryResultsTest extends QueryBaseCase
         $this->assertEquals(7, $count);
     }
 
-    public function testGetNodesWithMultiCurl()
+    public function testGetNodesAtOnce()
     {
-        $this->markTestSkipped(); // Remove me when merged with multiCurl branch
         // This test gets the nodes in one burst (parallel) instead serial like testGetNodes()
         $nodeIterator = $this->qr->getNodes();
         $count = 0;
         $nodes = $nodeIterator->getNodes();
-        foreach ($nodes as $node) {
-            $this->assertInstanceOf('PHPCR\NodeInterface', $node);
-            $count++;
-        }
-        $this->assertEquals(7, $count);
-    }
-
-    public function testGetNodesFromRows()
-    {
-        $this->markTestSkipped(); // Remove me when merged with multiCurl branch
-        // This test building the nodes from a result set rather than refetching the nodes from jackrabbit
-        $nodeIterator = $this->qr->getNodes();
-        $count = 0;
-        $nodes = $nodeIterator->getNodesFromRows();
         foreach ($nodes as $node) {
             $this->assertInstanceOf('PHPCR\NodeInterface', $node);
             $count++;
