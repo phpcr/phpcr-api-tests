@@ -8,7 +8,7 @@ require_once('QueryBaseCase.php');
  */
 class Query_6_QueryManagerTest extends QueryBaseCase
 {
-    public static function setupBeforeClass()
+    public static function setupBeforeClass($fixture = 'general/query')
     {
         parent::setupBeforeClass('general/query');
     }
