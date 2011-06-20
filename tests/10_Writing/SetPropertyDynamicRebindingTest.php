@@ -29,7 +29,7 @@ class Writing_10_SetPropertyDynamicRebindingTest extends phpcr_suite_baseCase
         // TODO: re-enable this test once Session.logout is working properly
         // (for the moment this test will take too long to run because we reach
         // the max number of sessions limit)
-        $this->markTestSkipped('Fix Session.logout before enabling this test');
+        //$this->markTestSkipped('Fix Session.logout before enabling this test');
     }
 
     public static function tearDownAfterClass()
@@ -120,18 +120,15 @@ class Writing_10_SetPropertyDynamicRebindingTest extends phpcr_suite_baseCase
         $typesAndValues = array(
             PropertyType::STRING        => 'abcdefg',
             PropertyType::URI           => 'https://github.com/jackalope/jackalope/wiki',
+            PropertyType::BOOLEAN       => true,
             PropertyType::LONG          => 3,
             PropertyType::DOUBLE        => 3.1415926535897,
             PropertyType::DECIMAL       => '3.14',
             PropertyType::BINARY        => 'some binary stuff',
             PropertyType::NAME          => 'jcr:some_name',
             PropertyType::PATH          => '/some/valid/path',
-            // TODO: Rebinding REFERENCE from/to WEAKREFERENCE does not work
             PropertyType::WEAKREFERENCE => $this->referenceable_node_uuid,
             PropertyType::REFERENCE     => $this->referenceable_node_uuid,
-
-            // TODO: rebinding from/to boolean does not work
-//            PropertyType::BOOLEAN       => true,
 
             // TODO: rebinding from/to date does not work
 //            PropertyType::DATE          => new DateTime(),
