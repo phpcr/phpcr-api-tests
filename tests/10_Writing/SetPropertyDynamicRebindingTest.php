@@ -68,6 +68,9 @@ class Writing_10_SetPropertyDynamicRebindingTest extends phpcr_suite_baseCase
         if ($sourcePropType === PropertyType::REFERENCE
          || $sourcePropType === PropertyType::WEAKREFERENCE) {
             $this->assertEquals($this->referenceable_node_uuid, $prop->getString());
+        } elseif ($sourcePropType === PropertyType::DATE) {
+            // To avoid problems with the representation of the TZ, we compare timestamps
+            $this->assertEquals($sourcePropValue->getTimestamp(), $prop->getValue()->getTimestamp());
         } elseif ($sourcePropType !== \PHPCR\PropertyType::BINARY) {
             $this->assertEquals($sourcePropValue, $prop->getValue(), 'Initial property value does not match before saving');
         } else {
@@ -84,6 +87,9 @@ class Writing_10_SetPropertyDynamicRebindingTest extends phpcr_suite_baseCase
         if ($sourcePropType === PropertyType::REFERENCE
          || $sourcePropType === PropertyType::WEAKREFERENCE) {
             $this->assertEquals($this->referenceable_node_uuid, $prop->getString());
+        } elseif ($sourcePropType === PropertyType::DATE) {
+            // To avoid problems with the representation of the TZ, we compare timestamps
+            $this->assertEquals($sourcePropValue->getTimestamp(), $prop->getValue()->getTimestamp());
         } elseif ($sourcePropType !== \PHPCR\PropertyType::BINARY) {
             $this->assertEquals($sourcePropValue, $prop->getValue(), 'Initial property value does not match after saving');
         } else {
@@ -101,7 +107,13 @@ class Writing_10_SetPropertyDynamicRebindingTest extends phpcr_suite_baseCase
         $prop = $this->sharedFixture['session']->getProperty('/' . $propName);
         $this->assertInstanceOf('\PHPCR\PropertyInterface', $prop);
         $this->assertEquals($destPropType, $prop->getType(), 'Property type does not match after re-binding and save');
-        $this->assertEquals($destPropValue, $prop->$getterFunc(), 'Property value does not match after re-binding and save');
+
+        if ($destPropType === PropertyType::DATE) {
+            // To avoid problems with the representation of the TZ, we compare timestamps
+            $this->assertEquals($destPropValue->getTimestamp(), $prop->getValue()->getTimestamp());
+        } else {
+            $this->assertEquals($destPropValue, $prop->$getterFunc(), 'Property value does not match after re-binding and save');
+        }
     }
 
     /**
@@ -125,13 +137,11 @@ class Writing_10_SetPropertyDynamicRebindingTest extends phpcr_suite_baseCase
             PropertyType::DOUBLE        => 3.1415926535897,
             PropertyType::DECIMAL       => '3.14',
             PropertyType::BINARY        => 'some binary stuff',
+            PropertyType::DATE          => new DateTime(),
             PropertyType::NAME          => 'jcr:some_name',
             PropertyType::PATH          => '/some/valid/path',
             PropertyType::WEAKREFERENCE => $this->referenceable_node_uuid,
             PropertyType::REFERENCE     => $this->referenceable_node_uuid,
-
-            // TODO: rebinding from/to date does not work
-//            PropertyType::DATE          => new DateTime(),
         );
 
         $getters = array(
