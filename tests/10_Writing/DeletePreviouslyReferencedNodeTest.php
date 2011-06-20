@@ -24,36 +24,34 @@ class Writing_10_DeletePreviouslyReferencedNodeTest extends phpcr_suite_baseCase
         self::$staticSharedFixture['ie']->import('10_Writing/nodetype');
     }
 
+    /**
+     * this test is just to see if there is any exception in this workflow.
+     */
     public function testDeleteNode()
     {
-        $error_occured = false;
+        // 1) Load a referenceable node
+        $destnode = $this->sharedFixture['session']->getNode('/tests_nodetype_base/idExample');
 
-        try {
-            // 1) Load a referenceable node
-            $destnode = $this->sharedFixture['session']->getNode('/tests_nodetype_base/idExample');
+        // 2) Create a reference to it
+        $sourcenode = $this->sharedFixture['session']->getRootNode();
+        $sourcenode->setProperty('reference', $destnode, PropertyType::WEAKREFERENCE);
 
-            // 2) Create a reference to it
-            $sourcenode = $this->sharedFixture['session']->getRootNode();
-            $sourcenode->setProperty('reference', $destnode, PropertyType::WEAKREFERENCE);
+        // 3) Save and renew session (+ re-read the source and dest)
+        $this->saveAndRenewSession();
+        $destnode = $this->sharedFixture['session']->getNode('/tests_nodetype_base/idExample');
+        $sourcenode = $this->sharedFixture['session']->getProperty('/reference');
 
-            // 3) Save and renew session (+ re-read the source and dest)
-            $this->saveAndRenewSession();
-            $destnode = $this->sharedFixture['session']->getNode('/tests_nodetype_base/idExample');
-            $sourcenode = $this->sharedFixture['session']->getProperty('/reference');
+        // 4) Delete the property reference
+        $sourcenode->remove();
 
-            // 4) Delete the property reference
-            $sourcenode->remove();
+        // 5) Save and renew session
+        $this->saveAndRenewSession();
 
-            // 5) Save and renew session
-            $this->saveAndRenewSession();
+        // 6) Delete the previously referenced node
+        $destnode = $this->sharedFixture['session']->getNode('/tests_nodetype_base/idExample');
+        $destnode->remove();
+        $this->saveAndRenewSession();
 
-            // 6) Delete the previously referenced node
-            $destnode->remove();
-            $this->saveAndRenewSession();
-        } catch (\Exception $ex) {
-            $error_occured = true;
-        }
-
-        $this->assertFalse($error_occured);
+        $this->assertFalse($this->sharedFixture['session']->itemExists('/tests_nodetype_base/idExample'));
     }
 }
