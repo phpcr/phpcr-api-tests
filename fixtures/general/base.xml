@@ -64,6 +64,7 @@
                 <sv:value>2011-10-23T14:34:20.000+01:00</sv:value>
                 <sv:value>2010-10-23T14:34:20.000+01:00</sv:value>
             </sv:property>
+
         </sv:node>
     </sv:node>
 
@@ -98,6 +99,15 @@
             <sv:property sv:name="jcr:mimeType" sv:type="String">
                 <sv:value>text/plain</sv:value>
             </sv:property>
+
+            <sv:node sv:name="Test escaping_x0020bla &lt;&gt;'&quot; node"> <!-- TODO: if https://issues.apache.org/jira/browse/JCR-2997 is fixed, add a space after _x0020 -->
+                <sv:property sv:name="jcr:primaryType" sv:type="Name">
+                    <sv:value>nt:unstructured</sv:value>
+                </sv:property>
+                <sv:property sv:name="escaping_x0020 bla &lt;&gt;'&quot;" sv:type="String">
+                    <sv:value>true</sv:value>
+                </sv:property>
+            </sv:node>
 
             <sv:node sv:name="weakreference_target">
                 <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -277,7 +287,5 @@
             </sv:property>
 
         </sv:node>
-
     </sv:node>
-
 </sv:node>

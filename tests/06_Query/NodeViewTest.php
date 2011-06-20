@@ -25,7 +25,7 @@ class Query_6_NodeViewTest extends QueryBaseCase
             $count++;
         }
 
-        $this->assertEquals(7, $count, 'wrong number of elements in iterator');
+        $this->assertEquals(8, $count, 'wrong number of elements in iterator');
     }
 
     public function testSeekable()

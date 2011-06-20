@@ -49,20 +49,24 @@ class Query_6_QueryResultsTest extends QueryBaseCase
             $this->assertInstanceOf('PHPCR\NodeInterface', $node);
             $count++;
         }
-        $this->assertEquals(7, $count);
+        $this->assertEquals(8, $count);
     }
 
     public function testGetNodesAtOnce()
     {
         // This test gets the nodes in one burst (parallel) instead serial like testGetNodes()
         $nodeIterator = $this->qr->getNodes();
-        $count = 0;
+        $keys = array();
         $nodes = $nodeIterator->getNodes();
-        foreach ($nodes as $node) {
+        foreach ($nodes as $path => $node) {
             $this->assertInstanceOf('PHPCR\NodeInterface', $node);
-            $count++;
+            $this->assertEquals($path, $node->getPath());
+
+            $keys[] = $path;
         }
-        $this->assertEquals(7, $count);
+        $this->assertEquals(8, count($keys));
+
+        $this->assertContains('/tests_general_base/idExample/jcr:content/Test escaping_x0020bla <>\'" node', $keys);
     }
 
     public function testGetSelectorNames()
@@ -84,7 +88,7 @@ class Query_6_QueryResultsTest extends QueryBaseCase
                 $count++;
             }
         }
-        $this->assertEquals(21, $count);
+        $this->assertEquals(24, $count);
     }
 
     public function testReadPropertyContentFromResults()
