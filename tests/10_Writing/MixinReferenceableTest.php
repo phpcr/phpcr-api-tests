@@ -42,9 +42,12 @@ class Writing_10_MixinReferenceableTest extends phpcr_suite_baseCase
     public function testReferenceOnNewlyReferenceableNode()
     {
         // Load a non-referenceable node and make it referenceable
-        $referenced_node = $this->sharedFixture['session']->getNode('/tests_nodetype_base/idExample');
+        $referenced_node = $this->sharedFixture['session']->getNode('/tests_nodetype_base/emptyExample');
         $referenced_node->addMixin('mix:referenceable');
-        $this->sharedFixture['session']->save();
+        $this->saveAndRenewSession();
+
+        // Re-read the node to be sure it has a UUID
+        $referenced_node = $this->sharedFixture['session']->getNode('/tests_nodetype_base/emptyExample');
 
         // Reference it from another node
         $source_node = $this->sharedFixture['session']->getNode('/tests_nodetype_base/nonreferenceable');
