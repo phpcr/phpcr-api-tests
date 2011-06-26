@@ -15,7 +15,7 @@ require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
  */
 class Reading_5_SessionReadMethodsTest extends phpcr_suite_baseCase
 {
-    static public function  setupBeforeClass()
+    static public function setupBeforeClass()
     {
         parent::setupBeforeClass();
         self::$staticSharedFixture['ie']->import('general/base');
@@ -272,7 +272,7 @@ class Reading_5_SessionReadMethodsTest extends phpcr_suite_baseCase
         }
         $config = self::$staticSharedFixture['config'];
         $config['user'] = 'anonymous';
-        self::$staticSharedFixture['session'] = getJCRSession($config);
+        self::$staticSharedFixture['session'] = getPHPCRSession($config);
         $session = self::$staticSharedFixture['session'];
 
         $session->checkPermission('/tests_general_base/numberPropertyNode/jcr:content/foo', 'add_node');
