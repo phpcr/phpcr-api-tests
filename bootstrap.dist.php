@@ -4,9 +4,9 @@
  * Sample bootstrap file (as used for jr_cr)
  *
  * This file does some basic stuff that's project specific.
- * Please copy the file for your project and make sure phpunit.xml includes 
+ * Please copy the file for your project and make sure phpunit.xml includes
  * this file.
- * 
+ *
  * function getRepository(config) which returns the repository
  * function getJCRSession(config) which returns the session
  *
@@ -24,7 +24,7 @@ foreach ($necessaryConfigValues as $val) {
     }
 }
 
-/** 
+/**
  * autoloader: jackalope-api-tests relies on this autoloader.
  */
 function jackalopeApiTestsAutoload($class) {
@@ -38,10 +38,26 @@ function jackalopeApiTestsAutoload($class) {
 spl_autoload_register('jackalopeApiTestsAutoload');
 
 /**
+ * @return string classname of the repository factory
+ */
+function getRepositoryFactoryClass()
+{
+    return 'Jackalope\RepositoryFactoryJackrabbit';
+}
+
+/**
+ * @return hashmap to be used with the repository factory
+ */
+function getRepositoryFactoryParameters($config)
+{
+    return array('jackalope.jackrabbit_uri' => $config['url']);
+}
+
+/**
  * Repository lookup is implementation specific.
  * @param config The configuration where to find the repository
  * @return the repository instance
- */ 
+ */
 function getRepository($config) {
     if (empty($config['url']) || empty($config['transport'])) {
         return false;
@@ -58,7 +74,7 @@ function getSimpleCredentials($user, $password) {
     return new jr_cr_simplecredentials($user, $password);
 }
 
-/** 
+/**
  * Get a session for this implementation.
  * @param config The configuration that is passed to getRepository
  * @param credentials The credentials to log into the repository. If omitted, $config['user'] and $config['pass'] is used with getSimpleCredentials
