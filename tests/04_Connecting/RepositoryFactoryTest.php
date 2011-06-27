@@ -12,7 +12,7 @@ class Connecting_4_RepositoryFactoryTest extends phpcr_suite_baseCase
         $factory = new $class;
         $this->assertInstanceOf('PHPCR\RepositoryFactoryInterface', $factory);
 
-        $repo = $factory->getRepository(getRepositoryFactoryParameters($this->config));
+        $repo = $factory->getRepository(getRepositoryFactoryParameters(self::$staticSharedFixture['config']));
         $this->assertInstanceOf('PHPCR\RepositoryInterface', $repo);
     }
 
