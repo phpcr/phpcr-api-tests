@@ -2,6 +2,9 @@
 
 /**
 * Test queries for Sql2 language
+*
+* The SQL2 queries defined here correspond to the QOM queries defined in QomTestQueries.
+* @see QomTestQueries
 */
 class Sql2TestQueries {
 

@@ -1,8 +1,12 @@
 <?php
 
 use PHPCR\Query\QOM\QueryObjectModelConstantsInterface as Constants;
+
 /**
 * Test queries for QOM language
+*
+* The QOM queries defined here correspond to the SQL2 queries defined in Sql2TestQueries.
+* @see Sql2TestQueries
 */
 class QomTestQueries {
 
@@ -403,32 +407,33 @@ class QomTestQueries {
                 array(),
                 array());
 
-        // NOT YET IMPLEMENTED
-//        // SELECT * FROM [nt:unstructured] ORDER BY prop1 ASC
-//        $queries['6.7.38.Order.Asc'] =
-//            $factory->createQuery(
-//                $factory->selector('[nt:unstructured]'),
-//                null,
-//                array(array('prop1', Constants::JCR_ORDER_ASCENDING)),
-//                array());
+        // SELECT * FROM [nt:unstructured] ORDER BY prop1 ASC
+        $queries['6.7.38.Order.Asc'] =
+            $factory->createQuery(
+                $factory->selector('[nt:unstructured]'),
+                null,
+                array(
+                    $factory->ascending($factory->propertyValue('prop1'))),
+                array());
 
         // SELECT * FROM [nt:unstructured] ORDER BY prop1 DESC
-//        $queries['6.7.38.Order.Desc'] =
-//            $factory->createQuery(
-//                $factory->selector('[nt:unstructured]'),
-//                null,
-//                array(array('prop1', Constants::JCR_ORDER_DESCENDING)),
-//                array());
+        $queries['6.7.38.Order.Desc'] =
+            $factory->createQuery(
+                $factory->selector('[nt:unstructured]'),
+                null,
+                array(
+                    $factory->descending($factory->propertyValue('prop1'))),
+                array());
 
         // SELECT * FROM [nt:unstructured] ORDER BY prop1 ASC, prop2 DESC
-//        $queries['6.7.38.Order.Mixed'] =
-//            $factory->createQuery(
-//                $factory->selector('[nt:unstructured]'),
-//                null,
-//                array(
-//                  array('prop1', Constants::JCR_ORDER_ASCENDING),
-//                  array('prop2', Constants::JCR_ORDER_DESCENDING)),
-//                array());
+        $queries['6.7.38.Order.Mixed'] =
+            $factory->createQuery(
+                $factory->selector('[nt:unstructured]'),
+                null,
+                array(
+                    $factory->ascending($factory->propertyValue('prop1')),
+                    $factory->descending($factory->propertyValue('prop2'))),
+                array());
 
         /**
         * 6.7.39 Column
