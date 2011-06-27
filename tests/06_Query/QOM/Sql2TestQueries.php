@@ -85,6 +85,7 @@ class Sql2TestQueries {
         */
         $queries['6.7.22.DescendantNode.Simple'] = 'SELECT * FROM [nt:file] WHERE ISDESCENDANTNODE([/home])';
         $queries['6.7.22.DescendantNode.Selector'] = 'SELECT * FROM [nt:file] WHERE ISDESCENDANTNODE(sel1, [/home])';
+
         /**
         * 6.7.27. ProperyValue
         */
