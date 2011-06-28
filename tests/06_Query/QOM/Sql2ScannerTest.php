@@ -7,7 +7,7 @@ use PHPCR\Util\QOM\Sql2Scanner;
 /**
  * Test for PHPCR\Util\QOM\Sql2Scanner
  */
-class ScannerTest extends \phpcr_suite_baseCase
+class Sql2ScannerTest extends \phpcr_suite_baseCase
 {
     protected $sql2;
     protected $tokens;

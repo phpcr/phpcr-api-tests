@@ -7,7 +7,7 @@ require_once('QomTestQueries.php');
 use PHPCR\Util\QOM\Sql2Scanner;
 use PHPCR\Util\QOM\Sql2ToQomQueryConverter;
 
-class Sql2ParserTest extends \phpcr_suite_baseCase
+class Sql2ToQomConverterTest extends \phpcr_suite_baseCase
 {
     protected $sql2Queries;
 
