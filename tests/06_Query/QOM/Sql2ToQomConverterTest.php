@@ -39,7 +39,7 @@ class Sql2ToQomConverterTest extends \phpcr_suite_baseCase
         $this->assertEmpty($query->getOrderings());
         $this->assertInstanceOf('\PHPCR\Query\QOM\SourceInterface', $query->getSource());
         $this->assertEquals('[nt:unstructured]', $query->getSource()->getNodeTypeName());
-        
+
         $cols = $query->getColumns();
         $this->assertTrue(is_array($cols));
         $this->assertEquals(3, count($cols));
