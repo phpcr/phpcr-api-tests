@@ -24,11 +24,11 @@ interface phpcrApiTestSuiteImportExportFixtureInterface
  *
  * Connection parameters for jackrabbit have to be set in the $GLOBALS array (i.e. in phpunit.xml)
  *     <php>
- *      <var name="jcr.url" value="http://localhost:8080/server" />
- *      <var name="jcr.user" value="admin" />
- *      <var name="jcr.pass" value="admin" />
- *      <var name="jcr.workspace" value="tests" />
- *      <var name="jcr.transport" value="davex" />
+ *      <var name="phpcr.url" value="http://localhost:8080/server" />
+ *      <var name="phpcr.user" value="admin" />
+ *      <var name="phpcr.pass" value="admin" />
+ *      <var name="phpcr.workspace" value="tests" />
+ *      <var name="phpcr.transport" value="davex" />
  *    </php>
  */
 class jackrabbit_importexport implements phpcrApiTestSuiteImportExportFixtureInterface
@@ -65,12 +65,12 @@ class jackrabbit_importexport implements phpcrApiTestSuiteImportExportFixtureInt
     private function getArguments()
     {
         $args = array(
-            'jcr.url' => 'storage',
-            'jcr.user' => 'username',
-            'jcr.pass' => 'password',
-            'jcr.workspace' => 'workspace',
-            'jcr.transport' => 'transport',
-            'jcr.basepath' => 'repository-base-xpath',
+            'phpcr.url' => 'storage',
+            'phpcr.user' => 'username',
+            'phpcr.pass' => 'password',
+            'phpcr.workspace' => 'workspace',
+            'phpcr.transport' => 'transport',
+            'phpcr.basepath' => 'repository-base-xpath',
         );
         $opts = "";
         foreach ($args AS $arg => $newArg) {

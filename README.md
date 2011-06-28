@@ -36,12 +36,12 @@ implementation:
 * Copy phpunit.dist.xml to the parent folder of where you added the submodule,
     rename it to phpunit.xml and adapt as necessary.
 * All <php /> vars beginning with "jcr." are copied to the configuration array
-    that is passed to the functions `getJCRSession`,
+    that is passed to the functions `getPHPCRSession`,
     `getRepository` and `getFixtureLoader`.
     TODO: configuration should be handled by bootstrap and not by baseClass
 * Write your own bootstrap file. Have a look at bootstrap.dist.php You
   have to implement the following methods:
-    ** getJCRSession()
+    ** getPHPCRSession()
     ** getRepository()
     ** getSimpleCredentials()
     ** getFixtureLoader()

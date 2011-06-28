@@ -61,7 +61,6 @@ class Writing_10_NodeTypeAssignementTest extends phpcr_suite_baseCase
         foreach ($savedNode->getMixinNodeTypes() as $type) {
             $resultTypes[] = $type->getName();
         }
-        //var_dump($resultTypes);die;
         $this->assertContains($mixin, $resultTypes, "Node mixins should contain $mixin");
     }
 

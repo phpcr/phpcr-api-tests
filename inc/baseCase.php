@@ -34,7 +34,7 @@ abstract class phpcr_suite_baseCase extends PHPUnit_Framework_TestCase
 
     /**
      * the bootstrap.php from the client can throw PHPCR\RepositoryException
-     * with this message to tell assertSession when getJCRSession has been called
+     * with this message to tell assertSession when getPHPCRSession has been called
      * with parameters not supported by this implementation (like credentials null)
      */
     const NOTSUPPORTEDLOGIN = 'Not supported login';
@@ -43,13 +43,16 @@ abstract class phpcr_suite_baseCase extends PHPUnit_Framework_TestCase
     {
         self::$staticSharedFixture = array();
         date_default_timezone_set('Europe/Zurich');
-        foreach ($GLOBALS AS $cfgKey => $cfgValue) {
-            if (strpos($cfgKey, "jcr.") === 0) {
-                self::$staticSharedFixture['config'][substr($cfgKey, 4)] = $cfgValue;
+        foreach ($GLOBALS as $cfgKey => $value) {
+            if ('phpcr.' === substr($cfgKey, 0, 6)) {
+                self::$staticSharedFixture['config'][substr($cfgKey, 6)] = $value;
             }
         }
-        self::$staticSharedFixture['session'] = getJCRSession(self::$staticSharedFixture['config']);
+
+        self::$staticSharedFixture['session'] = getPHPCRSession(self::$staticSharedFixture['config']);
         self::$staticSharedFixture['ie'] = getFixtureLoader(self::$staticSharedFixture['config']);
+
+        self::$staticSharedFixture['ie']->import('general/base');
     }
 
     public static function tearDownAfterClass()
@@ -65,7 +68,7 @@ abstract class phpcr_suite_baseCase extends PHPUnit_Framework_TestCase
         if (isset(self::$staticSharedFixture['session'])) {
             self::$staticSharedFixture['session']->logout();
         }
-        self::$staticSharedFixture['session'] = getJCRSession(self::$staticSharedFixture['config']);
+        self::$staticSharedFixture['session'] = getPHPCRSession(self::$staticSharedFixture['config']);
         $this->sharedFixture['session'] = self::$staticSharedFixture['session'];
         return $this->sharedFixture['session'];
     }
@@ -115,7 +118,7 @@ abstract class phpcr_suite_baseCase extends PHPUnit_Framework_TestCase
     protected function assertSession($cfg, $credentials = null)
     {
         try {
-            $ses = getJCRSession($cfg, $credentials);
+            $ses = getPHPCRSession($cfg, $credentials);
         } catch(PHPCR\RepositoryException $e) {
             if ($e->getMessage() == phpcr_suite_baseCase::NOTSUPPORTEDLOGIN) {
                 $this->markTestSkipped('This implementation does not support this type of login.');
