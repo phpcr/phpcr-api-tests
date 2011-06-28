@@ -18,6 +18,11 @@ class Writing_10_ItemStateTest extends phpcr_suite_baseCase
             $this->markTestSkipped('This test is only meant for Jackalope');
         }
 
+        $class = new ReflectionClass('\Jackalope\Item');
+        if (! array_key_exists('STATE_NEW', $class->getConstants())) {
+            $this->markTestSkipped('Feature not yet implemented');
+        }
+
         $root = $this->sharedFixture['session']->getRootNode();
 
         if ($root->hasNode('testNode')) {
