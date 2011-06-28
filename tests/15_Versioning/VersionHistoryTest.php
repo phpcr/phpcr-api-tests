@@ -31,7 +31,7 @@ class Versioning_15_VersionHistoryTest extends phpcr_suite_baseCase
         $node->setProperty('foo', 'bar3');
         self::$staticSharedFixture['session']->save();
         $vm->checkin('/tests_version_base/versioned');
-        self::$staticSharedFixture['session'] = getJCRSession(self::$staticSharedFixture['config']); //reset the session, should not be needed if save would correctly invalidate and refresh $node
+        self::$staticSharedFixture['session'] = getPHPCRSession(self::$staticSharedFixture['config']); //reset the session, should not be needed if save would correctly invalidate and refresh $node
     }
 
     public function setUp()

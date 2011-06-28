@@ -13,7 +13,7 @@ class Reading_5_SessionNamespaceRemappingTest extends phpcr_suite_baseCase
     public function testSetNamespacePrefix()
     {
         //acquire new session, as we fiddle around with namespace prefixes
-        $session = getJCRSession($this->sharedFixture['config']);
+        $session = getPHPCRSession($this->sharedFixture['config']);
 
         if ($session instanceof \Jackalope\Session) {
             $this->markTestSkipped('Session.setNamespacePrefix is not yet implemented in Jackalope');

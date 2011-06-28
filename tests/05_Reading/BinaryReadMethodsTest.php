@@ -27,7 +27,7 @@ hello world
 # foo
 ';
 
-    static public function  setupBeforeClass()
+    static public function setupBeforeClass()
     {
         parent::setupBeforeClass();
         self::$staticSharedFixture['ie']->import('general/base');

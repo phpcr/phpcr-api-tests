@@ -14,7 +14,7 @@ class Reading_5_PropertyReadMethodsTest extends phpcr_suite_baseCase
     protected $property;
     protected $multiProperty;
 
-    static public function  setupBeforeClass()
+    static public function setupBeforeClass()
     {
         parent::setupBeforeClass();
         self::$staticSharedFixture['ie']->import('general/base');
@@ -294,7 +294,7 @@ class Reading_5_PropertyReadMethodsTest extends phpcr_suite_baseCase
 
         $prop = $this->sharedFixture['session']->getRootNode()->getNode('tests_general_base/index.txt/jcr:content')->getProperty('zeronumber');
         $this->assertFalse($prop->getBoolean(), 'this boolean property should be false');
-        $this->assertTrue(! $prop->getString(), 'boolean false as string should be false');
+        $this->assertTrue(!$prop->getString(), 'boolean false as string should be false');
     }
 
     public function testGetBooleanMulti()
