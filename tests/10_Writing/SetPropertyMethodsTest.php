@@ -118,7 +118,6 @@ class Writing_10_SetPropertyMethodsTest extends phpcr_suite_baseCase
         $this->saveAndRenewSession();
         $node = $this->sharedFixture['session']->getNode($this->nodePath);
         $prop = $node->getProperty('multivalue');
-        $this->assertEquals(array(1,2,3), $this->node->getPropertyValue('multivalue'));
         $this->assertEquals(\PHPCR\PropertyType::LONG, $prop->getType());
         $this->assertTrue($prop->isMultiple());
     }
@@ -135,6 +134,7 @@ class Writing_10_SetPropertyMethodsTest extends phpcr_suite_baseCase
         $this->assertEquals('abc', $prop->getString());
 
         $this->saveAndRenewSession();
+        $session = $this->sharedFixture['session'];
         $this->assertTrue($session->nodeExists($this->nodePath . '/child'));
         $this->assertTrue($session->propertyExists($this->nodePath . '/child/p'));
 
@@ -173,14 +173,13 @@ class Writing_10_SetPropertyMethodsTest extends phpcr_suite_baseCase
     {
         $nodePath = '/tests_nodetype_base/index.txt/jcr:content';
 
-        $session = $this->sharedFixture['session'];
-        $this->assertTrue($session->propertyExists($nodePath . '/jcr:data'));
+        $this->assertTrue($this->sharedFixture['session']->propertyExists($nodePath . '/jcr:data'));
 
-        $node = $session->getNode($nodePath);
+        $node = $this->sharedFixture['session']->getNode($nodePath);
         $node->setProperty('jcr:data', null);
 
         $this->saveAndRenewSession();
-        $this->assertFalse($session->propertyExists($nodePath . '/jcr:data'));
+        $this->assertFalse($this->sharedFixture['session']->propertyExists($nodePath . '/jcr:data'));
     }
 
     //TODO: is this all creation modes? the types are tested in SetPropertyTypes

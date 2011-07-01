@@ -38,6 +38,7 @@ class Writing_10_MixinReferenceableTest extends phpcr_suite_baseCase
 
     /**
      * Test that a node with newly set mix:referenceable type can be referenced
+     * @group test
      */
     public function testReferenceOnNewlyReferenceableNode()
     {

@@ -40,8 +40,9 @@ class Writing_10_NodeTypeAssignementTest extends phpcr_suite_baseCase
     {
         $newNode = $this->rootNode->addNode('parent-'.strtr($mixin, ':', '-'), 'nt:unstructured');
         $newNode->addMixin($mixin);
+        $path = $newNode->getPath();
         $session = $this->saveAndRenewSession();
-        $savedNode = $session->getNode($newNode->getPath());
+        $savedNode = $session->getNode($path);
         $resultTypes = array();
         foreach ($savedNode->getMixinNodeTypes() as $type) {
             $resultTypes[] = $type->getName();
@@ -54,9 +55,10 @@ class Writing_10_NodeTypeAssignementTest extends phpcr_suite_baseCase
      */
     public function testAddMixinOnExistingNode($mixin)
     {
+        $path = $this->node->getPath();
         $this->node->addMixin($mixin);
         $session = $this->saveAndRenewSession();
-        $savedNode = $session->getNode($this->node->getPath());
+        $savedNode = $session->getNode($path);
         $resultTypes = array();
         foreach ($savedNode->getMixinNodeTypes() as $type) {
             $resultTypes[] = $type->getName();

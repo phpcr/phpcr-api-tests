@@ -41,6 +41,7 @@ class Writing_10_AddMethodsTest extends phpcr_suite_baseCase
 
     public function testAddNodeFileType()
     {
+        $path = $this->node->getPath();
         $this->node->addNode('newFileNode', 'nt:file');
         $newNode = $this->sharedFixture['session']->getNode($this->node->getPath() . '/newFileNode');
         $contentNode = $newNode->addNode('jcr:content', 'nt:resource');
@@ -55,7 +56,7 @@ class Writing_10_AddMethodsTest extends phpcr_suite_baseCase
 
         $this->renewSession();
 
-        $newNode = $this->sharedFixture['session']->getNode($this->node->getPath() . '/newFileNode');
+        $newNode = $this->sharedFixture['session']->getNode($path . '/newFileNode');
         $this->assertNotNull($newNode, 'Node newFileNode was not created');
         $this->assertEquals('nt:file', $newNode->getPrimaryNodeType()->getName(), 'Node newFileNode was not created');
     }
@@ -68,6 +69,7 @@ class Writing_10_AddMethodsTest extends phpcr_suite_baseCase
 
     public function testAddPropertyOnUnstructured()
     {
+        $path = $this->node->getPath();
         $node = $this->node->addNode('unstructuredNode', 'nt:unstructured');
         $node->setProperty('testprop', 'val');
         $node->setProperty('refprop', $this->node->getNode('ref'));
@@ -76,7 +78,7 @@ class Writing_10_AddMethodsTest extends phpcr_suite_baseCase
         $this->assertFalse($node->isNew(), 'Node was not saved');
 
         $this->renewSession();
-        $node = $this->sharedFixture['session']->getNode($this->node->getPath() . '/unstructuredNode');
+        $node = $this->sharedFixture['session']->getNode($path . '/unstructuredNode');
 
         $this->assertNotNull($node, 'Node was not created');
         $this->assertEquals('val', $node->getPropertyValue('testprop'), 'Property was not saved correctly');
@@ -87,13 +89,15 @@ class Writing_10_AddMethodsTest extends phpcr_suite_baseCase
         $this->assertFalse($node->isNew(), 'Node was not saved');
         $this->assertFalse($node->getProperty('test2')->isNew(), 'Property was not saved');
         $this->renewSession();
-        $node = $this->sharedFixture['session']->getNode($this->node->getPath() . '/unstructuredNode');
+        $node = $this->sharedFixture['session']->getNode($path . '/unstructuredNode');
 
         $this->assertEquals('val2', $node->getPropertyValue('test2'), 'Property was not added correctly');
     }
 
     public function testAddMultiValuePropertyOnUnstructured()
     {
+        $path = $this->node->getPath();
+
         $node = $this->node->addNode('unstructuredNode2', 'nt:unstructured');
         $node->setProperty('test', array('val', 'val2'));
 
@@ -101,7 +105,7 @@ class Writing_10_AddMethodsTest extends phpcr_suite_baseCase
         $this->assertFalse($node->isNew(), 'Node was not saved');
 
         $this->renewSession();
-        $node = $this->sharedFixture['session']->getNode($this->node->getPath() . '/unstructuredNode2');
+        $node = $this->sharedFixture['session']->getNode($path . '/unstructuredNode2');
 
         $this->assertNotNull($node, 'Node was not created');
         $this->assertEquals(array('val', 'val2'), $node->getPropertyValue('test'), 'Property was not saved correctly');
@@ -112,7 +116,7 @@ class Writing_10_AddMethodsTest extends phpcr_suite_baseCase
         $this->assertFalse($node->isNew(), 'Node was not saved');
         $this->assertFalse($node->getProperty('test2')->isNew(), 'Property was not saved');
         $this->renewSession();
-        $node = $this->sharedFixture['session']->getNode($this->node->getPath() . '/unstructuredNode2');
+        $node = $this->sharedFixture['session']->getNode($path . '/unstructuredNode2');
 
         $this->assertEquals(array('val3', 'val4'), $node->getPropertyValue('test2'), 'Property was not added correctly');
     }
