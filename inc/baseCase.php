@@ -96,9 +96,11 @@ abstract class phpcr_suite_baseCase extends PHPUnit_Framework_TestCase
          */
         $this->node = null;
         $children = $this->rootNode->getNodes("tests_*");
-        $child = current($children);
-        if (false !== $child) {
-            $this->node = $child->hasNode($this->getName()) ? $child->getNode($this->getName()) : null;
+        foreach($children as $child){
+            if($child->hasNode($this->getName())){
+                $this->node = $child->getNode($this->getName());
+                break;
+            }
         }
     }
 
