@@ -48,16 +48,19 @@ class Transactions_21_TransactionMethodsTest extends phpcr_suite_baseCase
     public function testTransactionRollback()
     {
         $session = self::$staticSharedFixture['session'];
-        $utx= $session->getTransactionManager();
+        $utx = $session->getTransactionManager();
 
         $utx->begin();
-        $this->node->addNode('insideTransaction');
+        $root = $session->getNode('/');
+        $root->addNode('insideTransaction');
         $session->save();
         $utx->rollback();
 
-        $this->assertFalse($this->node->hasNode('insideTransaction'));
+        $root = $session->getNode('/');
+        $this->assertFalse($root->hasNode('insideTransaction'));
+
         $this->setExpectedException('\PHPCR\PathNotFoundException');
-        $node = $this->node->getNode('insideTransaction');
+        $session->getNode('/insideTransaction');
     }
 
     public function testInTransaction()
@@ -81,7 +84,8 @@ class Transactions_21_TransactionMethodsTest extends phpcr_suite_baseCase
         $this->assertFalse($utx->inTransaction());
     }
 
-    public function testTransactionTimeout() {
+    public function testTransactionTimeout()
+    {
         $this->markTestIncomplete('This test has not been implemented yet.'); 
     }
 }
