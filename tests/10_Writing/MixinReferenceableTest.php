@@ -23,7 +23,6 @@ class Writing_10_MixinReferenceableTest extends phpcr_suite_baseCase
     /**
      * Test that a node without mix:referenceable type cannot be referenced
      * @expectedException PHPCR\ValueFormatException
-     * @expectedExceptionMessage Node /tests_nodetype_base/nonreferenceable is not referencable
      */
     public function testReferenceOnNonReferenceableNode()
     {
