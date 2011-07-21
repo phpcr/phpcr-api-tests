@@ -38,11 +38,20 @@ class Transactions_21_TransactionMethodsTest extends phpcr_suite_baseCase
         $utx = $session->getTransactionManager();
 
         $utx->begin();
-        $this->node->addNode('insideTransaction');
+        $child = $this->node->addNode('insideTransaction');
+
+        $this->assertEquals($this->node->getPath() . '/insideTransaction', $child->getPath());
+
+        $session->save();
+
+        $sessionbeforesave = getPHPCRSession(self::$staticSharedFixture['config']);
+        $this->assertFalse($sessionbeforesave->nodeExists($child->getPath()));
+
         $utx->commit();
 
-        $node = $this->node->getNode('insideTransaction');
-        $this->assertEquals('/tests_transactions_base/testTransactionCommit/insideTransaction', $node->getPath());
+        //do not refresh session, as this functionality could be broken... create a new session
+        $sessionaftersave = getPHPCRSession(self::$staticSharedFixture['config']);
+        $this->assertTrue($sessionaftersave->nodeExists($child->getPath()));
     }
 
     public function testTransactionRollback()
@@ -51,16 +60,14 @@ class Transactions_21_TransactionMethodsTest extends phpcr_suite_baseCase
         $utx = $session->getTransactionManager();
 
         $utx->begin();
-        $root = $session->getNode('/');
-        $root->addNode('insideTransaction');
+        $child = $this->node->addNode('insideTransaction');
         $session->save();
         $utx->rollback();
 
-        $root = $session->getNode('/');
-        $this->assertFalse($root->hasNode('insideTransaction'));
+        $this->assertTrue($this->node->hasNode('insideTransaction'));
 
-        $this->setExpectedException('\PHPCR\PathNotFoundException');
-        $session->getNode('/insideTransaction');
+        $sessionaftersave = getPHPCRSession(self::$staticSharedFixture['config']);
+        $this->assertFalse($sessionaftersave->nodeExists($child->getPath()));
     }
 
     public function testInTransaction()
@@ -84,8 +91,31 @@ class Transactions_21_TransactionMethodsTest extends phpcr_suite_baseCase
         $this->assertFalse($utx->inTransaction());
     }
 
+    /**
+     * @expectedException PHPCR\InvalidItemStateException
+     */
+    public function testIllegalCheckin()
+    {
+        $session = self::$staticSharedFixture['session'];
+        try {
+            $vm = $session->getWorkspace()->getVersionManager();
+        } catch (\PHPCR\UnsupportedRepositoryOperationException $e) {
+            $this->markTestSkipped("Versioning not supported: " . $e->getMessage());
+        }
+
+        $utx= $session->getTransactionManager();
+        $vm->checkout($this->node->getPath());
+        $this->node->setProperty('foo', 'bar2');
+
+        $utx->begin();
+        $session->save();
+
+        $vm->checkin($this->node->getPath());
+    }
+
     public function testTransactionTimeout()
     {
-        $this->markTestIncomplete('This test has not been implemented yet.'); 
+        $this->markTestIncomplete('This test has not been implemented yet.');
     }
+
 }
