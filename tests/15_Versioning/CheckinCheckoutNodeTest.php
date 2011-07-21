@@ -62,6 +62,7 @@ class Versioning_15_CheckinCheckoutNodeTest extends phpcr_suite_baseCase
         $this->sharedFixture['session']->save();
         $newNode = $this->vm->checkin("/tests_version_base/versioned");
 
+        $this->assertInstanceOf('\PHPCR\Version\VersionInterface', $newNode);
     }
 
 }
