@@ -57,6 +57,7 @@ class Query_6_QueryResultsTest extends QueryBaseCase
         // This test gets the nodes in one burst (parallel) instead serial like testGetNodes()
         $nodeIterator = $this->qr->getNodes();
         $keys = array();
+        $this->markTestSkipped('TODO: this is not part of the api, update test when we decided what should happen');
         $nodes = $nodeIterator->getNodes();
         foreach ($nodes as $path => $node) {
             $this->assertInstanceOf('PHPCR\NodeInterface', $node);
