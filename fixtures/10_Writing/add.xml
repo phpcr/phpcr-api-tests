@@ -3,7 +3,7 @@
   <sv:property sv:name="jcr:primaryType" sv:type="Name">
     <sv:value>nt:unstructured</sv:value>
   </sv:property>
-  <sv:property sv:name="jcr:created" sv:type="String">
+  <sv:property sv:name="jcr:created" sv:type="Date">
     <sv:value>2009-04-27T13:00:54.082+02:00</sv:value>
   </sv:property>
   <sv:node sv:name="testAddNode">
