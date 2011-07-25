@@ -52,7 +52,7 @@ abstract class phpcr_suite_baseCase extends PHPUnit_Framework_TestCase
         self::$staticSharedFixture['session'] = getPHPCRSession(self::$staticSharedFixture['config']);
         self::$staticSharedFixture['ie'] = getFixtureLoader(self::$staticSharedFixture['config']);
 
-        self::$staticSharedFixture['ie']->import('general/base');
+        self::$staticSharedFixture['ie']->import('general/base'); //TODO: this should only happen if no other fixture is to be loaded
     }
 
     public static function tearDownAfterClass()
