@@ -105,7 +105,8 @@ class Reading_5_NodeReadMethodsTest extends phpcr_suite_baseCase
 
     public function testGetNodeAbsolutePath()
     {
-        $this->rootNode->getNode('/tests_general_base');
+        $node = $this->rootNode->getNode('/tests_general_base');
+        $this->assertInstanceOf('PHPCR\NodeInterface', $node);
     }
 
     public function testGetNodeRelativePath()
