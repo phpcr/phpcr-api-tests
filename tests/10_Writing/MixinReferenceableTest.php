@@ -12,7 +12,7 @@ class Writing_10_MixinReferenceableTest extends phpcr_suite_baseCase
     static public function setupBeforeClass()
     {
         parent::setupBeforeClass();
-        self::$staticSharedFixture['ie']->import('10_Writing/nodetype');
+        #self::$staticSharedFixture['ie']->import('10_Writing/general');
     }
 
     public function setUp()
@@ -27,10 +27,10 @@ class Writing_10_MixinReferenceableTest extends phpcr_suite_baseCase
     public function testReferenceOnNonReferenceableNode()
     {
         // Load a non-referenceable node
-        $referenced_node = $this->sharedFixture['session']->getNode('/tests_nodetype_base/nonreferenceable');
+        $referenced_node = $this->sharedFixture['session']->getNode('/tests_general_base/emptyExample');
 
         // Try to reference it
-        $source_node = $this->sharedFixture['session']->getNode('/tests_nodetype_base/index.txt/jcr:content');
+        $source_node = $this->sharedFixture['session']->getNode('/tests_general_base/index.txt/jcr:content');
         $source_node->setProperty('reference', $referenced_node, \PHPCR\PropertyType::WEAKREFERENCE);
         $this->sharedFixture['session']->save();
     }
@@ -42,15 +42,15 @@ class Writing_10_MixinReferenceableTest extends phpcr_suite_baseCase
     public function testReferenceOnNewlyReferenceableNode()
     {
         // Load a non-referenceable node and make it referenceable
-        $referenced_node = $this->sharedFixture['session']->getNode('/tests_nodetype_base/emptyExample');
+        $referenced_node = $this->sharedFixture['session']->getNode('/tests_general_base/emptyExample');
         $referenced_node->addMixin('mix:referenceable');
         $this->saveAndRenewSession();
 
         // Re-read the node to be sure it has a UUID
-        $referenced_node = $this->sharedFixture['session']->getNode('/tests_nodetype_base/emptyExample');
+        $referenced_node = $this->sharedFixture['session']->getNode('/tests_general_base/emptyExample');
 
         // Reference it from another node
-        $source_node = $this->sharedFixture['session']->getNode('/tests_nodetype_base/nonreferenceable');
+        $source_node = $this->sharedFixture['session']->getNode('/tests_general_base/index.txt/jcr:content');
         $source_node->setProperty('reference', $referenced_node, \PHPCR\PropertyType::WEAKREFERENCE);
         $this->sharedFixture['session']->save();
 
@@ -58,17 +58,19 @@ class Writing_10_MixinReferenceableTest extends phpcr_suite_baseCase
     }
 
     /**
-     * Test that a node that was imported as mix:referenceable can be referenced
+     * Test that a node with mix:referenceable in the fixtures can be referenced
      */
     public function testReferenceOnReferenceableNode()
     {
         // Load a referenceable node
-        $referenced_node = $this->sharedFixture['session']->getNode('/tests_nodetype_base/idExample');
+        $referenced_node = $this->sharedFixture['session']->getNode('/tests_general_base/idExample');
 
         // Reference it from another node
-        $source_node = $this->sharedFixture['session']->getNode('/tests_nodetype_base/index.txt/jcr:content');
+        $source_node = $this->sharedFixture['session']->getNode('/tests_general_base/index.txt/jcr:content');
         $source_node->setProperty('reference', $referenced_node, \PHPCR\PropertyType::WEAKREFERENCE);
         $this->sharedFixture['session']->save();
+
+        $this->assertInstanceOf('PHPCR\NodeInterface', $source_node->getPropertyValue('reference'));
     }
 
 }

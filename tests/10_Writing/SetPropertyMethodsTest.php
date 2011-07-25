@@ -13,14 +13,8 @@ require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
  */
 class Writing_10_SetPropertyMethodsTest extends phpcr_suite_baseCase
 {
-    protected $nodePath = '/tests_nodetype_base/numberPropertyNode/jcr:content';
-    protected $propPath = '/tests_nodetype_base/numberPropertyNode/jcr:content/longNumber';
-
-    static public function setupBeforeClass()
-    {
-        parent::setupBeforeClass();
-        self::$staticSharedFixture['ie']->import('10_Writing/nodetype');
-    }
+    protected $nodePath = '/tests_general_base/numberPropertyNode/jcr:content';
+    protected $propPath = '/tests_general_base/numberPropertyNode/jcr:content/longNumber';
 
     public function setUp()
     {
@@ -171,7 +165,7 @@ class Writing_10_SetPropertyMethodsTest extends phpcr_suite_baseCase
 
     public function testRemoveProperty()
     {
-        $nodePath = '/tests_nodetype_base/index.txt/jcr:content';
+        $nodePath = '/tests_general_base/index.txt/jcr:content';
 
         $this->assertTrue($this->sharedFixture['session']->propertyExists($nodePath . '/jcr:data'));
 

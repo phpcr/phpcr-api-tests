@@ -9,12 +9,6 @@ use PHPCR\PropertyType as Type;
  */
 class Writing_10_CombinedManipulationsTest extends phpcr_suite_baseCase
 {
-    public function setUp()
-    {
-        parent::setUp();
-        self::$staticSharedFixture['ie']->import('10_Writing/nodetype');
-    }
-
     /**
      * remove a node and then add a new one at the same path
      *
@@ -23,22 +17,23 @@ class Writing_10_CombinedManipulationsTest extends phpcr_suite_baseCase
     public function testRemoveAndAdd()
     {
         $session = $this->sharedFixture['session'];
-        $basenode = $session->getNode('/tests_nodetype_base');
+        $basenode = $session->getNode('/tests_general_base');
         $this->assertInstanceOf('PHPCR\NodeInterface', $basenode);
-        $node = $basenode->getNode('idExample');
+        $node = $basenode->getNode('numberPropertyNode');
         $this->assertInstanceOf('PHPCR\NodeInterface', $node);
         $this->assertInstanceOf('PHPCR\NodeType\NodeTypeInterface', $node->getPrimaryNodeType());
         $this->assertSame('nt:file', $node->getPrimaryNodeType()->getName());
 
         $node->remove();
 
-        $newnode = $basenode->addNode('idExample', 'nt:folder');
+        $newnode = $basenode->addNode('numberPropertyNode', 'nt:folder');
 
         $session = $this->saveAndRenewSession();
 
-        $node = $session->getNode('/tests_nodetype_base/idExample');
+        $node = $session->getNode('/tests_general_base/numberPropertyNode');
         $this->assertInstanceOf('PHPCR\NodeInterface', $node);
         $this->assertSame('nt:folder', $node->getPrimaryNodeType()->getName());
+        $this->assertFalse($node->hasNodes());
     }
 
     /*
