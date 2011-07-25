@@ -27,7 +27,7 @@ class Transactions_21_TransactionMethodsTest extends phpcr_suite_baseCase
     public function testGetTransactionManager()
     {
         $session = self::$staticSharedFixture['session'];
-        $utx = $session->getTransactionManager();
+        $utx = $session->getWorkspace()->getTransactionManager();
 
         $this->assertInstanceOf('\PHPCR\Transaction\UserTransactionInterface', $utx);
     }
@@ -35,7 +35,7 @@ class Transactions_21_TransactionMethodsTest extends phpcr_suite_baseCase
     public function testTransactionCommit()
     {
         $session = self::$staticSharedFixture['session'];
-        $utx = $session->getTransactionManager();
+        $utx = $session->getWorkspace()->getTransactionManager();
 
         $utx->begin();
         $child = $this->node->addNode('insideTransaction');
@@ -57,7 +57,7 @@ class Transactions_21_TransactionMethodsTest extends phpcr_suite_baseCase
     public function testTransactionRollback()
     {
         $session = self::$staticSharedFixture['session'];
-        $utx = $session->getTransactionManager();
+        $utx = $session->getWorkspace()->getTransactionManager();
 
         $utx->begin();
         $child = $this->node->addNode('insideTransaction');
@@ -73,7 +73,7 @@ class Transactions_21_TransactionMethodsTest extends phpcr_suite_baseCase
     public function testInTransaction()
     {
         $session = self::$staticSharedFixture['session'];
-        $utx= $session->getTransactionManager();
+        $utx= $session->getWorkspace()->getTransactionManager();
 
         $this->assertFalse($utx->inTransaction());
         $utx->begin();
@@ -103,7 +103,7 @@ class Transactions_21_TransactionMethodsTest extends phpcr_suite_baseCase
             $this->markTestSkipped("Versioning not supported: " . $e->getMessage());
         }
 
-        $utx= $session->getTransactionManager();
+        $utx= $session->getWorkspace()->getTransactionManager();
         $vm->checkout($this->node->getPath());
         $this->node->setProperty('foo', 'bar2');
 
