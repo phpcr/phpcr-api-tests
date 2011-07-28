@@ -75,7 +75,7 @@ class Export_7_ExportRepositoryContentTest extends phpcr_suite_baseCase
                 foreach($expected->childNodes as $index => $child) {
                     $this->assertEquals('sv:value', $child->tagName);
                     $o = $output->childNodes->item($index);
-                    $this->assertNotNull($o, "No child at $index in ".$this->buildPath($child));
+                    $this->assertInstanceOf('DOMElement', $o, "No child element at $index in ".$this->buildPath($child));
                     $this->assertEquals('sv:value', $o->tagName, 'Unexpected tag name at '.$this->buildPath($expected)."sv:value[$index]");
                     $this->assertEquals($child->textContent, $o->textContent, 'Not the same text at '.$this->buildPath($output)."sv:value[$index]");
                 }
