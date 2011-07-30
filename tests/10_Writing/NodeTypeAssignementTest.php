@@ -9,8 +9,7 @@ class Writing_10_NodeTypeAssignementTest extends phpcr_suite_baseCase
 {
     public static function setupBeforeClass()
     {
-        parent::setupBeforeClass();
-        self::$staticSharedFixture['ie']->import('10_Writing/nodetype');
+        parent::setupBeforeClass('10_Writing/nodetype');
     }
 
     public function setUp()

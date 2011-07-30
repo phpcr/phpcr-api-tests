@@ -11,8 +11,7 @@ class Versioning_15_CheckinCheckoutNodeTest extends phpcr_suite_baseCase
 {
     static public function setupBeforeClass()
     {
-        parent::setupBeforeClass();
-        self::$staticSharedFixture['ie']->import('15_Versioning/base');
+        parent::setupBeforeClass('15_Versioning/base');
     }
 
     public function setUp()

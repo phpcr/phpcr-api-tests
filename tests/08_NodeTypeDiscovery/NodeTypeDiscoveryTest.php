@@ -10,12 +10,6 @@ class NodeTypeDiscovery_8_NodeTypeDiscoveryTest extends phpcr_suite_baseCase
 {
     private $nodeTypeManager;
 
-    static public function setupBeforeClass()
-    {
-        parent::setupBeforeClass();
-        self::$staticSharedFixture['ie']->import('general/base');
-    }
-
     public function setUp() {
         parent::setUp();
         $this->nodeTypeManager = $this->sharedFixture['session']->getWorkspace()->getNodeTypeManager();

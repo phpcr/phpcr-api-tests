@@ -12,8 +12,7 @@ class Writing_10_CopyMethodsTest extends phpcr_suite_baseCase
 
     static public function setupBeforeClass()
     {
-        parent::setupBeforeClass();
-        self::$staticSharedFixture['ie']->import('10_Writing/copy');
+        parent::setupBeforeClass('10_Writing/copy');
     }
 
     protected function setUp()

@@ -18,8 +18,7 @@ class Writing_10_SetPropertyDynamicRebindingTest extends phpcr_suite_baseCase
 
     static public function setupBeforeClass()
     {
-        parent::setupBeforeClass();
-        self::$staticSharedFixture['ie']->import('10_Writing/nodetype');
+        parent::setupBeforeClass('10_Writing/nodetype');
     }
 
     public function setUp() {

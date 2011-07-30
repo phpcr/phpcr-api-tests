@@ -9,8 +9,7 @@ class Writing_10_DeleteMethodsTest extends phpcr_suite_baseCase
 {
     static public function setupBeforeClass()
     {
-        parent::setupBeforeClass();
-        self::$staticSharedFixture['ie']->import('10_Writing/delete');
+        parent::setupBeforeClass('10_Writing/delete');
     }
 
     public function setUp()

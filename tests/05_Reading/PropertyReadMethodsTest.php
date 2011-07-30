@@ -14,12 +14,6 @@ class Reading_5_PropertyReadMethodsTest extends phpcr_suite_baseCase
     protected $property;
     protected $multiProperty;
 
-    static public function setupBeforeClass()
-    {
-        parent::setupBeforeClass();
-        self::$staticSharedFixture['ie']->import('general/base');
-    }
-
     public function setUp()
     {
         parent::setUp();

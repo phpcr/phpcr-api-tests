@@ -15,12 +15,6 @@ require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
  */
 class Reading_5_SessionReadMethodsTest extends phpcr_suite_baseCase
 {
-    static public function setupBeforeClass()
-    {
-        parent::setupBeforeClass();
-        self::$staticSharedFixture['ie']->import('general/base');
-    }
-
     //5.1.1
     public function testGetRootNode()
     {

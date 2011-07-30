@@ -10,12 +10,6 @@ class Reading_5_NodeReadMethodsTest extends phpcr_suite_baseCase
     protected $node;
     protected $deepnode;
 
-    static public function setupBeforeClass()
-    {
-        parent::setupBeforeClass();
-        self::$staticSharedFixture['ie']->import('general/base');
-    }
-
     public function setUp()
     {
         parent::setUp();

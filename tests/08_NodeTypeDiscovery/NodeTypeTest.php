@@ -14,7 +14,6 @@ class NodeTypeDiscovery_8_NodeTypeTest extends phpcr_suite_baseCase
     static public function setupBeforeClass()
     {
         parent::setupBeforeClass();
-        self::$staticSharedFixture['ie']->import('general/base');
         self::$nodeType = self::$staticSharedFixture['session']->getWorkspace()->getNodeTypeManager()->getNodeType('nt:file');
     }
 

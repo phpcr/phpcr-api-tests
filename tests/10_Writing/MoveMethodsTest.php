@@ -10,8 +10,7 @@ class Writing_10_MoveMethodsTest extends phpcr_suite_baseCase
 
     static public function setupBeforeClass()
     {
-        parent::setupBeforeClass();
-        self::$staticSharedFixture['ie']->import('10_Writing/move');
+        parent::setupBeforeClass('10_Writing/move');
     }
 
     protected function setUp()

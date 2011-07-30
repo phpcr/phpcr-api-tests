@@ -6,8 +6,7 @@ class Export_7_ExportRepositoryContentTest extends phpcr_suite_baseCase
 {
     static public function setupBeforeClass()
     {
-        parent::setupBeforeClass();
-        self::$staticSharedFixture['ie']->import('07_Export/systemview');
+        parent::setupBeforeClass('07_Export/systemview');
     }
 
     public function testExportSystemView()

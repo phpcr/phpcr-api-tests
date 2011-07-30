@@ -4,12 +4,6 @@ require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
 //6.5 Export Repository Content
 class Export_11_ImportRepositoryContentTest extends phpcr_suite_baseCase
 {
-    static public function setupBeforeClass()
-    {
-        parent::setupBeforeClass();
-        self::$staticSharedFixture['ie']->import('general/base');
-    }
-
     public function testImportXML()
     {
         $this->markTestSkipped('TODO: what kind of stream is ok for input?');

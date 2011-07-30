@@ -13,12 +13,6 @@ class Connecting_4_WorkspaceReadMethodsTest extends phpcr_suite_baseCase
     protected $path = 'read/read';
     protected $workspace;
 
-    static public function setupBeforeClass()
-    {
-        parent::setupBeforeClass();
-        self::$staticSharedFixture['ie']->import('general/base');
-    }
-
     //4.5 Workspace Read Methods
 
     function setUp()

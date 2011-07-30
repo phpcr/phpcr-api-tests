@@ -13,9 +13,8 @@ abstract class QueryBaseCase extends phpcr_suite_baseCase
      */
     public static function setupBeforeClass($fixture = 'general/base')
     {
-        parent::setupBeforeClass();
+        parent::setupBeforeClass($fixture);
         self::$staticSharedFixture['qm'] = self::$staticSharedFixture['session']->getWorkspace()->getQueryManager();
-        self::$staticSharedFixture['ie']->import($fixture);
     }
 
     /**

@@ -9,12 +9,6 @@ require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
  */
 class Writing_10_MixinReferenceableTest extends phpcr_suite_baseCase
 {
-    static public function setupBeforeClass()
-    {
-        parent::setupBeforeClass();
-        #self::$staticSharedFixture['ie']->import('10_Writing/general');
-    }
-
     public function setUp()
     {
         $this->renewSession();

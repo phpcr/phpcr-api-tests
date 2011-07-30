@@ -13,8 +13,7 @@ class Transactions_21_TransactionMethodsTest extends phpcr_suite_baseCase
 
     static public function setupBeforeClass()
     {
-        parent::setupBeforeClass();
-        self::$staticSharedFixture['ie']->import('21_Transactions/transactions');
+        parent::setupBeforeClass('21_Transactions/transactions');
     }
 
     public function setUp()
