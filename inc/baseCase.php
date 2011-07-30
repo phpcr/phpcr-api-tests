@@ -39,7 +39,18 @@ abstract class phpcr_suite_baseCase extends PHPUnit_Framework_TestCase
      */
     const NOTSUPPORTEDLOGIN = 'Not supported login';
 
-    public static function setupBeforeClass()
+    /**
+     * we use this place to fetch a session and possibly load fixtures.
+     *
+     * this speeds up the tests considerably as fixture loading can be
+     * quite expensive
+     *
+     * @param string $fixtures the fixtures name to import, defaults to
+     *      general/base. if you want to load fixtures yourself, send false
+     *
+     * @see initProperties()
+     */
+    public static function setupBeforeClass($fixtures = 'general/base')
     {
         self::$staticSharedFixture = array();
         date_default_timezone_set('Europe/Zurich');
@@ -52,7 +63,16 @@ abstract class phpcr_suite_baseCase extends PHPUnit_Framework_TestCase
         self::$staticSharedFixture['session'] = getPHPCRSession(self::$staticSharedFixture['config']);
         self::$staticSharedFixture['ie'] = getFixtureLoader(self::$staticSharedFixture['config']);
 
-        self::$staticSharedFixture['ie']->import('general/base'); //TODO: this should only happen if no other fixture is to be loaded
+        if ($fixtures) {
+            self::$staticSharedFixture['ie']->import($fixtures);
+        }
+    }
+
+    protected function setUp()
+    {
+        $this->sharedFixture = self::$staticSharedFixture;
+
+        $this->initProperties();
     }
 
     public static function tearDownAfterClass()
@@ -70,6 +90,9 @@ abstract class phpcr_suite_baseCase extends PHPUnit_Framework_TestCase
         }
         self::$staticSharedFixture['session'] = getPHPCRSession(self::$staticSharedFixture['config']);
         $this->sharedFixture['session'] = self::$staticSharedFixture['session'];
+
+        $this->initProperties();
+
         return $this->sharedFixture['session'];
     }
 
@@ -84,16 +107,22 @@ abstract class phpcr_suite_baseCase extends PHPUnit_Framework_TestCase
         return $this->sharedFixture['session'];
     }
 
-    protected function setUp()
+    /**
+     * You can load the fixtures in the setupBeforeClass() to speed up the
+     * tests quite a lot.
+     *
+     * This method helps to populate test case properties both at test setUp
+     * and after renewing the session.
+     *
+     * The default schema
+     * is to have one node per test with the test name under /tests_something
+     *
+     * You can overwrite this to have some other logic
+     */
+    protected function initProperties()
     {
-        $this->sharedFixture = self::$staticSharedFixture;
         $this->rootNode = $this->sharedFixture['session']->getNode('/');
 
-        /* we create the fixtures in one go
-         * the data must all exist under a node /tests_something
-         * with one tree per test
-         * jackrabbit always puts in a node jcr:system, so we look for nodes under root with the name tests_* only
-         */
         $this->node = null;
         $children = $this->rootNode->getNodes("tests_*");
         $child = current($children);

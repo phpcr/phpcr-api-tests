@@ -54,7 +54,7 @@ class Writing_10_DeleteMethodsTest extends phpcr_suite_baseCase
     public function testRemoveItemConstraintViolation()
     {
         //not only remove item but also save session, as check might only be done on save
-        $this->markTestIncomplete('TODO: figure out how to provoke that error');
+        $this->markTestIncomplete('TODO: remove an jcr:data from an nt:file node and save');
 
         //relies on the base class setup trick to have the node populated from the fixtures
         $this->assertInstanceOf('PHPCR\NodeInterface', $this->node);
@@ -169,7 +169,7 @@ class Writing_10_DeleteMethodsTest extends phpcr_suite_baseCase
     public function testNodeRemovePropertyConstraintViolation()
     {
         //not only remove item but also save session, as check might only be done on save
-        $this->markTestIncomplete('TODO: figure out how to provoke that error');
+        $this->markTestIncomplete('TODO: would have to remove required property from a built-in node type');
 
         //relies on the base class setup trick to have the node populated from the fixtures
         $this->assertInstanceOf('PHPCR\NodeInterface', $this->node);
@@ -267,8 +267,56 @@ class Writing_10_DeleteMethodsTest extends phpcr_suite_baseCase
         $new = $parent->addNode($name, 'nt:unstructured');
         $item = $this->sharedFixture['session']->getNode($path);
         $this->assertEquals($new, $item);
-        $this->markTestIncomplete('TODO: check if saving the session works properly');
+
+        $this->saveAndRenewSession();
+
+        $this->assertNotNull($this->node);
     }
+
+    /**
+     * It is not allowed to delete a referenced node
+     *
+     * @expectedException PHPCR\ReferentialIntegrityException
+     */
+    public function testDeleteReferencedNodeException()
+    {
+        $destnode = $this->node->getNode('idExample');
+        $destnode->remove();
+        $this->sharedFixture['session']->save();
+    }
+
+    /**
+     * however, if the reference is first deleted, it must be possible to
+     * delete the node
+     */
+    public function testDeletePreviouslyReferencedNode()
+    {
+        // 2) Get the referencing property and delete it
+        $sourceprop = $this->node->getProperty('reference');
+        $sourceprop->remove();
+
+        // 3) Save and renew session
+        $this->saveAndRenewSession();
+
+        // 4) Load the previously referenced node and remove it
+        $destnode = $this->node->getNode('idExample');
+
+        $destnode->remove();
+        $this->saveAndRenewSession();
+
+        $this->assertFalse($this->node->hasNode($this->getName()));
+    }
+
+    /**
+     * it must be possible to delete a weakly referenced node
+     */
+    public function testDeleteWeakReferencedNode()
+    {
+        $destnode = $this->node->getNode('idExample');
+        $destnode->remove();
+        $this->saveAndRenewSession();
+
+        $this->assertFalse($this->node->hasNode('idExample'));
+    }
+
 }
-
-
