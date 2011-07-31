@@ -12,11 +12,10 @@
     <php>
         <!-- set some globals for connection handling.
            the following is an example of the jackalope-jackrabbit implementation -->
-        <var name="jcr.url" value="http://localhost:8080/server" />
-        <var name="jcr.user" value="admin" />
-        <var name="jcr.pass" value="admin" />
-        <var name="jcr.workspace" value="tests" />
-        <var name="jcr.transport" value="davex" />
+        <var name="jackrabbit.uri" value="http://localhost:8080/server" />
+        <var name="phpcr.user" value="admin" />
+        <var name="phpcr.pass" value="admin" />
+        <var name="phpcr.workspace" value="tests" />
     </php>
 
     <testsuites>
@@ -32,10 +31,7 @@
             <directory>../</directory>
 
             <exclude>
-                <!-- ignore the unit tests -->
-                <directory>../tests</directory>
-
-                <!-- ignore the api tests -->
+                <!-- ignore the tests folder -->
                 <directory>.</directory>
 
                 <!-- ignore whats not implemented yet -->

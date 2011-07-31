@@ -1,5 +1,7 @@
 <?php
-require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
+namespace PHPCR\Tests\Reading;
+
+require_once(dirname(__FILE__) . '/../../inc/BaseCase.php');
 
 /**
  * javax.jcr.Property read methods
@@ -7,7 +9,7 @@ require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
  *
  * PropertyWriteMethods: isModified, refresh, save, remove, setValue (in many variants)
  */
-class Reading_5_PropertyReadMethodsTest extends phpcr_suite_baseCase
+class PropertyReadMethodsTest extends \PHPCR\Test\BaseCase
 {
     protected $rootNode;
     protected $node;
@@ -162,8 +164,6 @@ class Reading_5_PropertyReadMethodsTest extends phpcr_suite_baseCase
 
     public function testGetBinaryMulti()
     {
-        $this->markTestIncomplete('TODO: Figure out how the fixture must look for jackrabbit to import multivalue binaries');
-
         $prop = $this->node->getProperty('index.txt/jcr:content/multidata');
         $this->assertEquals(\PHPCR\PropertyType::BINARY, $prop->getType(), 'Expected binary type');
         $arr = $prop->getValue();
@@ -255,9 +255,9 @@ class Reading_5_PropertyReadMethodsTest extends phpcr_suite_baseCase
         }
         //check correct values and sort order
         $expected = array(
-                new DateTime('2011-04-22T14:34:20+01:00'),
-                new DateTime('2011-10-23T14:34:20+01:00'),
-                new DateTime('2010-10-23T14:34:20+01:00'));
+                new \DateTime('2011-04-22T14:34:20+01:00'),
+                new \DateTime('2011-10-23T14:34:20+01:00'),
+                new \DateTime('2010-10-23T14:34:20+01:00'));
         $this->assertEquals($expected, $arr);
     }
 

@@ -1,5 +1,7 @@
 <?php
-require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
+namespace PHPCR\Tests\Reading;
+
+require_once(dirname(__FILE__) . '/../../inc/BaseCase.php');
 
 /**
  * Test Session read methods
@@ -13,7 +15,7 @@ require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
  * Retention: getRetentionManager
  * Access Control: getAccessControlManager
  */
-class Reading_5_SessionReadMethodsTest extends phpcr_suite_baseCase
+class SessionReadMethodsTest extends \PHPCR\Test\BaseCase
 {
     //5.1.1
     public function testGetRootNode()
@@ -208,21 +210,19 @@ class Reading_5_SessionReadMethodsTest extends phpcr_suite_baseCase
      */
     public function testImpersonate()
     {
-        //TODO: Check if that's implemented in newer jackrabbit versions.
-        //TODO: Write tests for LoginException and RepositoryException
-        //$cr = $this->assertSimpleCredentials($this->sharedFixture['config']['user'], $this->sharedFixture['config']['pass']);
-        //$ses = $this->sharedFixture['session']->impersonate($cr);
-        $this->markTestIncomplete('TODO: check if we should implement this method.');
-
+        $cr = self::$loader->getImpersonateCredentials();
+        $session = $this->sharedFixture['session']->impersonate($cr);
+        $this->markTestIncomplete('TODO: do some tests with the impersonated session');
     }
+
+    //TODO: Write tests for LoginException and RepositoryException with impersonate
 
     //4.4.4, 4.4.5
     public function testIsLiveLogout()
     {
-        $ses = $this->assertSession($this->sharedFixture['config']);
+        $ses = $this->assertSession();
         $this->assertTrue($ses->isLive());
         $ses->logout();
-        $this->assertInstanceOf('PHPCR\SessionInterface', $ses);
         $this->assertFalse($ses->isLive());
     }
 
@@ -260,21 +260,14 @@ class Reading_5_SessionReadMethodsTest extends phpcr_suite_baseCase
      */
     public function testCheckPermissionAccessControlException()
     {
-        // Login as anonymous
-        if (isset(self::$staticSharedFixture['session'])) {
-            self::$staticSharedFixture['session']->logout();
-        }
-        $config = self::$staticSharedFixture['config'];
-        $config['user'] = 'anonymous';
-        self::$staticSharedFixture['session'] = getPHPCRSession($config);
+        // Login with restricted credentials
+        $session = self::$loader->getSession(self::$loader->getRestrictedCredentials());
         $session = self::$staticSharedFixture['session'];
 
         $session->checkPermission('/tests_general_base/numberPropertyNode/jcr:content/foo', 'add_node');
         $session->logout();
-
-        // TODO: check if the session is correctly renewed...
-        $this->saveAndRenewSession();
     }
+
     public function testHasCapability()
     {
         $node = $this->sharedFixture['session']->getNode('/tests_general_base');

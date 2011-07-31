@@ -1,9 +1,15 @@
 <?php
-require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
+namespace PHPCR\Tests\Connecting;
 
-class Connecting_4_RepositoryDescriptorsTest extends phpcr_suite_baseCase
+require_once(dirname(__FILE__) . '/../../inc/BaseCase.php');
+
+class RepositoryDescriptorsTest extends \PHPCR\Test\BaseCase
 {
-    //don't care about fixtures
+    public static function setupBeforeClass()
+    {
+        //don't care about fixtures
+        parent::setupBeforeClass(false);
+    }
 
     //Those constants need to be defined in the bootstrap file
     protected $expectedDescriptors = array(
@@ -27,7 +33,7 @@ class Connecting_4_RepositoryDescriptorsTest extends phpcr_suite_baseCase
     // 24.2 Repository Descriptors
     public function testDescriptorKeys()
     {
-        $rep = getRepository($this->sharedFixture['config']);
+        $rep = self::$loader->getRepository();
         $keys = $rep->getDescriptorKeys();
         $this->assertInternalType('array', $keys);
         $this->assertNotEmpty($keys);
@@ -39,7 +45,7 @@ class Connecting_4_RepositoryDescriptorsTest extends phpcr_suite_baseCase
     //TODO: Check if the values are compatible to the spec
     public function testDescription()
     {
-        $rep = getRepository($this->sharedFixture['config']);
+        $rep = self::$loader->getRepository();
         foreach ($this->expectedDescriptors as $descriptor) {
             $str = $rep->getDescriptor($descriptor);
             $this->assertInternalType('string', $str);
@@ -47,18 +53,6 @@ class Connecting_4_RepositoryDescriptorsTest extends phpcr_suite_baseCase
         }
     }
 
-    public function testGetDescriptorValue()
-    {
-        $this->markTestSkipped('TODO: implement');
-    }
-    public function testGetDescriptorValues()
-    {
-        $this->markTestSkipped('TODO: implement');
-    }
-    public function testIsSingleValueDescriptor()
-    {
-        $this->markTestSkipped('TODO: implement');
-    }
     public function testIsStandardDescriptor()
     {
         $this->markTestSkipped('TODO: implement');

@@ -1,13 +1,14 @@
 <?php
+namespace PHPCR\Tests\Query\QOM;
 
-require_once(dirname(__FILE__) . '/../../../inc/baseCase.php');
+require_once(dirname(__FILE__) . '/../../../inc/BaseCase.php');
 require_once('Sql2TestQueries.php');
 require_once('QomTestQueries.php');
 
 use PHPCR\Util\QOM\Sql2Scanner;
 use PHPCR\Util\QOM\Sql2ToQomQueryConverter;
 
-class Sql2ToQomConverterTest extends \phpcr_suite_baseCase
+class Sql2ToQomConverterTest extends \PHPCR\Test\BaseCase
 {
     protected $sql2Queries;
 

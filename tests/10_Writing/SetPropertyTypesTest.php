@@ -1,5 +1,7 @@
 <?php
-require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
+namespace PHPCR\Tests\Writing;
+
+require_once(dirname(__FILE__) . '/../../inc/BaseCase.php');
 
 /**
  * Testing whether the property correctly handles all types
@@ -10,7 +12,7 @@ require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
  *
  * Covering jcr-2.8.3 spec $10.4.2
  */
-class Writing_10_SetPropertyTypesTest extends phpcr_suite_baseCase
+class SetPropertyTypesTest extends \PHPCR\Test\BaseCase
 {
     public function setUp()
     {
@@ -40,7 +42,7 @@ class Writing_10_SetPropertyTypesTest extends phpcr_suite_baseCase
 
     public function testCreateValueBinary()
     {
-        $bin = $this->node->setProperty('newBinary', 'foobar', PHPCR\PropertyType::BINARY);
+        $bin = $this->node->setProperty('newBinary', 'foobar', \PHPCR\PropertyType::BINARY);
         $this->assertInstanceOf('PHPCR\PropertyInterface', $bin);
         $this->assertEquals(\PHPCR\PropertyType::BINARY, $bin->getType());
         $this->assertEquals('foobar', stream_get_contents($bin->getBinary()));

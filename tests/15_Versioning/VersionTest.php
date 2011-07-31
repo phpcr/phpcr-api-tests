@@ -1,13 +1,14 @@
 <?php
+namespace PHPCR\Tests\Versioning;
 
-require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
+require_once(dirname(__FILE__) . '/../../inc/BaseCase.php');
 
 /**
  * Testing whether getting predecessor / successor works correctly
  *
  * Covering jcr-283 spec $15.1
  */
-class Versioning_15_VersionTest extends phpcr_suite_baseCase
+class VersionTest extends \PHPCR\Test\BaseCase
 {
     /** the versionmanager instance */
     private $vm;
@@ -19,11 +20,8 @@ class Versioning_15_VersionTest extends phpcr_suite_baseCase
         parent::setupBeforeClass('15_Versioning/base');
 
         //have some versions
-        try {
-            $vm = self::$staticSharedFixture['session']->getWorkspace()->getVersionManager();
-        } catch (\PHPCR\UnSupportedRepositoryOperationException $e) {
-            return;
-        }
+        $vm = self::$staticSharedFixture['session']->getWorkspace()->getVersionManager();
+
         $node = self::$staticSharedFixture['session']->getNode('/tests_version_base/versioned');
         $vm->checkpoint('/tests_version_base/versioned');
         $node->setProperty('foo', 'bar');
@@ -35,18 +33,14 @@ class Versioning_15_VersionTest extends phpcr_suite_baseCase
         $node->setProperty('foo', 'bar3');
         self::$staticSharedFixture['session']->save();
         $vm->checkin('/tests_version_base/versioned');
-        self::$staticSharedFixture['session'] = getPHPCRSession(self::$staticSharedFixture['config']); //reset the session
+        self::$staticSharedFixture['session'] = self::$loader->getSession(); //reset the session
     }
 
     public function setUp()
     {
         parent::setUp();
-        try {
-            $this->vm = $this->sharedFixture['session']->getWorkspace()->getVersionManager();
-        } catch (\PHPCR\UnSupportedRepositoryOperationException $e) {
-            $this->markTestSkipped("Versioning not supported: " . $e->getMessage());
-        }
 
+        $this->vm = $this->sharedFixture['session']->getWorkspace()->getVersionManager();
         $this->version = $this->vm->getBaseVersion("/tests_version_base/versioned");
 
         $this->assertInstanceOf('PHPCR\Version\VersionInterface', $this->version);

@@ -1,19 +1,20 @@
 <?php
+namespace PHPCR\Tests\NodeTypeDiscovery;
 
-require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
+require_once(dirname(__FILE__) . '/../../inc/BaseCase.php');
 
 /**
  * Test the NoteType §8
  *
  * Requires that NodeTypeManager->getNodeType works correctly
  */
-class NodeTypeDiscovery_8_NodeTypeTest extends phpcr_suite_baseCase
+class NodeTypeTest extends \PHPCR\Test\BaseCase
 {
     private static $nodeType;
 
     static public function setupBeforeClass()
     {
-        parent::setupBeforeClass();
+        parent::setupBeforeClass(false);
         self::$nodeType = self::$staticSharedFixture['session']->getWorkspace()->getNodeTypeManager()->getNodeType('nt:file');
     }
 

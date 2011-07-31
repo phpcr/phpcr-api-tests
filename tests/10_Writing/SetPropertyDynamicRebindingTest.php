@@ -1,6 +1,7 @@
 <?php
+namespace PHPCR\Tests\Writing;
 
-require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
+require_once(dirname(__FILE__) . '/../../inc/BaseCase.php');
 
 use PHPCR\PropertyType;
 
@@ -10,7 +11,7 @@ use PHPCR\PropertyType;
  *
  * Covering jcr-2.8.3 spec $10.4.2
  */
-class Writing_10_SetPropertyDynamicRebindingTest extends phpcr_suite_baseCase
+class SetPropertyDynamicRebindingTest extends \PHPCR\Test\BaseCase
 {
     protected $referenceable_node_uuid = '842e61c0-09ab-42a9-87c0-308ccc90e6f4';
 
@@ -24,23 +25,6 @@ class Writing_10_SetPropertyDynamicRebindingTest extends phpcr_suite_baseCase
     public function setUp() {
         parent::setUp();
         $this->renewSession();
-
-        // TODO: re-enable this test once Session.logout is working properly
-        // (for the moment this test will take too long to run because we reach
-        // the max number of sessions limit)
-        //$this->markTestSkipped('Fix Session.logout before enabling this test');
-    }
-
-    public static function tearDownAfterClass()
-    {
-        // Remove the created nodes to avoid keeping referenced nodes
-        foreach(self::$created_nodes as $node) {
-            self::$staticSharedFixture['session']->removeItem($node);
-        }
-
-        self::$staticSharedFixture['session']->save();
-
-        parent::tearDownAfterClass();
     }
 
     /**
@@ -136,7 +120,7 @@ class Writing_10_SetPropertyDynamicRebindingTest extends phpcr_suite_baseCase
             PropertyType::DOUBLE        => 3.1415926535897,
             PropertyType::DECIMAL       => '3.14',
             PropertyType::BINARY        => 'some binary stuff',
-            PropertyType::DATE          => new DateTime(),
+            PropertyType::DATE          => new \DateTime(),
             PropertyType::NAME          => 'jcr:some_name',
             PropertyType::PATH          => '/some/valid/path',
             PropertyType::WEAKREFERENCE => $this->referenceable_node_uuid,

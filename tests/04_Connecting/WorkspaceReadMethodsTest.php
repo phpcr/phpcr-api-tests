@@ -1,5 +1,7 @@
 <?php
-require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
+namespace PHPCR\Tests\Connecting;
+
+require_once(dirname(__FILE__) . '/../../inc/BaseCase.php');
 
 /** test javax.jcr.Workspace read methods (read)
  *  most of the pdf specification is in chapter 4.5
@@ -8,7 +10,7 @@ require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
  *  Versioning: getVersionManager
  *  level2: WorkspaceWriteMethods: clone, copy, createWorkspace, deleteWorkspace, getImportContentHandler, importXML, move
  */
-class Connecting_4_WorkspaceReadMethodsTest extends phpcr_suite_baseCase
+class WorkspaceReadMethodsTest extends \PHPCR\Test\BaseCase
 {
     protected $path = 'read/read';
     protected $workspace;
@@ -30,7 +32,7 @@ class Connecting_4_WorkspaceReadMethodsTest extends phpcr_suite_baseCase
     //4.5.3
     public function testGetName()
     {
-        $this->assertEquals($this->sharedFixture['config']['workspace'], $this->workspace->getName());
+        $this->assertEquals(self::$loader->getWorkspaceName(), $this->workspace->getName());
     }
 
     public function testGetQueryManager()
@@ -80,7 +82,7 @@ class Connecting_4_WorkspaceReadMethodsTest extends phpcr_suite_baseCase
     {
         $names = $this->workspace->getAccessibleWorkspaceNames();
         $this->assertInternalType('array', $names);
-        $this->assertContains($this->sharedFixture['config']['workspace'], $names);
+        $this->assertContains(self::$loader->getWorkspaceName(), $names);
     }
 
     /**

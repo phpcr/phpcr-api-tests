@@ -1,11 +1,12 @@
 <?php
+namespace PHPCR\Tests\Query;
 
 require_once('QueryBaseCase.php');
 
 /**
  * $ 6.11.1 Table View - Row part
  */
-class Query_6_RowTest extends QueryBaseCase
+class RowTest extends QueryBaseCase
 {
     private $row;
 

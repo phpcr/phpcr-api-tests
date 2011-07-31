@@ -1,13 +1,14 @@
 <?php
+namespace PHPCR\Tests\Query\QOM;
 
-require_once(dirname(__FILE__) . '/../../../inc/baseCase.php');
+require_once(dirname(__FILE__) . '/../../../inc/BaseCase.php');
 
 use PHPCR\Util\QOM\Sql2Scanner;
 
 /**
  * Test for PHPCR\Util\QOM\Sql2Scanner
  */
-class Sql2ScannerTest extends \phpcr_suite_baseCase
+class Sql2ScannerTest extends \PHPCR\Test\BaseCase
 {
     protected $sql2;
     protected $tokens;

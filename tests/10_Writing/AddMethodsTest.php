@@ -1,13 +1,14 @@
 <?php
+namespace PHPCR\Tests\Writing;
 
-require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
+require_once(dirname(__FILE__) . '/../../inc/BaseCase.php');
 
 use PHPCR\PropertyType as Type;
 
 /**
  * Covering jcr-283 spec $10.4
  */
-class Writing_10_AddMethodsTest extends phpcr_suite_baseCase
+class AddMethodsTest extends \PHPCR\Test\BaseCase
 {
 
     static public function setupBeforeClass()
@@ -25,8 +26,8 @@ class Writing_10_AddMethodsTest extends phpcr_suite_baseCase
 
     public function testAddNode()
     {
-        $this->markTestSkipped('Find a case where the parent type specifies the type for this node'); //with nt:folder, this is also not working with the java jackrabbit, so it seems not to be an implementation issue
-        // should take the primaryType of emptyExample
+        $this->markTestSkipped('TODO: Find a case where the parent type specifies the type for this node'); //with nt:folder, this is also not working with the java jackrabbit, so it seems not to be an implementation issue
+        // should take the primaryType
         $this->node->addNode('newNode');
         $this->assertNotNull($this->sharedFixture['session']->getNode($this->node->getPath() . '/newNode'), 'Node newNode was not created');
     }
@@ -46,7 +47,7 @@ class Writing_10_AddMethodsTest extends phpcr_suite_baseCase
         $contentNode = $newNode->addNode('jcr:content', 'nt:resource');
         $contentNode->setProperty('jcr:mimeType', 'text/plain', Type::STRING);
         $contentNode->setProperty('jcr:data', 'Hello', Type::BINARY);
-        $contentNode->setProperty('jcr:lastModified', new DateTime(), Type::DATE);
+        $contentNode->setProperty('jcr:lastModified', new \DateTime(), Type::DATE);
 
         $this->assertNotNull($newNode, 'Node newFileNode was not created');
         $this->assertTrue($newNode->isNew(), 'Node newFileNode is not marked dirty');

@@ -1,4 +1,6 @@
 <?php
+namespace PHPCR\Tests\Query;
+
 require_once('QueryBaseCase.php');
 
 /**
@@ -8,7 +10,7 @@ require_once('QueryBaseCase.php');
  *
  * TODO: this is for xpath, which is not mandatory in JCR 2.0
  */
-class Query_6_QueryObjectXpathTest extends QueryBaseCase
+class QueryObjectXpathTest extends QueryBaseCase
 {
     public function setUp()
     {

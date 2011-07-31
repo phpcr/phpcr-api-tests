@@ -7,20 +7,9 @@ numbers in the JCR v2.0 specification, JSR 283.
 (available at http://www.day.com/specs/jcr/2.0/index.html)
 
 
-Some of the chapters have not yet been implemented. They have a file named TODO
-in the folder.
-TODO: check existing chapters for completeness and correctness
-Some tests are missing, some are skipped although jackalope implements the feature.
-Write operations are less tested than read operations. Should go through all tests and fix failing ones and implement missing ones.
-For write, check Session::save too and add more complicated chained operations in CombinedManipulationsTest.
-
-TODO: tests should check workspace if it supports that feature and mark tests
-skipped if implemenation does not claim to implement this feature.
-
-TODO: Although generically useable this checkout comes with fixtures and data for the Jackalope API tests.
-clean out the jackalope references and move all jackalope specific stuff (the .jars and so on)
-into the jackalope api-tests folder. These tests should be clean. The only relevant folders are
-tests and fixtures, plus the .sample files, the rest should go out of this.
+Some of the chapters have not yet been implemented. They have a file named ```TODO```
+in the folder. The tests in all chapters are probably not feature complete, but
+steadily increasing. Help is of course welcome.
 
 ## Usage
 
@@ -28,60 +17,53 @@ The phpcr-api-tests is a suite to test compliance for implementations of
 the java content repository specification.
 [https://github.com/phpcr/phpcr](https://github.com/phpcr/phpcr)
 
-You need to provide a couple of files in order to let the tests detect your
-implementation:
-
+This test suite is independent of an actual implementation. You need to do a
+couple of things to provide proper bootstrapping for your implementation:
 
 * Add the api tests as submodule of your project, for example in a folder tests/api
-* Copy phpunit.dist.xml to the parent folder of where you added the submodule,
-    rename it to phpunit.xml and adapt as necessary.
-* All <php /> vars beginning with "jcr." are copied to the configuration array
-    that is passed to the functions `getPHPCRSession`,
-    `getRepository` and `getFixtureLoader`.
-    TODO: configuration should be handled by bootstrap and not by baseClass
-* Write your own bootstrap file. Have a look at bootstrap.dist.php You
-  have to implement the following methods:
-    ** getPHPCRSession()
-    ** getRepository()
-    ** getSimpleCredentials()
-    ** getFixtureLoader()
-    TODO: make this a class and move logic for configuration into the bootstrap
-* Implement data for all the necessary fixtures. See the "fixtures/" folder for
-  a JCR XML system view export of the fixture data. If your implementation can
-  not import this format, you will need to convert them into a suitable format.
+* Copy phpunit.dist.xml to ../phpunit.xml and adapt as necessary.
+* Implement the bootstrapping (see below)
+
+### Bootstrapping
+
+You find a sample bootstrap.dist.php that you can copy to ../bootstrap.php and
+adjust to your implementation. Your bootstrap must ensure that the
+```ImplementationLoader``` class extending the \PHPCR\Test\AbstractLoader
+is available in the environment.
+The ImplementationLoader is used by the \PHPCR\Test\BaseCase to acquire the
+PHPCR instances.
+
+See the inc/AbstractLoader.php file to see what the ImplementationLoader has to do.
+
+You can pass parameters from phpunit.xml into your bootstrap with the <php><var... syntax.
+
+### Fixtures loading
+
+The ImplementationLoader must provide a fixture loader. The fixture names are
+generic, but all names map to .xml files in the fixtures folder. Those files
+are in the JCR system view format. This is the format that is used with
+SessionInterface::import and produced by SessionInterface::exportSystemView
+
+If your implementation can not import that format, you will need to convert
+them into a suitable format.
+
+We recommend not to use your phpcr implementation import() implementation to
+load the fixtures but something stripped down.
+If you use the import() implementation but have some error or bug in that
+implementation, you will get confusing errors on tests that should not fail.
+
+
+## Running the tests
 
 Once this binding is working, run the tests with phpunit. If you use a normal
 php installation, this is usually along the lines of:
 
-    $ phpunit -c path/to/folder-with-phpunit
+    $ phpunit -c path/to/folder-with/phpunit.xml
 
-You can run the tests for a specific chapter of the specification with
-phpunit -c path/to/folder-with-phpunit path/to/NN_chaptername
+You can run the tests for a specific chapter of the specification or just a
+single test case by specifying a path
 
-
-### Required Fixtures
-
-The fixture loading passes strings without the file extension so you can roll
-your own fixtures if you want.
-The test suite provides default fixtures in the fixtures folder in the JCR
-system view export format. It is recommended to use those.
-
-
-### Using jackrabbit_importexport for load your own fixtures
-
-TODO: move this into jackalope, its implementation specific. and we should just
-implement the session::importXML method anyways
-
-The class jackrabbit_importexport can be used to import fixtures in xml format.
-It relies on jack.jar. The class can be plugged in Symfony2 autoload mechanism
-through autoload.php, which can be used to feed a MapFileClassLoader istance. E.g:
-
-```php
-$phpcr_loader = new MapFileClassLoader(
-  __DIR__.'/../vendor/doctrine-phpcr-odm/lib/vendor/jackalope/api-test/suite/inc/autoload.php'
-);
-$phpcr_loader->register();
-```
+    $ phpunit -c path/to/folder-with/phpunit.xml path/to/suite/tests/NN_chaptername
 
 
 ## Dependencies
@@ -90,34 +72,35 @@ $phpcr_loader->register();
 * PHPUnit in include_path
 
 
-## Implementation
+## Implementation notes
 
-All tests extend from the baseCase, found in inc/baseCase.php
-The baseCase prepares a couple of fixtures and assertions that can be used by
-the tests. Read the comments in that file for details.
+This test suite is made to work with all implementations of PHPCR. Never write
+tests for implementation specific things in here - use your applications unit
+or functional tests for that.
 
-To improve test running speed, tests should load the fixtures in the
-setupBeforeClass method.
-For the read-only tests, we have just two fixture files that cover all cases.
-For the write tests, we have one fixture per file with nodes named after the
-test names, which baseCase::setUp puts into $this->node. This way, each test
+All tests must extend from the PHPCR\Test\BaseCase which provides the static
+member $loader with the ImplementationLoader to load data.
+The BaseCase offers infrastructure to load fixtures efficiently and has some
+additional assertions that can be used by the tests.
+Read the comments in inc/BaseCase.php for details.
+
+To improve test running speed, fixture are loaded in the setupBeforeClass
+method. If you need specific fixtures, pass the name to the parent class
+setupBeforeClass method, if you do not need fixtures at all, pass false.
+
+For the read-only tests, we have just two fixtures that cover all cases:
+general/base and general/query
+
+To only load fixtures once but reliably test write operations, have a fixture
+per test case class with nodes named after the test names. The BaseCase will
+put that name into $this->node for each test in setUp(). This way, each test
 has its own "root" node and does not influence the other tests.
 
-To add or adjust fixtures, you can use jackrabbit and the jack.jar tool to
-import and export data: http://github.com/jackalope/jackrabbit-importexport
-See the readme file of jack for details.
-
-
-## Note on JCR
-
-It would be nice if we were able to run the relevant parts of the JSR-283
-Technology Compliance Kit (TCK) against php implementations. Note that we would
-need to have some glue for things that look different in php than in Java, like
-the whole topic of Value and ValueFactory.
-[https://jira.liip.ch/browse/JACK-24](https://jira.liip.ch/browse/JACK-24)
-
-Once we manage to do that, we could hopefully also use the performance test suite
-[https://jira.liip.ch/browse/JACK-23](https://jira.liip.ch/browse/JACK-23)
+To add or adjust fixtures, please keep them in the PHPCR system view format.
+If you work on Jackalope, you can use jackrabbit and the jack.jar tool to
+import and export data:
+http://github.com/jackalope/jackrabbit-importexport
+See the readme file of jackrabbit-importexport for details.
 
 
 # Contributors
@@ -127,6 +110,7 @@ Once we manage to do that, we could hopefully also use the performance test suit
 * Tobias Ebnöther <ebi@liip.ch>
 * Roland Schilter <roland.schilter@liip.ch>
 * Uwe Jäger <uwej711@googlemail.com>
+* Johannes Stark <starkj@gmx.de>
 * Lukas Kahwe Smith <lukas@liip.ch>
 * Benjamin Eberlei <kontakt@beberlei.de>
 * Daniel Barsotti <daniel.barsotti@liip.ch>

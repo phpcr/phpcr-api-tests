@@ -1,4 +1,5 @@
 <?php
+namespace PHPCR\Tests\Query\QOM;
 
 use PHPCR\Query\QOM\QueryObjectModelConstantsInterface as Constants;
 
@@ -39,10 +40,10 @@ class QomTestQueries {
         */
 
         // SELECT * FROM nt:file INNER JOIN nt:folder ON sel1.prop1=sel2.prop2
-        $queries['6.7.8.EquiJoin.Inner'] = 
+        $queries['6.7.8.EquiJoin.Inner'] =
             $factory->createQuery(
                 $factory->join(
-                    $factory->selector('nt:file'), 
+                    $factory->selector('nt:file'),
                     $factory->selector('nt:folder'),
                     Constants::JCR_JOIN_TYPE_INNER,
                     $factory->equiJoinCondition('sel1', 'prop1', 'sel2', 'prop2')),
@@ -54,7 +55,7 @@ class QomTestQueries {
         $queries['6.7.8.EquiJoin.Left'] =
             $factory->createQuery(
                 $factory->join(
-                    $factory->selector('nt:file'), 
+                    $factory->selector('nt:file'),
                     $factory->selector('nt:folder'),
                     Constants::JCR_JOIN_TYPE_LEFT_OUTER,
                     $factory->equiJoinCondition('sel1', 'prop1', 'sel2', 'prop2')),
@@ -66,7 +67,7 @@ class QomTestQueries {
         $queries['6.7.8.EquiJoin.Right'] =
             $factory->createQuery(
                 $factory->join(
-                    $factory->selector('nt:file'), 
+                    $factory->selector('nt:file'),
                     $factory->selector('nt:folder'),
                     Constants::JCR_JOIN_TYPE_RIGHT_OUTER,
                     $factory->equiJoinCondition('sel1', 'prop1', 'sel2', 'prop2')),
@@ -82,7 +83,7 @@ class QomTestQueries {
         $queries['6.7.9.SameNodeJoinCondition.Simple'] =
             $factory->createQuery(
                 $factory->join(
-                    $factory->selector('nt:file'), 
+                    $factory->selector('nt:file'),
                     $factory->selector('nt:folder'),
                     Constants::JCR_JOIN_TYPE_INNER,
                     $factory->sameNodeJoinCondition('sel1', 'sel2')),
@@ -94,7 +95,7 @@ class QomTestQueries {
         $queries['6.7.9.SameNodeJoinCondition.Path'] =
             $factory->createQuery(
                 $factory->join(
-                    $factory->selector('nt:file'), 
+                    $factory->selector('nt:file'),
                     $factory->selector('nt:folder'),
                     Constants::JCR_JOIN_TYPE_INNER,
                     $factory->sameNodeJoinCondition('sel1', 'sel2', '/home')),
@@ -110,7 +111,7 @@ class QomTestQueries {
         $queries['6.7.10.ChildNodeCondition'] =
             $factory->createQuery(
                 $factory->join(
-                    $factory->selector('nt:file'), 
+                    $factory->selector('nt:file'),
                     $factory->selector('nt:folder'),
                     Constants::JCR_JOIN_TYPE_INNER,
                     $factory->childNodeJoinCondition('child', 'parent')),
@@ -126,7 +127,7 @@ class QomTestQueries {
         $queries['6.7.11.DescendantNodeJoinCondition'] =
             $factory->createQuery(
                 $factory->join(
-                    $factory->selector('nt:file'), 
+                    $factory->selector('nt:file'),
                     $factory->selector('nt:folder'),
                     Constants::JCR_JOIN_TYPE_INNER,
                     $factory->descendantNodeJoinCondition('descendant', 'ancestor')),
@@ -308,7 +309,7 @@ class QomTestQueries {
          /**
         * 6.7.29. NodeName
         */
- 
+
         // SELECT * FROM nt:file WHERE NAME(sel) LIKE 'literal'
         $queries['6.7.29.NodeName'] =
             $factory->createQuery(

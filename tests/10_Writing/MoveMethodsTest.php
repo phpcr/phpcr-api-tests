@@ -1,11 +1,12 @@
 <?php
+namespace PHPCR\Tests\Writing;
 
-require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
+require_once(dirname(__FILE__) . '/../../inc/BaseCase.php');
 
 /**
  * Covering jcr-2.8.3 spec $10.6
  */
-class Writing_10_MoveMethodsTest extends phpcr_suite_baseCase
+class MoveMethodsTest extends \PHPCR\Test\BaseCase
 {
 
     static public function setupBeforeClass()

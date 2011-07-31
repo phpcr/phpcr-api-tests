@@ -1,8 +1,10 @@
 <?php
-require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
+namespace PHPCR\Tests\Writing;
+
+require_once(dirname(__FILE__) . '/../../inc/BaseCase.php');
 
 //6.3.1 Namespace Registry
-class Writing_10_NamespaceRegistryTest extends phpcr_suite_baseCase
+class NamespaceRegistryTest extends \PHPCR\Test\BaseCase
 {
     protected $workspace;
     protected $nr; //the NamespaceRegistry
@@ -74,7 +76,7 @@ class Writing_10_NamespaceRegistryTest extends phpcr_suite_baseCase
         $this->nr->getPrefix('http://thisshouldnotexist.org/0.0');
     }
 
-    public function testRegisterUnregisterNamespace()
+    public function testRegisterNamespace()
     {
         $uri = 'http://a_new_namespace';
         $prefix = 'new_prefix';
@@ -89,13 +91,16 @@ class Writing_10_NamespaceRegistryTest extends phpcr_suite_baseCase
         $session = $this->renewSession();
         $nr = $session->getWorkspace()->getNamespaceRegistry();
         $this->assertEquals($uri, $nr->getURI($prefix2));
+    }
 
+    public function testRegisterUnregisterNamespace()
+    {
+        $uri = 'http://removable_namespace';
+        $prefix = 'removable_prefix';
 
-        if ($this->nr instanceof Jackalope\NamespaceRegistry) {
-            $this->markTestSkipped('Jackrabbit does not support unregistering namespaces');
-        }
-        $this->nr->unregisterNamespace($prefix2);
-        $this->assertNotContains($prefix2, $this->nr->getPrefixes());
+        $this->nr->registerNamespace($prefix, $uri);
+        $this->nr->unregisterNamespace($prefix);
+        $this->assertNotContains($prefix, $this->nr->getPrefixes());
         $this->assertNotContains($uri, $this->nr->getURIs());
     }
 

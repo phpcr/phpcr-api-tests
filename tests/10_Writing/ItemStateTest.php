@@ -1,6 +1,7 @@
 <?php
+namespace PHPCR\Tests\Writing;
 
-require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
+require_once(dirname(__FILE__) . '/../../inc/BaseCase.php');
 
 use PHPCR\PropertyType;
 use Jackalope\Item;
@@ -8,17 +9,17 @@ use Jackalope\Item;
 /**
  * Test the workflow of Item state
  */
-class Writing_10_ItemStateTest extends phpcr_suite_baseCase
+class ItemStateTest extends \PHPCR\Test\BaseCase
 {
     public function setUp()
     {
         parent::setUp();
 
         if (! $this->sharedFixture['session']->getWorkspace() instanceof \Jackalope\Workspace) {
-            $this->markTestSkipped('This test is only meant for Jackalope');
+            $this->markTestSkipped('This test is only meant for Jackalope'); //TODO: this is a unit test that belongs into jackalope
         }
 
-        $class = new ReflectionClass('\Jackalope\Item');
+        $class = new \ReflectionClass('\Jackalope\Item');
         if (! array_key_exists('STATE_NEW', $class->getConstants())) {
             $this->markTestSkipped('Feature not yet implemented');
         }

@@ -1,12 +1,14 @@
 <?php
-require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
+namespace PHPCR\Tests\Reading;
+
+require_once(dirname(__FILE__) . '/../../inc/BaseCase.php');
 
 // According to PHPCR\BinaryInterface
 
 /**
  * §5.10.5
  */
-class Reading_5_BinaryReadMethodsTest extends phpcr_suite_baseCase
+class BinaryReadMethodsTest extends \PHPCR\Test\BaseCase
 {
     protected $node;
     private $decodedstring = 'h1. Chapter 1 Title
@@ -33,7 +35,7 @@ hello world
         parent::setUp();
         $this->node = $this->sharedFixture['session']->getRootNode()->getNode('tests_general_base/numberPropertyNode/jcr:content');
         $this->binaryProperty = $this->node->getProperty('jcr:data');
-        $this->assertEquals(PHPCR\PropertyType::BINARY, $this->binaryProperty->getType());
+        $this->assertEquals(\PHPCR\PropertyType::BINARY, $this->binaryProperty->getType());
     }
 
     public function testReadBinaryValue()

@@ -1,6 +1,7 @@
 <?php
+namespace PHPCR\Tests\Query\QOM;
 
-require_once(dirname(__FILE__) . '/../../../inc/baseCase.php');
+require_once(dirname(__FILE__) . '/../../../inc/BaseCase.php');
 require_once('Sql2TestQueries.php');
 require_once('QomTestQueries.php');
 
@@ -9,7 +10,7 @@ use PHPCR\Util\QOM\Sql2Generator;
 use PHPCR\Util\QOM\Sql2ToQomQueryConverter;
 use PHPCR\Util\QOM\QomToSql2QueryConverter;
 
-class ConvertQueriesBackAndForthTest extends \phpcr_suite_baseCase
+class ConvertQueriesBackAndForthTest extends \PHPCR\Test\BaseCase
 {
     protected $sql2Queries;
 

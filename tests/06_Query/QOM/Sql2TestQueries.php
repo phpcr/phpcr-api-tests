@@ -1,4 +1,5 @@
 <?php
+namespace PHPCR\Tests\Query\QOM;
 
 /**
 * Test queries for Sql2 language

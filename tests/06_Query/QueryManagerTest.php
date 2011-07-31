@@ -1,4 +1,6 @@
 <?php
+namespace PHPCR\Tests\Query;
+
 require_once('QueryBaseCase.php');
 
 /**
@@ -6,7 +8,7 @@ require_once('QueryBaseCase.php');
  *
  * TODO: getQOMFactory
  */
-class Query_6_QueryManagerTest extends QueryBaseCase
+class QueryManagerTest extends QueryBaseCase
 {
     public static function setupBeforeClass($fixture = 'general/query')
     {
@@ -15,7 +17,7 @@ class Query_6_QueryManagerTest extends QueryBaseCase
 
     public function testCreateQuery()
     {
-        $ret = $this->sharedFixture['qm']->createQuery(null, PHPCR\Query\QueryInterface::JCR_SQL2);
+        $ret = $this->sharedFixture['qm']->createQuery(null, \PHPCR\Query\QueryInterface::JCR_SQL2);
         $this->assertInstanceOf('PHPCR\Query\QueryInterface', $ret);
     }
 
@@ -29,34 +31,19 @@ class Query_6_QueryManagerTest extends QueryBaseCase
 
     public function testGetQuery()
     {
-        if ($this->sharedFixture['session'] instanceof \Jackalope\Session) {
-            $this->markTestSkipped('QueryManager.getQuery is not yet implemented in Jackalope');
-        }
+        $qnode = $this->sharedFixture['session']->getRootNode()->getNode('queryNode');
+        $this->assertInstanceOf('PHPCR\NodeInterface', $qnode);
 
-        $this->sharedFixture['ie']->import('general/query');
-        try {
-            $qnode = $this->sharedFixture['session']->getRootNode()->getNode('queryNode');
-            $this->assertInstanceOf('PHPCR\NodeInterface', $qnode);
-
-            $query = $this->sharedFixture['qm']->getQuery($qnode);
-            $this->assertInstanceOf('PHPCR\Query\QueryInterface', $query);
-        } catch(exception $e) {
-            //FIXME: finally?
-            $this->sharedFixture['ie']->import('general/query');
-            throw $e;
-        }
-        $this->sharedFixture['ie']->import('general/query');
+        $query = $this->sharedFixture['qm']->getQuery($qnode);
+        $this->assertInstanceOf('PHPCR\Query\QueryInterface', $query);
     }
+
     /**
      * @expectedException PHPCR\Query\InvalidQueryException
      */
     public function testGetQueryInvalid()
     {
-        if ($this->sharedFixture['session'] instanceof \Jackalope\Session) {
-            $this->markTestSkipped('QueryManager.getQuery is not yet implemented in Jackalope');
-        }
-
-        $this->sharedFixture['qm']->getQuery($this->sharedFixture['session']->getRootNode());
+        $this->sharedFixture['qm']->getQuery($this->rootNode);
     }
 
     public function testGetSupportedQueryLanguages()

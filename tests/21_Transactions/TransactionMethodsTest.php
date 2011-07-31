@@ -1,6 +1,7 @@
 <?php
+namespace PHPCR\Tests\Transactions;
 
-require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
+require_once(dirname(__FILE__) . '/../../inc/BaseCase.php');
 
 use \PHPCR\PropertyType as Type;
 use \PHPCR\Transaction;
@@ -8,7 +9,7 @@ use \PHPCR\Transaction;
 /**
  * Covering jcr-283 spec $10.4
  */
-class Transactions_21_TransactionMethodsTest extends phpcr_suite_baseCase
+class TransactionMethodsTest extends \PHPCR\Test\BaseCase
 {
 
     static public function setupBeforeClass()
@@ -43,13 +44,13 @@ class Transactions_21_TransactionMethodsTest extends phpcr_suite_baseCase
 
         $session->save();
 
-        $sessionbeforesave = getPHPCRSession(self::$staticSharedFixture['config']);
+        $sessionbeforesave = self::$loader->getSession();
         $this->assertFalse($sessionbeforesave->nodeExists($child->getPath()));
 
         $utx->commit();
 
         //do not refresh session, as this functionality could be broken... create a new session
-        $sessionaftersave = getPHPCRSession(self::$staticSharedFixture['config']);
+        $sessionaftersave = self::$loader->getSession();
         $this->assertTrue($sessionaftersave->nodeExists($child->getPath()));
     }
 
@@ -65,7 +66,7 @@ class Transactions_21_TransactionMethodsTest extends phpcr_suite_baseCase
 
         $this->assertTrue($this->node->hasNode('insideTransaction'));
 
-        $sessionaftersave = getPHPCRSession(self::$staticSharedFixture['config']);
+        $sessionaftersave = self::$loader->getSession();
         $this->assertFalse($sessionaftersave->nodeExists($child->getPath()));
     }
 
@@ -96,11 +97,8 @@ class Transactions_21_TransactionMethodsTest extends phpcr_suite_baseCase
     public function testIllegalCheckin()
     {
         $session = self::$staticSharedFixture['session'];
-        try {
-            $vm = $session->getWorkspace()->getVersionManager();
-        } catch (\PHPCR\UnsupportedRepositoryOperationException $e) {
-            $this->markTestSkipped("Versioning not supported: " . $e->getMessage());
-        }
+        $vm = $session->getWorkspace()->getVersionManager();
+
 
         $utx= $session->getWorkspace()->getTransactionManager();
         $vm->checkout($this->node->getPath());

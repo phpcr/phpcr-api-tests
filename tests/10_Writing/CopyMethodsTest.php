@@ -1,11 +1,12 @@
 <?php
+namespace PHPCR\Tests\Writing;
 
-require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
+require_once(dirname(__FILE__) . '/../../inc/BaseCase.php');
 
 /**
  * Covering jcr-283 spec $10.7
  */
-class Writing_10_CopyMethodsTest extends phpcr_suite_baseCase
+class CopyMethodsTest extends \PHPCR\Test\BaseCase
 {
     protected $ws;
 
@@ -121,12 +122,10 @@ class Writing_10_CopyMethodsTest extends phpcr_suite_baseCase
 
     public function testCopyUpdateOnCopy()
     {
-        $this->markTestSkipped('Enable this to test an update-on-copy implementation ');
-
         $sess = $this->sharedFixture['session'];
 
-        $src = '/tests_write_manipulation_copy/testCopyNoUpdateOnCopy/srcNode';
-        $dst = '/tests_write_manipulation_copy/testCopyNoUpdateOnCopy/dstNode/srcNode';
+        $src = '/tests_write_manipulation_copy/testCopyUpdateOnCopy/srcNode';
+        $dst = '/tests_write_manipulation_copy/testCopyUpdateOnCopy/dstNode/srcNode';
         $this->ws->copy($src, $dst);
 
         // make sure child node was copied

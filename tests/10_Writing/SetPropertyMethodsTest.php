@@ -1,6 +1,7 @@
 <?php
+namespace PHPCR\Tests\Writing;
 
-require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
+require_once(dirname(__FILE__) . '/../../inc/BaseCase.php');
 
 /**
  * Testing whether node property manipulations work correctly
@@ -11,7 +12,7 @@ require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
  *
  * Covering jcr-2.8.3 spec $10.4.2
  */
-class Writing_10_SetPropertyMethodsTest extends phpcr_suite_baseCase
+class SetPropertyMethodsTest extends \PHPCR\Test\BaseCase
 {
     protected $nodePath = '/tests_general_base/numberPropertyNode/jcr:content';
     protected $propPath = '/tests_general_base/numberPropertyNode/jcr:content/longNumber';
@@ -145,7 +146,7 @@ class Writing_10_SetPropertyMethodsTest extends phpcr_suite_baseCase
         $this->assertEquals(\PHPCR\PropertyType::LONG, $this->property->getType());
 
         // Re-bind property
-        $this->property->setValue(false, PHPCR\PropertyType::BOOLEAN);
+        $this->property->setValue(false, \PHPCR\PropertyType::BOOLEAN);
         $this->assertEquals(\PHPCR\PropertyType::BOOLEAN, $this->property->getType());
         $this->assertEquals(false, $this->property->getBoolean());
 

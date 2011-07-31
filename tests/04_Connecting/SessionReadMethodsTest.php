@@ -1,5 +1,7 @@
 <?php
-require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
+namespace PHPCR\Tests\Connecting;
+
+require_once(dirname(__FILE__) . '/../../inc/BaseCase.php');
 
 /** test javax.cr.Session read methods (level 1)
  *  most of the pdf specification is in section 4.4 and 5.1
@@ -12,7 +14,7 @@ require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
  *  Access Control: getAccessControlManager
  */
 
-class Reading_4_SessionReadMethodsTest extends phpcr_suite_baseCase
+class SessionReadMethodsTest extends \PHPCR\Test\BaseCase
 {
     //4.4.3
     public function testGetRepository()
@@ -25,16 +27,15 @@ class Reading_4_SessionReadMethodsTest extends phpcr_suite_baseCase
     public function testGetUserId()
     {
         $user = $this->sharedFixture['session']->getUserId();
-        $this->assertEquals($this->sharedFixture['config']['user'], $user);
+        $this->assertEquals(self::$loader->getUserId(), $user);
     }
 
     //4.4.2
     public function testGetAttributeNames()
     {
-        $this->markTestSkipped('TODO: Figure why Jackrabbit is not returning the AttributeNames');
-        $cr = $this->assertSimpleCredentials($this->sharedFixture['config']['user'], $this->sharedFixture['config']['pass']);
+        $cr = self::$loader->getCredentials();
         $cr->setAttribute('foo', 'bar');
-        $session = $this->assertSession($this->sharedFixture['config'], $cr);
+        $session = $this->assertSession($cr);
         $attrs = $session->getAttributeNames();
         $this->assertInternalType('array', $attrs);
         $this->assertContains('foo', $attrs);
@@ -42,10 +43,9 @@ class Reading_4_SessionReadMethodsTest extends phpcr_suite_baseCase
 
     public function testGetAttribute()
     {
-        $this->markTestSkipped('TODO: Figure why Jackrabbit is not returning the Attribute');
-        $cr = $this->assertSimpleCredentials($this->sharedFixture['config']['user'], $this->sharedFixture['config']['pass']);
+        $cr = self::$loader->getCredentials();
         $cr->setAttribute('foo', 'bar');
-        $session = $this->assertSession($this->sharedFixture['config'], $cr);
+        $session = $this->assertSession($cr);
         $val = $session->getAttribute('foo');
         $this->assertSame('bar', $val);
     }

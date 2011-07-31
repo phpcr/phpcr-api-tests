@@ -1,10 +1,12 @@
 <?php
+namespace PHPCR\Tests\Query;
+
 require_once('QueryBaseCase.php');
 
 /**
  * $ 6.11 QueryResult - Test the query result object
  */
-class Query_6_QueryResultsTest extends QueryBaseCase
+class QueryResultsTest extends QueryBaseCase
 {
     public static $expect = array("jcr:createdBy","jcr:created","jcr:primaryType","jcr:path","jcr:score");
 

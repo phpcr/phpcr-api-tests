@@ -1,9 +1,17 @@
 <?php
-require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
+namespace PHPCR\Tests\Reading;
+
+require_once(dirname(__FILE__) . '/../../inc/BaseCase.php');
 
 //6.3.3 Session Namespace Remapping
-class Reading_5_SessionNamespaceRemappingTest extends phpcr_suite_baseCase
+class SessionNamespaceRemappingTest extends \PHPCR\Test\BaseCase
 {
+    public static function setupBeforeClass()
+    {
+        // do not care about the fixtures
+        parent::setupBeforeClass(false);
+    }
+
     protected $nsBuiltIn = array('jcr' => 'http://www.jcp.org/jcr/1.0',
                                  'nt'  => 'http://www.jcp.org/jcr/nt/1.0',
                                  'mix' => 'http://www.jcp.org/jcr/mix/1.0',
@@ -13,16 +21,14 @@ class Reading_5_SessionNamespaceRemappingTest extends phpcr_suite_baseCase
     public function testSetNamespacePrefix()
     {
         //acquire new session, as we fiddle around with namespace prefixes
-        $session = getPHPCRSession($this->sharedFixture['config']);
-
-        if ($session instanceof \Jackalope\Session) {
-            $this->markTestSkipped('Session.setNamespacePrefix is not yet implemented in Jackalope');
-        }
+        $session = self::$loader->getSession();
 
         $session->setNamespacePrefix('notyetexisting', 'http://www.jcp.org/jcr/mix/1.0');
         $ret = $session->getNamespacePrefixes();
         $this->assertInternalType('array', $ret);
         $this->assertContains('notyetexisting', $ret);
+
+        $session->logout();
     }
 
     /**

@@ -1,11 +1,12 @@
 <?php
+namespace PHPCR\Tests\Query;
 
 require_once('QueryBaseCase.php');
 
 /**
  * test the query result node view $ 6.11.2
  */
-class Query_6_NodeViewTest extends QueryBaseCase
+class NodeViewTest extends QueryBaseCase
 {
     public $nodeIterator;
 

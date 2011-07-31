@@ -1,10 +1,12 @@
 <?php
-require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
+namespace PHPCR\Tests\Reading;
+
+require_once(dirname(__FILE__) . '/../../inc/BaseCase.php');
 
 /**
  * test javax.jcr.Node read methods (read) §5.6
  */
-class Reading_5_NodeReadMethodsTest extends phpcr_suite_baseCase
+class NodeReadMethodsTest extends \PHPCR\Test\BaseCase
 {
     protected $rootNode;
     protected $node;
@@ -13,7 +15,6 @@ class Reading_5_NodeReadMethodsTest extends phpcr_suite_baseCase
     public function setUp()
     {
         parent::setUp();
-        $this->rootNode = $this->sharedFixture['session']->getRootNode();
         $this->node = $this->rootNode->getNode('tests_general_base');
         $this->deepnode = $this->node->getNode('multiValueProperty')->getNode('deepnode');
     }
@@ -457,19 +458,17 @@ class Reading_5_NodeReadMethodsTest extends phpcr_suite_baseCase
 
     public function testGetSharedSetUnreferenced()
     {
-        if ($this->sharedFixture['session'] instanceof \Jackalope\Session) {
-            $this->markTestSkipped('Node.getSharedSet is not yet implemented in Jackalope');
-        }
-
+        // TODO: should this be moved to 14_ShareableNodes
         $iterator = $this->node->getSharedSet();
         $this->assertInstanceOf('Iterator', $iterator);
         $this->assertTrue($iterator->valid());
         $node = $iterator->current();
         $this->assertEquals($node, $this->node);
     }
+
     public function testGetSharedSetReferenced()
     {
-        $this->markTestIncomplete('TODO: Have a referenced node');
+        $this->markTestIncomplete('TODO: should this be moved to 14_ShareableNodes');
     }
 
     public function testHasNodeTrue()

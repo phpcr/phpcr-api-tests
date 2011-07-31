@@ -1,12 +1,15 @@
 <?php
-require_once dirname(__FILE__).'/importexport.php';
+namespace PHPCR\Test;
 
 // PHPUnit 3.4 compat
 if (method_exists('PHPUnit_Util_Filter', 'addDirectoryToFilter')) {
     require_once 'PHPUnit/Framework.php';
 }
 
-abstract class phpcr_suite_baseCase extends PHPUnit_Framework_TestCase
+/**
+ * Base class for all phpcr api tests
+ */
+abstract class BaseCase extends \PHPUnit_Framework_TestCase
 {
     protected $path = ''; // Describes the path to the test
 
@@ -16,14 +19,22 @@ abstract class phpcr_suite_baseCase extends PHPUnit_Framework_TestCase
     /** The node in the current fixture at /test_class_name/testMethod */
     protected $node = null;
 
-    protected $config;
+    /**
+     * Instance of the implementation specific loader
+     *
+     * The BaseCase offers some utility methods, but tests can access the
+     * loader directly to get implementation instances.
+     *
+     * @var AbstractLoader
+     */
+    protected static $loader;
 
     /**
      * Populated in the setupBeforeClass method.
      *
      * Contains the fields
      * - session (the PHPCR Session)
-     * - ie (the import export instance)
+     * - ie (the fixture loader instance)
      */
     protected static $staticSharedFixture = null;
 
@@ -33,8 +44,8 @@ abstract class phpcr_suite_baseCase extends PHPUnit_Framework_TestCase
     protected $sharedFixture = array();
 
     /**
-     * the bootstrap.php from the client can throw PHPCR\RepositoryException
-     * with this message to tell assertSession when getPHPCRSession has been called
+     * the loader can throw a PHPCR\RepositoryException
+     * with this message to tell assertSession when getSession has been called
      * with parameters not supported by this implementation (like credentials null)
      */
     const NOTSUPPORTEDLOGIN = 'Not supported login';
@@ -52,16 +63,13 @@ abstract class phpcr_suite_baseCase extends PHPUnit_Framework_TestCase
      */
     public static function setupBeforeClass($fixtures = 'general/base')
     {
-        self::$staticSharedFixture = array();
-        date_default_timezone_set('Europe/Zurich');
-        foreach ($GLOBALS as $cfgKey => $value) {
-            if ('phpcr.' === substr($cfgKey, 0, 6)) {
-                self::$staticSharedFixture['config'][substr($cfgKey, 6)] = $value;
-            }
-        }
+        self::$loader = \ImplementationLoader::getInstance();
 
-        self::$staticSharedFixture['session'] = getPHPCRSession(self::$staticSharedFixture['config']);
-        self::$staticSharedFixture['ie'] = getFixtureLoader(self::$staticSharedFixture['config']);
+        self::$staticSharedFixture = array();
+        date_default_timezone_set('Europe/Zurich'); //TODO put this here?
+
+        self::$staticSharedFixture['session'] = self::$loader->getSession();
+        self::$staticSharedFixture['ie'] = self::$loader->getFixtureLoader();
 
         if ($fixtures) {
             self::$staticSharedFixture['ie']->import($fixtures);
@@ -70,6 +78,9 @@ abstract class phpcr_suite_baseCase extends PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
+        if (! self::$loader->getTestSupported($this)) {
+            $this->markTestSkipped('Feature not supported by this implementation');
+        }
         $this->sharedFixture = self::$staticSharedFixture;
 
         $this->initProperties();
@@ -83,12 +94,19 @@ abstract class phpcr_suite_baseCase extends PHPUnit_Framework_TestCase
         self::$staticSharedFixture = null;
     }
 
+    /**
+     * Utility method for tests to get a new session
+     *
+     * Logout from the old session but does *NOT* save the session
+     *
+     * @return \PHPCR\SessionInterface   The new session
+     */
     protected function renewSession()
     {
         if (isset(self::$staticSharedFixture['session'])) {
             self::$staticSharedFixture['session']->logout();
         }
-        self::$staticSharedFixture['session'] = getPHPCRSession(self::$staticSharedFixture['config']);
+        self::$staticSharedFixture['session'] = self::$loader->getSession();
         $this->sharedFixture['session'] = self::$staticSharedFixture['session'];
 
         $this->initProperties();
@@ -97,8 +115,11 @@ abstract class phpcr_suite_baseCase extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Saves the session and clears the cache
-     * @return \Jackalope\Session   The new session
+     * Utility method for tests to save the session and get a new one
+     *
+     * Saves the old session and logs it out.
+     *
+     * @return \PHPCR\SessionInterface   The new session
      */
     protected function saveAndRenewSession()
     {
@@ -108,26 +129,22 @@ abstract class phpcr_suite_baseCase extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * You can load the fixtures in the setupBeforeClass() to speed up the
-     * tests quite a lot.
-     *
-     * This method helps to populate test case properties both at test setUp
+     * This method populates the test case properties both at test setUp
      * and after renewing the session.
      *
-     * The default schema
-     * is to have one node per test with the test name under /tests_something
-     *
-     * You can overwrite this to have some other logic
+     * The default schema is to have a root node /test_<something> with one
+     * child node per test with the node name being the test name.
      */
     protected function initProperties()
     {
-        $this->rootNode = $this->sharedFixture['session']->getNode('/');
-
         $this->node = null;
+
+        $this->rootNode = $this->sharedFixture['session']->getRootNode();
+
         $children = $this->rootNode->getNodes("tests_*");
         $child = current($children);
-        if (false !== $child) {
-            $this->node = $child->hasNode($this->getName()) ? $child->getNode($this->getName()) : null;
+        if (false !== $child && $child->hasNode($this->getName())) {
+            $this->node = $child->getNode($this->getName());
         }
     }
 
@@ -135,21 +152,20 @@ abstract class phpcr_suite_baseCase extends PHPUnit_Framework_TestCase
      * Custom assertions
      *************************************************************************/
 
-    /** try to create credentials from this user/password */
-    protected function assertSimpleCredentials($user, $password)
-    {
-        $cr = getSimpleCredentials($user, $password);
-        $this->assertInstanceOf('PHPCR\CredentialsInterface', $cr);
-        return $cr;
-    }
-
-    /** try to create a session with the config and credentials */
-    protected function assertSession($cfg, $credentials = null)
+    /**
+     * create a session with the given credentials and assert this is a session
+     *
+     * this is similar to doing self::$loader->getSession($credentials) but
+     * does error handling and asserts the session is a valid SessionInterface
+     *
+     * @return PHPCR\SessionInterface the session from the login
+     */
+    protected function assertSession($credentials = false)
     {
         try {
-            $ses = getPHPCRSession($cfg, $credentials);
-        } catch(PHPCR\RepositoryException $e) {
-            if ($e->getMessage() == phpcr_suite_baseCase::NOTSUPPORTEDLOGIN) {
+            $ses = self::$loader->getSession($credentials);
+        } catch(\PHPCR\RepositoryException $e) {
+            if ($e->getMessage() == self::NOTSUPPORTEDLOGIN) {
                 $this->markTestSkipped('This implementation does not support this type of login.');
             } else {
                 throw $e;
@@ -158,6 +174,7 @@ abstract class phpcr_suite_baseCase extends PHPUnit_Framework_TestCase
         $this->assertInstanceOf('PHPCR\SessionInterface', $ses);
         return $ses;
     }
+
     /** assert that this is an object that is traversable */
     protected function assertTraversableImplemented($obj) {
         $this->assertTrue($obj instanceof \Iterator || $obj instanceof \IteratorAggregate, 'To provide Traversable, you have to either implement Iterator or IteratorAggregate');

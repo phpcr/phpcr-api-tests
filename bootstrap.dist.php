@@ -1,109 +1,21 @@
 <?php
 
 /**
- * Sample bootstrap file (as used for jr_cr)
+ * Sample bootstrap file
  *
- * This file does some basic stuff that's project specific.
- * Please copy the file for your project and make sure phpunit.xml includes
- * this file.
+ * the thing you MUST do is define the constants as expected in the
+ * 04_Connecting/RepositoryDescriptorsTest.php
  *
- * function getRepository(config) which returns the repository
- * function getPHPCRSession(config) which returns the session
+ * Otherwise you may use this file to register autoloaders or require files
+ * to have your implementation be ready.
  *
- * TODO: move the following to a base file, as they are not implementation specific
- * function getSimpleCredentials(user, password) which returns simpleCredentials
- *
- * constants necessary to the JCR 1.0/JSR-170 and JSR-283 specs
+ * Have a look at the Jackalope repository for an example how the tests are
+ * integrated https://github.com/jackalope/jackalope
  */
 
-// Make sure we have the necessary config
-$necessaryConfigValues = array('jcr.url', 'jcr.user', 'jcr.pass', 'jcr.workspace', 'jcr.transport');
-foreach ($necessaryConfigValues as $val) {
-    if (empty($GLOBALS[$val])) {
-        die('Please set '.$val.' in your phpunit.xml.' . "\n");
-    }
-}
-
-/**
- * autoloader: jackalope-api-tests relies on this autoloader.
+/*
+ * you need to define the following constants for the repository descriptor test for JCR 1.0/JSR-170 and JSR-283 specs
  */
-function jackalopeApiTestsAutoload($class) {
-    $incFile = dirname(__FILE__) . '/../lib/' . str_replace("_", DIRECTORY_SEPARATOR, $class).".php";
-    if (@fopen($incFile, "r", TRUE)) {
-        include($incFile);
-        return $incFile;
-    }
-    return FALSE;
-}
-spl_autoload_register('jackalopeApiTestsAutoload');
-
-/**
- * @return string classname of the repository factory
- */
-function getRepositoryFactoryClass()
-{
-    return 'Jackalope\RepositoryFactoryJackrabbit';
-}
-
-/**
- * @return hashmap to be used with the repository factory
- */
-function getRepositoryFactoryParameters($config)
-{
-    return array('jackalope.jackrabbit_uri' => $config['url']);
-}
-
-/**
- * Repository lookup is implementation specific.
- * @param config The configuration where to find the repository
- * @return the repository instance
- */
-function getRepository($config) {
-    if (empty($config['url']) || empty($config['transport'])) {
-        return false;
-    }
-    return jr_cr::lookup($config['url'], $config['transport']);
-}
-
-/**
- * @param user The user name for the credentials
- * @param password The password for the credentials
- * @return the simple credentials instance for this implementation with the specified username/password
- */
-function getSimpleCredentials($user, $password) {
-    return new jr_cr_simplecredentials($user, $password);
-}
-
-/**
- * Get a session for this implementation.
- * @param config The configuration that is passed to getRepository
- * @param credentials The credentials to log into the repository. If omitted, $config['user'] and $config['pass'] is used with getSimpleCredentials
- * @return A session resulting from logging into the repository found at the $config path
- */
-function getPHPCRSession($config, $credentials = null) {
-    $repository = getRepository($config);
-    if (isset($config['pass']) || isset($credentials)) {
-        if (empty($config['workspace'])) {
-            $config['workspace'] = null;
-        }
-        if (empty($credentials)) {
-            $credentials = getSimpleCredentials($config['user'], $config['pass']);
-        }
-        return $repository->login($credentials, $config['workspace']);
-    } elseif (isset($config['workspace'])) {
-        return $repository->login(null, $config['workspace']);
-    } else {
-        return $repository->login(null, null);
-    }
-}
-
-function getFixtureLoader($config)
-{
-    require_once "importexport.php";
-    return new jackalope_importexport(__DIR__."/fixtures", (isset($config['jackalope_jar']) ? $config['jackalope_jar'] : null));
-}
-
-/** some constants */
 
 define('SPEC_VERSION_DESC', 'jcr.specification.version');
 define('SPEC_NAME_DESC', 'jcr.specification.name');
@@ -120,3 +32,16 @@ define('OPTION_LOCKING_SUPPORTED', 'option.locking.supported');
 define('OPTION_QUERY_SQL_SUPPORTED', 'option.query.sql.supported');
 define('QUERY_XPATH_POS_INDEX', 'query.xpath.pos.index');
 define('QUERY_XPATH_DOC_ORDER', 'query.xpath.doc.order');
+
+/*
+ * you can do things here like registering your autoloader
+ * or require files with classes that are used but not autoloaded
+ */
+require __DIR__.'/../src/Jackalope/autoloader.php';
+
+### Load two classes needed for jackalope unit tests ###
+require __DIR__.'/../tests/Jackalope/TestCase.php';
+require __DIR__.'/../tests/Jackalope/Transport/DoctrineDBAL/DoctrineDBALTestCase.php';
+
+### Load the implementation loader class ###
+require 'ImplementationLoader.php';

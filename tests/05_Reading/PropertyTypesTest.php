@@ -1,11 +1,19 @@
 <?php
+namespace PHPCR\Tests\Reading;
 
-require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
+require_once(dirname(__FILE__) . '/../../inc/BaseCase.php');
 
-// 6.2.4 Property Read Methods
-
-class Reading_5_PropertyTypesTest extends phpcr_suite_baseCase
+/**
+ * a test for the PHPCR\PropertyType class
+ */
+class PropertyTypesTest extends \PHPCR\Test\BaseCase
 {
+    public static function setupBeforeClass()
+    {
+        // do not care about the fixtures
+        parent::setupBeforeClass(false);
+    }
+
     /** key = numeric type constant names as defined by api
      *  value = expected value of the TYPENAME_<TYPE> constants
      */

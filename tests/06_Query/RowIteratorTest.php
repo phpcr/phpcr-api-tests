@@ -1,11 +1,12 @@
 <?php
+namespace PHPCR\Tests\Query;
 
 require_once('QueryBaseCase.php');
 
 /**
  * $ 6.11.1 Row View - Iterator part
  */
-class Query_6_RowIteratorTest extends QueryBaseCase
+class RowIteratorTest extends QueryBaseCase
 {
     public $rowIterator;
 

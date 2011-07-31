@@ -1,9 +1,10 @@
 <?php
+namespace PHPCR\Tests\Query\QOM;
 
-require_once(dirname(__FILE__) . '/../../../inc/baseCase.php');
+require_once(dirname(__FILE__) . '/../../../inc/BaseCase.php');
 require_once('Sql2TestQueries.php');
 
-use Jackalope\Query\QOM;
+use Jackalope\Query\QOM; // TODO get rid of jackalope dependency
 use PHPCR\Util\QOM\QomToSql2QueryConverter;
 use PHPCR\Util\QOM\Sql2Generator;
 use PHPCR\Query\QOM\QueryObjectModelConstantsInterface as Constants;
@@ -11,7 +12,7 @@ use PHPCR\Query\QOM\QueryObjectModelConstantsInterface as Constants;
 /**
  * Test for PHPCR\Util\QOM\QomToSql2QueryConverter
  */
-class QomToSql2ConverterTest extends \phpcr_suite_baseCase
+class QomToSql2ConverterTest extends \PHPCR\Test\BaseCase
 {
     /**
      * @var \PHPCR\Util\QOM\QomToSql2QueryConverter

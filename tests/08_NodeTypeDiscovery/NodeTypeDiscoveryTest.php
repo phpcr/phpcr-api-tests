@@ -1,17 +1,18 @@
 <?php
+namespace PHPCR\Tests\NodeTypeDiscovery;
 
-require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
+require_once(dirname(__FILE__) . '/../../inc/BaseCase.php');
 
 /**
  * Test the NoteTypeManager §8
  *
  */
-class NodeTypeDiscovery_8_NodeTypeDiscoveryTest extends phpcr_suite_baseCase
+class NodeTypeDiscoveryTest extends \PHPCR\Test\BaseCase
 {
     private $nodeTypeManager;
 
     public function setUp() {
-        parent::setUp();
+        parent::setUp(false);
         $this->nodeTypeManager = $this->sharedFixture['session']->getWorkspace()->getNodeTypeManager();
     }
 

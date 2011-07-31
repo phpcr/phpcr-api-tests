@@ -1,10 +1,12 @@
 <?php
-require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
+namespace PHPCR\Tests\Query;
+
+require_once(dirname(__FILE__) . '/../../inc/BaseCase.php');
 
 /**
  * a base class for all query tests
  */
-abstract class QueryBaseCase extends phpcr_suite_baseCase
+abstract class QueryBaseCase extends \PHPCR\Test\BaseCase
 {
     /**
      * in addition to base stuff, prepare the query manager and load general/query fixture

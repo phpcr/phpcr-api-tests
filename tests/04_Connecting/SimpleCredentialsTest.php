@@ -1,12 +1,29 @@
 <?php
-require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
+namespace PHPCR\Tests\Connecting;
 
-class Connecting_4_CredentialsTest extends phpcr_suite_baseCase
+require_once(dirname(__FILE__) . '/../../inc/BaseCase.php');
+
+/**
+ * Test the simple credentials PHPCR class
+ */
+class SimpleCredentialsTest extends \PHPCR\Test\BaseCase
 {
-    //don't care about fixtures
+    public static function setupBeforeClass()
+    {
+        //don't care about fixtures
+        parent::setupBeforeClass(false);
+    }
 
     const CR_USER = 'foo';
     const CR_PASS = 'bar';
+
+    /** try to create credentials from this user/password */
+    protected function assertSimpleCredentials($user, $password)
+    {
+        $cr = new \PHPCR\SimpleCredentials($user, $password);
+        $this->assertInstanceOf('PHPCR\CredentialsInterface', $cr);
+        return $cr;
+    }
 
     // 6.1.2 Credentials
     public function testSimpleCredentials()

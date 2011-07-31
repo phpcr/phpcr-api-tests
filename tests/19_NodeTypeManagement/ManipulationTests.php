@@ -1,18 +1,21 @@
 <?php
+namespace PHPCR\Tests\NodeTypeManagement;
 
-require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
+require_once(dirname(__FILE__) . '/../../inc/BaseCase.php');
 
 /**
  * Covering jcr-2.8.3 spec $19
  *
  * (only a few tests, lots is tested by unit tests)
+ *
+ * This test case contains some tests for jackalope that should be in jackalope functional tests
  */
-class NodeTypeManagement_19_MoveMethodsTest extends phpcr_suite_baseCase
+class ManipulationTest extends \PHPCR\Test\BaseCase
 {
 
     protected function setUp()
     {
-        $this->renewSession();
+        $this->renewSession(); // reset session
         parent::setUp();
     }
 
@@ -40,7 +43,7 @@ class NodeTypeManagement_19_MoveMethodsTest extends phpcr_suite_baseCase
         $types = $ntm->registerNodeTypesCnd($this->cnd, true);
         $this->assertEquals(2, count($types), 'Wrong number of nodes registered');
         list($name, $type) = each($types);
-        $this->assertEquals('phpcr:managed', $name);
+        $this->assertEquals('phpcr:apitest', $name);
         $this->assertInstanceOf('PHPCR\NodeType\NodeTypeDefinitionInterface', $type);
         list($name, $type) = each($types);
         $this->assertEquals('phpcr:test', $name);
@@ -99,7 +102,7 @@ class NodeTypeManagement_19_MoveMethodsTest extends phpcr_suite_baseCase
 
     private $cnd = "
         <'phpcr'='http://www.doctrine-project.org/projects/phpcr_odm'>
-         [phpcr:managed]
+         [phpcr:apitest]
           mixin
           - phpcr:alias (string)
           [phpcr:test]

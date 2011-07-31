@@ -1,8 +1,12 @@
 <?php
-require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
+namespace PHPCR\Tests\Export;
+
+require_once(dirname(__FILE__) . '/../../inc/BaseCase.php');
+
+use DOMDocument, DOMElement, DOMNode, DOMText, DOMXPath;
 
 //7 Export Repository Content
-class Export_7_ExportRepositoryContentTest extends phpcr_suite_baseCase
+class ExportRepositoryContentTest extends \PHPCR\Test\BaseCase
 {
     static public function setupBeforeClass()
     {

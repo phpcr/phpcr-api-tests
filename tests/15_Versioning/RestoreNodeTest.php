@@ -1,13 +1,14 @@
 <?php
+namespace PHPCR\Tests\Versioning;
 
-require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
+require_once(dirname(__FILE__) . '/../../inc/BaseCase.php');
 
 /**
 * Testing whether node property manipulations work correctly
 *
 * Covering jcr-2.8.3 spec $15.1
 */
-class Versioning_15_RestoreNodeTest extends phpcr_suite_baseCase
+class RestoreNodeTest extends \PHPCR\Test\BaseCase
 {
     static public function setupBeforeClass()
     {
@@ -17,11 +18,7 @@ class Versioning_15_RestoreNodeTest extends phpcr_suite_baseCase
     public function setUp()
     {
         parent::setUp();
-        try {
-            $this->vm = $this->sharedFixture['session']->getWorkspace()->getVersionManager();
-        } catch (\PHPCR\UnSupportedRepositoryOperationException $e) {
-            $this->markTestSkipped("Versioning not supported: " . $e->getMessage());
-        }
+        $this->vm = $this->sharedFixture['session']->getWorkspace()->getVersionManager();
     }
 
     public function testRestoreversion() {

@@ -1,17 +1,14 @@
 <?php
-require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
+namespace PHPCR\Tests\Import;
 
-//6.5 Export Repository Content
-class Export_11_ImportRepositoryContentTest extends phpcr_suite_baseCase
+require_once(dirname(__FILE__) . '/../../inc/BaseCase.php');
+
+//6.5 Import Repository Content
+class ImportRepositoryContentTest extends \PHPCR\Test\BaseCase
 {
     public function testImportXML()
     {
-        $this->markTestSkipped('TODO: what kind of stream is ok for input?');
+        $this->markTestSkipped('TODO: have document and system view to import and validate success. share with export test');
         //$this->sharedFixture['session']->importXML('/', input stream, behaviour flags);
-    }
-
-    public function testGetImportContentHandler()
-    {
-        $this->markTestSkipped('TODO: implement');
     }
 }

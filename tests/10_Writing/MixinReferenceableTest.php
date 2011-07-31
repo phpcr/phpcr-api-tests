@@ -1,17 +1,18 @@
 <?php
+namespace PHPCR\Tests\Writing;
 
-require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
+require_once(dirname(__FILE__) . '/../../inc/BaseCase.php');
 
 /**
  * Testing that mix:referenceable nodes references work correctly
  *
  * Covering jcr-2.8.3 spec $10.10.3
  */
-class Writing_10_MixinReferenceableTest extends phpcr_suite_baseCase
+class MixinReferenceableTest extends \PHPCR\Test\BaseCase
 {
     public function setUp()
     {
-        $this->renewSession();
+        $this->renewSession(); // discard changes
     }
 
     /**

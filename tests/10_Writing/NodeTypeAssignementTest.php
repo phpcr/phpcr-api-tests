@@ -1,11 +1,12 @@
 <?php
+namespace PHPCR\Tests\Writing;
 
-require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
+require_once(dirname(__FILE__) . '/../../inc/BaseCase.php');
 
 /**
  * Test adding mixin to nodes.
  */
-class Writing_10_NodeTypeAssignementTest extends phpcr_suite_baseCase
+class NodeTypeAssignementTest extends \PHPCR\Test\BaseCase
 {
     public static function setupBeforeClass()
     {

@@ -1,13 +1,14 @@
 <?php
+namespace PHPCR\Tests\Writing;
 
-require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
+require_once(dirname(__FILE__) . '/../../inc/BaseCase.php');
 
 use PHPCR\PropertyType as Type;
 
 /**
  * test sequences of adding / moving / removing stuff inside a transaction
  */
-class Writing_10_CombinedManipulationsTest extends phpcr_suite_baseCase
+class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
 {
     /**
      * remove a node and then add a new one at the same path

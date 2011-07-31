@@ -1,18 +1,24 @@
 <?php
-require_once(dirname(__FILE__) . '/../../inc/baseCase.php');
+namespace PHPCR\Tests\Connecting;
 
-class Connecting_4_RepositoryFactoryTest extends phpcr_suite_baseCase
+require_once(dirname(__FILE__) . '/../../inc/BaseCase.php');
+
+class RepositoryFactoryTest extends \PHPCR\Test\BaseCase
 {
-    //don't care about fixtures
+    public static function setupBeforeClass()
+    {
+        //don't care about fixtures
+        parent::setupBeforeClass(false);
+    }
 
     // 4.1 Repository
     public function testRepositoryFactory()
     {
-        $class = getRepositoryFactoryClass();
+        $class = self::$loader->getRepositoryFactoryClass();
         $factory = new $class;
         $this->assertInstanceOf('PHPCR\RepositoryFactoryInterface', $factory);
 
-        $repo = $factory->getRepository(getRepositoryFactoryParameters(self::$staticSharedFixture['config']));
+        $repo = $factory->getRepository(self::$loader->getRepositoryFactoryParameters());
         $this->assertInstanceOf('PHPCR\RepositoryInterface', $repo);
     }
 
