@@ -262,7 +262,6 @@ class SessionReadMethodsTest extends \PHPCR\Test\BaseCase
     {
         // Login with restricted credentials
         $session = self::$loader->getSession(self::$loader->getRestrictedCredentials());
-        $session = self::$staticSharedFixture['session'];
 
         $session->checkPermission('/tests_general_base/numberPropertyNode/jcr:content/foo', 'add_node');
         $session->logout();
