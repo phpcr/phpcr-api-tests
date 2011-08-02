@@ -133,23 +133,17 @@ abstract class AbstractLoader
      * The default implementation uses the unsupported... arrays to decide.
      * Overwrite if you need a different logic.
      *
-     * @param string $chapter the chapter name (folder name)
-     * @param string $class the test case name (filename without .php)
-     * @param string $name the test name as returned by TestCase::getName()
+     * @param string $chapter the chapter name (folder name without number, i.e. Writing)
+     * @param string $case the test case full class name but without PHPCR\Tests , i.e. Writing\CopyMethodsTest
+     * @param string $name the test name as returned by TestCase::getName(), i.e. Writing\CopyMethodsTest::testCopyUpdateOnCopy - is null when checking for general support of test case in setupBeforeClass
      *
      * @return bool true if the implementation supports the features of this test
      */
-    public function getTestSupported($testcase)
+    public function getTestSupported($chapter, $case, $name)
     {
-        $fqn = get_class($testcase);
-        list($phpcr, $tests, $chapter, $case) = explode('\\', $fqn);
-
-        $case = "$chapter\\$case";
-        $test = "$case::".$testcase->getName();
-
         return ! (   in_array($chapter, $this->unsupportedChapters)
                   || in_array($case, $this->unsupportedCases)
-                  || in_array($test, $this->unsupportedTests)
+                  || in_array($name, $this->unsupportedTests)
                  );
     }
 

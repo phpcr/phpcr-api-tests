@@ -65,6 +65,13 @@ abstract class BaseCase extends \PHPUnit_Framework_TestCase
     {
         self::$loader = \ImplementationLoader::getInstance();
 
+        $fqn = get_called_class();
+        list($phpcr, $tests, $chapter, $case) = explode('\\', $fqn);
+        $case = "$chapter\\$case";
+        if (! self::$loader->getTestSupported($chapter, $case, null)) {
+            throw new \PHPUnit_Framework_SkippedTestSuiteError('Test case not supported by this implementation');
+        }
+
         self::$staticSharedFixture = array();
         date_default_timezone_set('Europe/Zurich'); //TODO put this here?
 
@@ -78,9 +85,16 @@ abstract class BaseCase extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        if (! self::$loader->getTestSupported($this)) {
+        $fqn = get_called_class();
+        list($phpcr, $tests, $chapter, $case) = explode('\\', $fqn);
+
+        $case = "$chapter\\$case";
+        $test = "$case::".$this->getName();
+
+        if (! self::$loader->getTestSupported($chapter, $case, $test)) {
             $this->markTestSkipped('Feature not supported by this implementation');
         }
+
         $this->sharedFixture = self::$staticSharedFixture;
 
         $this->initProperties();
