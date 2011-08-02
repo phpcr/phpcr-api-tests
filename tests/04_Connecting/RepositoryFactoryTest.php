@@ -15,10 +15,7 @@ class RepositoryFactoryTest extends \PHPCR\Test\BaseCase
     public function testRepositoryFactory()
     {
         $class = self::$loader->getRepositoryFactoryClass();
-        $factory = new $class;
-        $this->assertInstanceOf('PHPCR\RepositoryFactoryInterface', $factory);
-
-        $repo = $factory->getRepository(self::$loader->getRepositoryFactoryParameters());
+        $repo = $class::getRepository(self::$loader->getRepositoryFactoryParameters());
         $this->assertInstanceOf('PHPCR\RepositoryInterface', $repo);
     }
 
