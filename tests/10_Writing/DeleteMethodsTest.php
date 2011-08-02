@@ -8,9 +8,9 @@ require_once(dirname(__FILE__) . '/../../inc/BaseCase.php');
  */
 class DeleteMethodsTest extends \PHPCR\Test\BaseCase
 {
-    static public function setupBeforeClass()
+    static public function setupBeforeClass($fixtures = '10_Writing/delete')
     {
-        parent::setupBeforeClass('10_Writing/delete');
+        parent::setupBeforeClass($fixtures);
     }
 
     public function setUp()

@@ -8,9 +8,9 @@ require_once(dirname(__FILE__) . '/../../inc/BaseCase.php');
  */
 class NodeTypeAssignementTest extends \PHPCR\Test\BaseCase
 {
-    public static function setupBeforeClass()
+    public static function setupBeforeClass($fixtures = '10_Writing/nodetype')
     {
-        parent::setupBeforeClass('10_Writing/nodetype');
+        parent::setupBeforeClass($fixtures);
     }
 
     public function setUp()

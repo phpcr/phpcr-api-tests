@@ -8,10 +8,10 @@ require_once(dirname(__FILE__) . '/../../inc/BaseCase.php');
  */
 class PropertyTypesTest extends \PHPCR\Test\BaseCase
 {
-    public static function setupBeforeClass()
+    public static function setupBeforeClass($fixtures = false)
     {
         // do not care about the fixtures
-        parent::setupBeforeClass(false);
+        parent::setupBeforeClass($fixtures);
     }
 
     /** key = numeric type constant names as defined by api

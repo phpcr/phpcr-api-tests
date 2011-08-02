@@ -1,4 +1,6 @@
 <?php
+/** make sure we get ALL infos from php */
+error_reporting(E_ALL | E_STRICT);
 
 /**
  * Sample bootstrap file

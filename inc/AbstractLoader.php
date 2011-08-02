@@ -47,7 +47,10 @@ abstract class AbstractLoader
      *
      * @return AbstractLoader loader for your implementation
      */
-    public abstract static function getInstance();
+    public static function getInstance()
+    {
+        throw new \Exception('You need to overwrite this method, but php does not allow to declare it abstract.');
+    }
 
     /**
      * @return string classname of the repository factory

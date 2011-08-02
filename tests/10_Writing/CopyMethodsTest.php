@@ -11,9 +11,9 @@ class CopyMethodsTest extends \PHPCR\Test\BaseCase
     protected $ws;
 
 
-    static public function setupBeforeClass()
+    static public function setupBeforeClass($fixtures = '10_Writing/copy')
     {
-        parent::setupBeforeClass('10_Writing/copy');
+        parent::setupBeforeClass($fixtures);
     }
 
     protected function setUp()

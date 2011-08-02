@@ -17,9 +17,9 @@ class SetPropertyDynamicRebindingTest extends \PHPCR\Test\BaseCase
 
     protected static $created_nodes = array();
 
-    static public function setupBeforeClass()
+    static public function setupBeforeClass($fixtures = '10_Writing/nodetype')
     {
-        parent::setupBeforeClass('10_Writing/nodetype');
+        parent::setupBeforeClass($fixtures);
     }
 
     public function setUp() {

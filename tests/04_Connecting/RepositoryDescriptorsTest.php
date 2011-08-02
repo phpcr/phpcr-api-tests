@@ -5,10 +5,10 @@ require_once(dirname(__FILE__) . '/../../inc/BaseCase.php');
 
 class RepositoryDescriptorsTest extends \PHPCR\Test\BaseCase
 {
-    public static function setupBeforeClass()
+    public static function setupBeforeClass($fixtures = false)
     {
         //don't care about fixtures
-        parent::setupBeforeClass(false);
+        parent::setupBeforeClass($fixtures);
     }
 
     //Those constants need to be defined in the bootstrap file

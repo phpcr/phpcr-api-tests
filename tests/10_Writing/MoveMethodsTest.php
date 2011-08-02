@@ -9,9 +9,9 @@ require_once(dirname(__FILE__) . '/../../inc/BaseCase.php');
 class MoveMethodsTest extends \PHPCR\Test\BaseCase
 {
 
-    static public function setupBeforeClass()
+    static public function setupBeforeClass($fixtures = '10_Writing/move')
     {
-        parent::setupBeforeClass('10_Writing/move');
+        parent::setupBeforeClass($fixtures);
     }
 
     protected function setUp()

@@ -6,10 +6,10 @@ require_once(dirname(__FILE__) . '/../../inc/BaseCase.php');
 //6.3.3 Session Namespace Remapping
 class SessionNamespaceRemappingTest extends \PHPCR\Test\BaseCase
 {
-    public static function setupBeforeClass()
+    public static function setupBeforeClass($fixtures = false)
     {
         // do not care about the fixtures
-        parent::setupBeforeClass(false);
+        parent::setupBeforeClass($fixtures);
     }
 
     protected $nsBuiltIn = array('jcr' => 'http://www.jcp.org/jcr/1.0',

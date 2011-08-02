@@ -8,10 +8,10 @@ require_once(dirname(__FILE__) . '/../../inc/BaseCase.php');
  */
 class SimpleCredentialsTest extends \PHPCR\Test\BaseCase
 {
-    public static function setupBeforeClass()
+    public static function setupBeforeClass($fixtures = false)
     {
         //don't care about fixtures
-        parent::setupBeforeClass(false);
+        parent::setupBeforeClass($fixtures);
     }
 
     const CR_USER = 'foo';

@@ -15,9 +15,9 @@ class VersionTest extends \PHPCR\Test\BaseCase
     /** a versioned node */
     private $version;
 
-    static public function setupBeforeClass()
+    static public function setupBeforeClass($fixtures = '15_Versioning/base')
     {
-        parent::setupBeforeClass('15_Versioning/base');
+        parent::setupBeforeClass($fixtures);
 
         //have some versions
         $vm = self::$staticSharedFixture['session']->getWorkspace()->getVersionManager();

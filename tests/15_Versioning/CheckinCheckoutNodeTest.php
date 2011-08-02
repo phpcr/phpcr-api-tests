@@ -10,9 +10,9 @@ require_once(dirname(__FILE__) . '/../../inc/BaseCase.php');
 */
 class CheckinCheckoutNodeTest extends \PHPCR\Test\BaseCase
 {
-    static public function setupBeforeClass()
+    static public function setupBeforeClass($fixtures = '15_Versioning/base')
     {
-        parent::setupBeforeClass('15_Versioning/base');
+        parent::setupBeforeClass($fixtures);
     }
 
     public function setUp()

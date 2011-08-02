@@ -8,9 +8,9 @@ use DOMDocument, DOMElement, DOMNode, DOMText, DOMXPath;
 //7 Export Repository Content
 class ExportRepositoryContentTest extends \PHPCR\Test\BaseCase
 {
-    static public function setupBeforeClass()
+    static public function setupBeforeClass($fixtures = '07_Export/systemview')
     {
-        parent::setupBeforeClass('07_Export/systemview');
+        parent::setupBeforeClass($fixtures);
     }
 
     public function testExportSystemView()

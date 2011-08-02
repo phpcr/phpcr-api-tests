@@ -12,9 +12,9 @@ class NodeTypeTest extends \PHPCR\Test\BaseCase
 {
     private static $nodeType;
 
-    static public function setupBeforeClass()
+    static public function setupBeforeClass($fixtures = false)
     {
-        parent::setupBeforeClass(false);
+        parent::setupBeforeClass($fixtures);
         self::$nodeType = self::$staticSharedFixture['session']->getWorkspace()->getNodeTypeManager()->getNodeType('nt:file');
     }
 

@@ -12,9 +12,9 @@ use \PHPCR\Transaction;
 class TransactionMethodsTest extends \PHPCR\Test\BaseCase
 {
 
-    static public function setupBeforeClass()
+    static public function setupBeforeClass($fixtures = '21_Transactions/transactions')
     {
-        parent::setupBeforeClass('21_Transactions/transactions');
+        parent::setupBeforeClass($fixtures);
     }
 
     public function setUp()
