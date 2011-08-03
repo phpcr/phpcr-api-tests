@@ -31,14 +31,14 @@ class NodeViewTest extends QueryBaseCase
 
     public function testSeekable()
     {
-        $seekKey = '/tests_general_base/index.txt/jcr:content';
-        $seekPosition = 6;
+        $seekPosition = 2;
 
         $nodes = array();
         $i = 0;
-        foreach ($this->nodeIterator as $nodeName => $node) {
+        foreach ($this->nodeIterator as $path => $node) {
             if ($i++ == $seekPosition) {
                 $seekNode = $node;
+                $seekKey = $path;
             }
         }
 
