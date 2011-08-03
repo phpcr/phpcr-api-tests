@@ -37,7 +37,8 @@ class QueryResultsTest extends QueryBaseCase
     public function testGetColumnNames()
     {
         $columnNames = $this->qr->getColumnNames();
-        $columnNamesExpected = array('nt:folder.jcr:createdBy', 'nt:folder.jcr:created', 'nt:folder.jcr:primaryType', 'jcr:path', 'jcr:score');
+        sort($columnNames); //order is not determined
+        $columnNamesExpected = array('jcr:path', 'jcr:score', 'nt:folder.jcr:created', 'nt:folder.jcr:createdBy', 'nt:folder.jcr:primaryType');
 
        $this->assertEquals($columnNamesExpected, $columnNames);
     }
