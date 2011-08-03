@@ -210,7 +210,7 @@ class SessionReadMethodsTest extends \PHPCR\Test\BaseCase
      */
     public function testImpersonate()
     {
-        $cr = self::$loader->getImpersonateCredentials();
+        $cr = self::$loader->getRestrictedCredentials();
         $session = $this->sharedFixture['session']->impersonate($cr);
         $this->markTestIncomplete('TODO: do some tests with the impersonated session');
     }
