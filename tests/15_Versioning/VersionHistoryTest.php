@@ -15,7 +15,11 @@ class VersionHistoryTest extends \PHPCR\Test\BaseCase
         parent::setupBeforeClass($fixtures);
 
         //have some versions
-        $vm = self::$staticSharedFixture['session']->getWorkspace()->getVersionManager();
+        try {
+            $vm = self::$staticSharedFixture['session']->getWorkspace()->getVersionManager();
+        } catch (\PHPCR\UnSupportedRepositoryOperationException $e) {
+            return;
+        }
         $node = self::$staticSharedFixture['session']->getNode('/tests_version_base/versioned');
         $vm->checkpoint('/tests_version_base/versioned');
         $node->setProperty('foo', 'bar');
@@ -33,7 +37,11 @@ class VersionHistoryTest extends \PHPCR\Test\BaseCase
     public function setUp()
     {
         parent::setUp();
-        $this->vm = $this->sharedFixture['session']->getWorkspace()->getVersionManager();
+        try {
+            $this->vm = $this->sharedFixture['session']->getWorkspace()->getVersionManager();
+        } catch (\PHPCR\UnSupportedRepositoryOperationException $e) {
+            $this->markTestSkipped("Versioning not supported: " . $e->getMessage());
+        }
     }
 
     //TODO: missing methods
