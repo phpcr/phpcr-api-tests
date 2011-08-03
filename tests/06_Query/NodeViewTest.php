@@ -31,14 +31,21 @@ class NodeViewTest extends QueryBaseCase
 
     public function testSeekable()
     {
-        $seekNodeName = '/tests_general_base/index.txt/jcr:content';
+        $seekKey = '/tests_general_base/index.txt/jcr:content';
+        $seekPosition = 6;
 
         $nodes = array();
+        $i = 0;
         foreach ($this->nodeIterator as $nodeName => $node) {
-            $nodes[$nodeName] = $node;
+            if ($i++ == $seekPosition) {
+                $seekNode = $node;
+            }
         }
-        $this->nodeIterator->seek($seekNodeName);
-        $this->assertEquals($nodes[$seekNodeName], $this->nodeIterator->current());
+
+        // note that in php 5.3.3, the array iterator gets the seek wrong and wants a string position instead of a number. according to the doc, we test for the correct behaviour here.
+        $this->nodeIterator->seek($seekPosition);
+        $this->assertEquals($seekKey, $this->nodeIterator->key());
+        $this->assertEquals($seekNode, $this->nodeIterator->current());
     }
 
     /**
@@ -46,9 +53,7 @@ class NodeViewTest extends QueryBaseCase
      */
     public function testSeekableOutOfBounds()
     {
-        $seekNodeName = 'foobar';
-
-        $this->nodeIterator->seek($seekNodeName);
+        $this->nodeIterator->seek(30);
     }
 
     public function testCountable()
