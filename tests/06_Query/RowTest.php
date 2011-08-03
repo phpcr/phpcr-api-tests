@@ -31,7 +31,7 @@ class RowTest extends QueryBaseCase
             $count++;
         }
 
-        $this->assertEquals(3, $count);
+        $this->assertEquals(5, $count);
     }
 
     public function testGetValues()
@@ -45,7 +45,7 @@ class RowTest extends QueryBaseCase
 
     public function testGetValue()
     {
-        $this->assertEquals('/', $this->row->getValue('jcr:path'));
+        $this->assertEquals('nt:folder', $this->row->getValue('nt:folder.jcr:primaryType'));
     }
 
     /**
@@ -65,7 +65,7 @@ class RowTest extends QueryBaseCase
 
     public function testGetPath()
     {
-        $this->assertEquals('/', $this->row->getPath());
+        $this->assertTrue(in_array($this->row->getPath(), $this->resultPaths), 'not one of the expected results');
     }
 
     public function testGetScore()
