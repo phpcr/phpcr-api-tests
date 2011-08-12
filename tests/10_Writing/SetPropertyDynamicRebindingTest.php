@@ -6,10 +6,16 @@ require_once(dirname(__FILE__) . '/../../inc/BaseCase.php');
 use PHPCR\PropertyType;
 
 /**
- * Testing whether node property dynamic re-binding (i.e. setting a new type and
- * value for a property) works correctly
+ * Testing whether node property dynamic re-binding (i.e. setting a new type
+ * and value for a property) works correctly.
+ *
+ * re-binding is an optional, a UnsupportedRepositoryOperationException is also
+ * treated as correct. See the setProperty method of Node for more information.
  *
  * Covering jcr-2.8.3 spec $10.4.2
+ *
+ * @see \PHPCR\NodeInterface::setProperty()
+ * @see \PHPCR\PropertyInterface::setValue()
  */
 class SetPropertyDynamicRebindingTest extends \PHPCR\Test\BaseCase
 {
@@ -80,8 +86,18 @@ class SetPropertyDynamicRebindingTest extends \PHPCR\Test\BaseCase
             $this->assertTrue(is_resource($prop->getValue()));
         }
 
-        // Re-bind the property to the new type/value and save it
-        $prop->setValue($destPropValue, $destPropType);
+        try {
+            // Re-bind the property to the new type/value and save it
+            $prop->setValue($destPropValue, $destPropType);
+        } catch (\PHPCR\UnsupportedRepositoryOperationException $e) {
+            // if we try to change the type, the repository may throw this
+            // exception instead of supporting dynamic rebinding
+            // if we set type parameter but its the same as the property
+            // already has, this is a NOOP
+            $this->assertNotEquals($sourcePropType, $destPropType, 'explicit type parameters that do not change the type may not provoke the unsupported exception');
+            return;
+        }
+
         $this->assertEquals($destPropType, $prop->getType(), 'Property type does not match after re-binding');
         $this->assertEquals($destPropValue, $prop->$getterFunc(), 'Property value does not match after re-binding');
 
