@@ -141,21 +141,6 @@ class SetPropertyMethodsTest extends \PHPCR\Test\BaseCase
         $this->assertEquals('abc', $prop->getString());
     }
 
-    public function testPropertyDefinitionDynamicRebinding()
-    {
-        $this->assertEquals(\PHPCR\PropertyType::LONG, $this->property->getType());
-
-        // Re-bind property
-        $this->property->setValue(false, \PHPCR\PropertyType::BOOLEAN);
-        $this->assertEquals(\PHPCR\PropertyType::BOOLEAN, $this->property->getType());
-        $this->assertEquals(false, $this->property->getBoolean());
-
-        $this->saveAndRenewSession();
-        $prop = $this->sharedFixture['session']->getProperty($this->propPath);
-        $this->assertEquals(\PHPCR\PropertyType::BOOLEAN, $prop->getType());
-        $this->assertEquals(false, $prop->getBoolean());
-    }
-
     /**
      * @expectedException \InvalidArgumentException
      */
