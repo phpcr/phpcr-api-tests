@@ -76,11 +76,13 @@ class DeleteMethodsTest extends \PHPCR\Test\BaseCase
     {
         //relies on the base class setup trick to have the node populated from the fixtures
         $this->assertInstanceOf('PHPCR\NodeInterface', $this->node);
+        $path = $this->node->getPath();
 
         $parent = $this->node->getParent();
         $this->assertTrue($parent->hasNode('testRemoveNode'));
         $this->node->remove();
         $this->assertFalse($parent->hasNode('child'));
+        $this->assertFalse($this->sharedFixture['session']->itemExists($path));
     }
 
     public function testRemoveNodeFromBackend()
@@ -105,12 +107,11 @@ class DeleteMethodsTest extends \PHPCR\Test\BaseCase
     public function testRemovePropertyFromBackend()
     {
         $this->rootNode->setProperty('toBeDeletedProperty', 'TEMP');
-        $this->sharedFixture['session']->save();
-
-        $this->renewSession();
+        $this->saveAndRenewSession();
 
         $node = $this->sharedFixture['session']->getNode('/');
-        $this->assertEquals('TEMP', $node->getPropertyValue('toBeDeletedProperty'), 'Property was not created');
+        $this->assertTrue($node->hasProperty('toBeDeletedProperty'), 'Property was not created');
+        $this->assertEquals('TEMP', $node->getPropertyValue('toBeDeletedProperty'), 'wrong value');
 
         $node->getProperty('toBeDeletedProperty')->remove();
         $this->sharedFixture['session']->save();

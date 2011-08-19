@@ -15,13 +15,8 @@ class ItemStateTest extends \PHPCR\Test\BaseCase
     {
         parent::setUp();
 
-        if (! $this->sharedFixture['session']->getWorkspace() instanceof \Jackalope\Workspace) {
+        if (! $this->sharedFixture['session'] instanceof \Jackalope\Session) {
             $this->markTestSkipped('This test is only meant for Jackalope'); //TODO: this is a unit test that belongs into jackalope
-        }
-
-        $class = new \ReflectionClass('\Jackalope\Item');
-        if (! array_key_exists('STATE_NEW', $class->getConstants())) {
-            $this->markTestSkipped('Feature not yet implemented');
         }
 
         $root = $this->sharedFixture['session']->getRootNode();
@@ -46,7 +41,7 @@ class ItemStateTest extends \PHPCR\Test\BaseCase
 
         // New node --> state = NEW
         $node = $root->addNode('testNode');
-        $this->assertInstanceOf('\Jackalope\Item', $node);
+        $this->assertInstanceOf('\Jackalope\Node', $node);
         $this->assertEquals(Item::STATE_NEW, $node->getState());
 
         // Modifying a new node keeps it new --> state = NEW
@@ -73,14 +68,11 @@ class ItemStateTest extends \PHPCR\Test\BaseCase
         $node->remove();
         $this->assertEquals(Item::STATE_DELETED, $node->getState());
 
+        $this->assertFalse($root->hasNode('testNode'));
+
         // Node deleted --> read access should throw an error
-        $flag = false;
-        try {
-            $name = $node->getName();
-        } catch (\PHPCR\InvalidItemStateException $ex) {
-            $flag = true;
-        }
-        $this->assertTrue($flag);
+        $this->setExpectedException('\PHPCR\InvalidItemStateException');
+        $name = $node->getName();
     }
 
     public function testPropertyWorkflow()

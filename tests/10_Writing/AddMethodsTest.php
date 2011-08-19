@@ -42,8 +42,7 @@ class AddMethodsTest extends \PHPCR\Test\BaseCase
     public function testAddNodeFileType()
     {
         $path = $this->node->getPath();
-        $this->node->addNode('newFileNode', 'nt:file');
-        $newNode = $this->sharedFixture['session']->getNode($this->node->getPath() . '/newFileNode');
+        $newNode = $this->node->addNode('newFileNode', 'nt:file');
         $contentNode = $newNode->addNode('jcr:content', 'nt:resource');
         $contentNode->setProperty('jcr:mimeType', 'text/plain', Type::STRING);
         $contentNode->setProperty('jcr:data', 'Hello', Type::BINARY);

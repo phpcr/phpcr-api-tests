@@ -163,6 +163,4 @@ class SetPropertyMethodsTest extends \PHPCR\Test\BaseCase
     }
 
     //TODO: is this all creation modes? the types are tested in SetPropertyTypes
-
-    //TODO: Session::hasPendingChanges
 }
