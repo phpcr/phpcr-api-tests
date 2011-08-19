@@ -136,7 +136,6 @@ class MoveMethodsTest extends \PHPCR\Test\BaseCase
     }
 
     public function testSessionMoveMoved()
-
     {
         $session = $this->sharedFixture['session'];
 
@@ -264,6 +263,19 @@ class MoveMethodsTest extends \PHPCR\Test\BaseCase
     }
 
     /**
+     * @expectedException   \PHPCR\PathNotFoundException
+     */
+    public function testSessionMoveToProperty()
+    {
+        $session = $this->sharedFixture['session'];
+
+        $src = '/tests_write_manipulation_move/testSessionMoveToProperty/srcNode';
+        $dst = '/tests_write_manipulation_move/testSessionMoveToProperty/dstNode/prop/fail';
+        $session->move($src, $dst);
+        $session->save();
+    }
+
+    /**
      * @expectedException   \PHPCR\RepositoryException
      */
     public function testSessionMoveInvalidDstPath()
@@ -277,7 +289,7 @@ class MoveMethodsTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * @expectedException   \PHPCR\RepositoryException
+     * @expectedException   \PHPCR\PathNotFoundException
      */
     public function testSessionMoveSrcNotFound()
     {
@@ -289,9 +301,8 @@ class MoveMethodsTest extends \PHPCR\Test\BaseCase
         $session->save();
     }
 
-
     /**
-     * @expectedException   \PHPCR\RepositoryException
+     * @expectedException   \PHPCR\PathNotFoundException
      */
     public function testSessionMoveDstNotFound()
     {
@@ -344,7 +355,7 @@ class MoveMethodsTest extends \PHPCR\Test\BaseCase
      */
     public function testNodeOrderBefore()
     {
-        $this->markTestSkipped('TODO: implement different use cases. move up, down, same paths, end, inexisting src, inexisting dest');
+        $this->markTestSkipped('TODO: implement different use cases. move up, down, same paths, end');
     }
 
 }
