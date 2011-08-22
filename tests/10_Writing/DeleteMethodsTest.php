@@ -29,8 +29,14 @@ class DeleteMethodsTest extends \PHPCR\Test\BaseCase
 
         $parent = $this->node->getParent();
         $this->assertTrue($parent->hasNode('testRemoveItemNode'));
-        $this->sharedFixture['session']->removeItem('/tests_write_manipulation_delete/testRemoveItemNode');
+
+        $this->node->remove();
+
         $this->assertFalse($parent->hasNode('testRemoveItemNode'), 'Node was not removed');
+
+        $this->saveAndRenewSession();
+
+        $this->assertFalse($this->sharedFixture['session']->nodeExists($parent->getPath().'/testRemoveItemNode'));
     }
 
     /**
@@ -273,6 +279,53 @@ class DeleteMethodsTest extends \PHPCR\Test\BaseCase
 
         $this->assertNotNull($this->node);
     }
+
+    /**
+     * deleting a node must cascade to its children
+     */
+    public function testDeleteCascade()
+    {
+        $session = $this->sharedFixture['session'];
+        $path = $this->node->getPath();
+
+        $ptest = $this->node->setProperty('test', 'value');
+        $prop = $this->node->getProperty('prop');
+        $child = $this->node->getNode('child');
+        $child->setProperty('test', 'value');
+        $childprop = $child->getProperty('prop');
+        $childchild = $child->getNode('child');
+        $childchildprop = $childchild->getProperty('prop');
+
+        $this->node->remove();
+
+        $items = array($this->node, $ptest, $prop, $child, $childprop, $childchild, $childchildprop);
+        foreach ($items as $item) {
+            try {
+                $this->fail('Should not be able to get path of deleted item '.$item->getPath()); // this should explode
+            } catch(\PHPCR\InvalidItemStateException $e) {
+                // the exception is expected
+            }
+        }
+
+        $session->save();
+
+        $this->assertFalse($session->nodeExists("$path/prop"));
+        $this->assertFalse($session->nodeExists("$path/test"));
+        $this->assertFalse($session->nodeExists("$path/child"));
+        $this->assertFalse($session->nodeExists("$path/child/child"));
+        $this->assertFalse($session->propertyExists("$path/prop"));
+        $this->assertFalse($session->propertyExists("$path/child/prop"));
+        $this->assertFalse($session->propertyExists("$path/child/child/prop"));
+
+        foreach ($items as $item) {
+            try {
+                $this->fail('Should not be able to get path of deleted item '.$item->getPath()); // this should explode
+            } catch(\PHPCR\InvalidItemStateException $e) {
+                // the exception is expected
+            }
+        }
+    }
+
 
     /**
      * It is not allowed to delete a referenced node

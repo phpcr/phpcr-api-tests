@@ -10,6 +10,9 @@
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
       <sv:value>nt:unstructured</sv:value>
     </sv:property>
+    <sv:property sv:name="prop" sv:type="String">
+      <sv:value>Test</sv:value>
+    </sv:property>
   </sv:node>
   <sv:node sv:name="testRemoveItemProperty">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -75,6 +78,31 @@
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
       <sv:value>nt:unstructured</sv:value>
     </sv:property>
+  </sv:node>
+
+  <sv:node sv:name="testDeleteCascade">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>nt:unstructured</sv:value>
+    </sv:property>
+    <sv:property sv:name="prop" sv:type="String">
+      <sv:value>Test</sv:value>
+    </sv:property>
+    <sv:node sv:name="child">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>nt:unstructured</sv:value>
+      </sv:property>
+      <sv:property sv:name="prop" sv:type="String">
+        <sv:value>Test</sv:value>
+      </sv:property>
+      <sv:node sv:name="child">
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+          <sv:value>nt:unstructured</sv:value>
+        </sv:property>
+        <sv:property sv:name="prop" sv:type="String">
+          <sv:value>Test</sv:value>
+        </sv:property>
+      </sv:node>
+    </sv:node>
   </sv:node>
 
   <sv:node sv:name="testDeleteReferencedNodeException">
