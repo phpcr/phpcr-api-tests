@@ -92,14 +92,12 @@ class SetPropertyTypesTest extends \PHPCR\Test\BaseCase
         $this->assertEquals(\PHPCR\PropertyType::BOOLEAN, $value->getType(), 'wrong type');
         $this->assertTrue($value->getBoolean(), 'boolean not true');
         $this->assertTrue($value->getString() == true, 'wrong string value'); //boolean converted to string must be true
-        $this->assertSame(1, $value->getLong(), 'wrong integer value');
 
         $this->saveAndRenewSession();
         $value = $this->sharedFixture['session']->getProperty('/tests_general_base/numberPropertyNode/jcr:content/propBoolean');
         $this->assertEquals(\PHPCR\PropertyType::BOOLEAN, $value->getType(), 'wrong type');
         $this->assertTrue($value->getBoolean(), 'boolean not true');
         $this->assertTrue($value->getString() == true, 'wrong string value'); //boolean converted to string must be true
-        $this->assertSame(1, $value->getLong(), 'wrong integer value');
     }
 
     public function testCreateValueNode()

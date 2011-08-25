@@ -64,7 +64,11 @@
                 <sv:value>2011-10-23T14:34:20.000+01:00</sv:value>
                 <sv:value>2010-10-23T14:34:20.000+01:00</sv:value>
             </sv:property>
-
+            <sv:property sv:name="multivalue" sv:type="Long" sv:multiple="true">
+                <sv:value>200</sv:value>
+                <sv:value>0</sv:value>
+                <sv:value>100</sv:value>
+            </sv:property>
         </sv:node>
     </sv:node>
 
@@ -279,6 +283,13 @@
             </sv:property>
 
             <sv:property sv:name="yesOrNo" sv:type="String">
+                <sv:value>true</sv:value>
+            </sv:property>
+            <sv:property sv:name="thisIsNo" sv:type="Boolean">
+                <sv:value>false</sv:value>
+            </sv:property>
+            <sv:property sv:name="multiBoolean" sv:type="Boolean" sv:multiple="true">
+                <sv:value>false</sv:value>
                 <sv:value>true</sv:value>
             </sv:property>
 
