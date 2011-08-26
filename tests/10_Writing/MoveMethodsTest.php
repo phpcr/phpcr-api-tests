@@ -125,6 +125,7 @@ class MoveMethodsTest extends \PHPCR\Test\BaseCase
     /** Verifies the parent of a moved node no longer has the node as child */
     public function testSessionMoveHasNodeParent()
     {
+        $this->assertInstanceOf('PHPCR\NodeInterface', $this->node);
         $session = $this->sharedFixture['session'];
 
         $src = '/tests_write_manipulation_move/testSessionMoveHasNodeParent/srcNode';
@@ -354,11 +355,89 @@ class MoveMethodsTest extends \PHPCR\Test\BaseCase
     }
 
     /**
+     * Helper method to assert a certain order of the child nodes
+     *
+     * @param array $names array values are the names in expected order
+     * @param \PHPCR\NodeInterface $node the node whos children are to be checked
+     */
+    private function assertChildOrder($names, $node)
+    {
+        $children = array();
+        foreach($node as $name => $node) {
+            $children[] = $name;
+        }
+        $this->assertEquals($names, $children);
+    }
+
+    /**
      * @covers \PHPCR\NodeInterface::orderBefore
      */
-    public function testNodeOrderBefore()
+    public function testNodeOrderBeforeUp()
     {
-        $this->markTestSkipped('TODO: implement different use cases. move up, down, same paths, end');
+        $this->assertInstanceOf('\PHPCR\NodeInterface', $this->node);
+        $this->node->orderBefore('three', 'two');
+        $this->assertChildOrder(array('one', 'three', 'two', 'four'), $this->node);
+
+        $this->saveAndRenewSession();
+
+        $this->assertChildOrder(array('one', 'three', 'two', 'four'), $this->node);
+    }
+    /**
+     * @covers \PHPCR\NodeInterface::orderBefore
+     */
+    public function testNodeOrderBeforeDown()
+    {
+        $this->assertInstanceOf('\PHPCR\NodeInterface', $this->node);
+        $this->node->orderBefore('two', 'four');
+        $this->assertChildOrder(array('one', 'three', 'two', 'four'), $this->node);
+
+        $this->saveAndRenewSession();
+
+        $this->assertChildOrder(array('one', 'three', 'two', 'four'), $this->node);
+    }
+    /**
+     * @covers \PHPCR\NodeInterface::orderBefore
+     */
+    public function testNodeOrderBeforeEnd()
+    {
+        $this->assertInstanceOf('\PHPCR\NodeInterface', $this->node);
+        $this->node->orderBefore('two', null);
+        $this->assertChildOrder(array('one', 'three', 'four', 'two'), $this->node);
+
+        $this->saveAndRenewSession();
+
+        $this->assertChildOrder(array('one', 'three', 'four', 'two'), $this->node);
+    }
+    /**
+     * @covers \PHPCR\NodeInterface::orderBefore
+     */
+    public function testNodeOrderBeforeNoop()
+    {
+        $this->assertInstanceOf('\PHPCR\NodeInterface', $this->node);
+        $this->node->orderBefore('two', 'two');
+        $this->assertChildOrder(array('one', 'two', 'three', 'four'), $this->node);
+
+        $this->saveAndRenewSession();
+
+        $this->assertChildOrder(array('one', 'two', 'three', 'four'), $this->node);
+    }
+    /**
+     * @covers \PHPCR\NodeInterface::orderBefore
+     * @expectedException \PHPCR\ItemNotFoundException
+     */
+    public function testNodeOrderBeforeSrcNotFound()
+    {
+        $this->assertInstanceOf('\PHPCR\NodeInterface', $this->node);
+        $this->node->orderBefore('notexisting', 'one');
+    }
+    /**
+     * @covers \PHPCR\NodeInterface::orderBefore
+     * @expectedException \PHPCR\ItemNotFoundException
+     */
+    public function testNodeOrderBeforeDestNotFound()
+    {
+        $this->assertInstanceOf('\PHPCR\NodeInterface', $this->node);
+        $this->node->orderBefore('one', 'notexisting');
     }
 
 }
