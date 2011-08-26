@@ -34,6 +34,9 @@ class MoveMethodsTest extends \PHPCR\Test\BaseCase
         $this->assertFalse($session->nodeExists($src), 'Source node still exists [S]');
         $this->assertTrue($session->nodeExists($dst.'/srcFile/jcr:content'), 'Destination child node not found [S]');
 
+        $dstNode = $session->getNode($dst);
+        $this->assertInstanceOf('PHPCR\NodeInterface', $dstNode);
+
         // Backend
         $session = $this->saveAndRenewSession();
         $this->assertTrue($session->nodeExists($dst), 'Destination node not found [B]');

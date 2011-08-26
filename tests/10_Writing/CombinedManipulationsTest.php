@@ -32,15 +32,47 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
         $session = $this->sharedFixture['session'];
         $node = $this->node->getNode('child');
         $path = $node->getPath();
+        $parentpath = $this->node->getPath();
         $this->assertInstanceOf('PHPCR\NodeType\NodeTypeInterface', $node->getPrimaryNodeType());
         $this->assertSame('nt:unstructured', $node->getPrimaryNodeType()->getName());
 
         $node->remove();
-
+        $this->assertFalse($session->nodeExists($path));
+        $this->assertFalse($this->node->hasNode('child'));
         $newnode = $this->node->addNode('child', 'nt:folder');
+
+        $this->assertTrue($session->nodeExists($path));
+        $this->assertTrue($this->node->hasNode('child'));
 
         $session = $this->saveAndRenewSession();
 
+        $this->assertTrue($session->nodeExists($path));
+        $this->assertTrue($session->getNode($parentpath)->hasNode('child'));
+        $node = $session->getNode($path);
+        $this->assertInstanceOf('PHPCR\NodeInterface', $node);
+        $this->assertSame('nt:folder', $node->getPrimaryNodeType()->getName());
+        $this->assertFalse($node->hasNodes());
+    }
+
+    /**
+     * remove a node and then move another node at the same path
+     */
+    public function testRemoveAndMove()
+    {
+        $session = $this->sharedFixture['session'];
+        $node = $session->getNode($this->node->getPath().'/parent/child');
+        $path = $node->getPath();
+        $this->assertInstanceOf('PHPCR\NodeType\NodeTypeInterface', $node->getPrimaryNodeType());
+        $this->assertSame('nt:unstructured', $node->getPrimaryNodeType()->getName());
+
+        $node->remove();
+        $this->assertFalse($session->nodeExists($path));
+        $session->move($this->node->getPath().'/other', $path);
+        $this->assertTrue($session->nodeExists($path));
+        $parent = $this->node->getNode('parent');
+        $this->assertTrue($parent->hasNode('child'));
+
+        $session = $this->saveAndRenewSession();
 
         $node = $session->getNode($path);
         $this->assertInstanceOf('PHPCR\NodeInterface', $node);

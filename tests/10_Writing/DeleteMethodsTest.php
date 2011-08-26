@@ -26,13 +26,15 @@ class DeleteMethodsTest extends \PHPCR\Test\BaseCase
     {
         //relies on the base class setup trick to have the node populated from the fixtures
         $this->assertInstanceOf('PHPCR\NodeInterface', $this->node);
+        $session = $this->sharedFixture['session'];
 
         $parent = $this->node->getParent();
         $this->assertTrue($parent->hasNode('testRemoveItemNode'));
 
-        $this->node->remove();
+        $session->removeItem($this->node->getPath());
 
         $this->assertFalse($parent->hasNode('testRemoveItemNode'), 'Node was not removed');
+        $this->assertFalse($this->sharedFixture['session']->nodeExists($parent->getPath().'/testRemoveItemNode'));
 
         $this->saveAndRenewSession();
 
@@ -76,6 +78,8 @@ class DeleteMethodsTest extends \PHPCR\Test\BaseCase
     }
 
     /**
+     * Check if state of cached parent node is updated correctly
+     *
      * @covers \PHPCR\ItemInterface::remove
      */
     public function testRemoveNode()
@@ -86,9 +90,41 @@ class DeleteMethodsTest extends \PHPCR\Test\BaseCase
 
         $parent = $this->node->getParent();
         $this->assertTrue($parent->hasNode('testRemoveNode'));
+
         $this->node->remove();
+
+        $this->assertFalse($parent->hasNode('testRemoveNode'));
+        $this->assertFalse($this->sharedFixture['session']->nodeExists($path));
+
+        $this->saveAndRenewSession();
+
+        $this->assertFalse($this->sharedFixture['session']->nodeExists($path));
+    }
+
+    /**
+     * Check if state of parent that was not cached when delete was executed is correct
+     *
+     * @covers \PHPCR\ItemInterface::remove
+     */
+    public function testRemoveNodeParentState()
+    {
+        //relies on the base class setup trick to have the node populated from the fixtures
+        $this->assertInstanceOf('PHPCR\NodeInterface', $this->node);
+        $path = $this->node->getPath().'/parent/child';
+        $session = $this->sharedFixture['session'];
+
+        $child = $session->getNode($path);
+        $child->remove();
+
+        $parent = $session->getNode($this->node->getPath().'/parent');
         $this->assertFalse($parent->hasNode('child'));
-        $this->assertFalse($this->sharedFixture['session']->itemExists($path));
+        $this->assertFalse($session->nodeExists($path));
+
+        $session = $this->saveAndRenewSession();
+
+        $this->assertFalse($session->nodeExists($path));
+        $parent = $session->getNode($this->node->getPath().'/parent');
+        $this->assertFalse($parent->hasNode('child'));
     }
 
     public function testRemoveNodeFromBackend()
