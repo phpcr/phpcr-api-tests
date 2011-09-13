@@ -66,7 +66,33 @@ class CreateVersionableNodeTest extends \PHPCR\Test\BaseCase
 
         $node->setProperty('foo', 'bar2');
         $this->sharedFixture['session']->save();
-
     }
 
+    public function testNewVersionableNode()
+    {
+        $this->renewSession(); // need a clean session after exception
+
+        $node = $this->sharedFixture['session']->getNode('/tests_version_base');
+        $node = $node->addNode('myversioned');
+        $node->setProperty('foo', 'bar');
+        $node->addMixin('mix:versionable');
+
+        $this->saveAndRenewSession();
+
+        $node = $this->sharedFixture['session']->getNode('/tests_version_base/myversioned');
+        $this->assertTrue($node->hasProperty('foo'));
+
+        $ws = $this->sharedFixture['session']->getWorkspace();
+        $vm = $ws->getVersionManager();
+        $vm->checkin($node->getPath());
+        $vm->checkout($node->getPath());
+
+        $node->setProperty('foo', 'XXX');
+
+        $this->sharedFixture['session']->save();
+
+        $node = $this->sharedFixture['session']->getNode('/tests_version_base/myversioned');
+        $this->assertTrue($node->hasProperty('foo'));
+        $this->assertEquals('XXX', $node->getPropertyValue('foo'));
+    }
 }

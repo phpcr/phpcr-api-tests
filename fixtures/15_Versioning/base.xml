@@ -23,5 +23,8 @@
       <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
         <sv:value>mix:versionable</sv:value>
       </sv:property>
+      <sv:property sv:name="foo" sv:type="String">
+          <sv:value>something</sv:value>
+      </sv:property>
     </sv:node>
 </sv:node>

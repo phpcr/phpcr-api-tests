@@ -23,12 +23,22 @@ class CheckinCheckoutNodeTest extends \PHPCR\Test\BaseCase
     }
 
     public function testCheckinVersion() {
+        $history = $this->vm->getVersionHistory("/tests_version_base/versioned");
+        $this->assertEquals(1, count($history->getAllVersions()));
+
         $this->vm->checkout("/tests_version_base/versioned");
         $node = $this->sharedFixture['session']->getNode('/tests_version_base/versioned');
         $node->setProperty('foo', 'bar');
+        $this->sharedFixture['session']->save();
+
         $this->vm->checkin("/tests_version_base/versioned");
         $history = $this->vm->getVersionHistory("/tests_version_base/versioned");
         $this->assertEquals(2, count($history->getAllVersions()));
+
+        $this->renewSession();
+        $node = $this->sharedFixture['session']->getNode('/tests_version_base/versioned');
+        $this->assertTrue($node->hasProperty('foo'));
+        $this->assertEquals('bar', $node->getPropertyValue('foo'));
     }
 
     /**
