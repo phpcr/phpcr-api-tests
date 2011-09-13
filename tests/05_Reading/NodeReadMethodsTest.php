@@ -266,8 +266,10 @@ class NodeReadMethodsTest extends \PHPCR\Test\BaseCase
         $node = $this->rootNode->getNode('/tests_general_base/idExample/jcr:content/weakreference_source1');
         $props = $node->getPropertiesValues("jcr:*");
         $this->assertInternalType('array', $props);
+        /* This node type is nt:unstructured, child type of nt:base which provide two default properties */
         $this->assertArrayHasKey('jcr:primaryType', $props);
-        $this->assertEquals(1, count($props));
+        $this->assertArrayHasKey('jcr:mixinTypes', $props);
+        $this->assertEquals(2, count($props));
     }
 
     /**
