@@ -99,7 +99,22 @@
   </sv:node>
   <sv:node sv:name="testAddNodeExisting">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
-      <sv:value>nt:unstructured</sv:value>
+      <sv:value>nt:folder</sv:value>
+    </sv:property>
+    <sv:node sv:name="child">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>nt:file</sv:value>
+      </sv:property>
+      <sv:node sv:name="jcr:content">
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+          <sv:value>nt:unstructured</sv:value>
+        </sv:property>
+      </sv:node>
+    </sv:node>
+  </sv:node>
+  <sv:node sv:name="testAddNodeInParallel">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>nt:folder</sv:value>
     </sv:property>
   </sv:node>
   <sv:node sv:name="testAddNodePathNotFound">

@@ -138,14 +138,41 @@ class AddMethodsTest extends \PHPCR\Test\BaseCase
     }
 
     /**
+     * Test adding an already existing child.
+     *
+     * FIXME: we should do this this should only happen for node types that do not allow same-name siblings - and for implementations not supporting same-name siblings
+     *
      * @expectedException \PHPCR\ItemExistsException
      */
     public function testAddNodeExisting()
     {
-        $name = $this->node->getName();
-        $parent = $this->node->getParent();
-        $parent->addNode($name, 'nt:unstructured');
+        $this->node->addNode('child', 'nt:file');
     }
+
+    /**
+     * Tests adding the same child to the same node in 2 different sessions.
+     *
+     * @expectedException \PHPCR\ItemExistsException
+     */
+    public function testAddNodeInParallel()
+    {
+        $path = $this->node->getPath();
+
+        $session1 = $this->sharedFixture['session'];
+        $session2 = self::$loader->getSession();
+
+        $node1 = $session1->getNode($path);
+        $c1 = $node1->addNode('test', 'nt:file');
+        $c1->addNode('jcr:content', 'nt:unstructured');
+        $node2 = $session2->getNode($path);
+        $c2 = $node2->addNode('test', 'nt:file');
+        $c2->addNode('jcr:content', 'nt:unstructured');
+
+        $session1->save();
+        $session2->save();
+    }
+
+
 
     /**
      * try to add a node below a not existing node.
