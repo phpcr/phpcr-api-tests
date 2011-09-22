@@ -266,10 +266,24 @@ class NodeReadMethodsTest extends \PHPCR\Test\BaseCase
         $node = $this->rootNode->getNode('/tests_general_base/idExample/jcr:content/weakreference_source1');
         $props = $node->getPropertiesValues("jcr:*");
         $this->assertInternalType('array', $props);
-        /* This node type is nt:unstructured, child type of nt:base which provide two default properties */
-        $this->assertArrayHasKey('jcr:primaryType', $props);
-        $this->assertArrayHasKey('jcr:mixinTypes', $props);
-        $this->assertEquals(2, count($props));
+        /*
+         * jcr:mixinTypes is a non-mandatory protected multi-value NAME property which holds a list of the declared mixin node  
+         * types of its node. It is non-mandatory but is required to be present on any node that has one or more declared mixin
+         * types. If it is present, the repository must maintain its value accurately throughout the lifetime of the node
+         */  
+        if (count($props) == 1)
+        {
+            $this->assertArrayHasKey('jcr:primaryType', $props);
+        }
+        else if (count($props) == 2)
+        {
+            $this->assertArrayHasKey('jcr:primaryType', $props);
+            $this->assertArrayHasKey('jcr:mixinTypes', $props);
+        } 
+        else 
+        {
+            $this->assertTrue(count($props) < 3);
+        }
     }
 
     /**
