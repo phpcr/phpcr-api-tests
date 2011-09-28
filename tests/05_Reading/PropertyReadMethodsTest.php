@@ -401,7 +401,7 @@ class PropertyReadMethodsTest extends \PHPCR\Test\BaseCase
         $propertyPath = $this->node->getNode('numberPropertyNode/jcr:content')->getProperty('multiPropertyPath');
         $properties = $propertyPath->getProperty();
         $this->assertEquals(2, count($properties));
-        foreach($properties as $prop) {
+        foreach ($properties as $prop) {
             $this->assertInstanceOf('PHPCR\PropertyInterface', $prop);
         }
         $this->assertEquals('/tests_general_base/numberPropertyNode/jcr:content/foo', $properties[0]->getPath());

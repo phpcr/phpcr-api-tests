@@ -32,7 +32,7 @@ class Sql2ScannerTest extends \PHPCR\Test\BaseCase
     public function testLookupAndFetch()
     {
         $scanner = new Sql2Scanner($this->sql2);
-        foreach($this->tokens as $token) {
+        foreach ($this->tokens as $token) {
             $this->assertEquals($token, $scanner->lookupNextToken());
             $this->assertEquals($token, $scanner->fetchNextToken());
         }

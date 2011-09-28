@@ -363,7 +363,7 @@ class MoveMethodsTest extends \PHPCR\Test\BaseCase
     private function assertChildOrder($names, $node)
     {
         $children = array();
-        foreach($node as $name => $node) {
+        foreach ($node as $name => $node) {
             $children[] = $name;
         }
         $this->assertEquals($names, $children);

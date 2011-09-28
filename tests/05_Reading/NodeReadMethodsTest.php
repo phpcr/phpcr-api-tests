@@ -273,7 +273,7 @@ class NodeReadMethodsTest extends \PHPCR\Test\BaseCase
          */
         if (count($props) == 1) {
             $this->assertArrayHasKey('jcr:primaryType', $props);
-        } else if (count($props) == 2) {
+        } elseif (count($props) == 2) {
             $this->assertArrayHasKey('jcr:primaryType', $props);
             $this->assertArrayHasKey('jcr:mixinTypes', $props);
             $this->assertEquals(0, count($props['jcr:mixinTypes']));

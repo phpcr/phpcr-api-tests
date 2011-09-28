@@ -98,7 +98,7 @@ class QueryResultsTest extends QueryBaseCase
     public function testReadPropertyContentFromResults()
     {
         $seekName = '/tests_general_base/multiValueProperty';
-        foreach($this->qr->getNodes() as $path => $node) {
+        foreach ($this->qr->getNodes() as $path => $node) {
             if ($seekName == $path) break;
         }
 

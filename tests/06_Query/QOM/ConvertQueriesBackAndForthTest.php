@@ -37,7 +37,7 @@ class ConvertQueriesBackAndForthTest extends \PHPCR\Test\BaseCase
 
     public function testBackAndForth()
     {
-        foreach($this->qomQueries as $name => $originalQomQuery) {
+        foreach ($this->qomQueries as $name => $originalQomQuery) {
 
             $originalSql2Query = $this->sql2Queries[$name];
             $qom = $this->sql2Parser->parse($originalSql2Query);

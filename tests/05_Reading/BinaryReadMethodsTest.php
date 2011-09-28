@@ -58,7 +58,7 @@ hello world
 
     public function testIterateBinaryValue()
     {
-        foreach($this->binaryProperty as $value) {
+        foreach ($this->binaryProperty as $value) {
             $this->assertEquals($this->decodedstring, stream_get_contents($value));
         }
     }
@@ -84,7 +84,7 @@ hello world
         $this->assertEquals(\PHPCR\PropertyType::BINARY, $binaryMulti->getType());
         $vals = $binaryMulti->getValue();
         $this->assertInternalType('array', $vals);
-        foreach($vals as $value) {
+        foreach ($vals as $value) {
             $this->assertTrue(is_resource($value));
             $this->assertEquals($this->decodedstring, stream_get_contents($value));
         }
@@ -98,7 +98,7 @@ hello world
         $this->assertEquals(\PHPCR\PropertyType::BINARY, $binaryMulti->getType());
         $vals = $binaryMulti->getString();
         $this->assertInternalType('array', $vals);
-        foreach($vals as $value) {
+        foreach ($vals as $value) {
             $this->assertInternalType('string', $value);
             $this->assertEquals($this->decodedstring, $value);
         }
@@ -110,7 +110,7 @@ hello world
         $binaryMulti = $node->getProperty('multidata');
         $sizes = $binaryMulti->getLength();
         $this->assertInternalType('array', $sizes);
-        foreach($sizes as $size) {
+        foreach ($sizes as $size) {
             $this->assertEquals(strlen($this->decodedstring), $size);
         }
     }

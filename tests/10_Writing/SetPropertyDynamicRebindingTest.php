@@ -159,8 +159,8 @@ class SetPropertyDynamicRebindingTest extends \PHPCR\Test\BaseCase
         );
 
         $provider = array();
-        foreach($typesAndValues as $sourceKey => $sourceVal) {
-            foreach($typesAndValues as $destKey => $destVal) {
+        foreach ($typesAndValues as $sourceKey => $sourceVal) {
+            foreach ($typesAndValues as $destKey => $destVal) {
                 if ($sourceKey !== $destKey) {
                     $propName =
                         'dynRebinding_' . PropertyType::nameFromValue($sourceKey) .

@@ -63,7 +63,7 @@ class ExportRepositoryContentTest extends \PHPCR\Test\BaseCase
     {
         $this->assertEquals($expected->tagName, $output->tagName);
 
-        foreach($expected->attributes as $attr) {
+        foreach ($expected->attributes as $attr) {
             //i.e. sv:name attribute
             $oattr = $output->attributes->getNamedItem($attr->name);
             $this->assertNotNull($oattr, 'missing attribute '.$attr->name);
@@ -75,7 +75,7 @@ class ExportRepositoryContentTest extends \PHPCR\Test\BaseCase
             if ($expected->attributes->getNamedItem('name')->value == 'jcr:created') {
                 $this->assertNotEmpty($output->textContent);
             } else {
-                foreach($expected->childNodes as $index => $child) {
+                foreach ($expected->childNodes as $index => $child) {
                     $this->assertEquals('sv:value', $child->tagName);
                     $o = $output->childNodes->item($index);
                     $this->assertInstanceOf('DOMElement', $o, "No child element at $index in ".$this->buildPath($child));
@@ -83,9 +83,9 @@ class ExportRepositoryContentTest extends \PHPCR\Test\BaseCase
                     $this->assertEquals($child->textContent, $o->textContent, 'Not the same text at '.$this->buildPath($output)."sv:value[$index]");
                 }
             }
-        } else if ($expected->tagName == 'sv:node') {
+        } elseif ($expected->tagName == 'sv:node') {
             // nodes have sv:node or sv:property children
-            foreach($expected->childNodes as $child) {
+            foreach ($expected->childNodes as $child) {
                 $this->assertContains($child->tagName, array('sv:property', 'sv:node'), 'unexpected child of sv:node');
                 $childname = $child->attributes->getNamedItem('name')->value;
                 $q = $oxpath->query($child->tagName.'[@sv:name="'.$childname.'"]', $output);
@@ -122,7 +122,7 @@ class ExportRepositoryContentTest extends \PHPCR\Test\BaseCase
         } elseif ($expected instanceof DOMElement) {
             $this->assertEquals($expected->tagName, $output->tagName);
 
-            foreach($expected->attributes as $attr) {
+            foreach ($expected->attributes as $attr) {
                 if ('jcr:created' == $attr->nodeName) {
                     $this->assertNotEmpty($attr->value);
                 } else {
@@ -132,7 +132,7 @@ class ExportRepositoryContentTest extends \PHPCR\Test\BaseCase
                 }
             }
 
-            foreach($expected->childNodes as $child) {
+            foreach ($expected->childNodes as $child) {
                 $q = $oxpath->query($child->tagName, $output); //TODO: same-name siblings
                 $this->assertEquals(1, $q->length, 'expected to find exactly one node named '.$child->tagName.' under '.$this->buildPath($expected));
                 $this->assertEquivalentDocument($child, $q->item(0), $oxpath);
