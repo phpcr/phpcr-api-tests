@@ -11,11 +11,13 @@ require_once(dirname(__FILE__) . '/../../inc/BaseCase.php');
 class NodeTypeTest extends \PHPCR\Test\BaseCase
 {
     private static $nodeType;
+    private static $mixinType;
 
     static public function setupBeforeClass($fixtures = false)
     {
         parent::setupBeforeClass($fixtures);
         self::$nodeType = self::$staticSharedFixture['session']->getWorkspace()->getNodeTypeManager()->getNodeType('nt:file');
+        self::$mixinType = self::$staticSharedFixture['session']->getWorkspace()->getNodeTypeManager()->getNodeType('mix:versionable');
     }
 
     public function testGetSupertypes()
@@ -36,7 +38,7 @@ class NodeTypeTest extends \PHPCR\Test\BaseCase
         $this->markTestIncomplete('TODO: what to expect?');
     }
 
-    public function getSubtypes()
+    public function testGetSubtypes()
     {
         //TODO: work on this type.
         $this->markTestIncomplete('TODO: what to expect?');
@@ -49,7 +51,20 @@ class NodeTypeTest extends \PHPCR\Test\BaseCase
         canSetProperty
         getChildNodeDefinitions
         getPropertyDefinitions
-        isNodeType
     */
 
+    public function testIsPrimaryNodeType()
+    {
+        $this->assertTrue(self::$nodeType->isNodeType('nt:file'));
+        $this->assertTrue(self::$nodeType->isNodeType('nt:hierarchyNode'));
+        $this->assertTrue(self::$nodeType->isNodeType('nt:base'));
+        $this->assertFalse(self::$nodeType->isNodeType('nt:unstructured'));
+    }
+
+    public function testIsMixinNodeType()
+    {
+        $this->assertTrue(self::$mixinType->isNodeType('mix:versionable'));
+        $this->assertTrue(self::$mixinType->isNodeType('mix:referenceable'));
+        $this->assertFalse(self::$mixinType->isNodeType('mix:lockable'));
+    }
 }
