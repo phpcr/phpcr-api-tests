@@ -549,7 +549,8 @@ class NodeReadMethodsTest extends \PHPCR\Test\BaseCase
     }
     */
 
-    public function testIterator() {
+    public function testIterator()
+    {
         $this->assertTraversableImplemented($this->node);
         $results = false;
         foreach ($this->node as $name => $child) {

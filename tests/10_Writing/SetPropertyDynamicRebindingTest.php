@@ -28,7 +28,8 @@ class SetPropertyDynamicRebindingTest extends \PHPCR\Test\BaseCase
         parent::setupBeforeClass($fixtures);
     }
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->renewSession();
     }

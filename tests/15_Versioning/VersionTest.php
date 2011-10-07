@@ -48,7 +48,8 @@ class VersionTest extends \PHPCR\Test\BaseCase
 
     //TODO: missing methods
 
-    public function testGetPredecessors() {
+    public function testGetPredecessors()
+    {
         $versions = $this->version->getPredecessors();
         $this->assertEquals(1, count($versions));
         $pred = $versions[0];
@@ -60,7 +61,8 @@ class VersionTest extends \PHPCR\Test\BaseCase
         //TODO: how to access the data of the older version?
     }
 
-    public function testGetSuccessors() {
+    public function testGetSuccessors()
+    {
         $versions = $this->version->getSuccessors();
         $this->assertEquals(0, count($versions));
     }

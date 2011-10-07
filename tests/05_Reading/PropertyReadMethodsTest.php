@@ -498,7 +498,8 @@ class PropertyReadMethodsTest extends \PHPCR\Test\BaseCase
         $this->assertEquals(\PHPCR\PropertyType::WEAKREFERENCE, $node->getProperty('newWeakRef')->getType(), 'Expecting WEAKREFERENCE type');
     }
 
-    public function testIterator() {
+    public function testIterator()
+    {
         $this->assertTraversableImplemented($this->valProperty);
 
         $results = 0;
@@ -511,7 +512,8 @@ class PropertyReadMethodsTest extends \PHPCR\Test\BaseCase
         $this->assertEquals(1, $results, 'Single value iterator must have exactly one entry');
     }
 
-    public function testIteratorMulti() {
+    public function testIteratorMulti()
+    {
         $this->assertTraversableImplemented($this->multiProperty);
         $expected = array('mix:referenceable', 'mix:versionable');
         $returned = array();

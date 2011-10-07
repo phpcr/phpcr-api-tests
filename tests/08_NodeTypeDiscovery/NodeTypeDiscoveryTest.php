@@ -11,7 +11,8 @@ class NodeTypeDiscoveryTest extends \PHPCR\Test\BaseCase
 {
     private $nodeTypeManager;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp(false);
         $this->nodeTypeManager = $this->sharedFixture['session']->getWorkspace()->getNodeTypeManager();
     }

@@ -20,7 +20,8 @@ class ConvertQueriesBackAndForthTest extends \PHPCR\Test\BaseCase
 
     protected $qomParser;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $factory = $this->sharedFixture['session']->getWorkspace()->getQueryManager()->getQOMFactory();

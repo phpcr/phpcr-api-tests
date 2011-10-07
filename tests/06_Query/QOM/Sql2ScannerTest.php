@@ -13,7 +13,8 @@ class Sql2ScannerTest extends \PHPCR\Test\BaseCase
     protected $sql2;
     protected $tokens;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->sql2 = 'SELECT * FROM [nt:file] INNER JOIN [nt:folder] ON ISSAMENODE(sel1, sel2, [/home])';

@@ -40,7 +40,8 @@ class CreateVersionableNodeTest extends \PHPCR\Test\BaseCase
         $this->assertTrue( $this->node->getProperty("jcr:isCheckedOut")->getBoolean(),"jcr:isCheckout is not true");
     }
 
-    public function testCheckinVersion() {
+    public function testCheckinVersion()
+    {
         $ws = $this->sharedFixture['session']->getWorkspace();
         $vm = $ws->getVersionManager();
         $vm->checkout("/tests_version_base/versioned");
@@ -54,7 +55,8 @@ class CreateVersionableNodeTest extends \PHPCR\Test\BaseCase
     /**
      * @expectedException PHPCR\Version\VersionException
      */
-    public function testWriteNotCheckedOutVersion() {
+    public function testWriteNotCheckedOutVersion()
+    {
         $ws = $this->sharedFixture['session']->getWorkspace();
         $vm = $ws->getVersionManager();
         $vm->checkout("/tests_version_base/versioned");

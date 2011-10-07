@@ -16,7 +16,8 @@ class Sql2ToQomConverterTest extends \PHPCR\Test\BaseCase
 
     protected $parser;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $factory = $this->sharedFixture['session']->getWorkspace()->getQueryManager()->getQOMFactory();

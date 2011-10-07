@@ -38,7 +38,8 @@ class VersionHistoryTest extends \PHPCR\Test\BaseCase
 
     //TODO: missing methods
 
-    public function testGetVersionHistory() {
+    public function testGetVersionHistory()
+    {
         $history = $this->vm->getVersionHistory("/tests_version_base/versioned");
         $versions = $history->getAllVersions();
         $this->assertTraversableImplemented($versions);

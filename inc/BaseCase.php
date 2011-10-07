@@ -190,7 +190,8 @@ abstract class BaseCase extends \PHPUnit_Framework_TestCase
     }
 
     /** assert that this is an object that is traversable */
-    protected function assertTraversableImplemented($obj) {
+    protected function assertTraversableImplemented($obj)
+    {
         $this->assertTrue($obj instanceof \Iterator || $obj instanceof \IteratorAggregate, 'To provide Traversable, you have to either implement Iterator or IteratorAggregate');
     }
 }
