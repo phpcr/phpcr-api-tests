@@ -34,6 +34,9 @@ class SessionReadMethodsTest extends \PHPCR\Test\BaseCase
     public function testGetAttributeNames()
     {
         $cr = self::$loader->getCredentials();
+        if (! $cr instanceof \PHPCR\SimpleCredentials) {
+            $this->markTestSkipped('This implementation is not using the SimpleCredentials. We can not know if there is anything about attributes. You need to test getAttributeNames in your implementation specific tests');
+        }
         $cr->setAttribute('foo', 'bar');
         $session = $this->assertSession($cr);
         $attrs = $session->getAttributeNames();
@@ -44,6 +47,9 @@ class SessionReadMethodsTest extends \PHPCR\Test\BaseCase
     public function testGetAttribute()
     {
         $cr = self::$loader->getCredentials();
+        if (! $cr instanceof \PHPCR\SimpleCredentials) {
+            $this->markTestSkipped('This implementation is not using the SimpleCredentials. We can not know if there is anything about attributes. You need to test getAttribute in your implementation specific tests');
+        }
         $cr->setAttribute('foo', 'bar');
         $session = $this->assertSession($cr);
         $val = $session->getAttribute('foo');
