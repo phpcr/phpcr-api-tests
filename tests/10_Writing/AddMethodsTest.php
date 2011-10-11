@@ -66,6 +66,14 @@ class AddMethodsTest extends \PHPCR\Test\BaseCase
         $this->assertNotNull($this->sharedFixture['session']->getNode($this->node->getPath() . '/newUnstructuredNode'), 'Node newUnstructuredNode was not created');
     }
 
+    /**
+     * expectedException \Exception
+     */
+    public function testAddNodeNoNameException()
+    {
+        $this->node->addNode(null, 'nt:folder');
+    }
+
     public function testAddPropertyOnUnstructured()
     {
         $path = $this->node->getPath();
