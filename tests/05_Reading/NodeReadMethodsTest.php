@@ -65,6 +65,14 @@ class NodeReadMethodsTest extends \PHPCR\Test\BaseCase
         $this->assertNotNull($parent);
         $this->assertTrue($this->node->getNode('multiValueProperty')->isSame($parent));
     }
+    /**
+     * @expectedException \PHPCR\ItemNotFoundException
+     */
+    public function testGetParentRootnode()
+    {
+        $this->rootNode->getParent();
+    }
+
     public function testGetPath()
     {
         $path = $this->deepnode->getPath();
