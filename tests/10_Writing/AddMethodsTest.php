@@ -67,7 +67,7 @@ class AddMethodsTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * expectedException \Exception
+     * @expectedException \Exception
      */
     public function testAddNodeNoNameException()
     {
