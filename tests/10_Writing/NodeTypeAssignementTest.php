@@ -4,7 +4,7 @@ namespace PHPCR\Tests\Writing;
 require_once(dirname(__FILE__) . '/../../inc/BaseCase.php');
 
 /**
- * Test adding mixin to nodes.
+ * Test setting node types on nodes.
  */
 class NodeTypeAssignementTest extends \PHPCR\Test\BaseCase
 {
@@ -26,10 +26,10 @@ class NodeTypeAssignementTest extends \PHPCR\Test\BaseCase
         $this->node = $this->rootNode->getNode("tests_write_nodetype/$name");
     }
 
+    // TODO: a repository MAY also allow changing the primary node type.
+
     /**
-     * the mix: types are predefined types.
-     *
-     * we only use those that do not depend on optional features.
+     * the predefined mixin types that do not depend on optional features
      */
     public static $mixins = array(
             "mix:etag", "mix:language", "mix:lastModified", "mix:mimeType",
