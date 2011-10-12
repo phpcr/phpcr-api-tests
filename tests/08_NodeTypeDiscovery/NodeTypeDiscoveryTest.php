@@ -5,7 +5,6 @@ require_once(dirname(__FILE__) . '/../../inc/BaseCase.php');
 
 /**
  * Test the NoteTypeManager §8
- *
  */
 class NodeTypeDiscoveryTest extends \PHPCR\Test\BaseCase
 {

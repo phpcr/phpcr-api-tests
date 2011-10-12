@@ -26,33 +26,31 @@ class PropertyReadMethodsTest extends \PHPCR\Test\BaseCase
         $this->createdProperty = $this->node->getProperty('jcr:created');
         $this->dateProperty = $this->node->getProperty('index.txt/jcr:content/mydateprop');
         $this->valProperty = $this->node->getNode('numberPropertyNode/jcr:content')->getProperty('foo');
-        $this->multiProperty = $this->node->getNode('multiValueProperty')->getProperty('jcr:mixinTypes');
         $this->multiValueProperty = $this->node->getNode('index.txt/jcr:content')->getProperty('multivalue');
     }
 
     /*** item base methods for property ***/
     function testGetAncestor()
     {
-        $ancestor = $this->multiProperty->getAncestor(0);
+        $ancestor = $this->dateProperty->getAncestor(0);
         $this->assertNotNull($ancestor);
-        $this->assertInstanceOf('PHPCR\ItemInterface', $ancestor);
+        $this->assertInstanceOf('PHPCR\NodeInterface', $ancestor);
         $this->assertTrue($this->rootNode->isSame($ancestor));
 
-        $ancestor = $this->multiProperty->getAncestor(1);
+        $ancestor = $this->dateProperty->getAncestor(1);
         $this->assertNotNull($ancestor);
-        $this->assertInstanceOf('PHPCR\ItemInterface', $ancestor);
+        $this->assertInstanceOf('PHPCR\NodeInterface', $ancestor);
         $this->assertTrue($this->node->isSame($ancestor));
 
         //self
-        $ancestor = $this->multiProperty->getAncestor($this->multiProperty->getDepth());
+        $ancestor = $this->dateProperty->getAncestor($this->dateProperty->getDepth());
         $this->assertNotNull($ancestor);
-        $this->assertInstanceOf('PHPCR\ItemInterface', $ancestor);
-        $this->assertTrue($this->multiProperty->isSame($ancestor));
+        $this->assertInstanceOf('PHPCR\PropertyInterface', $ancestor);
+        $this->assertTrue($this->dateProperty->isSame($ancestor));
     }
     function testGetDepthProperty()
     {
         $this->assertEquals(2, $this->createdProperty->getDepth());
-        $this->assertEquals(3, $this->multiProperty->getDepth());
         $this->assertEquals(4, $this->dateProperty->getDepth());
     }
     public function testGetParent()
@@ -108,7 +106,7 @@ class PropertyReadMethodsTest extends \PHPCR\Test\BaseCase
     }
     public function testGetValueMulti()
     {
-        $vals = $this->multiProperty->getValue();
+        $vals = $this->multiValueProperty->getValue();
         $this->assertInternalType('array', $vals);
         foreach ($vals as $val) {
             $this->assertNotNull($val);
@@ -203,7 +201,7 @@ class PropertyReadMethodsTest extends \PHPCR\Test\BaseCase
      */
     public function testGetLongValueFormatException()
     {
-        $this->multiProperty->getLong();
+        $this->node->getProperty('jcr:primaryType')->getLong();
     }
 
     public function testGetDouble()
@@ -228,7 +226,7 @@ class PropertyReadMethodsTest extends \PHPCR\Test\BaseCase
      */
     public function testGetDoubleValueFormatException()
     {
-        $this->multiProperty->getDouble();
+        $this->node->getProperty('jcr:primaryType')->getDouble();
     }
 
     public function testGetDecimal()
@@ -246,7 +244,7 @@ class PropertyReadMethodsTest extends \PHPCR\Test\BaseCase
      */
     public function testGetDecimalValueFormatException()
     {
-        $this->multiProperty->getDecimal();
+        $this->node->getProperty('jcr:primaryType')->getDecimal();
     }
     /**
      * The PHP Implementation requires that getDouble and getDecimal return the same
@@ -324,7 +322,7 @@ class PropertyReadMethodsTest extends \PHPCR\Test\BaseCase
      */
     public function testGetBooleanValueFormatException()
     {
-        $this->multiProperty->getBoolean();
+        $this->node->getProperty('jcr:primaryType')->getBoolean();
     }
 
     public function testGetNode()
@@ -425,7 +423,7 @@ class PropertyReadMethodsTest extends \PHPCR\Test\BaseCase
 
     public function testGetLengthMultivalue()
     {
-        $this->assertEquals(array(17, 15), $this->multiProperty->getLength());
+        $this->assertEquals(array(3, 1, 3), $this->multiValueProperty->getLength());
     }
 
     //FIXME: we most definitely should not create properties here but read existing ones!
@@ -516,10 +514,10 @@ class PropertyReadMethodsTest extends \PHPCR\Test\BaseCase
 
     public function testIteratorMulti()
     {
-        $this->assertTraversableImplemented($this->multiProperty);
-        $expected = array('mix:referenceable', 'mix:versionable');
+        $this->assertTraversableImplemented($this->multiValueProperty);
+        $expected = array(200, 0, 100);
         $returned = array();
-        foreach ($this->multiProperty as $value) {
+        foreach ($this->multiValueProperty as $value) {
             $returned[] = $value;
         }
         $this->assertEquals($expected, $returned);
