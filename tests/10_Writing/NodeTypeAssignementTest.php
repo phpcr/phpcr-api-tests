@@ -81,8 +81,6 @@ class NodeTypeAssignementTest extends \PHPCR\Test\BaseCase
     /**
      * adding an already existing mixin should not set the node into the modified state
      * adding a mixin to a node that already has a mixin in the permanent storage should work too
-     *
-     * @group abc
      */
     public function testAddMixinTwice()
     {
@@ -100,6 +98,16 @@ class NodeTypeAssignementTest extends \PHPCR\Test\BaseCase
         $this->assertFalse($this->node->isModified());
         $this->node->addMixin('mix:mimeType');
         $this->assertFalse($this->node->isModified());
+    }
+
+    /**
+     * add a mixin type that extends another type and check if the node
+     * is properly reported as implementing the base type too.
+     */
+    public function testAddMixinExtending()
+    {
+        $this->node->addMixin('mix:versionable');
+        $this->assertTrue($this->node->isNodeType('mix:referenceable'));
     }
 
     /**
