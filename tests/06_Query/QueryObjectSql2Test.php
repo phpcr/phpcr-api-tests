@@ -75,7 +75,7 @@ class QueryObjectSql2Test extends QueryBaseCase
     }
     */
     /*
-    +diverse exceptions
+        TODO: trigger the possible exceptions
     */
 
     /** changes fixtures */
