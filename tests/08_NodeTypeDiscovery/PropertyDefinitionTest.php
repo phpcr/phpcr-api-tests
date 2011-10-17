@@ -121,6 +121,7 @@ class PropertyDefinitionTest extends \PHPCR\Test\BaseCase
 
         // no built-in type without all query operators
     }
+
     public function testGetDefaultValues()
     {
         $def = $this->primaryType->getDefaultValues();
@@ -128,6 +129,7 @@ class PropertyDefinitionTest extends \PHPCR\Test\BaseCase
         $this->assertEquals(0, count($def));
         // no built-in types with default value
     }
+
     public function testGetRequiredType()
     {
         $tid = $this->primaryType->getRequiredType();
