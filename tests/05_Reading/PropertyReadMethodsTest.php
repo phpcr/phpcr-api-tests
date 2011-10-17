@@ -411,6 +411,16 @@ class PropertyReadMethodsTest extends \PHPCR\Test\BaseCase
         $this->assertSame($expected, $properties);
     }
 
+    /**
+     * @expectedException PHPCR\ValueFormatException
+     */
+    public function testGetPropertyNoPath()
+    {
+        $prop = $this->node->getNode('numberPropertyNode/jcr:content')->getProperty('longNumber');
+        $this->assertEquals(\PHPCR\PropertyType::LONG, $prop->getType());
+        $property = $prop->getProperty();
+    }
+
     public function testGetLength()
     {
         $this->assertEquals(29, $this->dateProperty->getLength());

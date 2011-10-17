@@ -251,7 +251,7 @@
                 <sv:value>text/plain</sv:value>
             </sv:property>
 
-            <sv:property sv:name="longNumber" sv:type="String">
+            <sv:property sv:name="longNumber" sv:type="Long">
                 <sv:value>999</sv:value>
             </sv:property>
 

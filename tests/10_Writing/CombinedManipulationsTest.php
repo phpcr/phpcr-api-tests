@@ -185,12 +185,19 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
     {
         $session = $this->sharedFixture['session'];
         $node = $this->node;
+        $childprop = $this->sharedFixture['session']->getProperty($node->getPath().'/child/childprop');
 
-        $node->setProperty('prop', null);
+        $othersession = self::$loader->getSession();
+        $othernode = $othersession->getNode($node->getPath());
+        $othernode->setProperty('prop', null);
+        $othernode->getNode('child')->remove();
+        $othersession->save();
+
+        $childprop->refresh(true);
+        $this->assertTrue($childprop->isDeleted());
+        $session->refresh(true);
         $this->assertFalse($node->hasProperty('prop'));
-
-        $session->refresh(false);
-        $this->assertEquals('Old', $node->getPropertyValue('prop'));
+        $this->assertFalse($node->hasNode('child'));
     }
 
     public function testMoveSessionRefresh()

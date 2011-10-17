@@ -32,7 +32,12 @@ class ManipulationTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * @covers Jackalope\NodeTypeManager::registerNodeTypesCnd
+     * A test for a jackalope specific feature. Is automatically skipped if
+     * your implementation is something different.
+     *
+     * TODO: move this into jackalope functional tests
+     *
+     * \Jackalope\NodeTypeManager::registerNodeTypesCnd
      */
     public function testRegisterNodeTypesCnd()
     {
@@ -60,7 +65,13 @@ class ManipulationTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * @covers Jackalope\NodeTypeManager::registerNodeTypesCnd
+     * A test for a jackalope specific feature. Is automatically skipped if
+     * your implementation is something different.
+     *
+     * TODO: move this into jackalope functional tests
+     *
+     * \Jackalope\NodeTypeManager::registerNodeTypesCnd
+     *
      * @expectedException \PHPCR\NodeType\NodeTypeExistsException
      */
     public function testRegisterNodeTypesCndNoUpdate()
@@ -72,6 +83,16 @@ class ManipulationTest extends \PHPCR\Test\BaseCase
         $types = $ntm->registerNodeTypesCnd($this->cnd, false);
     }
 
+    /**
+     * A test for a jackalope specific feature. Is automatically skipped if
+     * your implementation is something different.
+     *
+     * TODO: move this into jackalope functional tests
+     *
+     * \Jackalope\NodeTypeManager::registerNodeTypesCnd
+     *
+     * @expectedException \PHPCR\NodeType\NodeTypeExistsException
+     */
     public function testPrimaryItem()
     {
         $this->checkJackalope();
