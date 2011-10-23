@@ -125,7 +125,7 @@ class ManipulationTest extends \PHPCR\Test\BaseCase
         <'phpcr'='http://www.doctrine-project.org/projects/phpcr_odm'>
          [phpcr:apitest]
           mixin
-          - phpcr:alias (string)
+          - phpcr:class (string)
           [phpcr:test]
           mixin
           - phpcr:prop (string)
