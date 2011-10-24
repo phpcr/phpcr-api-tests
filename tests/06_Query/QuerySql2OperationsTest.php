@@ -11,7 +11,7 @@ class QuerySql2OperationsTest extends QueryBaseCase
     public function testQueryField()
     {
         $query = $this->sharedFixture['qm']->createQuery(
-            'SELECT foo FROM [nt:unstructured] AS data WHERE data.foo = "bar"',
+            'SELECT foo FROM [nt:unstructured] WHERE foo = "bar"',
             \PHPCR\Query\QueryInterface::JCR_SQL2
         );
 
@@ -29,6 +29,31 @@ class QuerySql2OperationsTest extends QueryBaseCase
             $vals[] = $row->getValue('foo');
         }
         $this->assertEquals(array('bar'), $vals);
+    }
+
+    public function testQueryFieldSomenull()
+    {
+        $query = $this->sharedFixture['qm']->createQuery(
+            'SELECT foo FROM [nt:unstructured]',
+            \PHPCR\Query\QueryInterface::JCR_SQL2
+        );
+
+        $this->assertInstanceOf('\PHPCR\Query\QueryInterface', $query);
+        $result = $query->execute();
+        $this->assertInstanceOf('\PHPCR\Query\QueryResultInterface', $result);
+        $vals = array();
+        foreach($result->getNodes() as $node) {
+            $vals[] = ($node->hasProperty('foo') ? $node->getPropertyValue('foo') : null);
+        }
+        $this->assertContains('bar', $vals);
+        $this->assertEquals(8, count($vals));
+
+        $vals = array();
+        foreach($result->getRows() as $row) {
+            $vals[] = $row->getValue('foo');
+        }
+        $this->assertContains('bar', $vals);
+        $this->assertEquals(8, count($vals));
     }
 
     public function testQueryFieldSelector()
@@ -91,4 +116,25 @@ class QuerySql2OperationsTest extends QueryBaseCase
         }
         $this->assertEquals(array('13543fc6-1abf-4708-bfcc-e49511754b40' => '13543fc6-1abf-4708-bfcc-e49511754b40'), $vals);
     }
+
+    public function testQueryOrder()
+    {
+        $query = $this->sharedFixture['qm']->createQuery(
+            'SELECT data.zeronumber
+             FROM [nt:unstructured] AS data
+             ORDER BY data.zeronumber',
+            \PHPCR\Query\QueryInterface::JCR_SQL2
+        );
+
+        $this->assertInstanceOf('\PHPCR\Query\QueryInterface', $query);
+        $result = $query->execute();
+        $this->assertInstanceOf('\PHPCR\Query\QueryResultInterface', $result);
+        $vals = array();
+        foreach($result->getRows() as $row) {
+            $vals[] = $row->getValue('data.zeronumber');
+        }
+        // rows that do not have that field are null. empty is before fields with values
+        $this->assertEquals(array(null, null, null, null, null, null, null, 0), $vals);
+    }
+
 }
