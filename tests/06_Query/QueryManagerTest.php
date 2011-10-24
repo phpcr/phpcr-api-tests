@@ -46,6 +46,12 @@ class QueryManagerTest extends QueryBaseCase
         $this->sharedFixture['qm']->getQuery($this->rootNode);
     }
 
+    public function testGetQOMFactory()
+    {
+        $factory = $this->sharedFixture['qm']->getQOMFactory();
+        $this->assertInstanceOf('PHPCR\Query\QOM\QueryObjectModelFactoryInterface', $factory);
+    }
+
     public function testGetSupportedQueryLanguages()
     {
         $ret = $this->sharedFixture['qm']->getSupportedQueryLanguages();

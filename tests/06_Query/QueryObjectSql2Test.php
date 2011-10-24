@@ -7,8 +7,6 @@ require_once('QueryBaseCase.php');
  * test the Query interface. $ 6.9
  *
  * setLimit, setOffset, bindValue, getBindVariableNames
- *
- * TODO: this is for xpath, which is not mandatory in JCR 2.0
  */
 class QueryObjectSql2Test extends QueryBaseCase
 {

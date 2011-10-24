@@ -349,7 +349,9 @@ class QomToSql2ConverterTest extends \PHPCR\Test\BaseCase
      */
     protected function assertQuery($expectedSql2, $source, $columns = array(), $constraint = null, $ordering = array())
     {
-        $query = new QOM\QueryObjectModel($source, $constraint, $ordering, $columns);
+        // TODO: test this without relying on jackalope implementation
+        $om = $this->getMockBuilder('Jackalope\ObjectManager')->disableOriginalConstructor()->getMock();
+        $query = new QOM\QueryObjectModel(null, $om, $source, $constraint, $ordering, $columns);
         $this->assertEquals($expectedSql2, $this->parser->convert($query));
     }
 }
