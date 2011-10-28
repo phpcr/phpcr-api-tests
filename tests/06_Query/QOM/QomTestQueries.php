@@ -143,7 +143,7 @@ class QomTestQueries {
         $queries['6.7.13.And'] =
             $factory->createQuery(
                 $factory->selector('nt:file'),
-                $factory->_and(
+                $factory->andConstraint(
                     $factory->propertyExistence('prop1', 'sel1'),
                     $factory->propertyExistence('prop2', 'sel2')),
                 array(),
@@ -157,7 +157,7 @@ class QomTestQueries {
         $queries['6.7.14.Or'] =
             $factory->createQuery(
                 $factory->selector('nt:file'),
-                $factory->_or(
+                $factory->orConstraint(
                     $factory->propertyExistence('prop1', 'sel1'),
                     $factory->propertyExistence('prop2', 'sel2')),
                 array(),
@@ -171,7 +171,7 @@ class QomTestQueries {
         $queries['6.7.15.Not'] =
             $factory->createQuery(
                 $factory->selector('nt:file'),
-                $factory->not(
+                $factory->notConstraint(
                     $factory->propertyExistence('prop1', 'sel1')),
                 array(),
                 array());

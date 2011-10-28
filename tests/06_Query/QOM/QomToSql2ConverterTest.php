@@ -115,7 +115,7 @@ class QomToSql2ConverterTest extends \PHPCR\Test\BaseCase
         $selector = $this->factory->selector('nt:file');
         $constraint1 = $this->factory->propertyExistence('prop1', 'sel1');
         $constraint2 = $this->factory->propertyExistence('prop2', 'sel2');
-        $this->assertQuery($this->queries['6.7.13.And'], $selector, array(), $this->factory->_and($constraint1, $constraint2), array());
+        $this->assertQuery($this->queries['6.7.13.And'], $selector, array(), $this->factory->andConstraint($constraint1, $constraint2), array());
     }
 
     /**
@@ -126,7 +126,7 @@ class QomToSql2ConverterTest extends \PHPCR\Test\BaseCase
         $selector = $this->factory->selector('nt:file');
         $constraint1 = $this->factory->propertyExistence('prop1', 'sel1');
         $constraint2 = $this->factory->propertyExistence('prop2', 'sel2');
-        $this->assertQuery($this->queries['6.7.14.Or'], $selector, array(), $this->factory->_or($constraint1, $constraint2), array());
+        $this->assertQuery($this->queries['6.7.14.Or'], $selector, array(), $this->factory->orConstraint($constraint1, $constraint2), array());
     }
 
     /**
@@ -136,7 +136,7 @@ class QomToSql2ConverterTest extends \PHPCR\Test\BaseCase
     {
         $selector = $this->factory->selector('nt:file');
         $constraint = $this->factory->propertyExistence('prop1', 'sel1');
-        $this->assertQuery($this->queries['6.7.15.Not'], $selector, array(), $this->factory->not($constraint), array());
+        $this->assertQuery($this->queries['6.7.15.Not'], $selector, array(), $this->factory->notConstraint($constraint), array());
     }
 
     /**
