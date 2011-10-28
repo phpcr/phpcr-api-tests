@@ -53,6 +53,15 @@ class QomToSql2ConverterTest extends \PHPCR\Test\BaseCase
     }
 
     /**
+     * 6.7.4. Name
+     */
+    public function testName()
+    {
+        $this->assertQuery($this->queries['6.7.3.Selector.Simple'], $this->factory->selector('nt:unstructured'));
+        $this->assertQuery($this->queries['6.7.3.Selector.Simple'], $this->factory->selector('[nt:unstructured]'));
+    }
+
+    /**
      * 6.7.8. EquiJoinCondition
      */
     public function testEquiJoin()
@@ -197,6 +206,17 @@ class QomToSql2ConverterTest extends \PHPCR\Test\BaseCase
         $selector = $this->factory->selector('nt:file');
         $this->assertQuery($this->queries['6.7.22.DescendantNode.Simple'], $selector, array(), $this->factory->descendantNode('/home'), array());
         $this->assertQuery($this->queries['6.7.22.DescendantNode.Selector'], $selector, array(), $this->factory->descendantNode('/home', 'sel1'), array());
+    }
+
+    /**
+     * 6.7.23. Path
+     */
+    public function testPath()
+    {
+        $selector = $this->factory->selector('nt:file');
+        $this->assertQuery($this->queries['6.7.20.SameNode.Simple'], $selector, array(), $this->factory->sameNode('/home'), array());
+        $this->assertQuery($this->queries['6.7.20.SameNode.Simple'], $selector, array(), $this->factory->sameNode('[/home]'), array());
+
     }
 
     /**
