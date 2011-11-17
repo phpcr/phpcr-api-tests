@@ -350,7 +350,7 @@ class QomToSql2ConverterTest extends \PHPCR\Test\BaseCase
 
         $this->assertQuery($this->queries['6.7.39.Colum.Wildcard'], $selector, array());
         $this->assertQuery($this->queries['6.7.39.Colum.Simple'], $selector, array($col1));
-        $this->assertQuery('SELECT prop1, prop2 as col2 FROM [nt:unstructured]', $selector, array($col1, $col2));
+        $this->assertQuery('SELECT prop1, prop2 AS col2 FROM [nt:unstructured]', $selector, array($col1, $col2));
         $this->assertQuery($this->queries['6.7.39.Colum.Mixed'], $selector, array($col1, $col2, $col3));
     }
 

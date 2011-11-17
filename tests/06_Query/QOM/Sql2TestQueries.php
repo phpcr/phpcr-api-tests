@@ -146,7 +146,7 @@ class Sql2TestQueries {
         $queries['6.7.39.Colum.Simple'] = 'SELECT prop1 FROM [nt:unstructured]';
         $queries['6.7.39.Colum.Named'] = 'SELECT prop1 AS col1 FROM [nt:unstructured]';
         $queries['6.7.39.Colum.Selector'] = 'SELECT sel1.prop1 FROM [nt:unstructured]';
-        $queries['6.7.39.Colum.Mixed'] = 'SELECT prop1, prop2 as col2, sel3.prop3 as col3 FROM [nt:unstructured]';
+        $queries['6.7.39.Colum.Mixed'] = 'SELECT prop1, prop2 AS col2, sel3.prop3 AS col3 FROM [nt:unstructured]';
 
         return $queries;
     }
