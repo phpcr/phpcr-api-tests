@@ -194,7 +194,12 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
         $othersession->save();
 
         $childprop->refresh(true);
-        $this->assertTrue($childprop->isDeleted());
+        try {
+            $childprop->getValue();
+            $this->fail('Should not be possible to get the value of a deleted property');
+        } catch(\Exception $e) {
+            //expected
+        }
         $session->refresh(true);
         $this->assertFalse($node->hasProperty('prop'));
         $this->assertFalse($node->hasNode('child'));
