@@ -1,7 +1,7 @@
 <?php
 namespace PHPCR\Tests\Connecting;
 
-require_once(dirname(__FILE__) . '/../../inc/BaseCase.php');
+require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 /** test javax.cr.Session read methods (level 1)
  *  most of the pdf specification is in section 4.4 and 5.1

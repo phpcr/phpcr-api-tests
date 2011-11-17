@@ -1,7 +1,7 @@
 <?php
 namespace PHPCR\Tests\Connecting;
 
-require_once(dirname(__FILE__) . '/../../inc/BaseCase.php');
+require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 /** test javax.jcr.Workspace read methods (read)
  *  most of the pdf specification is in chapter 4.5

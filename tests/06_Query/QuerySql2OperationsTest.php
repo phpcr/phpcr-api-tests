@@ -59,7 +59,7 @@ class QuerySql2OperationsTest extends QueryBaseCase
     public function testQueryFieldSelector()
     {
         $query = $this->sharedFixture['qm']->createQuery(
-            'SELECT data.foo FROM [nt:unstructured] AS data WHERE data.foo = "bar"',
+            'SELECT data.foo FROM [nt:unstructured] as data WHERE data.foo = "bar"',
             \PHPCR\Query\QueryInterface::JCR_SQL2
         );
 
@@ -77,8 +77,8 @@ class QuerySql2OperationsTest extends QueryBaseCase
     {
         $query = $this->sharedFixture['qm']->createQuery(
             'SELECT data.zeronumber
-             FROM [nt:unstructured] AS data
-               INNER JOIN [nt:unstructured] AS second
+             FROM [nt:unstructured] as data
+               INNER JOIN [nt:unstructured] as second
                ON data.[jcr:mimeType] = second.[jcr:mimeType]
 
              WHERE data.zeronumber = 0',
@@ -99,8 +99,8 @@ class QuerySql2OperationsTest extends QueryBaseCase
     {
         $query = $this->sharedFixture['qm']->createQuery(
             'SELECT source.ref1, target.[jcr:uuid]
-             FROM [nt:unstructured] AS source
-               INNER JOIN [nt:unstructured] AS target
+             FROM [nt:unstructured] as source
+               INNER JOIN [nt:unstructured] as target
                ON source.ref1 = target.[jcr:uuid]
              WHERE ISCHILDNODE(source, "/tests_general_base/idExample/jcr:content")
              ',
@@ -121,7 +121,7 @@ class QuerySql2OperationsTest extends QueryBaseCase
     {
         $query = $this->sharedFixture['qm']->createQuery(
             'SELECT data.zeronumber
-             FROM [nt:unstructured] AS data
+             FROM [nt:unstructured] as data
              ORDER BY data.zeronumber',
             \PHPCR\Query\QueryInterface::JCR_SQL2
         );

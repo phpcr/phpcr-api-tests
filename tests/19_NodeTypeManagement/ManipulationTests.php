@@ -1,7 +1,7 @@
 <?php
 namespace PHPCR\Tests\NodeTypeManagement;
 
-require_once(dirname(__FILE__) . '/../../inc/BaseCase.php');
+require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 /**
  * Covering jcr-2.8.3 spec $19

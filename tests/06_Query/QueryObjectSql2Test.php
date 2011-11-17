@@ -12,7 +12,7 @@ class QueryObjectSql2Test extends QueryBaseCase
 {
     protected $simpleQuery = '
             SELECT data.[jcr:mimeType]
-            FROM [nt:file] AS data
+            FROM [nt:file] as data
             WHERE data.[jcr:mimeType] = "text/plain"
             ';
 

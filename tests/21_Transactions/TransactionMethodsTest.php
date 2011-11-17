@@ -1,7 +1,7 @@
 <?php
 namespace PHPCR\Tests\Transactions;
 
-require_once(dirname(__FILE__) . '/../../inc/BaseCase.php');
+require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 use \PHPCR\PropertyType as Type;
 use \PHPCR\Transaction;

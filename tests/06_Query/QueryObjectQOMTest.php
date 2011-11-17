@@ -64,7 +64,7 @@ class QueryObjectQOMTest extends QueryBaseCase
 
     public function testGetStatement()
     {
-        $this->assertEquals('SELECT * FROM [nt:folder] AS data', $this->query->getStatement());
+        $this->assertEquals('SELECT * FROM [nt:folder] as data', $this->query->getStatement());
     }
 
     public function testGetLanguage()

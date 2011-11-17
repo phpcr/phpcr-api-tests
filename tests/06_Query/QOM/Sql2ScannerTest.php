@@ -1,7 +1,7 @@
 <?php
 namespace PHPCR\Tests\Query\QOM;
 
-require_once(dirname(__FILE__) . '/../../../inc/BaseCase.php');
+require_once(__DIR__ . '/../../../inc/BaseCase.php');
 
 use PHPCR\Util\QOM\Sql2Scanner;
 

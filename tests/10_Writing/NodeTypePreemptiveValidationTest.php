@@ -1,7 +1,7 @@
 <?php
 namespace PHPCR\Tests\Writing;
 
-require_once(dirname(__FILE__) . '/../../inc/BaseCase.php');
+require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 /**
  * Test pre-emptive validation (§10.10.3.2)

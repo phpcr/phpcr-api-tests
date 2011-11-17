@@ -1,7 +1,7 @@
 <?php
 namespace PHPCR\Tests\Writing;
 
-require_once(dirname(__FILE__) . '/../../inc/BaseCase.php');
+require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 //6.3.1 Namespace Registry
 class NamespaceRegistryTest extends \PHPCR\Test\BaseCase

@@ -1,7 +1,7 @@
 <?php
 namespace PHPCR\Tests\NodeTypeDiscovery;
 
-require_once(dirname(__FILE__) . '/../../inc/BaseCase.php');
+require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 /**
  * Test the NoteTypeManager §8
