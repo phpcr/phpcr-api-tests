@@ -457,7 +457,7 @@ class QomTestQueries {
                 array(
                     $factory->column('prop1')));
 
-        // SELECT prop1 as col1 FROM nt:unstructured
+        // SELECT prop1 AS col1 FROM nt:unstructured
         $queries['6.7.39.Colum.Named'] =
             $factory->createQuery(
                 $factory->selector('nt:unstructured'),
