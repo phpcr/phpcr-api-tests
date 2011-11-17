@@ -17,7 +17,7 @@ class Sql2TestQueries {
         * 6.7.3. Selector
         */
         $queries['6.7.3.Selector.Simple'] = 'SELECT * FROM [nt:unstructured]';
-        $queries['6.7.3.Selector.Named'] = 'SELECT * FROM [nt:unstructured] as test';
+        $queries['6.7.3.Selector.Named'] = 'SELECT * FROM [nt:unstructured] AS test';
 
         /**
         * 6.7.8. EquiJoinCondition
