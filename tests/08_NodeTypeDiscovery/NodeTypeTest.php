@@ -14,7 +14,6 @@ class NodeTypeTest extends \PHPCR\Test\BaseCase
     private static $hierarchyNode;
     private static $file;
     private static $resource;
-    private static $versionable;
     private static $created;
 
     static public function setupBeforeClass($fixtures = false)
@@ -26,7 +25,6 @@ class NodeTypeTest extends \PHPCR\Test\BaseCase
         self::$file = $ntm->getNodeType('nt:file');
         self::$resource = $ntm->getNodeType('nt:resource');
         self::$created = $ntm->getNodeType('mix:created');
-        self::$versionable = $ntm->getNodeType('mix:versionable');
     }
 
     public function testGetSupertypes()
@@ -146,8 +144,22 @@ class NodeTypeTest extends \PHPCR\Test\BaseCase
 
     public function testIsNodeTypeMixin()
     {
-        $this->assertTrue(self::$versionable->isNodeType('mix:versionable'));
-        $this->assertTrue(self::$versionable->isNodeType('mix:referenceable'));
-        $this->assertFalse(self::$versionable->isNodeType('mix:lockable'));
+        $this->assertTrue(self::$created->isNodeType('mix:created'));
+        $this->assertFalse(self::$created->isNodeType('mix:createdBy'));
+    }
+
+    /**
+     * If your implementation supports versioning, this test checks if isNodeType
+     * works for parent types as well.
+     * If your implementation does not have the mix:versionable node type, just mark
+     * this test as unsupported in your implementation loader.
+     */
+    public function testIsNodeTypeMixinVersion()
+    {
+        $ntm = self::$staticSharedFixture['session']->getWorkspace()->getNodeTypeManager();
+        $versionable = $ntm->getNodeType('mix:versionable');
+        $this->assertTrue($versionable->isNodeType('mix:versionable'));
+        $this->assertTrue($versionable->isNodeType('mix:referenceable'));
+        $this->assertFalse($versionable->isNodeType('mix:lockable'));
     }
 }
