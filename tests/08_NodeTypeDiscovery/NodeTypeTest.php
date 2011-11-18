@@ -151,11 +151,14 @@ class NodeTypeTest extends \PHPCR\Test\BaseCase
     /**
      * If your implementation supports versioning, this test checks if isNodeType
      * works for parent types as well.
-     * If your implementation does not have the mix:versionable node type, just mark
-     * this test as unsupported in your implementation loader.
+     * If the repository does not declare it supports versioning, this test is skipped
      */
     public function testIsNodeTypeMixinVersion()
     {
+        if (!self::$staticSharedFixture['session']->getRepository()->getDescriptor('option.versioning.supported')) {
+            $this->markTestSkipped('PHPCR repository doesn\'t support versioning');
+        }
+
         $ntm = self::$staticSharedFixture['session']->getWorkspace()->getNodeTypeManager();
         $versionable = $ntm->getNodeType('mix:versionable');
         $this->assertTrue($versionable->isNodeType('mix:versionable'));
