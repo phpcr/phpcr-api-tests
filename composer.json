@@ -1,0 +1,35 @@
+{
+    "name": "phpcr/phpcr-api-tests",
+    "type": "testsuite",
+    "description": "PHP Content Repository compliance test suite",
+    "keywords": ["phpcr", "contentrepository", "testing"],
+    "homepage": "http://phpcr.github.com",
+    "license": "Apache License 2.0",
+    "authors": [
+        {
+            "name": "David Buchmann",
+            "email": "david@liip.ch"
+        },
+        {
+            "name": "Daniel Barsotti",
+            "email": "daniel.barsotti@liip.ch"
+        },
+        {
+            "name": "Roland Schilter",
+            "email": "roland.schilter@liip.ch"
+        },
+        {
+            "name": "Lukas Kahwe Smith",
+            "email": "smith@pooteeweet.org"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0",
+        "phpcr/implementation": "master"
+    },
+    "autoload": {
+        "psr-0": {
+            "PHPCR": "src"
+        }
+    }
+}
