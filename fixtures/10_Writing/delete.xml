@@ -10,6 +10,9 @@
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
       <sv:value>nt:unstructured</sv:value>
     </sv:property>
+    <sv:property sv:name="prop" sv:type="String">
+      <sv:value>Test</sv:value>
+    </sv:property>
   </sv:node>
   <sv:node sv:name="testRemoveItemProperty">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -19,6 +22,16 @@
       <sv:value>999</sv:value>
     </sv:property>
   </sv:node>
+  <sv:node sv:name="testRemoveNodeConstraintViolation">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>nt:file</sv:value>
+    </sv:property>
+    <sv:node sv:name="jcr:content">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>nt:unstructured</sv:value>
+      </sv:property>
+    </sv:node>
+  </sv:node>
   <sv:node sv:name="testRemoveProperty">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
       <sv:value>nt:unstructured</sv:value>
@@ -26,8 +39,24 @@
     <sv:property sv:name="longNumber" sv:type="String">
       <sv:value>998</sv:value>
     </sv:property>
+    <sv:property sv:name="otherprop" sv:type="String">
+      <sv:value>998</sv:value>
+    </sv:property>
   </sv:node>
   <sv:node sv:name="testRemoveRemovedNode">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>nt:unstructured</sv:value>
+    </sv:property>
+  </sv:node>
+  <sv:node sv:name="testRefreshRemovedProperty">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>nt:unstructured</sv:value>
+    </sv:property>
+    <sv:property sv:name="longNumber" sv:type="String">
+      <sv:value>998</sv:value>
+    </sv:property>
+  </sv:node>
+  <sv:node sv:name="testRefreshRemovedNode">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
       <sv:value>nt:unstructured</sv:value>
     </sv:property>
@@ -40,10 +69,33 @@
       <sv:value>997</sv:value>
     </sv:property>
   </sv:node>
+  <sv:node sv:name="testNodeRemovePropertyConstraintViolation">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>nt:unstructured</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+      <sv:value>mix:created</sv:value>
+    </sv:property>
+  </sv:node>
   <sv:node sv:name="testRemoveNode">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
       <sv:value>nt:unstructured</sv:value>
     </sv:property>
+  </sv:node>
+  <sv:node sv:name="testRemoveNodeParentState">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>nt:unstructured</sv:value>
+    </sv:property>
+    <sv:node sv:name="parent">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>nt:unstructured</sv:value>
+      </sv:property>
+      <sv:node sv:name="child">
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+          <sv:value>nt:unstructured</sv:value>
+        </sv:property>
+      </sv:node>
+    </sv:node>
   </sv:node>
   <sv:node sv:name="testGetRemovedNodeSession">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -75,6 +127,31 @@
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
       <sv:value>nt:unstructured</sv:value>
     </sv:property>
+  </sv:node>
+
+  <sv:node sv:name="testDeleteCascade">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>nt:unstructured</sv:value>
+    </sv:property>
+    <sv:property sv:name="prop" sv:type="String">
+      <sv:value>Test</sv:value>
+    </sv:property>
+    <sv:node sv:name="child">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>nt:unstructured</sv:value>
+      </sv:property>
+      <sv:property sv:name="prop" sv:type="String">
+        <sv:value>Test</sv:value>
+      </sv:property>
+      <sv:node sv:name="child">
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+          <sv:value>nt:unstructured</sv:value>
+        </sv:property>
+        <sv:property sv:name="prop" sv:type="String">
+          <sv:value>Test</sv:value>
+        </sv:property>
+      </sv:node>
+    </sv:node>
   </sv:node>
 
   <sv:node sv:name="testDeleteReferencedNodeException">

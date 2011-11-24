@@ -1,7 +1,7 @@
 <?php
 namespace PHPCR\Tests\Transactions;
 
-require_once(dirname(__FILE__) . '/../../inc/BaseCase.php');
+require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 use \PHPCR\PropertyType as Type;
 use \PHPCR\Transaction;
@@ -59,12 +59,20 @@ class TransactionMethodsTest extends \PHPCR\Test\BaseCase
         $session = self::$staticSharedFixture['session'];
         $utx = $session->getWorkspace()->getTransactionManager();
 
-        $utx->begin();
         $child = $this->node->addNode('insideTransaction');
+        $utx->begin();
         $session->save();
+        $this->assertFalse($child->isNew());
         $utx->rollback();
 
         $this->assertTrue($this->node->hasNode('insideTransaction'));
+
+        $sessionafterrollback = self::$loader->getSession();
+        $this->assertFalse($sessionafterrollback->nodeExists($child->getPath()));
+
+        // semantics of rollback is that the local session state does not roll back
+        // this must work
+        $session->save();
 
         $sessionaftersave = self::$loader->getSession();
         $this->assertFalse($sessionaftersave->nodeExists($child->getPath()));

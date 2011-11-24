@@ -1,7 +1,7 @@
 <?php
 namespace PHPCR\Tests\Reading;
 
-require_once(dirname(__FILE__) . '/../../inc/BaseCase.php');
+require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 /**
  * Test Session read methods
@@ -210,7 +210,7 @@ class SessionReadMethodsTest extends \PHPCR\Test\BaseCase
      */
     public function testImpersonate()
     {
-        $cr = self::$loader->getImpersonateCredentials();
+        $cr = self::$loader->getRestrictedCredentials();
         $session = $this->sharedFixture['session']->impersonate($cr);
         $this->markTestIncomplete('TODO: do some tests with the impersonated session');
     }

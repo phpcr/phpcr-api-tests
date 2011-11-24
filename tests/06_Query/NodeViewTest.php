@@ -26,19 +26,26 @@ class NodeViewTest extends QueryBaseCase
             $count++;
         }
 
-        $this->assertEquals(8, $count, 'wrong number of elements in iterator');
+        $this->assertEquals(5, $count, 'wrong number of elements in iterator');
     }
 
     public function testSeekable()
     {
-        $seekNodeName = '/tests_general_base/index.txt/jcr:content';
+        $seekPosition = 2;
 
         $nodes = array();
-        foreach ($this->nodeIterator as $nodeName => $node) {
-            $nodes[$nodeName] = $node;
+        $i = 0;
+        foreach ($this->nodeIterator as $path => $node) {
+            if ($i++ == $seekPosition) {
+                $seekNode = $node;
+                $seekKey = $path;
+            }
         }
-        $this->nodeIterator->seek($seekNodeName);
-        $this->assertEquals($nodes[$seekNodeName], $this->nodeIterator->current());
+
+        // note that in php 5.3.3, the array iterator gets the seek wrong and wants a string position instead of a number. according to the doc, we test for the correct behaviour here.
+        $this->nodeIterator->seek($seekPosition);
+        $this->assertEquals($seekKey, $this->nodeIterator->key());
+        $this->assertEquals($seekNode, $this->nodeIterator->current());
     }
 
     /**
@@ -46,9 +53,7 @@ class NodeViewTest extends QueryBaseCase
      */
     public function testSeekableOutOfBounds()
     {
-        $seekNodeName = 'foobar';
-
-        $this->nodeIterator->seek($seekNodeName);
+        $this->nodeIterator->seek(30);
     }
 
     public function testCountable()

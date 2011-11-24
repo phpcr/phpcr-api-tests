@@ -1,7 +1,7 @@
 <?php
 namespace PHPCR\Tests\Connecting;
 
-require_once(dirname(__FILE__) . '/../../inc/BaseCase.php');
+require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 class RepositoryTest extends \PHPCR\Test\BaseCase
 {

@@ -1,10 +1,10 @@
 <?php
 namespace PHPCR\Tests\Writing;
 
-require_once(dirname(__FILE__) . '/../../inc/BaseCase.php');
+require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 /**
- * Test adding mixin to nodes.
+ * Test setting node types on nodes.
  */
 class NodeTypeAssignementTest extends \PHPCR\Test\BaseCase
 {
@@ -26,10 +26,10 @@ class NodeTypeAssignementTest extends \PHPCR\Test\BaseCase
         $this->node = $this->rootNode->getNode("tests_write_nodetype/$name");
     }
 
+    // TODO: a repository MAY also allow changing the primary node type.
+
     /**
-     * the mix: types are predefined types.
-     *
-     * we only use those that do not depend on optional features.
+     * the predefined mixin types that do not depend on optional features
      */
     public static $mixins = array(
             "mix:etag", "mix:language", "mix:lastModified", "mix:mimeType",
@@ -81,8 +81,6 @@ class NodeTypeAssignementTest extends \PHPCR\Test\BaseCase
     /**
      * adding an already existing mixin should not set the node into the modified state
      * adding a mixin to a node that already has a mixin in the permanent storage should work too
-     *
-     * @group abc
      */
     public function testAddMixinTwice()
     {
@@ -92,6 +90,7 @@ class NodeTypeAssignementTest extends \PHPCR\Test\BaseCase
         $this->assertFalse($this->node->isModified());
 
         $this->markTestIncomplete('TODO: fix adding mixin when there is already one existing');
+        // maybe similar to http://mail-archives.apache.org/mod_mbox/jackrabbit-users/201108.mbox/%3C1314168796503-3764635.post@n4.nabble.com%3E
 
         $this->node->addMixin('mix:mimeType');
         $this->assertTrue($this->node->isModified());
@@ -99,6 +98,16 @@ class NodeTypeAssignementTest extends \PHPCR\Test\BaseCase
         $this->assertFalse($this->node->isModified());
         $this->node->addMixin('mix:mimeType');
         $this->assertFalse($this->node->isModified());
+    }
+
+    /**
+     * add a mixin type that extends another type and check if the node
+     * is properly reported as implementing the base type too.
+     */
+    public function testAddMixinExtending()
+    {
+        $this->node->addMixin('mix:versionable');
+        $this->assertTrue($this->node->isNodeType('mix:referenceable'));
     }
 
     /**

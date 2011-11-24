@@ -37,7 +37,8 @@ class QueryResultsTest extends QueryBaseCase
     public function testGetColumnNames()
     {
         $columnNames = $this->qr->getColumnNames();
-        $columnNamesExpected = array('nt:unstructured.jcr:primaryType', 'jcr:path', 'jcr:score');
+        sort($columnNames); //order is not determined
+        $columnNamesExpected = array('jcr:path', 'jcr:score', 'nt:folder.jcr:created', 'nt:folder.jcr:createdBy', 'nt:folder.jcr:primaryType');
 
        $this->assertEquals($columnNamesExpected, $columnNames);
     }
@@ -51,7 +52,7 @@ class QueryResultsTest extends QueryBaseCase
             $this->assertInstanceOf('PHPCR\NodeInterface', $node);
             $count++;
         }
-        $this->assertEquals(8, $count);
+        $this->assertEquals(5, $count);
     }
 
     public function testGetNodesAtOnce()
@@ -75,7 +76,7 @@ class QueryResultsTest extends QueryBaseCase
     public function testGetSelectorNames()
     {
         $selectorNames = $this->qr->getSelectorNames();
-        $selectorNamesExpected = array('nt:unstructured');
+        $selectorNamesExpected = array('nt:folder');
 
         $this->assertEquals($selectorNamesExpected, $selectorNames);
     }
@@ -91,26 +92,21 @@ class QueryResultsTest extends QueryBaseCase
                 $count++;
             }
         }
-        $this->assertEquals(24, $count);
+        $this->assertEquals(15, $count);
     }
 
     public function testReadPropertyContentFromResults()
     {
-        $nodes = $this->qr->getNodes();
-        $seekNodeName = '/tests_general_base/numberPropertyNode/jcr:content';
-        $nodes->seek($seekNodeName);
-        $node = $nodes->current();
+        $seekName = '/tests_general_base/multiValueProperty';
+        foreach ($this->qr->getNodes() as $path => $node) {
+            if ($seekName == $path) break;
+        }
 
         $this->assertInstanceOf('PHPCR\NodeInterface', $node);
 
-        $prop = $node->getProperty('foo');
+        $prop = $node->getProperty('jcr:uuid');
         $this->assertInstanceOf('PHPCR\PropertyInterface', $prop);
-        $this->assertEquals('foo', $prop->getName());
-        $this->assertEquals('bar', $prop->getString());
-
-        $prop = $node->getProperty('specialChars');
-        $this->assertInstanceOf('PHPCR\PropertyInterface', $prop);
-        $this->assertEquals('specialChars', $prop->getName());
-        $this->assertEquals('üöäøéáñâêèàçæëìíîïþ', $prop->getString());
+        $this->assertEquals('jcr:uuid', $prop->getName());
+        $this->assertEquals('14e18ef3-be20-4985-bee9-7bb4763b31de', $prop->getString());
     }
 }

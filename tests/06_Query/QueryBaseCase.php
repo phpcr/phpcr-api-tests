@@ -1,7 +1,7 @@
 <?php
 namespace PHPCR\Tests\Query;
 
-require_once(dirname(__FILE__) . '/../../inc/BaseCase.php');
+require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 /**
  * a base class for all query tests
@@ -26,6 +26,13 @@ abstract class QueryBaseCase extends \PHPCR\Test\BaseCase
     {
         parent::setUp();
 
-        $this->query = $this->sharedFixture['qm']->createQuery("SELECT * FROM [nt:unstructured]", \PHPCR\Query\QueryInterface::JCR_SQL2);
+        $this->query = $this->sharedFixture['qm']->createQuery("SELECT * FROM [nt:folder]", \PHPCR\Query\QueryInterface::JCR_SQL2);
+
+        // the query result is not ordered, but these are the nodes that are to be expected in any order
+        $this->resultPaths = array("/tests_general_base",
+                                   "/tests_general_base/test:namespacedNode",
+                                   "/tests_general_base/emptyExample",
+                                   "/tests_general_base/multiValueProperty/deepnode",
+                                   "/tests_general_base/multiValueProperty");
     }
 }

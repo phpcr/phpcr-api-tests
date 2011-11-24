@@ -1,7 +1,7 @@
 <?php
 namespace PHPCR\Tests\Query\QOM;
 
-require_once(dirname(__FILE__) . '/../../../inc/BaseCase.php');
+require_once(__DIR__ . '/../../../inc/BaseCase.php');
 require_once('Sql2TestQueries.php');
 
 use Jackalope\Query\QOM; // TODO get rid of jackalope dependency
@@ -50,6 +50,15 @@ class QomToSql2ConverterTest extends \PHPCR\Test\BaseCase
     {
         $this->assertQuery($this->queries['6.7.3.Selector.Simple'], $this->factory->selector('nt:unstructured'));
         $this->assertQuery($this->queries['6.7.3.Selector.Named'], $this->factory->selector('nt:unstructured', 'test'));
+    }
+
+    /**
+     * 6.7.4. Name
+     */
+    public function testName()
+    {
+        $this->assertQuery($this->queries['6.7.3.Selector.Simple'], $this->factory->selector('nt:unstructured'));
+        $this->assertQuery($this->queries['6.7.3.Selector.Simple'], $this->factory->selector('[nt:unstructured]'));
     }
 
     /**
@@ -115,7 +124,7 @@ class QomToSql2ConverterTest extends \PHPCR\Test\BaseCase
         $selector = $this->factory->selector('nt:file');
         $constraint1 = $this->factory->propertyExistence('prop1', 'sel1');
         $constraint2 = $this->factory->propertyExistence('prop2', 'sel2');
-        $this->assertQuery($this->queries['6.7.13.And'], $selector, array(), $this->factory->_and($constraint1, $constraint2), array());
+        $this->assertQuery($this->queries['6.7.13.And'], $selector, array(), $this->factory->andConstraint($constraint1, $constraint2), array());
     }
 
     /**
@@ -126,7 +135,7 @@ class QomToSql2ConverterTest extends \PHPCR\Test\BaseCase
         $selector = $this->factory->selector('nt:file');
         $constraint1 = $this->factory->propertyExistence('prop1', 'sel1');
         $constraint2 = $this->factory->propertyExistence('prop2', 'sel2');
-        $this->assertQuery($this->queries['6.7.14.Or'], $selector, array(), $this->factory->_or($constraint1, $constraint2), array());
+        $this->assertQuery($this->queries['6.7.14.Or'], $selector, array(), $this->factory->orConstraint($constraint1, $constraint2), array());
     }
 
     /**
@@ -136,7 +145,7 @@ class QomToSql2ConverterTest extends \PHPCR\Test\BaseCase
     {
         $selector = $this->factory->selector('nt:file');
         $constraint = $this->factory->propertyExistence('prop1', 'sel1');
-        $this->assertQuery($this->queries['6.7.15.Not'], $selector, array(), $this->factory->not($constraint), array());
+        $this->assertQuery($this->queries['6.7.15.Not'], $selector, array(), $this->factory->notConstraint($constraint), array());
     }
 
     /**
@@ -197,6 +206,17 @@ class QomToSql2ConverterTest extends \PHPCR\Test\BaseCase
         $selector = $this->factory->selector('nt:file');
         $this->assertQuery($this->queries['6.7.22.DescendantNode.Simple'], $selector, array(), $this->factory->descendantNode('/home'), array());
         $this->assertQuery($this->queries['6.7.22.DescendantNode.Selector'], $selector, array(), $this->factory->descendantNode('/home', 'sel1'), array());
+    }
+
+    /**
+     * 6.7.23. Path
+     */
+    public function testPath()
+    {
+        $selector = $this->factory->selector('nt:file');
+        $this->assertQuery($this->queries['6.7.20.SameNode.Simple'], $selector, array(), $this->factory->sameNode('/home'), array());
+        $this->assertQuery($this->queries['6.7.20.SameNode.Simple'], $selector, array(), $this->factory->sameNode('[/home]'), array());
+
     }
 
     /**
@@ -349,7 +369,9 @@ class QomToSql2ConverterTest extends \PHPCR\Test\BaseCase
      */
     protected function assertQuery($expectedSql2, $source, $columns = array(), $constraint = null, $ordering = array())
     {
-        $query = new QOM\QueryObjectModel($source, $constraint, $ordering, $columns);
+        // TODO: test this without relying on jackalope implementation
+        $om = $this->getMockBuilder('Jackalope\ObjectManager')->disableOriginalConstructor()->getMock();
+        $query = new QOM\QueryObjectModel(null, $om, $source, $constraint, $ordering, $columns);
         $this->assertEquals($expectedSql2, $this->parser->convert($query));
     }
 }

@@ -1,15 +1,21 @@
 <?php
 namespace PHPCR\Tests\Writing;
 
-require_once(dirname(__FILE__) . '/../../inc/BaseCase.php');
+require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 use PHPCR\PropertyType;
 
 /**
- * Testing whether node property dynamic re-binding (i.e. setting a new type and
- * value for a property) works correctly
+ * Testing whether node property dynamic re-binding (i.e. setting a new type
+ * and value for a property) works correctly.
+ *
+ * re-binding is an optional, a UnsupportedRepositoryOperationException is also
+ * treated as correct. See the setProperty method of Node for more information.
  *
  * Covering jcr-2.8.3 spec $10.4.2
+ *
+ * @see \PHPCR\NodeInterface::setProperty()
+ * @see \PHPCR\PropertyInterface::setValue()
  */
 class SetPropertyDynamicRebindingTest extends \PHPCR\Test\BaseCase
 {
@@ -22,7 +28,8 @@ class SetPropertyDynamicRebindingTest extends \PHPCR\Test\BaseCase
         parent::setupBeforeClass($fixtures);
     }
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->renewSession();
     }
@@ -80,10 +87,26 @@ class SetPropertyDynamicRebindingTest extends \PHPCR\Test\BaseCase
             $this->assertTrue(is_resource($prop->getValue()));
         }
 
-        // Re-bind the property to the new type/value and save it
-        $prop->setValue($destPropValue, $destPropType);
+        try {
+            // Re-bind the property to the new type/value and save it
+            $prop->setValue($destPropValue, $destPropType);
+        } catch (\PHPCR\UnsupportedRepositoryOperationException $e) {
+            // if we try to change the type, the repository may throw this
+            // exception instead of supporting dynamic rebinding
+            // if we set type parameter but its the same as the property
+            // already has, this is a NOOP
+            $this->assertNotEquals($sourcePropType, $destPropType, 'explicit type parameters that do not change the type may not provoke the unsupported exception');
+            return;
+        }
+
         $this->assertEquals($destPropType, $prop->getType(), 'Property type does not match after re-binding');
-        $this->assertEquals($destPropValue, $prop->$getterFunc(), 'Property value does not match after re-binding');
+        // If this is DateTime object, convert to string and then compare.
+        // It's done to avoid issues with timezone provided by DateTime object 
+        if ($destPropValue instanceof \DateTime) {
+            $this->assertEquals($destPropValue->format('c'), $destPropValue->format('c'), 'Datetime value does not match after re-binding');
+        } else {
+            $this->assertEquals($destPropValue, $prop->$getterFunc(), 'Property value does not match after re-binding');
+        }
 
         // Finally re-read it from backend and check it's still ok
         $this->saveAndRenewSession();
@@ -143,8 +166,8 @@ class SetPropertyDynamicRebindingTest extends \PHPCR\Test\BaseCase
         );
 
         $provider = array();
-        foreach($typesAndValues as $sourceKey => $sourceVal) {
-            foreach($typesAndValues as $destKey => $destVal) {
+        foreach ($typesAndValues as $sourceKey => $sourceVal) {
+            foreach ($typesAndValues as $destKey => $destVal) {
                 if ($sourceKey !== $destKey) {
                     $propName =
                         'dynRebinding_' . PropertyType::nameFromValue($sourceKey) .

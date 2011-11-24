@@ -1,7 +1,7 @@
 <?php
 namespace PHPCR\Tests\Versioning;
 
-require_once(dirname(__FILE__) . '/../../inc/BaseCase.php');
+require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 /**
 * Testing whether node property manipulations work correctly
@@ -25,7 +25,8 @@ class RestoreNodeTest extends \PHPCR\Test\BaseCase
         }
     }
 
-    public function testRestoreversion() {
+    public function testRestoreversion()
+    {
         $this->vm->checkout("/tests_version_base/versioned");
         $node = $this->sharedFixture['session']->getNode('/tests_version_base/versioned');
 

@@ -1,7 +1,7 @@
 <?php
 namespace PHPCR\Tests\Versioning;
 
-require_once(dirname(__FILE__) . '/../../inc/BaseCase.php');
+require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 /**
 * Testing whether node property manipulations work correctly
@@ -44,7 +44,8 @@ class CreateVersionableNodeTest extends \PHPCR\Test\BaseCase
         $this->assertTrue( $this->node->getProperty("jcr:isCheckedOut")->getBoolean(),"jcr:isCheckout is not true");
     }
 
-    public function testCheckinVersion() {
+    public function testCheckinVersion()
+    {
         $ws = $this->sharedFixture['session']->getWorkspace();
         $vm = $ws->getVersionManager();
         $vm->checkout("/tests_version_base/versioned");
@@ -58,7 +59,8 @@ class CreateVersionableNodeTest extends \PHPCR\Test\BaseCase
     /**
      * @expectedException PHPCR\Version\VersionException
      */
-    public function testWriteNotCheckedOutVersion() {
+    public function testWriteNotCheckedOutVersion()
+    {
         $ws = $this->sharedFixture['session']->getWorkspace();
         $vm = $ws->getVersionManager();
         $vm->checkout("/tests_version_base/versioned");
@@ -70,7 +72,33 @@ class CreateVersionableNodeTest extends \PHPCR\Test\BaseCase
 
         $node->setProperty('foo', 'bar2');
         $this->sharedFixture['session']->save();
-
     }
 
+    public function testNewVersionableNode()
+    {
+        $this->renewSession(); // need a clean session after exception
+
+        $node = $this->sharedFixture['session']->getNode('/tests_version_base');
+        $node = $node->addNode('myversioned');
+        $node->setProperty('foo', 'bar');
+        $node->addMixin('mix:versionable');
+
+        $this->saveAndRenewSession();
+
+        $node = $this->sharedFixture['session']->getNode('/tests_version_base/myversioned');
+        $this->assertTrue($node->hasProperty('foo'));
+
+        $ws = $this->sharedFixture['session']->getWorkspace();
+        $vm = $ws->getVersionManager();
+        $vm->checkin($node->getPath());
+        $vm->checkout($node->getPath());
+
+        $node->setProperty('foo', 'XXX');
+
+        $this->sharedFixture['session']->save();
+
+        $node = $this->sharedFixture['session']->getNode('/tests_version_base/myversioned');
+        $this->assertTrue($node->hasProperty('foo'));
+        $this->assertEquals('XXX', $node->getPropertyValue('foo'));
+    }
 }

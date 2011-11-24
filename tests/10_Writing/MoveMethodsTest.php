@@ -1,7 +1,7 @@
 <?php
 namespace PHPCR\Tests\Writing;
 
-require_once(dirname(__FILE__) . '/../../inc/BaseCase.php');
+require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 /**
  * Covering jcr-2.8.3 spec $10.6
@@ -33,6 +33,9 @@ class MoveMethodsTest extends \PHPCR\Test\BaseCase
         $this->assertTrue($session->nodeExists($dst), 'Destination node not found [S]');
         $this->assertFalse($session->nodeExists($src), 'Source node still exists [S]');
         $this->assertTrue($session->nodeExists($dst.'/srcFile/jcr:content'), 'Destination child node not found [S]');
+
+        $dstNode = $session->getNode($dst);
+        $this->assertInstanceOf('PHPCR\NodeInterface', $dstNode);
 
         // Backend
         $session = $this->saveAndRenewSession();
@@ -122,6 +125,7 @@ class MoveMethodsTest extends \PHPCR\Test\BaseCase
     /** Verifies the parent of a moved node no longer has the node as child */
     public function testSessionMoveHasNodeParent()
     {
+        $this->assertInstanceOf('PHPCR\NodeInterface', $this->node);
         $session = $this->sharedFixture['session'];
 
         $src = '/tests_write_manipulation_move/testSessionMoveHasNodeParent/srcNode';
@@ -136,7 +140,6 @@ class MoveMethodsTest extends \PHPCR\Test\BaseCase
     }
 
     public function testSessionMoveMoved()
-
     {
         $session = $this->sharedFixture['session'];
 
@@ -264,6 +267,19 @@ class MoveMethodsTest extends \PHPCR\Test\BaseCase
     }
 
     /**
+     * @expectedException   \PHPCR\PathNotFoundException
+     */
+    public function testSessionMoveToProperty()
+    {
+        $session = $this->sharedFixture['session'];
+
+        $src = '/tests_write_manipulation_move/testSessionMoveToProperty/srcNode';
+        $dst = '/tests_write_manipulation_move/testSessionMoveToProperty/dstNode/prop/fail';
+        $session->move($src, $dst);
+        $session->save();
+    }
+
+    /**
      * @expectedException   \PHPCR\RepositoryException
      */
     public function testSessionMoveInvalidDstPath()
@@ -277,7 +293,7 @@ class MoveMethodsTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * @expectedException   \PHPCR\RepositoryException
+     * @expectedException   \PHPCR\PathNotFoundException
      */
     public function testSessionMoveSrcNotFound()
     {
@@ -289,9 +305,8 @@ class MoveMethodsTest extends \PHPCR\Test\BaseCase
         $session->save();
     }
 
-
     /**
-     * @expectedException   \PHPCR\RepositoryException
+     * @expectedException   \PHPCR\PathNotFoundException
      */
     public function testSessionMoveDstNotFound()
     {
@@ -340,11 +355,89 @@ class MoveMethodsTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * @covers \PHPCR\NodeInterface::orderBefore
+     * Helper method to assert a certain order of the child nodes
+     *
+     * @param array $names array values are the names in expected order
+     * @param \PHPCR\NodeInterface $node the node whos children are to be checked
      */
-    public function testNodeOrderBefore()
+    private function assertChildOrder($names, $node)
     {
-        $this->markTestSkipped('TODO: implement different use cases. move up, down, same paths, end, inexisting src, inexisting dest');
+        $children = array();
+        foreach ($node as $name => $node) {
+            $children[] = $name;
+        }
+        $this->assertEquals($names, $children);
+    }
+
+    /**
+     * \PHPCR\NodeInterface::orderBefore
+     */
+    public function testNodeOrderBeforeUp()
+    {
+        $this->assertInstanceOf('\PHPCR\NodeInterface', $this->node);
+        $this->node->orderBefore('three', 'two');
+        $this->assertChildOrder(array('one', 'three', 'two', 'four'), $this->node);
+
+        $this->saveAndRenewSession();
+
+        $this->assertChildOrder(array('one', 'three', 'two', 'four'), $this->node);
+    }
+    /**
+     * \PHPCR\NodeInterface::orderBefore
+     */
+    public function testNodeOrderBeforeDown()
+    {
+        $this->assertInstanceOf('\PHPCR\NodeInterface', $this->node);
+        $this->node->orderBefore('two', 'four');
+        $this->assertChildOrder(array('one', 'three', 'two', 'four'), $this->node);
+
+        $this->saveAndRenewSession();
+
+        $this->assertChildOrder(array('one', 'three', 'two', 'four'), $this->node);
+    }
+    /**
+     * \PHPCR\NodeInterface::orderBefore
+     */
+    public function testNodeOrderBeforeEnd()
+    {
+        $this->assertInstanceOf('\PHPCR\NodeInterface', $this->node);
+        $this->node->orderBefore('two', null);
+        $this->assertChildOrder(array('one', 'three', 'four', 'two'), $this->node);
+
+        $this->saveAndRenewSession();
+
+        $this->assertChildOrder(array('one', 'three', 'four', 'two'), $this->node);
+    }
+    /**
+     * \PHPCR\NodeInterface::orderBefore
+     */
+    public function testNodeOrderBeforeNoop()
+    {
+        $this->assertInstanceOf('\PHPCR\NodeInterface', $this->node);
+        $this->node->orderBefore('two', 'two');
+        $this->assertChildOrder(array('one', 'two', 'three', 'four'), $this->node);
+
+        $this->saveAndRenewSession();
+
+        $this->assertChildOrder(array('one', 'two', 'three', 'four'), $this->node);
+    }
+    /**
+     * \PHPCR\NodeInterface::orderBefore
+     * @expectedException \PHPCR\ItemNotFoundException
+     */
+    public function testNodeOrderBeforeSrcNotFound()
+    {
+        $this->assertInstanceOf('\PHPCR\NodeInterface', $this->node);
+        $this->node->orderBefore('notexisting', 'one');
+    }
+    /**
+     * \PHPCR\NodeInterface::orderBefore
+     * @expectedException \PHPCR\ItemNotFoundException
+     */
+    public function testNodeOrderBeforeDestNotFound()
+    {
+        $this->assertInstanceOf('\PHPCR\NodeInterface', $this->node);
+        $this->node->orderBefore('one', 'notexisting');
     }
 
 }

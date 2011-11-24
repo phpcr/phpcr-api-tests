@@ -1,7 +1,7 @@
 <?php
 namespace PHPCR\Tests\Versioning;
 
-require_once(dirname(__FILE__) . '/../../inc/BaseCase.php');
+require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 /**
  * Testing whether the version history methods work correctly
@@ -46,7 +46,8 @@ class VersionHistoryTest extends \PHPCR\Test\BaseCase
 
     //TODO: missing methods
 
-    public function testGetVersionHistory() {
+    public function testGetVersionHistory()
+    {
         $history = $this->vm->getVersionHistory("/tests_version_base/versioned");
         $versions = $history->getAllVersions();
         $this->assertTraversableImplemented($versions);

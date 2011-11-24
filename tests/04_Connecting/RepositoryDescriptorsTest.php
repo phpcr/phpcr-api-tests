@@ -1,7 +1,7 @@
 <?php
 namespace PHPCR\Tests\Connecting;
 
-require_once(dirname(__FILE__) . '/../../inc/BaseCase.php');
+require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 class RepositoryDescriptorsTest extends \PHPCR\Test\BaseCase
 {
@@ -19,15 +19,11 @@ class RepositoryDescriptorsTest extends \PHPCR\Test\BaseCase
         REP_VENDOR_URL_DESC,
         REP_NAME_DESC,
         REP_VERSION_DESC,
-        LEVEL_1_SUPPORTED,
-        LEVEL_2_SUPPORTED,
         OPTION_TRANSACTIONS_SUPPORTED,
         OPTION_VERSIONING_SUPPORTED,
         OPTION_OBSERVATION_SUPPORTED,
         OPTION_LOCKING_SUPPORTED,
-        OPTION_QUERY_SQL_SUPPORTED,
-        QUERY_XPATH_POS_INDEX,
-        QUERY_XPATH_DOC_ORDER
+        // TODO: complete with the list from jcr 2
     );
 
     // 24.2 Repository Descriptors
@@ -48,13 +44,17 @@ class RepositoryDescriptorsTest extends \PHPCR\Test\BaseCase
         $rep = self::$loader->getRepository();
         foreach ($this->expectedDescriptors as $descriptor) {
             $str = $rep->getDescriptor($descriptor);
-            $this->assertInternalType('string', $str);
+            $this->assertTrue(is_string($str) || is_bool($str));
             $this->assertNotEmpty($str);
         }
     }
 
     public function testIsStandardDescriptor()
     {
-        $this->markTestSkipped('TODO: implement');
+        $rep = self::$loader->getRepository();
+        foreach ($this->expectedDescriptors as $descriptor) {
+            $this->assertTrue($rep->isStandardDescriptor($descriptor), "Not considered $descriptor a standard descriptor");
+        }
+        // there is probably no obligation for an implementation to have any non-standard descriptors
     }
 }
