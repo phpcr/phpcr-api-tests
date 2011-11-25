@@ -14,7 +14,7 @@
     <sv:value>nt:query</sv:value>
   </sv:property>
   <sv:property sv:name="jcr:language" sv:type="String">
-    <sv:value>sql2</sv:value>
+    <sv:value>JCR-SQL2</sv:value>
   </sv:property>
   <sv:property sv:name="jcr:statement" sv:type="String">
     <sv:value>SELECT * FROM [nt:file] WHERE [nt:file].[jcr:mimeType] = "text/plain"</sv:value>
