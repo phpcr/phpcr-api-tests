@@ -45,7 +45,9 @@ class RepositoryDescriptorsTest extends \PHPCR\Test\BaseCase
         foreach ($this->expectedDescriptors as $descriptor) {
             $str = $rep->getDescriptor($descriptor);
             $this->assertTrue(is_string($str) || is_bool($str));
-            $this->assertNotEmpty($str);
+            if (!is_bool($str)) {
+                $this->assertNotEmpty($str);
+            }
         }
     }
 

@@ -41,6 +41,7 @@ class VersionTest extends \PHPCR\Test\BaseCase
         parent::setUp();
 
         $this->vm = $this->sharedFixture['session']->getWorkspace()->getVersionManager();
+
         $this->version = $this->vm->getBaseVersion("/tests_version_base/versioned");
 
         $this->assertInstanceOf('PHPCR\Version\VersionInterface', $this->version);
