@@ -20,11 +20,7 @@ class VersionTest extends \PHPCR\Test\BaseCase
         parent::setupBeforeClass($fixtures);
 
         //have some versions
-        try {
-            $vm = self::$staticSharedFixture['session']->getWorkspace()->getVersionManager();
-        } catch (\PHPCR\UnSupportedRepositoryOperationException $e) {
-            return;
-        }
+        $vm = self::$staticSharedFixture['session']->getWorkspace()->getVersionManager();
 
         $node = self::$staticSharedFixture['session']->getNode('/tests_version_base/versioned');
         $vm->checkpoint('/tests_version_base/versioned');
@@ -44,11 +40,7 @@ class VersionTest extends \PHPCR\Test\BaseCase
     {
         parent::setUp();
 
-        try {
-            $this->vm = $this->sharedFixture['session']->getWorkspace()->getVersionManager();
-        } catch (\PHPCR\UnSupportedRepositoryOperationException $e) {
-            $this->markTestSkipped("Versioning not supported: " . $e->getMessage());
-        }
+        $this->vm = $this->sharedFixture['session']->getWorkspace()->getVersionManager();
 
         $this->version = $this->vm->getBaseVersion("/tests_version_base/versioned");
 

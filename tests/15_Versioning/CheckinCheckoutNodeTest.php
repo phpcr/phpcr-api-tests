@@ -19,11 +19,7 @@ class CheckinCheckoutNodeTest extends \PHPCR\Test\BaseCase
     {
         parent::setUp();
         $this->node = $this->sharedFixture['session']->getNode('/tests_version_base/versionable');
-        try {
-            $this->vm = $this->sharedFixture['session']->getWorkspace()->getVersionManager();
-        } catch (\PHPCR\UnSupportedRepositoryOperationException $e) {
-            $this->markTestSkipped("Versioning not supported: " . $e->getMessage());
-        }
+        $this->vm = $this->sharedFixture['session']->getWorkspace()->getVersionManager();
     }
 
     public function testCheckinVersion()

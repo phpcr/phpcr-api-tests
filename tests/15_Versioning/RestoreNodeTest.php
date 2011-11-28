@@ -18,11 +18,7 @@ class RestoreNodeTest extends \PHPCR\Test\BaseCase
     public function setUp()
     {
         parent::setUp();
-        try {
-            $this->vm = $this->sharedFixture['session']->getWorkspace()->getVersionManager();
-        } catch (\PHPCR\UnSupportedRepositoryOperationException $e) {
-            $this->markTestSkipped("Versioning not supported: " . $e->getMessage());
-        }
+        $this->vm = $this->sharedFixture['session']->getWorkspace()->getVersionManager();
     }
 
     public function testRestoreversion()
