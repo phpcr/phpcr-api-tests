@@ -397,7 +397,7 @@ class NodeReadMethodsTest extends \PHPCR\Test\BaseCase
 
             $reference = $prop->getNode();
             $this->assertInstanceOf('PHPCR\NodeInterface', $reference);
-            $this->assertEquals($reference, $target);
+            $this->assertTrue($reference->isSame($target));
         }
     }
 
