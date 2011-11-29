@@ -53,6 +53,45 @@ class SetPropertyTypesTest extends \PHPCR\Test\BaseCase
         $this->assertEquals('foobar', stream_get_contents($bin->getBinary()));
     }
 
+    public function testCreateValueBinaryFromStream()
+    {
+        $stream = fopen('php://memory', 'w+');
+        fwrite($stream, 'foo bar');
+        rewind($stream);
+        $bin = $this->node->setProperty('newBinaryStream', $stream, \PHPCR\PropertyType::BINARY);
+        $this->assertInstanceOf('PHPCR\PropertyInterface', $bin);
+        $this->assertEquals(\PHPCR\PropertyType::BINARY, $bin->getType());
+
+        $session = $this->sharedFixture['session'];
+        $this->saveAndRenewSession(); // either this
+        $session->logout(); // or this should close the stream
+        $this->assertFalse(is_resource($stream), 'The responsibility for the stream goes into phpcr who must close it');
+
+        $bin = $this->sharedFixture['session']->getProperty('/tests_general_base/numberPropertyNode/jcr:content/newBinaryStream');
+        $this->assertEquals(\PHPCR\PropertyType::BINARY, $bin->getType());
+        $this->assertEquals('foo bar', stream_get_contents($bin->getBinary()));
+    }
+
+    public function testCreateValueBinaryFromStreamAndRead()
+    {
+        $stream = fopen('php://memory', 'w+');
+        fwrite($stream, 'foo bar');
+        rewind($stream);
+        $bin = $this->node->setProperty('newBinaryStream', $stream, \PHPCR\PropertyType::BINARY);
+        $this->assertInstanceOf('PHPCR\PropertyInterface', $bin);
+        $this->assertEquals(\PHPCR\PropertyType::BINARY, $bin->getType());
+        $this->assertEquals('foo bar', stream_get_contents($bin->getBinary()));
+
+        $session = $this->sharedFixture['session'];
+        $this->saveAndRenewSession(); // either this
+        $session->logout(); // or this should close the stream
+        $this->assertFalse(is_resource($stream), 'The responsibility for the stream goes into phpcr who must close it');
+
+        $bin = $this->sharedFixture['session']->getProperty('/tests_general_base/numberPropertyNode/jcr:content/newBinaryStream');
+        $this->assertEquals(\PHPCR\PropertyType::BINARY, $bin->getType());
+        $this->assertEquals('foo bar', stream_get_contents($bin->getBinary()));
+    }
+
     public function testCreateValueInt()
     {
         $value = $this->node->setProperty('propInt', 100);
