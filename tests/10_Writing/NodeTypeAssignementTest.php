@@ -106,6 +106,10 @@ class NodeTypeAssignementTest extends \PHPCR\Test\BaseCase
      */
     public function testAddMixinExtending()
     {
+        if (!self::$staticSharedFixture['session']->getRepository()->getDescriptor('option.versioning.supported')) {
+            $this->markTestSkipped('PHPCR repository doesn\'t support versioning');
+        }
+
         $this->node->addMixin('mix:versionable');
         $this->assertTrue($this->node->isNodeType('mix:referenceable'));
     }

@@ -336,7 +336,7 @@ class PropertyReadMethodsTest extends \PHPCR\Test\BaseCase
         $this->assertEquals(\PHPCR\PropertyType::REFERENCE, $property->getType(), 'Expecting REFERENCE type');
         $target = $property->getNode();
         $this->assertInstanceOf('PHPCR\NodeInterface', $target);
-        $this->assertEquals($target, $idnode);
+        $this->assertSame($target, $idnode);
     }
 
     //TODO: testGetNodeWeak, testGetNodePath
