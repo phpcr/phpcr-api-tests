@@ -17,7 +17,11 @@ class Sql2ScannerTest extends \PHPCR\Test\BaseCase
     {
         parent::setUp();
 
-        $this->sql2 = 'SELECT * FROM [nt:file] INNER JOIN [nt:folder] ON ISSAMENODE(sel1, sel2, [/home])';
+        $this->sql2 = '
+            SELECT * FROM
+                [nt:file]
+            INNER JOIN
+                [nt:folder] ON ISSAMENODE(sel1, sel2, [/home])';
         $this->tokens = array(
             'SELECT', '*', 'FROM','[nt:file]', 'INNER', 'JOIN', '[nt:folder]',
             'ON', 'ISSAMENODE', '(', 'sel1', ',', 'sel2', ',', '[/home]', ')');
