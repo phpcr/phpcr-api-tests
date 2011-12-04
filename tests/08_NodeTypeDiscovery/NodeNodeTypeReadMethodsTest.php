@@ -44,11 +44,6 @@ class NodeNodeTypeReadMethodsTest extends \PHPCR\Test\BaseCase
 
     public function testIsMixin()
     {
-        $this->assertTrue($this->nodewithmixin->isNodeType('mix:versionable'));
-    }
-
-    public function testIsParentMixin()
-    {
         $this->assertTrue($this->nodewithmixin->isNodeType('mix:referenceable'));
     }
 
@@ -57,4 +52,6 @@ class NodeNodeTypeReadMethodsTest extends \PHPCR\Test\BaseCase
         $this->assertFalse($this->nodewithmixin->isNodeType('mix:language'));
     }
 
+    // note: mixin that is parent is tested in Versioning\NodeTypeReadTest as there is no
+    // other mixin that inherits from another type.
 }
