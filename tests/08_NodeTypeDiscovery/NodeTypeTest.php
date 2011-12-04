@@ -150,7 +150,7 @@ class NodeTypeTest extends \PHPCR\Test\BaseCase
 
     /**
      * If your implementation supports versioning, this test checks if isNodeType
-     * works for parent types as well.
+     * works for parent mixin types as well.
      * If the repository does not declare it supports versioning, this test is skipped
      */
     public function testIsNodeTypeMixinVersion()
