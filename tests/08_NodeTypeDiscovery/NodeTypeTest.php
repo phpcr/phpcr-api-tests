@@ -130,7 +130,7 @@ class NodeTypeTest extends \PHPCR\Test\BaseCase
             $this->assertInstanceOf('\PHPCR\NodeType\PropertyDefinitionInterface', $prop);
             $names[] = $prop->getName();
         }
-        arsort($names);
+        sort($names);
         $this->assertEquals(array('jcr:createdBy', 'jcr:created', 'jcr:mixinTypes', 'jcr:primaryType'), $names);
     }
 
