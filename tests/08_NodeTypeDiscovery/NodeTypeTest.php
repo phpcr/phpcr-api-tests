@@ -130,8 +130,8 @@ class NodeTypeTest extends \PHPCR\Test\BaseCase
             $this->assertInstanceOf('\PHPCR\NodeType\PropertyDefinitionInterface', $prop);
             $names[] = $prop->getName();
         }
-        arsort($names);
-        $this->assertEquals(array('jcr:createdBy', 'jcr:created', 'jcr:mixinTypes', 'jcr:primaryType'), $names);
+        sort($names);
+        $this->assertEquals(array('jcr:created', 'jcr:createdBy', 'jcr:mixinTypes', 'jcr:primaryType'), $names);
     }
 
     public function testIsNodeTypePrimary()
