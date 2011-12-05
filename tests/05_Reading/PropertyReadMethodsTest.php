@@ -409,7 +409,7 @@ class PropertyReadMethodsTest extends \PHPCR\Test\BaseCase
         $this->assertEquals('/tests_general_base/index.txt/jcr:content/mydateprop', $properties[1]->getPath());
 
         $expected = array($this->valProperty, $this->dateProperty);
-        $this->assertSame($expected, $properties);
+        $this->assertEquals($expected, $properties, '', 0, 3);
     }
 
     /**
