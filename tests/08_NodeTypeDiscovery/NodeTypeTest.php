@@ -131,7 +131,7 @@ class NodeTypeTest extends \PHPCR\Test\BaseCase
             $names[] = $prop->getName();
         }
         sort($names);
-        $this->assertEquals(array('jcr:createdBy', 'jcr:created', 'jcr:mixinTypes', 'jcr:primaryType'), $names);
+        $this->assertEquals(array('jcr:created', 'jcr:createdBy', 'jcr:mixinTypes', 'jcr:primaryType'), $names);
     }
 
     public function testIsNodeTypePrimary()
