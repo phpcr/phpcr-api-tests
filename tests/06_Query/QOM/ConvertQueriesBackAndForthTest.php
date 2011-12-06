@@ -1,7 +1,7 @@
 <?php
 namespace PHPCR\Tests\Query\QOM;
 
-require_once(dirname(__FILE__) . '/../../../inc/BaseCase.php');
+require_once(__DIR__ . '/../../../inc/BaseCase.php');
 require_once('Sql2TestQueries.php');
 require_once('QomTestQueries.php');
 
@@ -20,7 +20,8 @@ class ConvertQueriesBackAndForthTest extends \PHPCR\Test\BaseCase
 
     protected $qomParser;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $factory = $this->sharedFixture['session']->getWorkspace()->getQueryManager()->getQOMFactory();

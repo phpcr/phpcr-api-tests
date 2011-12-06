@@ -1,7 +1,7 @@
 <?php
 namespace PHPCR\Tests\Reading;
 
-require_once(dirname(__FILE__) . '/../../inc/BaseCase.php');
+require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 /**
  * test javax.jcr.Node read methods (read) §5.6
@@ -65,6 +65,14 @@ class NodeReadMethodsTest extends \PHPCR\Test\BaseCase
         $this->assertNotNull($parent);
         $this->assertTrue($this->node->getNode('multiValueProperty')->isSame($parent));
     }
+    /**
+     * @expectedException \PHPCR\ItemNotFoundException
+     */
+    public function testGetParentRootnode()
+    {
+        $this->rootNode->getParent();
+    }
+
     public function testGetPath()
     {
         $path = $this->deepnode->getPath();
@@ -389,7 +397,7 @@ class NodeReadMethodsTest extends \PHPCR\Test\BaseCase
 
             $reference = $prop->getNode();
             $this->assertInstanceOf('PHPCR\NodeInterface', $reference);
-            $this->assertEquals($reference, $target);
+            $this->assertSame($reference, $target);
         }
     }
 
@@ -549,7 +557,8 @@ class NodeReadMethodsTest extends \PHPCR\Test\BaseCase
     }
     */
 
-    public function testIterator() {
+    public function testIterator()
+    {
         $this->assertTraversableImplemented($this->node);
         $results = false;
         foreach ($this->node as $name => $child) {

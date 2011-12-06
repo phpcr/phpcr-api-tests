@@ -14,9 +14,9 @@
     <sv:value>nt:query</sv:value>
   </sv:property>
   <sv:property sv:name="jcr:language" sv:type="String">
-    <sv:value>xpath</sv:value>
+    <sv:value>JCR-SQL2</sv:value>
   </sv:property>
   <sv:property sv:name="jcr:statement" sv:type="String">
-    <sv:value>//idExample[jcr:mimeType="text/plain"]</sv:value>
+    <sv:value>SELECT * FROM [nt:file] WHERE [nt:file].[jcr:mimeType] = "text/plain"</sv:value>
   </sv:property>
 </sv:node>

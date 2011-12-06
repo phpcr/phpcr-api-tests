@@ -1,7 +1,7 @@
 <?php
 namespace PHPCR\Tests\Versioning;
 
-require_once(dirname(__FILE__) . '/../../inc/BaseCase.php');
+require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 /**
 * Testing whether deleting versions works
@@ -26,7 +26,8 @@ class DeleteVersionTest extends \PHPCR\Test\BaseCase
      *
      * Note that you can not use $version->remove() although version is a node.
      */
-    public function testDeleteversion() {
+    public function testDeleteversion()
+    {
         $version = $this->vm->checkpoint("/tests_version_base/versioned");
         $this->vm->checkpoint("/tests_version_base/versioned"); // create another version, the last version can not be removed
         $history = $this->vm->getVersionHistory("/tests_version_base/versioned");

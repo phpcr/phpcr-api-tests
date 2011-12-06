@@ -1,7 +1,7 @@
 <?php
 namespace PHPCR\Tests\Writing;
 
-require_once(dirname(__FILE__) . '/../../inc/BaseCase.php');
+require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 use PHPCR\PropertyType as Type;
 
@@ -64,6 +64,14 @@ class AddMethodsTest extends \PHPCR\Test\BaseCase
     {
         $this->node->addNode('newUnstructuredNode', 'nt:unstructured');
         $this->assertNotNull($this->sharedFixture['session']->getNode($this->node->getPath() . '/newUnstructuredNode'), 'Node newUnstructuredNode was not created');
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testAddNodeNoNameException()
+    {
+        $this->node->addNode(null, 'nt:folder');
     }
 
     public function testAddPropertyOnUnstructured()

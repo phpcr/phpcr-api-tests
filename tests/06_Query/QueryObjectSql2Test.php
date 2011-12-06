@@ -7,19 +7,23 @@ require_once('QueryBaseCase.php');
  * test the Query interface. $ 6.9
  *
  * setLimit, setOffset, bindValue, getBindVariableNames
- *
- * TODO: this is for xpath, which is not mandatory in JCR 2.0
  */
-class QueryObjectXpathTest extends QueryBaseCase
+class QueryObjectSql2Test extends QueryBaseCase
 {
+    protected $simpleQuery = '
+            SELECT data.[jcr:mimeType]
+            FROM [nt:file] as data
+            WHERE data.[jcr:mimeType] = "text/plain"
+            ';
+
     public function setUp()
     {
-        $this->markTestSkipped('TODO: should we add support for xpath again?');
         parent::setUp();
     }
+
     public function testExecute()
     {
-        $query = $this->sharedFixture['qm']->createQuery('//idExample[jcr:mimeType="text/plain"]', 'xpath');
+        $query = $this->sharedFixture['qm']->createQuery($this->simpleQuery, \PHPCR\Query\QueryInterface::JCR_SQL2);
         $qr = $query->execute();
         $this->assertInstanceOf('PHPCR\Query\QueryResultInterface', $qr);
         //content of result is tested in QueryResults
@@ -33,30 +37,29 @@ class QueryObjectXpathTest extends QueryBaseCase
      */
     public function testExecuteInvalid()
     {
-        $query = $this->sharedFixture['qm']->createQuery('this is no xpath statement', 'xpath');
+        $query = $this->sharedFixture['qm']->createQuery('this is no sql2 statement', \PHPCR\Query\QueryInterface::JCR_SQL2);
         $qr = $query->execute();
     }
 
     public function testGetStatement()
     {
-        $qstr = '//idExample[jcr:mimeType="text/plain"]';
-        $query = $this->sharedFixture['qm']->createQuery($qstr, 'xpath');
-        $this->assertEquals($qstr, $query->getStatement());
+        $query = $this->sharedFixture['qm']->createQuery($this->simpleQuery, \PHPCR\Query\QueryInterface::JCR_SQL2);
+        $this->assertEquals($this->simpleQuery, $query->getStatement());
     }
+
     public function testGetLanguage()
     {
-        $qstr = '//idExample[jcr:mimeType="text/plain"]';
-        $query = $this->sharedFixture['qm']->createQuery($qstr, 'xpath');
-        $this->assertEquals('xpath', $query->getLanguage());
+        $query = $this->sharedFixture['qm']->createQuery($this->simpleQuery, \PHPCR\Query\QueryInterface::JCR_SQL2);
+        $this->assertEquals(\PHPCR\Query\QueryInterface::JCR_SQL2, $query->getLanguage());
     }
+
     /**
      * a transient query has no stored query path
      * @expectedException PHPCR\ItemNotFoundException
      */
     public function testGetStoredQueryPathItemNotFound()
     {
-        $qstr = '//idExample[jcr:mimeType="text/plain"]';
-        $query = $this->sharedFixture['qm']->createQuery($qstr, 'xpath');
+        $query = $this->sharedFixture['qm']->createQuery($this->simpleQuery, \PHPCR\Query\QueryInterface::JCR_SQL2);
         $query->getStoredQueryPath();
     }
     /* this is level 2 only */
@@ -70,10 +73,10 @@ class QueryObjectXpathTest extends QueryBaseCase
     }
     */
     /*
-    +diverse exceptions
+        TODO: trigger the possible exceptions
     */
 
-    /** changes repository state */
+    /** changes fixtures */
     public function testGetStoredQueryPath()
     {
         $this->sharedFixture['ie']->import('general/query');
@@ -94,5 +97,4 @@ class QueryObjectXpathTest extends QueryBaseCase
         }
         $this->sharedFixture['ie']->import('read/search/base');
     }
-
 }

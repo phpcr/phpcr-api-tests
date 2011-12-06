@@ -1,7 +1,7 @@
 <?php
 namespace PHPCR\Tests\Writing;
 
-require_once(dirname(__FILE__) . '/../../inc/BaseCase.php');
+require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 use PHPCR\PropertyType;
 
@@ -28,7 +28,8 @@ class SetPropertyDynamicRebindingTest extends \PHPCR\Test\BaseCase
         parent::setupBeforeClass($fixtures);
     }
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->renewSession();
     }
@@ -99,7 +100,13 @@ class SetPropertyDynamicRebindingTest extends \PHPCR\Test\BaseCase
         }
 
         $this->assertEquals($destPropType, $prop->getType(), 'Property type does not match after re-binding');
-        $this->assertEquals($destPropValue, $prop->$getterFunc(), 'Property value does not match after re-binding');
+        // If this is DateTime object, convert to string and then compare.
+        // It's done to avoid issues with timezone provided by DateTime object 
+        if ($destPropValue instanceof \DateTime) {
+            $this->assertEquals($destPropValue->format('c'), $destPropValue->format('c'), 'Datetime value does not match after re-binding');
+        } else {
+            $this->assertEquals($destPropValue, $prop->$getterFunc(), 'Property value does not match after re-binding');
+        }
 
         // Finally re-read it from backend and check it's still ok
         $this->saveAndRenewSession();

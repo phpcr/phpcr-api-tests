@@ -62,6 +62,11 @@
       <sv:value>842e61c0-09ab-42a9-87c0-308ccc90e6f4</sv:value>
     </sv:property>
   </sv:node>
+    <sv:node sv:name="testAddMixinExtending">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>nt:unstructured</sv:value>
+    </sv:property>
+  </sv:node>
   <sv:node sv:name="testAddMixinPrimaryType">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
       <sv:value>nt:unstructured</sv:value>

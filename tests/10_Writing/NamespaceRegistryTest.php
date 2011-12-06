@@ -1,7 +1,7 @@
 <?php
 namespace PHPCR\Tests\Writing;
 
-require_once(dirname(__FILE__) . '/../../inc/BaseCase.php');
+require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 //6.3.1 Namespace Registry
 class NamespaceRegistryTest extends \PHPCR\Test\BaseCase
@@ -128,7 +128,8 @@ class NamespaceRegistryTest extends \PHPCR\Test\BaseCase
         $this->nr->unregisterNamespace('http://thisshouldnotexist.org/0.0');
     }
 
-    public function testIterator() {
+    public function testIterator()
+    {
         $this->assertTraversableImplemented($this->nr);
         $results = 0;
         foreach ($this->nr as $prefix => $url) {

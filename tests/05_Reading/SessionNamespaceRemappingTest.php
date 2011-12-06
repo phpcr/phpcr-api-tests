@@ -1,7 +1,7 @@
 <?php
 namespace PHPCR\Tests\Reading;
 
-require_once(dirname(__FILE__) . '/../../inc/BaseCase.php');
+require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 //6.3.3 Session Namespace Remapping
 class SessionNamespaceRemappingTest extends \PHPCR\Test\BaseCase

@@ -15,7 +15,7 @@ class QueryManagerTest extends QueryBaseCase
         parent::setupBeforeClass($fixture);
     }
 
-    public function testCreateQuery()
+    public function testCreateQuerySql2()
     {
         $ret = $this->sharedFixture['qm']->createQuery(null, \PHPCR\Query\QueryInterface::JCR_SQL2);
         $this->assertInstanceOf('PHPCR\Query\QueryInterface', $ret);
@@ -24,9 +24,9 @@ class QueryManagerTest extends QueryBaseCase
     /**
      * @expectedException PHPCR\Query\InvalidQueryException
      */
-    public function testCreateXpathQuery()
+    public function testCreateQueryInvalid()
     {
-        $this->sharedFixture['qm']->createQuery('/jcr:root', 'xpath');
+        $this->sharedFixture['qm']->createQuery(null, 'some-not-existing-query-language');
     }
 
     public function testGetQuery()
@@ -44,6 +44,12 @@ class QueryManagerTest extends QueryBaseCase
     public function testGetQueryInvalid()
     {
         $this->sharedFixture['qm']->getQuery($this->rootNode);
+    }
+
+    public function testGetQOMFactory()
+    {
+        $factory = $this->sharedFixture['qm']->getQOMFactory();
+        $this->assertInstanceOf('PHPCR\Query\QOM\QueryObjectModelFactoryInterface', $factory);
     }
 
     public function testGetSupportedQueryLanguages()

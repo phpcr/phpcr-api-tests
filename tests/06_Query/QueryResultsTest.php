@@ -92,7 +92,7 @@ class QueryResultsTest extends QueryBaseCase
                 $count++;
             }
         }
-        $this->assertEquals(25, $count);
+        $this->assertEquals(15, $count);
     }
 
     public function testReadPropertyContentFromResults()

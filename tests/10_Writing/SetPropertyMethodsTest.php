@@ -1,7 +1,7 @@
 <?php
 namespace PHPCR\Tests\Writing;
 
-require_once(dirname(__FILE__) . '/../../inc/BaseCase.php');
+require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 /**
  * Testing whether node property manipulations work correctly
@@ -25,7 +25,7 @@ class SetPropertyMethodsTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * @covers \PHPCR\PropertyInterface::setValue
+     * \PHPCR\PropertyInterface::setValue
      */
     public function testSetValue()
     {
@@ -38,7 +38,7 @@ class SetPropertyMethodsTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * @covers \PHPCR\NodeInterface::setProperty
+     * \PHPCR\NodeInterface::setProperty
      */
     public function testSetPropertyExisting()
     {
@@ -55,7 +55,7 @@ class SetPropertyMethodsTest extends \PHPCR\Test\BaseCase
 
 
     /**
-     * @covers \PHPCR\NodeInterface::setProperty
+     * \PHPCR\NodeInterface::setProperty
      */
     public function testSetPropertyNew()
     {
@@ -71,7 +71,7 @@ class SetPropertyMethodsTest extends \PHPCR\Test\BaseCase
 
     /**
      * change type of existing property
-     * @covers \PHPCR\NodeInterface::setProperty
+     * \PHPCR\NodeInterface::setProperty
      */
     public function testSetPropertyWithType()
     {
@@ -87,7 +87,7 @@ class SetPropertyMethodsTest extends \PHPCR\Test\BaseCase
 
     /**
      * add new property
-     * @covers \PHPCR\NodeInterface::setProperty
+     * \PHPCR\NodeInterface::setProperty
      */
     public function testSetPropertyNewWithType()
     {
@@ -115,6 +115,41 @@ class SetPropertyMethodsTest extends \PHPCR\Test\BaseCase
         $prop = $node->getProperty('multivalue');
         $this->assertEquals(\PHPCR\PropertyType::LONG, $prop->getType());
         $this->assertTrue($prop->isMultiple());
+        $this->assertEquals(array(1,2,3), $prop->getValue('multivalue'));
+    }
+
+    public function testPropertyAddValue()
+    {
+        $prop = $this->node->getProperty('multiBoolean');
+        $this->assertEquals(array(false,true), $prop->getValue());
+        $this->assertTrue($prop->isMultiple());
+        $prop->addValue(true);
+        $this->assertEquals(array(false,true,true), $prop->getValue());
+
+        $this->saveAndRenewSession();
+        $node = $this->sharedFixture['session']->getNode($this->nodePath);
+        $prop = $node->getProperty('multiBoolean');
+        $this->assertEquals(\PHPCR\PropertyType::BOOLEAN, $prop->getType());
+        $this->assertTrue($prop->isMultiple());
+        $this->assertEquals(array(false,true,true), $prop->getValue());
+    }
+
+    /**
+     * @expectedException \PHPCR\ValueFormatException
+     */
+    public function testPropertyAddValueNoMultivalue()
+    {
+        $prop = $this->node->getProperty('longNumber');
+        $prop->addValue(33);
+    }
+
+    /**
+     * @expectedException \PHPCR\ValueFormatException
+     */
+    public function testPropertySetValueNoMultivalue()
+    {
+        $prop = $this->node->getProperty('longNumber');
+        $prop->setValue(array(33,34));
     }
 
     public function testNewNodeSetProperty()

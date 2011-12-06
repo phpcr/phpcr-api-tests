@@ -70,7 +70,7 @@ class Sql2TestQueries {
         /**
         * 6.7.19. FullTextSearch
         */
-        $queries['6.7.19.FullTextSearch'] = 'SELECT * FROM [nt:file] WHERE CONTAINS(sel.prop, expr)';
+        $queries['6.7.19.FullTextSearch'] = 'SELECT * FROM [nt:file] WHERE CONTAINS(sel.prop, \'expr\')';
 
         /**
         * 6.7.20. SameNode

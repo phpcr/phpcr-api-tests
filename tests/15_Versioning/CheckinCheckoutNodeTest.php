@@ -1,7 +1,7 @@
 <?php
 namespace PHPCR\Tests\Versioning;
 
-require_once(dirname(__FILE__) . '/../../inc/BaseCase.php');
+require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 /**
 * Testing whether node property manipulations work correctly
@@ -22,7 +22,8 @@ class CheckinCheckoutNodeTest extends \PHPCR\Test\BaseCase
         $this->vm = $this->sharedFixture['session']->getWorkspace()->getVersionManager();
     }
 
-    public function testCheckinVersion() {
+    public function testCheckinVersion()
+    {
         $history = $this->vm->getVersionHistory("/tests_version_base/versioned");
         $this->assertEquals(1, count($history->getAllVersions()));
 
@@ -44,7 +45,8 @@ class CheckinCheckoutNodeTest extends \PHPCR\Test\BaseCase
     /**
      * @expectedException PHPCR\Version\VersionException
      */
-    public function testWriteNotCheckedOutVersion() {
+    public function testWriteNotCheckedOutVersion()
+    {
         $this->vm->checkout("/tests_version_base/versioned");
         $node = $this->sharedFixture['session']->getNode('/tests_version_base/versioned');
 
@@ -58,7 +60,8 @@ class CheckinCheckoutNodeTest extends \PHPCR\Test\BaseCase
 
     }
 
-    public function testCheckpoint() {
+    public function testCheckpoint()
+    {
         $this->vm->checkout("/tests_version_base/versioned");
         $this->vm->checkpoint("/tests_version_base/versioned");
 

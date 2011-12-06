@@ -1,7 +1,7 @@
 <?php
 namespace PHPCR\Tests\Reading;
 
-require_once(dirname(__FILE__) . '/../../inc/BaseCase.php');
+require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 /**
  * a test for the PHPCR\PropertyType class

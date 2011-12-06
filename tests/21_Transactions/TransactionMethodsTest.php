@@ -1,7 +1,7 @@
 <?php
 namespace PHPCR\Tests\Transactions;
 
-require_once(dirname(__FILE__) . '/../../inc/BaseCase.php');
+require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 use \PHPCR\PropertyType as Type;
 use \PHPCR\Transaction;
@@ -100,10 +100,16 @@ class TransactionMethodsTest extends \PHPCR\Test\BaseCase
     }
 
     /**
+     * Testing interaction of transactions and versioning
+     *
      * @expectedException PHPCR\InvalidItemStateException
      */
     public function testIllegalCheckin()
     {
+        if (!self::$staticSharedFixture['session']->getRepository()->getDescriptor('option.versioning.supported')) {
+            $this->markTestSkipped('PHPCR repository doesn\'t support versioning');
+        }
+
         $session = self::$staticSharedFixture['session'];
         $vm = $session->getWorkspace()->getVersionManager();
 

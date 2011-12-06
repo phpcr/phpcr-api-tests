@@ -1,7 +1,7 @@
 <?php
 namespace PHPCR\Tests\NodeTypeManagement;
 
-require_once(dirname(__FILE__) . '/../../inc/BaseCase.php');
+require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 /**
  * Covering jcr-2.8.3 spec $19
@@ -32,7 +32,12 @@ class ManipulationTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * @covers Jackalope\NodeTypeManager::registerNodeTypesCnd
+     * A test for a jackalope specific feature. Is automatically skipped if
+     * your implementation is something different.
+     *
+     * TODO: move this into jackalope functional tests
+     *
+     * \Jackalope\NodeTypeManager::registerNodeTypesCnd
      */
     public function testRegisterNodeTypesCnd()
     {
@@ -60,7 +65,13 @@ class ManipulationTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * @covers Jackalope\NodeTypeManager::registerNodeTypesCnd
+     * A test for a jackalope specific feature. Is automatically skipped if
+     * your implementation is something different.
+     *
+     * TODO: move this into jackalope functional tests
+     *
+     * \Jackalope\NodeTypeManager::registerNodeTypesCnd
+     *
      * @expectedException \PHPCR\NodeType\NodeTypeExistsException
      */
     public function testRegisterNodeTypesCndNoUpdate()
@@ -72,6 +83,16 @@ class ManipulationTest extends \PHPCR\Test\BaseCase
         $types = $ntm->registerNodeTypesCnd($this->cnd, false);
     }
 
+    /**
+     * A test for a jackalope specific feature. Is automatically skipped if
+     * your implementation is something different.
+     *
+     * TODO: move this into jackalope functional tests
+     *
+     * \Jackalope\NodeTypeManager::registerNodeTypesCnd
+     *
+     * @expectedException \PHPCR\NodeType\NodeTypeExistsException
+     */
     public function testPrimaryItem()
     {
         $this->checkJackalope();
@@ -104,7 +125,7 @@ class ManipulationTest extends \PHPCR\Test\BaseCase
         <'phpcr'='http://www.doctrine-project.org/projects/phpcr_odm'>
          [phpcr:apitest]
           mixin
-          - phpcr:alias (string)
+          - phpcr:class (string)
           [phpcr:test]
           mixin
           - phpcr:prop (string)
