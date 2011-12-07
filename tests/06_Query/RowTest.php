@@ -31,7 +31,28 @@ class RowTest extends QueryBaseCase
             $count++;
         }
 
-        $this->assertEquals(3, $count);
+        /* Since we query nt:folder, We should expect up to 5 values for 5 columns:
+         * 1. jcr:primaryType - mandatory property derived from nt:base
+         * 2. jcr:created - autocreated property derived from mix:created via nt:hierarchyNode
+         * 3. jcr:createdBy - autocreated property derived from mix:created via nt:hierarchyNode
+         * 4. jcr:path - mandatory column in result
+         * 5. jcr:score - mandatory column in result
+         *
+         * It's up to the implementation if mixin properties are returned from query, 
+         * so jcr:created and jcr:createdBy are not mandatory columns in result.
+         */
+
+        $this->assertNotEmpty($this->row->getValue('jcr:primaryType', 'Empty value of jcr:primaryType'));
+        $this->assertNotEmpty($this->row->getValue('jcr:path', 'Empty value of jcr:path'));
+        $this->assertNotEmpty($this->row->getValue('jcr:score', 'Empty value of jcr:score'));
+
+        if ($count > 3) {
+            $this->assertNotEmpty($this->row->getValue('jcr:created', 'Empty value of jcr:created'));
+            $this->assertNotEmpty($this->row->getValue('jcr:createdBy', 'Empty value of jcr:createdBy'));
+            $this->assertEquals(5, $count);
+        } else {
+            $this->assertEquals(3, $count);
+        }
     }
 
     public function testGetValues()
