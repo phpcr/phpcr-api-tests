@@ -25,14 +25,33 @@ class RowIteratorTest extends QueryBaseCase
         foreach ($this->rowIterator as $key => $row) {
             $this->assertInstanceOf('PHPCR\Query\RowInterface', $row); // Test if the return element is an istance of row
             $this->assertInstanceOf('PHPCR\NodeInterface', $row->getNode()); //Test if we can get the node of a certain row
-            $this->assertEquals(3, count($row->getValues())); // test if we can get all the values of a row
+
+            /* Since we query nt:folder, We should expect up to 5 values for 5 columns:
+             * 1. jcr:primaryType - mandatory property derived from nt:base
+             * 2. jcr:created - autocreated property derived from mix:created via nt:hierarchyNode
+             * 3. jcr:createdBy - autocreated property derived from mix:created via nt:hierarchyNode
+             * 4. jcr:path - mandatory column in result
+             * 5. jcr:score - mandatory column in result
+             *
+             * It's up to the implementation if mixin properties are returned from query, 
+             * so jcr:created and jcr:createdBy are not mandatory columns in result.
+             */
+            $this->assertNotEmpty($row->getValue('jcr:primaryType', 'Empty value of jcr:primaryType'));  
+            $this->assertNotEmpty($row->getValue('jcr:path', 'Empty value of jcr:path'));  
+            $this->assertNotEmpty($row->getValue('jcr:score', 'Empty value of jcr:score'));  
+
+            $nValues = count($row->getValues());
 
             foreach ($row as $key => $value) { // Test if we can iterate over the columns inside a row
                 $count++;
             }
         }
 
-        $this->assertEquals(15, $count);
+        if ($nValues == 5) {
+            $this->assertEquals(25, $count); /* Result contains mixin properties */
+        } else {
+            $this->assertEquals(15, $count); /* Result contains mandatory primaryType,path and score */
+        }
     }
 
     public function testSeekable()
