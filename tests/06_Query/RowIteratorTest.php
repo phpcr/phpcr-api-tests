@@ -50,7 +50,7 @@ class RowIteratorTest extends QueryBaseCase
         if ($nValues == 5) {
             $this->assertEquals(25, $count); /* Result contains mixin properties */
         } else {
-            $this->assertEquals(15, $count); /* Result contains mandatory primaryType,path and score */
+            $this->assertEquals(15, $count); /* Result contains mandatory primaryType, path and score */
         }
     }
 
