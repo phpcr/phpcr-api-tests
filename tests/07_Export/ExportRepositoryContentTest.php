@@ -19,6 +19,7 @@ class ExportRepositoryContentTest extends \PHPCR\Test\BaseCase
         $this->sharedFixture['session']->exportSystemView('/tests_export', $stream, false, false);
         rewind($stream);
         $output = new DOMDocument();
+        $output->preserveWhiteSpace = false;
         $output->loadXML(stream_get_contents($stream));
         $expected = new DOMDocument();
         $expected->preserveWhiteSpace = false;
