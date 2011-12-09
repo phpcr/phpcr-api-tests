@@ -13,7 +13,7 @@
   </sv:node>
   <sv:node sv:name="testAddNodeWithPath">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
-      <sv:value>nt:folder</sv:value>
+      <sv:value>nt:unstructured</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2011-05-20T08:20:30.108+02:00</sv:value>
