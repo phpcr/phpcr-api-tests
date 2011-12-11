@@ -28,15 +28,28 @@ class AddMethodsTest extends \PHPCR\Test\BaseCase
     {
         $this->markTestSkipped('TODO: Find a case where the parent type specifies the type for this node'); //with nt:folder, this is also not working with the java jackrabbit, so it seems not to be an implementation issue
         // should take the primaryType
-        $this->node->addNode('newNode');
+
+        $new = $this->node->addNode('newNode');
         $this->assertNotNull($this->sharedFixture['session']->getNode($this->node->getPath() . '/newNode'), 'Node newNode was not created');
+        $this->sharedFixture['session']->save();
+        $this->assertFalse($new->isNew(), 'Node was not saved');
+
+        $this->renewSession();
+
+        $this->assertNotNull($this->sharedFixture['session']->getNode($this->node->getPath() . '/newNode'), 'Node newNode was not properly saved');
+
     }
 
     public function testAddNodeWithPath()
     {
-        // should take the primaryType of <testAddNodeWithPath />
-        $this->node->addNode('test:namespacedNode/newNode', 'nt:unstructured');
+        $new = $this->node->addNode('test:namespacedNode/newNode', 'nt:unstructured');
         $this->assertNotNull($this->sharedFixture['session']->getNode($this->node->getPath() . '/test:namespacedNode/newNode'), 'Node newNode was not created');
+        $this->sharedFixture['session']->save();
+        $this->assertFalse($new->isNew(), 'Node was not saved');
+
+        $this->renewSession();
+
+        $this->assertNotNull($this->sharedFixture['session']->getNode($this->node->getPath() . '/test:namespacedNode/newNode'), 'Node newNode was not properly saved');
     }
 
     public function testAddNodeFileType()
@@ -62,8 +75,15 @@ class AddMethodsTest extends \PHPCR\Test\BaseCase
 
     public function testAddNodeUnstructuredType()
     {
-        $this->node->addNode('newUnstructuredNode', 'nt:unstructured');
+        $new = $this->node->addNode('newUnstructuredNode', 'nt:unstructured');
         $this->assertNotNull($this->sharedFixture['session']->getNode($this->node->getPath() . '/newUnstructuredNode'), 'Node newUnstructuredNode was not created');
+        $this->sharedFixture['session']->save();
+        $this->assertFalse($new->isNew(), 'Node was not saved');
+
+        $this->renewSession();
+
+        $this->assertNotNull($this->sharedFixture['session']->getNode($this->node->getPath() . '/newUnstructuredNode'), 'Node newUnstructuredNode was not created');
+
     }
 
     /**
@@ -137,18 +157,26 @@ class AddMethodsTest extends \PHPCR\Test\BaseCase
     }
 
     /**
+     * @expectedException \PHPCR\NodeType\ConstraintViolationException
+     */
+    public function testAddNodeIllegalType()
+    {
+        $this->node->addNode('newNode', 'nt:unstructured');
+        $this->saveAndRenewSession();
+    }
+
+    /**
      * @expectedException \PHPCR\NodeType\NoSuchNodeTypeException
      */
     public function testAddNodeWithInexistingType()
     {
         $this->node->addNode('newFileNode', 'inexistenttype');
-        $this->assertNotNull($this->sharedFixture['session']->getNode($this->node->getPath() . '/newFileNode'), 'Node newFileNode was not created');
     }
 
     /**
      * Test adding an already existing child.
      *
-     * FIXME: we should do this this should only happen for node types that do not allow same-name siblings - and for implementations not supporting same-name siblings
+     * nt:folder do not allow same-name siblings
      *
      * @expectedException \PHPCR\ItemExistsException
      */
