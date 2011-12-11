@@ -166,6 +166,7 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
 
         $node->setProperty('prop', null);
         $this->assertFalse($node->hasProperty('prop'));
+        $this->assertFalse($session->propertyExists($node->getPath() . '/prop'));
         $child = $node->getNode('child');
         $child->remove();
         $this->assertFalse($node->hasNode('child'));
