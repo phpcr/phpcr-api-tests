@@ -17,7 +17,7 @@ class QueryManagerTest extends QueryBaseCase
 
     public function testCreateQuerySql2()
     {
-        $ret = $this->sharedFixture['qm']->createQuery(null, \PHPCR\Query\QueryInterface::JCR_SQL2);
+        $ret = $this->sharedFixture['qm']->createQuery("SELECT * FROM [nt:folder]", \PHPCR\Query\QueryInterface::JCR_SQL2);
         $this->assertInstanceOf('PHPCR\Query\QueryInterface', $ret);
     }
 
