@@ -38,16 +38,25 @@ class RowTest extends QueryBaseCase
     {
         $values = $this->row->getValues();
 
+        $count = 0;
         foreach ($values as $value) {
             $this->assertNotNull($value);
+            $count++;
         }
+
+        $this->assertEquals(3, $count);
+
+        $keys = array_keys($values);
+        sort($keys);
+        $this->assertEquals(array('nt:folder.jcr:created', 'nt:folder.jcr:createdBy', 'nt:folder.jcr:primaryType'), $keys);
+
     }
 
     public function testGetValue()
     {
-        $path = $this->row->getValue('jcr:path');
+        $path = $this->row->getValue('jcr:createdBy');
         $this->assertInternalType('string', $path);
-        $this->assertEquals('/tests_general_base', substr($path, 0, 19));
+        $this->assertEquals('admin', $path);
     }
 
     /**
