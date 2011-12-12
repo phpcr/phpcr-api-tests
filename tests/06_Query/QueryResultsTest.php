@@ -92,7 +92,23 @@ class QueryResultsTest extends QueryBaseCase
                 $count++;
             }
         }
-        $this->assertEquals(15, $count);
+        /* Since we query nt:folder, We should expect up to 5 values for 5 columns:
+         * 1. jcr:primaryType - mandatory property derived from nt:base
+         * 2. jcr:created - autocreated property derived from mix:created via nt:hierarchyNode
+         * 3. jcr:createdBy - autocreated property derived from mix:created via nt:hierarchyNode
+         * 4. jcr:path - mandatory column in result
+         * 5. jcr:score - mandatory column in result
+         *
+         * It's up to the implementation if mixin properties are returned from query, 
+         * so jcr:created and jcr:createdBy are not mandatory columns in result. 
+         */
+        $columns = $this->qr->getColumnNames();
+        if (in_array('nt:folder.jcr:created', $columns)
+            && in_array('nt:folder.jcr:createdBy', $columns)) {
+            $this->assertEquals(25, $count); /* Result contains mixin properties */
+        } else {
+            $this->assertEquals(15, $count); /* Result contains mandatory primaryType, path and score */
+        }
     }
 
     public function testReadPropertyContentFromResults()
