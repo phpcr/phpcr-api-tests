@@ -162,9 +162,6 @@ class MoveMethodsTest extends \PHPCR\Test\BaseCase
         $this->assertTrue($session->nodeExists($dst2), 'Destination source not found [B]');
     }
 
-    /**
-     * @expectedException \PHPCR\RepositoryException
-     */
     public function testSessionDeleteMoved()
     {
         $session = $this->sharedFixture['session'];
@@ -173,7 +170,16 @@ class MoveMethodsTest extends \PHPCR\Test\BaseCase
         $dst = '/tests_write_manipulation_move/testSessionDeleteMoved/dstNode/srcNode';
 
         $session->move($src, $dst);
+        $this->assertFalse($session->nodeExists($src));
+        $this->assertTrue($session->nodeExists($dst));
         $session->removeItem($dst);
+        $this->assertFalse($session->nodeExists($src));
+        $this->assertFalse($session->nodeExists($dst));
+
+        $session = $this->saveAndRenewSession();
+
+        $this->assertFalse($session->nodeExists($src));
+        $this->assertFalse($session->nodeExists($dst));
     }
 
     public function testSessionMoveAdded()
