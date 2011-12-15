@@ -33,15 +33,18 @@ class DeleteVersionTest extends \PHPCR\Test\BaseCase
         $history = $this->vm->getVersionHistory("/tests_version_base/versioned");
 
         // The version exists before removal
-        $this->assertTrue($this->sharedFixture['session']->itemExists($version->getPath()));
+        $path = $version->getPath();
+        $versionName = $version->getName();
 
-        $history->removeVersion($version->getName());
+        $this->assertTrue($this->sharedFixture['session']->itemExists($path));
+        $this->assertTrue($this->versionExists($history, $versionName));
+
+        // Remove the version
+        $history->removeVersion($versionName);
 
         // The version is gone after removal
-        // TODO: the JCR spec says at §15.8: "This change is a workspace-write; there is no need to call save."
-        //       so why does this test fail if the session is not saved and renewed?
-        $this->saveAndRenewSession();
-        $this->assertFalse($this->sharedFixture['session']->itemExists($version->getPath()));
+        $this->assertFalse($this->sharedFixture['session']->itemExists($path));
+        $this->assertFalse($this->versionExists($history, $versionName));
     }
 
     /**
@@ -55,6 +58,7 @@ class DeleteVersionTest extends \PHPCR\Test\BaseCase
         $history = $this->vm->getVersionHistory("/tests_version_base/versioned");
         $history->removeVersion($version->getName());
     }
+
      /**
      * Try removing an unexisting version
      *
@@ -66,4 +70,33 @@ class DeleteVersionTest extends \PHPCR\Test\BaseCase
         $history = $this->vm->getVersionHistory("/tests_version_base/versioned");
         $history->removeVersion('unexisting');
     }
+
+    /**
+     * Check $version->remove() does not work
+     *
+     * @expectedException PHPCR\RepositoryException
+     */
+    public function testNodeRemoveOnVersion()
+    {
+        $version = $this->vm->checkpoint("/tests_version_base/versioned");
+        $version->remove();
+    }
+
+    /**
+     * Check if a version node with the given name exists in the version history
+     * @param $history The version history node
+     * @param $versionName The name of the version to search for
+     * @return bool
+     */
+    protected function versionExists($history, $versionName)
+    {
+        foreach($history->getAllVersions() as $version) {
+            if ($version->getName() === $versionName) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
 }
