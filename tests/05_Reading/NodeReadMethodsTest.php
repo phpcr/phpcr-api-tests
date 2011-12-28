@@ -427,7 +427,7 @@ class NodeReadMethodsTest extends \PHPCR\Test\BaseCase
         $this->assertEquals(2, count($iterator), "Wrong number of weak references to weakreference_target");
         foreach ($iterator as $prop) {
             $this->assertInstanceOf('\PHPCR\PropertyInterface', $prop);
-            $this->assertTrue(in_array($prop, $source));
+            $this->assertTrue(in_array($prop, $source, true));
         }
     }
 
