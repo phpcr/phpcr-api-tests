@@ -107,6 +107,44 @@ class LockManagerTest extends \PHPCR\Test\BaseCase
         $this->assertLockEquals($lock, 'admin', false, true);
     }
 
+    /**
+     * Check that a deep lock locks the children but still the lock is hold by the parent node
+     */
+    public function testDeepLock()
+    {
+        $this->recreateTestNode('deep-lock');
+        $this->recreateTestNode('deep-lock/child');
+        $this->recreateTestNode('deep-lock/child/subchild');
+        $lock = $this->lm->lock('/deep-lock', true, true, PHP_INT_MAX, "");
+
+        $this->assertTrue($this->lm->isLocked('/deep-lock'));
+        $this->assertTrue($this->lm->isLocked('/deep-lock/child'));
+        $this->assertTrue($this->lm->isLocked('/deep-lock/child/subchild'));
+
+        $this->assertTrue($this->lm->holdsLock('/deep-lock'));
+        $this->assertFalse($this->lm->holdsLock('/deep-lock/child'));
+        $this->assertFalse($this->lm->holdsLock('/deep-lock/child/subchild'));
+    }
+
+    /**
+     * Check that a non-deep lock does not lock the children
+     */
+    public function testNonDeepLock()
+    {
+        $this->recreateTestNode('non-deep-lock');
+        $this->recreateTestNode('non-deep-lock/child');
+        $this->recreateTestNode('non-deep-lock/child/subchild');
+        $lock = $this->lm->lock('/non-deep-lock', false, true, PHP_INT_MAX, "");
+
+        $this->assertTrue($this->lm->isLocked('/non-deep-lock'));
+        $this->assertFalse($this->lm->isLocked('/non-deep-lock/child'));
+        $this->assertFalse($this->lm->isLocked('/non-deep-lock/child/subchild'));
+
+        $this->assertTrue($this->lm->holdsLock('/non-deep-lock'));
+        $this->assertFalse($this->lm->holdsLock('/non-deep-lock/child'));
+        $this->assertFalse($this->lm->holdsLock('/non-deep-lock/child/subchild'));
+    }
+
     // ----- ISLOCKED TESTS ---------------------------------------------------
 
     /**
@@ -166,6 +204,34 @@ class LockManagerTest extends \PHPCR\Test\BaseCase
     public function testUnlockUnexistingNode()
     {
         $this->lm->unlock('/some-unexisting-node');
+    }
+
+    // ----- HOLDSLOCK TESTS --------------------------------------------------
+
+    /**
+     * Try to test the lock on an unexisting node
+     * @expectedException \PHPCR\PathNotFoundException
+     */
+    public function testHoldsLockUnexistingNode()
+    {
+        $this->lm->holdsLock('/some-unexisting-node');
+    }
+
+    /**
+     * @depends testUnlockOnNonLocked
+     */
+    public function testHoldsLockOnNonLocked()
+    {
+        $this->assertFalse($this->lm->holdsLock('/non-lockable'));
+    }
+
+    /**
+     * @depends testUnlockOnLocked
+     */
+    public function testHoldsLockOnLocked()
+    {
+        $lock = $this->lm->lock('/lockable', false, true, PHP_INT_MAX, "");
+        $this->assertTrue($this->lm->holdsLock('/lockable'));
     }
 
     // ----- HELPERS ----------------------------------------------------------
