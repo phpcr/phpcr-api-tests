@@ -80,8 +80,6 @@ class LockManagerTest extends \PHPCR\Test\BaseCase
      */
     public function testLockNonSavedNode()
     {
-        $this->markTestSkipped('There is a problem with item state on saved nodes that prevent this test to work');
-        
         $node = $this->recreateTestNode('unsaved', true);
         $node->setProperty('testprop', 'foobar');
         $this->lm->lock('/unsaved', true, true, PHP_INT_MAX, "");
@@ -194,7 +192,10 @@ class LockManagerTest extends \PHPCR\Test\BaseCase
      */
     public function testUnlockInvalidState()
     {
-        $this->markTestSkipped('TODO: check that locking an unsaved node throws PHPCR\InvalidItemStateException');
+        $node = $this->recreateTestNode('locked-unsaved', true);
+        $this->lm->lock('/locked-unsaved', true, true, PHP_INT_MAX, "");
+        $node->setProperty('testprop', 'foobar');
+        $this->lm->unlock('/locked-unsaved');
     }
 
     /**
