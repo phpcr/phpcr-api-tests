@@ -171,7 +171,7 @@ class SetPropertyTypesTest extends \PHPCR\Test\BaseCase
     /**
      * @expectedException \PHPCR\ValueFormatException
      */
-    public function testCreateValueNodeNonReferencable()
+    public function testCreateValueNodeNonReferenceable()
     {
         $node = $this->sharedFixture['session']->getRootNode()->getNode('tests_general_base/numberPropertyNode/jcr:content');
         $value = $this->node->setProperty('x', $node);
@@ -180,7 +180,7 @@ class SetPropertyTypesTest extends \PHPCR\Test\BaseCase
     /**
      * @expectedException \PHPCR\ValueFormatException
      */
-    public function testCreateValueNodeNonReferencableWeak()
+    public function testCreateValueNodeNonReferenceableWeak()
     {
         $node = $this->sharedFixture['session']->getRootNode()->getNode('tests_general_base/numberPropertyNode/jcr:content');
         $value = $this->node->setProperty('x', $node, \PHPCR\PropertyType::WEAKREFERENCE);

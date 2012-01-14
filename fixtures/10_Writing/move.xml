@@ -58,7 +58,7 @@
       </sv:property>
     </sv:node>
   </sv:node>
-  <sv:node sv:name="testSessionMoveReferencable">
+  <sv:node sv:name="testSessionMoveReferenceable">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
       <sv:value>nt:unstructured</sv:value>
     </sv:property>

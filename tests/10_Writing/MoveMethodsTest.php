@@ -45,14 +45,14 @@ class MoveMethodsTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * Makes sure that UUID is not modified during a move for mix:referencable nodes
+     * Makes sure that UUID is not modified during a move for mix:referenceable nodes
      */
-    public function testSessionMoveReferencable()
+    public function testSessionMoveReferenceable()
     {
         $session = $this->sharedFixture['session'];
         // has mix:referenceable
-        $src = '/tests_write_manipulation_move/testSessionMoveReferencable/srcNode';
-        $dst = '/tests_write_manipulation_move/testSessionMoveReferencable/dstNode/srcNode';
+        $src = '/tests_write_manipulation_move/testSessionMoveReferenceable/srcNode';
+        $dst = '/tests_write_manipulation_move/testSessionMoveReferenceable/dstNode/srcNode';
 
         $srcUuid = $session->getNode($src)->getIdentifier();
         $session->move($src, $dst);
