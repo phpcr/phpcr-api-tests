@@ -132,7 +132,8 @@ class NodeReadMethodsTest extends \PHPCR\Test\BaseCase
      */
     public function testGetNodeRepositoryException()
     {
-        $this->rootNode->getNode('/ /'); //space is not valid in path
+        // @see http://www.day.com/specs/jcr/2.0/3_Repository_Model.html#3.2.2%20Local%20Names
+        $this->rootNode->getNode('/./');
     }
 
     public function testGetNodes()
