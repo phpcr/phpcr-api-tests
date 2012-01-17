@@ -44,7 +44,7 @@ class PropertyDefinitionTest extends \PHPCR\Test\BaseCase
         try {
             $defs = self::$base->getPropertyDefinitions();
             $this->assertInternalType('array', $defs);
-            foreach($defs as $def) {
+            foreach ($defs as $def) {
                 $this->assertInstanceOf('\PHPCR\NodeType\PropertyDefinitionInterface', $def);
                 switch($def->getName()) {
                     case 'jcr:primaryType':
@@ -60,7 +60,7 @@ class PropertyDefinitionTest extends \PHPCR\Test\BaseCase
 
             $defs = self::$address->getPropertyDefinitions();
             $this->assertInternalType('array', $defs);
-            foreach($defs as $def) {
+            foreach ($defs as $def) {
                 $this->assertInstanceOf('\PHPCR\NodeType\PropertyDefinitionInterface', $def);
                 switch($def->getName()) {
                     case 'jcr:workspace':
@@ -80,7 +80,7 @@ class PropertyDefinitionTest extends \PHPCR\Test\BaseCase
 
             $defs = self::$mix_created->getPropertyDefinitions();
             $this->assertInternalType('array', $defs);
-            foreach($defs as $def) {
+            foreach ($defs as $def) {
                 $this->assertInstanceOf('\PHPCR\NodeType\PropertyDefinitionInterface', $def);
                 if ('jcr:created' == $def->getName()) {
                     $this->created = $def;
@@ -90,7 +90,7 @@ class PropertyDefinitionTest extends \PHPCR\Test\BaseCase
 
             $defs = self::$resource->getPropertyDefinitions();
             $this->assertInternalType('array', $defs);
-            foreach($defs as $def) {
+            foreach ($defs as $def) {
                 $this->assertInstanceOf('\PHPCR\NodeType\PropertyDefinitionInterface', $def);
                 if ('jcr:data' == $def->getName()) {
                     $this->data = $def;

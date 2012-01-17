@@ -66,15 +66,15 @@ class NodeTypeDiscoveryTest extends \PHPCR\Test\BaseCase
         $types = $this->nodeTypeManager->getAllNodeTypes();
         $this->assertInstanceOf('SeekableIterator', $types);
         $names = array();
-        foreach($types as $name => $type) {
+        foreach ($types as $name => $type) {
             $this->assertInstanceOf('\PHPCR\NodeType\NodeTypeInterface', $type);
             $this->assertEquals($name, $type->getName());
             $names[$name] = true;
         }
-        foreach(self::$primary as $key) {
+        foreach (self::$primary as $key) {
             $this->assertArrayHasKey($key, $names);
         }
-        foreach(self::$mixins as $key) {
+        foreach (self::$mixins as $key) {
             $this->assertArrayHasKey($key, $names);
         }
     }
@@ -84,15 +84,15 @@ class NodeTypeDiscoveryTest extends \PHPCR\Test\BaseCase
         $types = $this->nodeTypeManager->getPrimaryNodeTypes();
         $this->assertInstanceOf('SeekableIterator', $types);
         $names = array();
-        foreach($types as $name => $type) {
+        foreach ($types as $name => $type) {
             $this->assertInstanceOf('\PHPCR\NodeType\NodeTypeInterface', $type);
             $this->assertEquals($name, $type->getName());
             $names[$name] = true;
         }
-        foreach(self::$primary as $key) {
+        foreach (self::$primary as $key) {
             $this->assertArrayHasKey($key, $names);
         }
-        foreach(self::$mixins as $key) {
+        foreach (self::$mixins as $key) {
             $this->assertArrayNotHasKey($key, $names);
         }
     }
@@ -102,15 +102,15 @@ class NodeTypeDiscoveryTest extends \PHPCR\Test\BaseCase
         $types = $this->nodeTypeManager->getMixinNodeTypes();
         $this->assertInstanceOf('SeekableIterator', $types);
         $names = array();
-        foreach($types as $name => $type) {
+        foreach ($types as $name => $type) {
             $this->assertInstanceOf('\PHPCR\NodeType\NodeTypeInterface', $type);
             $this->assertEquals($name, $type->getName());
             $names[$name] = true;
         }
-        foreach(self::$primary as $key) {
+        foreach (self::$primary as $key) {
             $this->assertArrayNotHasKey($key, $names);
         }
-        foreach(self::$mixins as $key) {
+        foreach (self::$mixins as $key) {
             $this->assertArrayHasKey($key, $names);
         }
     }

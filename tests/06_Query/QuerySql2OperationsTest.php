@@ -19,13 +19,13 @@ class QuerySql2OperationsTest extends QueryBaseCase
         $result = $query->execute();
         $this->assertInstanceOf('\PHPCR\Query\QueryResultInterface', $result);
         $vals = array();
-        foreach($result->getNodes() as $node) {
+        foreach ($result->getNodes() as $node) {
             $vals[] = $node->getPropertyValue('foo');
         }
         $this->assertEquals(array('bar'), $vals);
 
         $vals = array();
-        foreach($result->getRows() as $row) {
+        foreach ($result->getRows() as $row) {
             $vals[] = $row->getValue('foo');
         }
         $this->assertEquals(array('bar'), $vals);
@@ -42,14 +42,14 @@ class QuerySql2OperationsTest extends QueryBaseCase
         $result = $query->execute();
         $this->assertInstanceOf('\PHPCR\Query\QueryResultInterface', $result);
         $vals = array();
-        foreach($result->getNodes() as $node) {
+        foreach ($result->getNodes() as $node) {
             $vals[] = ($node->hasProperty('foo') ? $node->getPropertyValue('foo') : null);
         }
         $this->assertContains('bar', $vals);
         $this->assertEquals(8, count($vals));
 
         $vals = array();
-        foreach($result->getRows() as $row) {
+        foreach ($result->getRows() as $row) {
             $vals[] = $row->getValue('foo');
         }
         $this->assertContains('bar', $vals);
@@ -67,7 +67,7 @@ class QuerySql2OperationsTest extends QueryBaseCase
         $result = $query->execute();
         $this->assertInstanceOf('\PHPCR\Query\QueryResultInterface', $result);
         $vals = array();
-        foreach($result->getRows() as $row) {
+        foreach ($result->getRows() as $row) {
             $vals[] = $row->getValue('data.foo');
         }
         $this->assertEquals(array('bar'), $vals);
@@ -89,7 +89,7 @@ class QuerySql2OperationsTest extends QueryBaseCase
         $result = $query->execute();
         $this->assertInstanceOf('\PHPCR\Query\QueryResultInterface', $result);
         $vals = array();
-        foreach($result->getRows() as $row) {
+        foreach ($result->getRows() as $row) {
             $vals[] = $row->getValue('data.zeronumber');
         }
         $this->assertEquals(array(0), $vals);
@@ -111,7 +111,7 @@ class QuerySql2OperationsTest extends QueryBaseCase
         $result = $query->execute();
         $this->assertInstanceOf('\PHPCR\Query\QueryResultInterface', $result);
         $vals = array();
-        foreach($result->getRows() as $row) {
+        foreach ($result->getRows() as $row) {
             $vals[$row->getValue('source.ref1')] = $row->getValue('target.jcr:uuid');
         }
         $this->assertEquals(array('13543fc6-1abf-4708-bfcc-e49511754b40' => '13543fc6-1abf-4708-bfcc-e49511754b40'), $vals);
@@ -130,7 +130,7 @@ class QuerySql2OperationsTest extends QueryBaseCase
         $result = $query->execute();
         $this->assertInstanceOf('\PHPCR\Query\QueryResultInterface', $result);
         $vals = array();
-        foreach($result->getRows() as $row) {
+        foreach ($result->getRows() as $row) {
             $vals[] = $row->getValue('data.zeronumber');
         }
         // rows that do not have that field are null. empty is before fields with values

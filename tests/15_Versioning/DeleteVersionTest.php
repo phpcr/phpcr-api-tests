@@ -90,7 +90,7 @@ class DeleteVersionTest extends \PHPCR\Test\BaseCase
      */
     protected function versionExists($history, $versionName)
     {
-        foreach($history->getAllVersions() as $version) {
+        foreach ($history->getAllVersions() as $version) {
             if ($version->getName() === $versionName) {
                 return true;
             }

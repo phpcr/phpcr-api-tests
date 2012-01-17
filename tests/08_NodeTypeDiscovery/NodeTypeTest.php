@@ -80,7 +80,7 @@ class NodeTypeTest extends \PHPCR\Test\BaseCase
         $types = self::$created->getSubtypes();
         $this->assertInstanceOf('SeekableIterator', $types);
         $names = array();
-        foreach($types as $name => $type) {
+        foreach ($types as $name => $type) {
             $this->assertInstanceOf('\PHPCR\NodeType\NodeTypeInterface', $type);
             $this->assertEquals($name, $type->getName());
             $names[$name] = true;
@@ -97,7 +97,7 @@ class NodeTypeTest extends \PHPCR\Test\BaseCase
         $types = self::$created->getDeclaredSubtypes();
         $this->assertInstanceOf('SeekableIterator', $types);
         $names = array();
-        foreach($types as $name => $type) {
+        foreach ($types as $name => $type) {
             $this->assertInstanceOf('\PHPCR\NodeType\NodeTypeInterface', $type);
             $this->assertEquals($name, $type->getName());
             $names[$name] = true;
@@ -126,7 +126,7 @@ class NodeTypeTest extends \PHPCR\Test\BaseCase
         $this->assertInternalType('array', $properties);
         $this->assertEquals(4, count($properties));
         $names=array();
-        foreach($properties as $prop) {
+        foreach ($properties as $prop) {
             $this->assertInstanceOf('\PHPCR\NodeType\PropertyDefinitionInterface', $prop);
             $names[] = $prop->getName();
         }
