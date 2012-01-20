@@ -76,12 +76,12 @@ class QuerySql2OperationsTest extends QueryBaseCase
     public function testQueryJoin()
     {
         $query = $this->sharedFixture['qm']->createQuery(
-            'SELECT data.zeronumber
-             FROM [nt:unstructured] AS data
-               INNER JOIN [nt:unstructured] AS second
-               ON data.[jcr:mimeType] = second.[jcr:mimeType]
+            'SELECT content.longNumber
+             FROM [nt:file] AS file
+               INNER JOIN [nt:unstructured] AS content
+               ON ISDESCENDANTNODE(content, file)
 
-             WHERE data.zeronumber = 0',
+             WHERE content.longNumber = 999',
             \PHPCR\Query\QueryInterface::JCR_SQL2
         );
 
@@ -89,10 +89,11 @@ class QuerySql2OperationsTest extends QueryBaseCase
         $result = $query->execute();
         $this->assertInstanceOf('\PHPCR\Query\QueryResultInterface', $result);
         $vals = array();
-        foreach ($result->getRows() as $row) {
-            $vals[] = $row->getValue('data.zeronumber');
+
+        foreach($result->getRows() as $row) {
+            $vals[] = $row->getValue('content.longNumber');
         }
-        $this->assertEquals(array(0), $vals);
+        $this->assertEquals(array(999), $vals);
     }
 
     public function testQueryJoinReference()
