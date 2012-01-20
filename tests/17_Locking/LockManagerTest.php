@@ -25,7 +25,7 @@ class LockManagerTest extends \PHPCR\Test\BaseCase
     public function testCannotLockNonLockableNodes()
     {
         $this->recreateTestNode('non-lockable', false);
-        $this->lm->lock('/non-lockable', true, true, PHP_INT_MAX, "");
+        $this->lm->lock('/non-lockable', true, true, 3, "");
     }
 
     /**
@@ -37,18 +37,15 @@ class LockManagerTest extends \PHPCR\Test\BaseCase
         $this->recreateTestNode('lockable-node', true);
 
         // The first lock should work
-        try
-        {
-            $this->lm->lock('/lockable-node', true, true, PHP_INT_MAX, "");
-        }
-        catch (\PHPCR\Lock\LockException $ex)
-        {
+        try {
+            $this->lm->lock('/lockable-node', true, true, 3, "");
+        } catch (\PHPCR\Lock\LockException $ex) {
             // The lock didn't work, Huston, there is a problem...
             $this->fail('An error occurred while trying to lock a valid node: ' . $ex->getMessage());
         }
 
         // The second lock should not work
-        $this->lm->lock('/lockable-node', true, true, PHP_INT_MAX, "");
+        $this->lm->lock('/lockable-node', true, true, 3, "");
     }
 
     /**
@@ -61,17 +58,14 @@ class LockManagerTest extends \PHPCR\Test\BaseCase
         $this->recreateTestNode('lockable-parent/lockable-child', true);
 
         // The lock on the child should work
-        try
-        {
-            $this->lm->lock('/lockable-parent/lockable-child', true, true, PHP_INT_MAX, "");
-        }
-        catch (\PHPCR\Lock\LockException $ex)
-        {
+        try {
+            $this->lm->lock('/lockable-parent/lockable-child', true, true, 3, "");
+        } catch (\PHPCR\Lock\LockException $ex) {
             $this->fail('An error occurred while trying to lock a valid node: ' . $ex->getMessage());
         }
 
         // The *deep* lock on the parent should not work
-        $this->lm->lock('/lockable-parent', true, true, PHP_INT_MAX, "");
+        $this->lm->lock('/lockable-parent', true, true, 3, "");
     }
 
     /**
@@ -82,7 +76,7 @@ class LockManagerTest extends \PHPCR\Test\BaseCase
     {
         $node = $this->recreateTestNode('unsaved', true);
         $node->setProperty('testprop', 'foobar');
-        $this->lm->lock('/unsaved', true, true, PHP_INT_MAX, "");
+        $this->lm->lock('/unsaved', true, true, 3, "");
     }
 
     /**
@@ -91,7 +85,7 @@ class LockManagerTest extends \PHPCR\Test\BaseCase
      */
     public function testLockNonExistingNode()
     {
-        $this->lm->lock('/some-unexisting-node', true, true, PHP_INT_MAX, "");
+        $this->lm->lock('/some-unexisting-node', true, true, 3, "");
     }
 
     /**
@@ -100,9 +94,29 @@ class LockManagerTest extends \PHPCR\Test\BaseCase
     public function testCanLockLockableNodes()
     {
         $this->recreateTestNode('lockable');
-        $lock = $this->lm->lock('/lockable', false, true, PHP_INT_MAX, "");
+        $lock = $this->lm->lock('/lockable', false, true, 3, "");
         $this->assertNotNull($lock);
-        $this->assertLockEquals($lock, 'admin', false, true);
+        $this->assertLockEquals($lock, 'admin', false, true, 3);
+    }
+
+    public function testLockExpire()
+    {
+        $this->recreateTestNode('lockable-expire');
+        $lock = $this->lm->lock('/lockable-expire', false, true, 1, "");
+        $this->assertNotNull($lock);
+        $this->assertLockEquals($lock, 'admin', false, true, 1);
+        $this->assertTrue($this->lm->isLocked('/lockable-expire'));
+        sleep(2);
+        $this->assertFalse($this->lm->isLocked('/lockable-expire'));
+        $this->assertTrue($lock->getSecondsRemaining() < 0);
+    }
+
+    public function testCanLockLockableNodeInfiniteTimeout()
+    {
+        $this->recreateTestNode('lockable-infinite');
+        $lock = $this->lm->lock('/lockable-infinite', false, true, PHP_INT_MAX, "");
+        $this->assertNotNull($lock);
+        $this->assertLockEquals($lock, 'admin', false, true, PHP_INT_MAX);
     }
 
     /**
@@ -113,7 +127,7 @@ class LockManagerTest extends \PHPCR\Test\BaseCase
         $this->recreateTestNode('deep-lock');
         $this->recreateTestNode('deep-lock/child');
         $this->recreateTestNode('deep-lock/child/subchild');
-        $lock = $this->lm->lock('/deep-lock', true, true, PHP_INT_MAX, "");
+        $lock = $this->lm->lock('/deep-lock', true, true, 3, "");
 
         $this->assertTrue($this->lm->isLocked('/deep-lock'));
         $this->assertTrue($this->lm->isLocked('/deep-lock/child'));
@@ -132,7 +146,7 @@ class LockManagerTest extends \PHPCR\Test\BaseCase
         $this->recreateTestNode('non-deep-lock');
         $this->recreateTestNode('non-deep-lock/child');
         $this->recreateTestNode('non-deep-lock/child/subchild');
-        $lock = $this->lm->lock('/non-deep-lock', false, true, PHP_INT_MAX, "");
+        $lock = $this->lm->lock('/non-deep-lock', false, true, 3, "");
 
         $this->assertTrue($this->lm->isLocked('/non-deep-lock'));
         $this->assertFalse($this->lm->isLocked('/non-deep-lock/child'));
@@ -147,11 +161,11 @@ class LockManagerTest extends \PHPCR\Test\BaseCase
 
     /**
      * Check a locked node is locked
-     * @depends testCanLockLockableNodes
+     * @depends testCanLockLockableNodeInfiniteTimeout
      */
     public function testIsLockedOnLocked()
     {
-        $this->assertTrue($this->lm->isLocked('/lockable'));
+        $this->assertTrue($this->lm->isLocked('/lockable-infinite'));
     }
 
     /**
@@ -193,7 +207,7 @@ class LockManagerTest extends \PHPCR\Test\BaseCase
     public function testUnlockInvalidState()
     {
         $node = $this->recreateTestNode('locked-unsaved', true);
-        $this->lm->lock('/locked-unsaved', true, true, PHP_INT_MAX, "");
+        $this->lm->lock('/locked-unsaved', true, true, 3, "");
         $node->setProperty('testprop', 'foobar');
         $this->lm->unlock('/locked-unsaved');
     }
@@ -243,13 +257,20 @@ class LockManagerTest extends \PHPCR\Test\BaseCase
      * @param string $expectedOwner
      * @param boolean $expectedIsDeep
      * @param boolean $expectedIsSessionScoped
+     * @param int $timeout the expected seconds remaining. One second less remaining is accepted too to permit for one second change
      */
-    protected function assertLockEquals(\PHPCR\Lock\LockInterface $lock, $expectedOwner, $expectedIsDeep, $expectedIsSessionScoped)
+    protected function assertLockEquals(\PHPCR\Lock\LockInterface $lock, $expectedOwner, $expectedIsDeep, $expectedIsSessionScoped, $timeout)
     {
         $this->assertInstanceOf('\PHPCR\Lock\LockInterface', $lock);
         $this->assertEquals($expectedOwner, $lock->getLockOwner());
         $this->assertEquals($expectedIsDeep, $lock->isDeep());
         $this->assertEquals($expectedIsSessionScoped, $lock->isSessionScoped());
+        if (PHP_INT_MAX == $timeout) {
+            $this->assertEquals(PHP_INT_MAX, $lock->getSecondsRemaining(), 'Expected infinite timeout');
+        } else {
+            $remaining = $lock->getSecondsRemaining();
+            $this->assertTrue($timeout == $remaining || $timeout - 1 == $remaining, "Timeout does not match, expected $timeout but got $remaining");
+        }
     }
 
     /**
