@@ -85,7 +85,7 @@ class LockManagerTest extends \PHPCR\Test\BaseCase
      */
     public function testLockNonExistingNode()
     {
-        $this->lm->lock('/some-unexisting-node', true, true, 3, "");
+        $this->lm->lock('/some-unexisting-node', true, true, 3);
     }
 
     /**
@@ -94,7 +94,7 @@ class LockManagerTest extends \PHPCR\Test\BaseCase
     public function testCanLockLockableNodes()
     {
         $this->recreateTestNode('lockable');
-        $lock = $this->lm->lock('/lockable', false, true, 3, "");
+        $lock = $this->lm->lock('/lockable', false, true, 3);
         $this->assertNotNull($lock);
         $this->assertLockEquals($lock, 'admin', false, true, 3);
     }
@@ -102,7 +102,7 @@ class LockManagerTest extends \PHPCR\Test\BaseCase
     public function testLockExpire()
     {
         $this->recreateTestNode('lockable-expire');
-        $lock = $this->lm->lock('/lockable-expire', false, true, 1, "");
+        $lock = $this->lm->lock('/lockable-expire', false, true, 1);
         $this->assertNotNull($lock);
         $this->assertLockEquals($lock, 'admin', false, true, 1);
         $this->assertTrue($this->lm->isLocked('/lockable-expire'));
@@ -121,7 +121,7 @@ class LockManagerTest extends \PHPCR\Test\BaseCase
         $session = self::$loader->getSession();
         $this->recreateTestNode('lockable-logout', true, $session);
         $lm = $session->getWorkspace()->getLockManager();
-        $lock = $lm->lock('/lockable-logout', false, true, 3, "");
+        $lock = $lm->lock('/lockable-logout', false, true, 3);
         $session->logout();
 
         $this->assertFalse($this->lm->isLocked('/lockable-logout'), 'logout did not release session lock');
@@ -131,7 +131,7 @@ class LockManagerTest extends \PHPCR\Test\BaseCase
     public function testCanLockLockableNodeInfiniteTimeout()
     {
         $this->recreateTestNode('lockable-infinite');
-        $lock = $this->lm->lock('/lockable-infinite', false, true, PHP_INT_MAX, "");
+        $lock = $this->lm->lock('/lockable-infinite', false, true, PHP_INT_MAX);
         $this->assertNotNull($lock);
         $this->assertLockEquals($lock, 'admin', false, true, PHP_INT_MAX);
     }
@@ -144,7 +144,7 @@ class LockManagerTest extends \PHPCR\Test\BaseCase
         $this->recreateTestNode('deep-lock');
         $this->recreateTestNode('deep-lock/child');
         $this->recreateTestNode('deep-lock/child/subchild');
-        $lock = $this->lm->lock('/deep-lock', true, true, 3, "");
+        $lock = $this->lm->lock('/deep-lock', true, true, 3);
 
         $this->assertTrue($this->lm->isLocked('/deep-lock'));
         $this->assertTrue($this->lm->isLocked('/deep-lock/child'));
@@ -163,7 +163,7 @@ class LockManagerTest extends \PHPCR\Test\BaseCase
         $this->recreateTestNode('non-deep-lock');
         $this->recreateTestNode('non-deep-lock/child');
         $this->recreateTestNode('non-deep-lock/child/subchild');
-        $lock = $this->lm->lock('/non-deep-lock', false, true, 3, "");
+        $lock = $this->lm->lock('/non-deep-lock', false, true, 3);
 
         $this->assertTrue($this->lm->isLocked('/non-deep-lock'));
         $this->assertFalse($this->lm->isLocked('/non-deep-lock/child'));
@@ -172,6 +172,17 @@ class LockManagerTest extends \PHPCR\Test\BaseCase
         $this->assertTrue($this->lm->holdsLock('/non-deep-lock'));
         $this->assertFalse($this->lm->holdsLock('/non-deep-lock/child'));
         $this->assertFalse($this->lm->holdsLock('/non-deep-lock/child/subchild'));
+    }
+
+    /**
+     * Test a simple lock on a lockable node
+     */
+    public function testLockOwner()
+    {
+        $this->recreateTestNode('lockable-owner');
+        $lock = $this->lm->lock('/lockable-owner', false, true, 3, 'testownerstring');
+        $this->assertNotNull($lock);
+        $this->assertLockEquals($lock, 'testownerstring', false, true, 3);
     }
 
     // ----- ISLOCKED TESTS ---------------------------------------------------
