@@ -106,9 +106,26 @@ class LockManagerTest extends \PHPCR\Test\BaseCase
         $this->assertNotNull($lock);
         $this->assertLockEquals($lock, 'admin', false, true, 1);
         $this->assertTrue($this->lm->isLocked('/lockable-expire'));
+        $this->assertTrue($lock->isLive());
         sleep(2);
         $this->assertFalse($this->lm->isLocked('/lockable-expire'));
+        $this->assertFalse($lock->isLive());
         $this->assertTrue($lock->getSecondsRemaining() < 0);
+    }
+
+    /**
+     * @depends testCanLockLockableNodes
+     */
+    public function testLockReleasedOnLogout()
+    {
+        $session = self::$loader->getSession();
+        $this->recreateTestNode('lockable-logout', true, $session);
+        $lm = $session->getWorkspace()->getLockManager();
+        $lock = $lm->lock('/lockable-logout', false, true, 3, "");
+        $session->logout();
+
+        $this->assertFalse($this->lm->isLocked('/lockable-logout'), 'logout did not release session lock');
+        $this->assertFalse($lock->isLive());
     }
 
     public function testCanLockLockableNodeInfiniteTimeout()
@@ -177,17 +194,44 @@ class LockManagerTest extends \PHPCR\Test\BaseCase
         $this->assertFalse($this->lm->isLocked('/non-lockable'));
     }
 
+    // ----- HOLDSLOCK TESTS --------------------------------------------------
+
+    /**
+     * Try to test the lock on an unexisting node
+     * @expectedException \PHPCR\PathNotFoundException
+     */
+    public function testHoldsLockUnexistingNode()
+    {
+        $this->lm->holdsLock('/some-unexisting-node');
+    }
+
+    /**
+     * @depends testCannotLockNonLockableNodes
+     */
+    public function testHoldsLockOnNonLocked()
+    {
+        $this->assertFalse($this->lm->holdsLock('/non-lockable'));
+    }
+
+    /**
+     * @depends testCanLockLockableNodeInfiniteTimeout
+     */
+    public function testHoldsLockOnLocked()
+    {
+        $this->assertTrue($this->lm->holdsLock('/lockable-infinite'));
+    }
+
     // ----- UNLOCK TESTS -----------------------------------------------------
 
     /**
      * Try to unlock a locked node
-     * @depends testIsLockedOnLocked
+     * @depends testCanLockLockableNodeInfiniteTimeout
      */
     public function testUnlockOnLocked()
     {
-        $this->assertTrue($this->lm->isLocked('/lockable'));
-        $this->lm->unlock('/lockable');
-        $this->assertFalse($this->lm->isLocked('/lockable'));
+        $this->assertTrue($this->lm->isLocked('/lockable-infinite'));
+        $this->lm->unlock('/lockable-infinite');
+        $this->assertFalse($this->lm->isLocked('/lockable-infinite'));
     }
 
     /**
@@ -221,33 +265,6 @@ class LockManagerTest extends \PHPCR\Test\BaseCase
         $this->lm->unlock('/some-unexisting-node');
     }
 
-    // ----- HOLDSLOCK TESTS --------------------------------------------------
-
-    /**
-     * Try to test the lock on an unexisting node
-     * @expectedException \PHPCR\PathNotFoundException
-     */
-    public function testHoldsLockUnexistingNode()
-    {
-        $this->lm->holdsLock('/some-unexisting-node');
-    }
-
-    /**
-     * @depends testUnlockOnNonLocked
-     */
-    public function testHoldsLockOnNonLocked()
-    {
-        $this->assertFalse($this->lm->holdsLock('/non-lockable'));
-    }
-
-    /**
-     * @depends testUnlockOnLocked
-     */
-    public function testHoldsLockOnLocked()
-    {
-        $lock = $this->lm->lock('/lockable', false, true, PHP_INT_MAX, "");
-        $this->assertTrue($this->lm->holdsLock('/lockable'));
-    }
 
     // ----- HELPERS ----------------------------------------------------------
 
@@ -281,9 +298,12 @@ class LockManagerTest extends \PHPCR\Test\BaseCase
      * @param $relPath
      * @param bool $lockable
      */
-    protected function recreateTestNode($relPath, $lockable = true)
+    protected function recreateTestNode($relPath, $lockable = true, $session = null)
     {
-        $session = $this->sharedFixture['session'];
+        if (null == $session) {
+            $session = $this->sharedFixture['session'];
+        }
+
         $root = $session->getRootNode();
 
         if ($root->hasNode($relPath)) {
