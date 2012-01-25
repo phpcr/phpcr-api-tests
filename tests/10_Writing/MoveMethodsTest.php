@@ -388,6 +388,7 @@ class MoveMethodsTest extends \PHPCR\Test\BaseCase
 
         $this->assertChildOrder(array('one', 'three', 'two', 'four'), $this->node);
     }
+
     /**
      * \PHPCR\NodeInterface::orderBefore
      */
@@ -401,6 +402,7 @@ class MoveMethodsTest extends \PHPCR\Test\BaseCase
 
         $this->assertChildOrder(array('one', 'three', 'two', 'four'), $this->node);
     }
+
     /**
      * \PHPCR\NodeInterface::orderBefore
      */
@@ -414,6 +416,7 @@ class MoveMethodsTest extends \PHPCR\Test\BaseCase
 
         $this->assertChildOrder(array('one', 'three', 'four', 'two'), $this->node);
     }
+
     /**
      * \PHPCR\NodeInterface::orderBefore
      */
@@ -427,6 +430,7 @@ class MoveMethodsTest extends \PHPCR\Test\BaseCase
 
         $this->assertChildOrder(array('one', 'two', 'three', 'four'), $this->node);
     }
+
     /**
      * \PHPCR\NodeInterface::orderBefore
      * @expectedException \PHPCR\ItemNotFoundException
@@ -436,6 +440,7 @@ class MoveMethodsTest extends \PHPCR\Test\BaseCase
         $this->assertInstanceOf('\PHPCR\NodeInterface', $this->node);
         $this->node->orderBefore('notexisting', 'one');
     }
+
     /**
      * \PHPCR\NodeInterface::orderBefore
      * @expectedException \PHPCR\ItemNotFoundException
@@ -446,6 +451,22 @@ class MoveMethodsTest extends \PHPCR\Test\BaseCase
         $this->node->orderBefore('one', 'notexisting');
     }
 
+    /**
+     * \PHPCR\NodeInterface::orderBefore
+     */
+    public function testNodeOrderBeforeUpAndDelete()
+    {
+        $this->assertInstanceOf('\PHPCR\NodeInterface', $this->node);
+        $this->node->addNode('new');
+        $this->node->getNode('three')->remove();
+        $this->node->orderBefore('four', 'two');
+        $this->node->getNode('one')->remove();
+        $this->assertChildOrder(array('four', 'two', 'new'), $this->node);
+
+        $this->saveAndRenewSession();
+
+        $this->assertChildOrder(array('four', 'two', 'new'), $this->node);
+    }
 }
 
 
