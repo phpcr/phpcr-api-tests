@@ -61,4 +61,19 @@ class VersionHistoryTest extends \PHPCR\Test\BaseCase
         $this->assertEquals(0, count($lastVersion->getSuccessors()));
     }
 
+    /**
+     * @expectedException \PHPCR\UnsupportedRepositoryOperationException
+     */
+    public function testGetVersionHistoryNonversionable()
+    {
+        $this->vm->getVersionHistory("/tests_version_base/unversionable");
+    }
+
+    /**
+     * @expectedException \PHPCR\RepositoryException
+     */
+    public function testGetVersionHistoryNonexisting()
+    {
+        $this->vm->getVersionHistory("/not-existing-node");
+    }
 }
