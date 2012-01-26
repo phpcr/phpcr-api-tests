@@ -38,6 +38,14 @@ class VersionHistoryTest extends \PHPCR\Test\BaseCase
 
     //TODO: missing methods
 
+    public function testGetVersionableIdentifier()
+    {
+        $history = $this->vm->getVersionHistory("/tests_version_base/versioned");
+        $uuid = $history->getVersionableIdentifier();
+        $node = self::$staticSharedFixture['session']->getNode("/tests_version_base/versioned");
+        $this->assertEquals($node->getIdentifier(), $uuid, 'the versionable identifier must be the uuid of the versioned node');
+    }
+
     public function testGetVersionHistory()
     {
         $history = $this->vm->getVersionHistory("/tests_version_base/versioned");
