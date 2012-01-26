@@ -137,7 +137,7 @@ class PropertyReadMethodsTest extends \PHPCR\Test\BaseCase
         $this->assertInstanceOf('DateTime', $date);
         $diff = time() - $date->getTimestamp();
         // allow the tests to need 10 minutes to run, this should be plenty
-        $this->assertTrue($diff < 1000*60*10, "jcr:created should be current date as fixture was just imported: ".$date->format('c'));
+        $this->assertTrue($diff < 60*10, "jcr:created should be current date as fixture was just imported: ".$date->format('c'));
     }
 
     public function testGetStringMulti()

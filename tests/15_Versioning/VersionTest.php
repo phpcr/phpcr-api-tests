@@ -47,7 +47,12 @@ class VersionTest extends \PHPCR\Test\BaseCase
         $this->assertInstanceOf('PHPCR\Version\VersionInterface', $this->version);
     }
 
-    //TODO: missing methods
+    public function testGetCreated()
+    {
+        $date = $this->version->getCreated();
+        $diff = time() - $date->getTimestamp();
+        $this->assertTrue($diff < 60, 'creation date of the version we created in setupBeforeClass should be within the last few seconds');
+    }
 
     public function testGetPredecessors()
     {
@@ -68,4 +73,27 @@ class VersionTest extends \PHPCR\Test\BaseCase
         $this->assertEquals(0, count($versions));
     }
 
+    public function testGetFrozenNode()
+    {
+        $frozen = $this->version->getFrozenNode();
+        $this->assertTrue($frozen->hasProperty('foo'));
+        $this->assertEquals('bar3', $frozen->getPropertyValue('foo'));
+
+        $predecessors = $this->version->getPredecessors();
+        $frozen2 = reset($predecessors)->getFrozenNode();
+        $this->assertTrue($frozen2->hasProperty('foo'));
+        $this->assertEquals('bar2', $frozen2->getPropertyValue('foo'));
+    }
+
+
+    /**
+     * @expectedException PHPCR\NodeType\ConstraintViolationException
+     * @depends testGetFrozenNode
+     */
+    public function testFrozenNode()
+    {
+        $frozen = $this->version->getFrozenNode();
+        $frozen->setProperty("foo", "should not work");
+        self::$staticSharedFixture['session']->save();
+    }
 }
