@@ -33,7 +33,6 @@ class CheckinCheckoutNodeTest extends \PHPCR\Test\BaseCase
         $this->sharedFixture['session']->save();
 
         $this->vm->checkin("/tests_version_base/versioned");
-        $history = $this->vm->getVersionHistory("/tests_version_base/versioned");
         $this->assertEquals(2, count($history->getAllVersions()));
 
         $this->renewSession();

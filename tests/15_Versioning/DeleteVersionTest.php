@@ -26,24 +26,33 @@ class DeleteVersionTest extends \PHPCR\Test\BaseCase
      *
      * Note that you can not use $version->remove() although version is a node.
      */
-    public function testDeleteversion()
+    public function testDeleteVersion()
     {
-        $version = $this->vm->checkpoint("/tests_version_base/versioned");
-        $this->vm->checkpoint("/tests_version_base/versioned"); // create another version, the last version can not be removed
-        $history = $this->vm->getVersionHistory("/tests_version_base/versioned");
+        $nodePath = '/tests_version_base/versioned';
+        $this->sharedFixture['session']->getNode($nodePath); // just to make sure this does not confuse anything
+
+        $version = $this->vm->checkpoint($nodePath);
+        $this->vm->checkpoint($nodePath); // create another version, the last version can not be removed
+        $history = $this->vm->getVersionHistory($nodePath);
 
         // The version exists before removal
-        $path = $version->getPath();
+        $versionPath = $version->getPath();
         $versionName = $version->getName();
 
-        $this->assertTrue($this->sharedFixture['session']->itemExists($path));
+        $history->getAllVersions(); // load all versions so they land in cache
+        $frozen = $history->getVersion($versionName)->getFrozenNode(); // also have the frozen node in cache
+        $frozenPath = $frozen->getPath();
+
+        $this->assertTrue($this->sharedFixture['session']->itemExists($versionPath));
         $this->assertTrue($this->versionExists($history, $versionName));
 
         // Remove the version
         $history->removeVersion($versionName);
 
         // The version is gone after removal
-        $this->assertFalse($this->sharedFixture['session']->itemExists($path));
+        $this->assertFalse($this->sharedFixture['session']->itemExists($versionPath));
+        $this->assertFalse($this->sharedFixture['session']->itemExists($frozenPath));
+
         $this->assertFalse($this->versionExists($history, $versionName));
     }
 
@@ -52,7 +61,7 @@ class DeleteVersionTest extends \PHPCR\Test\BaseCase
      *
      * @expectedException PHPCR\ReferentialIntegrityException
      */
-    public function testDeleteLastVersion()
+    public function testDeleteLatestVersion()
     {
         $version = $this->vm->checkpoint("/tests_version_base/versioned");
         $history = $this->vm->getVersionHistory("/tests_version_base/versioned");

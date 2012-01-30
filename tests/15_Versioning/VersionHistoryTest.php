@@ -40,15 +40,18 @@ class VersionHistoryTest extends \PHPCR\Test\BaseCase
 
     public function testGetVersionableIdentifier()
     {
-        $history = $this->vm->getVersionHistory("/tests_version_base/versioned");
+        $nodePath = '/tests_version_base/versioned';
+        $history = $this->vm->getVersionHistory($nodePath);
         $uuid = $history->getVersionableIdentifier();
-        $node = self::$staticSharedFixture['session']->getNode("/tests_version_base/versioned");
+        $node = self::$staticSharedFixture['session']->getNode($nodePath);
         $this->assertEquals($node->getIdentifier(), $uuid, 'the versionable identifier must be the uuid of the versioned node');
     }
 
     public function testGetVersionHistory()
     {
-        $history = $this->vm->getVersionHistory("/tests_version_base/versioned");
+        $nodePath = '/tests_version_base/versioned';
+        $history = $this->vm->getVersionHistory($nodePath);
+        $this->assertSame($history, $this->vm->getVersionHistory($nodePath));
         $versions = $history->getAllVersions();
         $this->assertTraversableImplemented($versions);
 
@@ -60,7 +63,7 @@ class VersionHistoryTest extends \PHPCR\Test\BaseCase
 
         $firstVersion = reset($versions);
         $lastVersion = end($versions);
-        $currentVersion = $this->vm->getBaseVersion("/tests_version_base/versioned");
+        $currentVersion = $this->vm->getBaseVersion($nodePath);
 
         $this->assertSame($currentVersion, $lastVersion);
         $this->assertEquals(0, count($firstVersion->getPredecessors()));
