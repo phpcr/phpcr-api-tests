@@ -34,36 +34,66 @@ class VersionHistoryTest extends \PHPCR\Test\BaseCase
     {
         parent::setUp();
         $this->vm = $this->sharedFixture['session']->getWorkspace()->getVersionManager();
+        $this->history = $this->vm->getVersionHistory('/tests_version_base/versioned');
+        $this->assertInstanceOf('PHPCR\\Version\\VersionHistoryInterface', $this->history);
     }
 
-    //TODO: missing methods
-
-    public function testGetVersionableIdentifier()
+    public function testGetAllLinearFrozenNodes()
     {
-        $nodePath = '/tests_version_base/versioned';
-        $history = $this->vm->getVersionHistory($nodePath);
-        $uuid = $history->getVersionableIdentifier();
-        $node = self::$staticSharedFixture['session']->getNode($nodePath);
-        $this->assertEquals($node->getIdentifier(), $uuid, 'the versionable identifier must be the uuid of the versioned node');
+        $frozenNodes = $this->history->getAllLinearFrozenNodes();
+        $this->assertTraversableImplemented($frozenNodes);
+
+        $this->assertEquals(5, count($frozenNodes));
+
+        foreach ($frozenNodes as $name => $node) {
+            $this->assertInstanceOf('PHPCR\NodeInterface', $node);
+            $this->assertInternalType('string', $name);
+        }
+
+        $firstNode = reset($frozenNodes);
+        $lastNode = end($frozenNodes);
+        $currentNode = $this->vm->getBaseVersion('/tests_version_base/versioned')->getFrozenNode();
+
+        $this->assertSame($currentNode, $lastNode);
+
     }
-
-    public function testGetVersionHistory()
+    public function testGetAllFrozenNodes()
     {
-        $nodePath = '/tests_version_base/versioned';
-        $history = $this->vm->getVersionHistory($nodePath);
-        $this->assertSame($history, $this->vm->getVersionHistory($nodePath));
-        $versions = $history->getAllVersions();
+        // TODO: have non linear version history
+        $frozenNodes = $this->history->getAllFrozenNodes();
+        $this->assertTraversableImplemented($frozenNodes);
+
+        $this->assertEquals(5, count($frozenNodes));
+
+        foreach ($frozenNodes as $name => $node) {
+            $this->assertInstanceOf('PHPCR\NodeInterface', $node);
+            $this->assertInternalType('string', $name);
+        }
+
+        $firstNode = reset($frozenNodes);
+        $lastNode = end($frozenNodes);
+        $currentNode = $this->vm->getBaseVersion('/tests_version_base/versioned')->getFrozenNode();
+
+        $this->assertSame($currentNode, $lastNode);
+    }
+    /**
+     * @group x
+     */
+    public function testGetAllLinearVersions()
+    {
+        $versions = $this->history->getAllLinearVersions();
         $this->assertTraversableImplemented($versions);
 
         $this->assertEquals(5, count($versions));
 
-        foreach ($versions as $version) {
+        foreach ($versions as $name => $version) {
             $this->assertInstanceOf('PHPCR\Version\VersionInterface', $version);
+            $this->assertEquals($version->getName(), $name);
         }
 
         $firstVersion = reset($versions);
         $lastVersion = end($versions);
-        $currentVersion = $this->vm->getBaseVersion($nodePath);
+        $currentVersion = $this->vm->getBaseVersion('/tests_version_base/versioned');
 
         $this->assertSame($currentVersion, $lastVersion);
         $this->assertEquals(0, count($firstVersion->getPredecessors()));
@@ -72,19 +102,119 @@ class VersionHistoryTest extends \PHPCR\Test\BaseCase
         $this->assertEquals(0, count($lastVersion->getSuccessors()));
     }
 
-    /**
-     * @expectedException \PHPCR\UnsupportedRepositoryOperationException
-     */
-    public function testGetVersionHistoryNonversionable()
+    public function testGetAllVersions()
     {
-        $this->vm->getVersionHistory('/tests_version_base/unversionable');
+        // TODO: have non linear version history
+        $versions = $this->history->getAllVersions();
+        $this->assertTraversableImplemented($versions);
+
+        $this->assertEquals(5, count($versions));
+
+        foreach ($versions as $name => $version) {
+            $this->assertInstanceOf('PHPCR\Version\VersionInterface', $version);
+            $this->assertEquals($version->getName(), $name);
+        }
+
+        $firstVersion = reset($versions);
+        $lastVersion = end($versions);
+        $currentVersion = $this->vm->getBaseVersion('/tests_version_base/versioned');
+
+        $this->assertSame($currentVersion, $lastVersion);
+        $this->assertEquals(0, count($firstVersion->getPredecessors()));
+        $this->assertEquals(1, count($firstVersion->getSuccessors()));
+        $this->assertEquals(1, count($lastVersion->getPredecessors()));
+        $this->assertEquals(0, count($lastVersion->getSuccessors()));
+    }
+
+    public function testGetRootVersion()
+    {
+        $rootVersion = $this->history->getRootVersion();
+        $this->assertInstanceOf('PHPCR\\Version\\VersionInterface', $rootVersion);
+        $this->assertEquals($this->history->getPath(), dirname($rootVersion->getPath()));
+    }
+
+    public function testGetVersionableIdentifier()
+    {
+        $uuid = $this->history->getVersionableIdentifier();
+        $node = self::$staticSharedFixture['session']->getNode('/tests_version_base/versioned');
+        $this->assertEquals($node->getIdentifier(), $uuid, 'the versionable identifier must be the uuid of the versioned node');
     }
 
     /**
-     * @expectedException \PHPCR\RepositoryException
+     * Create two versions then delete the first version
+     *
+     * Note that you can not use $version->remove() although version is a node.
      */
-    public function testGetVersionHistoryNonexisting()
+    public function testDeleteVersion()
     {
-        $this->vm->getVersionHistory('/not-existing-node');
+        $nodePath = '/tests_version_base/versioned';
+        $this->sharedFixture['session']->getNode($nodePath); // just to make sure this does not confuse anything
+
+        $version = $this->vm->checkpoint($nodePath);
+        $this->vm->checkpoint($nodePath); // create another version, the last version can not be removed
+        $history = $this->vm->getVersionHistory($nodePath);
+
+        // The version exists before removal
+        $versionPath = $version->getPath();
+        $versionName = $version->getName();
+
+        $history->getAllVersions(); // load all versions so they land in cache
+        $frozen = $history->getVersion($versionName)->getFrozenNode(); // also have the frozen node in cache
+        $frozenPath = $frozen->getPath();
+
+        $this->assertTrue($this->sharedFixture['session']->itemExists($versionPath));
+        $this->assertTrue($this->versionExists($history, $versionName));
+
+        // Remove the version
+        $history->removeVersion($versionName);
+
+        // The version is gone after removal
+        $this->assertFalse($this->sharedFixture['session']->itemExists($versionPath));
+        $this->assertFalse($this->sharedFixture['session']->itemExists($frozenPath));
+
+        $this->assertFalse($this->versionExists($history, $versionName));
     }
+
+    /**
+     * Check the last version cannot be removed
+     *
+     * @expectedException PHPCR\ReferentialIntegrityException
+     */
+    public function testDeleteLatestVersion()
+    {
+        $version = $this->vm->checkpoint('/tests_version_base/versioned');
+        $history = $this->vm->getVersionHistory('/tests_version_base/versioned');
+        $history->removeVersion($version->getName());
+    }
+
+    /**
+     * Try removing an unexisting version
+     *
+     * @expectedException PHPCR\Version\VersionException
+     */
+    public function testDeleteUnexistingVersion()
+    {
+        $version = $this->vm->checkpoint('/tests_version_base/versioned');
+        $history = $this->vm->getVersionHistory('/tests_version_base/versioned');
+        $history->removeVersion('unexisting');
+    }
+
+    /**
+     * Check if a version node with the given name exists in the version history
+     * @param $history The version history node
+     * @param $versionName The name of the version to search for
+     * @return bool
+     */
+    protected function versionExists($history, $versionName)
+    {
+        foreach ($history->getAllVersions() as $version) {
+            if ($version->getName() === $versionName) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    // TODO: missing addVersionlabel, getVersionByLabel, getVersionLabels, hasVersionLabel, removeVersionLabel
 }

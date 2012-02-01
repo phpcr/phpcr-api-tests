@@ -4,7 +4,7 @@ namespace PHPCR\Tests\Versioning;
 require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 /**
-* Testing whether node property manipulations work correctly
+* Testing whether mix:versionable node type is properly handled
 *
 * Covering jcr-2.8.3 spec $15.1
 */
@@ -38,32 +38,6 @@ class CreateVersionableNodeTest extends \PHPCR\Test\BaseCase
         $this->node = $this->sharedFixture['session']->getNode('/tests_version_base/versionable');
         $this->assertContains('mix:versionable', $mixins, 'Node does not have mix:versionable mixin');
         $this->assertTrue( $this->node->getProperty('jcr:isCheckedOut')->getBoolean(),'jcr:isCheckout is not true');
-    }
-
-    public function testCheckinVersion()
-    {
-        $this->vm->checkout('/tests_version_base/versioned');
-        $node = $this->sharedFixture['session']->getNode('/tests_version_base/versioned');
-        $node->setProperty('foo', 'bar');
-        $this->vm->checkin('/tests_version_base/versioned');
-        $history = $this->vm->getVersionHistory('/tests_version_base/versioned');
-        $this->assertEquals(2, count($history->getAllVersions()));
-    }
-
-    /**
-     * @expectedException PHPCR\Version\VersionException
-     */
-    public function testWriteNotCheckedOutVersion()
-    {
-        $this->vm->checkout('/tests_version_base/versioned');
-        $node = $this->sharedFixture['session']->getNode('/tests_version_base/versioned');
-
-        $node->setProperty('foo', 'bar');
-        $this->sharedFixture['session']->save();
-        $this->vm->checkin('/tests_version_base/versioned');
-
-        $node->setProperty('foo', 'bar2');
-        $this->sharedFixture['session']->save();
     }
 
     public function testNewVersionableNode()

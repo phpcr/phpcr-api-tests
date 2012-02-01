@@ -47,30 +47,16 @@ class VersionTest extends \PHPCR\Test\BaseCase
         $this->assertInstanceOf('PHPCR\Version\VersionInterface', $this->version);
     }
 
+    public function testGetContainingHistory()
+    {
+        $this->assertSame($this->vm->getVersionHistory('/tests_version_base/versioned'), $this->version->getContainingHistory());
+    }
+
     public function testGetCreated()
     {
         $date = $this->version->getCreated();
         $diff = time() - $date->getTimestamp();
         $this->assertTrue($diff < 60, 'creation date of the version we created in setupBeforeClass should be within the last few seconds');
-    }
-
-    public function testGetPredecessors()
-    {
-        $versions = $this->version->getPredecessors();
-        $this->assertEquals(1, count($versions));
-        $pred = $versions[0];
-        $this->assertInstanceOf('PHPCR\Version\VersionInterface', $pred);
-        $versions = $pred->getSuccessors();
-        $this->assertEquals(1, count($versions), 'expected a successor of our predecessor');
-        $this->assertSame($this->version, $versions[0]);
-
-        //TODO: how to access the data of the older version?
-    }
-
-    public function testGetSuccessors()
-    {
-        $versions = $this->version->getSuccessors();
-        $this->assertEquals(0, count($versions));
     }
 
     public function testGetFrozenNode()
@@ -85,7 +71,6 @@ class VersionTest extends \PHPCR\Test\BaseCase
         $this->assertEquals('bar2', $frozen2->getPropertyValue('foo'));
     }
 
-
     /**
      * @expectedException PHPCR\NodeType\ConstraintViolationException
      * @depends testGetFrozenNode
@@ -95,5 +80,54 @@ class VersionTest extends \PHPCR\Test\BaseCase
         $frozen = $this->version->getFrozenNode();
         $frozen->setProperty('foo', 'should not work');
         self::$staticSharedFixture['session']->save();
+    }
+
+    public function testGetLinearPredecessorSuccessor()
+    {
+        $pred = $this->version->getLinearPredecessor();
+        $this->assertInstanceOf('PHPCR\Version\VersionInterface', $pred);
+        $succ = $pred->getLinearSuccessor();
+        $this->assertSame($this->version, $succ);
+    }
+
+    public function testGetLinearPredecessorNull()
+    {
+        $rootVersion = $this->vm->getVersionHistory('/tests_version_base/versioned')->getRootVersion();
+        // base version is at end of chain
+        $this->assertNull($rootVersion->getLinearPredecessor());
+    }
+
+    public function testGetLinearSuccessorNull()
+    {
+        // base version is at end of chain
+        $this->assertNull($this->version->getLinearSuccessor());
+    }
+
+    public function testGetPredecessors()
+    {
+        $versions = $this->version->getPredecessors();
+        $this->assertEquals(1, count($versions));
+        $pred = $versions[0];
+        $this->assertInstanceOf('PHPCR\Version\VersionInterface', $pred);
+        $versions = $pred->getSuccessors();
+        $this->assertEquals(1, count($versions), 'expected a successor of our predecessor');
+        $this->assertSame($this->version, $versions[0]);
+    }
+
+    public function testGetSuccessors()
+    {
+        $versions = $this->version->getSuccessors();
+        $this->assertEquals(0, count($versions));
+    }
+
+    /**
+     * Check $version->remove() is not possible. This must go through VersionHistory::remove
+     *
+     * @expectedException PHPCR\RepositoryException
+     */
+    public function testNodeRemoveOnVersion()
+    {
+        $version = $this->vm->checkpoint('/tests_version_base/versioned');
+        $version->remove();
     }
 }
