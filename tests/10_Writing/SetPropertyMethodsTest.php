@@ -46,8 +46,11 @@ class SetPropertyMethodsTest extends \PHPCR\Test\BaseCase
         $property = $this->node->setProperty('longNumber', 1024);
         $this->assertInstanceOf('PHPCR\PropertyInterface', $property);
         $this->assertEquals(1024, $property->getLong());
+        $this->assertTrue($property->isModified());
+        $this->sharedFixture['session']->save();
+        $this->assertFalse($property->isModified());
 
-        $this->saveAndRenewSession();
+        $this->renewSession();
         $prop = $this->sharedFixture['session']->getNode($this->nodePath)->getProperty('longNumber');
         $this->assertInstanceOf('PHPCR\PropertyInterface', $prop);
         $this->assertEquals(1024, $prop->getLong());
@@ -62,8 +65,12 @@ class SetPropertyMethodsTest extends \PHPCR\Test\BaseCase
         $property = $this->node->setProperty('newLongNumber', 1024);
         $this->assertInstanceOf('PHPCR\PropertyInterface', $property);
         $this->assertEquals(1024, $property->getLong());
+        $this->assertTrue($property->isNew());
+        $this->sharedFixture['session']->save();
+        $this->assertFalse($property->isNew());
+        $this->assertFalse($property->isModified());
 
-        $this->saveAndRenewSession();
+        $this->renewSession();
         $prop = $this->sharedFixture['session']->getNode($this->nodePath)->getProperty('newLongNumber');
         $this->assertInstanceOf('PHPCR\PropertyInterface', $prop);
         $this->assertEquals(1024, $prop->getLong());
