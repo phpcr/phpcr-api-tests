@@ -132,12 +132,14 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
         $othernode = $othersession->getNode($node->getPath());
         $othernode->setProperty('prop', 'Other');
         $othernode->setProperty('newprop', 'Test');
+        $othernode->setProperty('mod', 'Changed');
         $othersession->save();
 
         $session->refresh(true);
         $this->assertEquals('New', $node->getPropertyValue('prop'));
         $this->assertTrue($node->hasProperty('newprop'));
         $this->assertEquals('Test', $node->getPropertyValue('newprop'));
+        $this->assertEquals('Changed', $node->getPropertyValue('mod'));
     }
 
     public function testRemoveSessionRefresh()

@@ -64,6 +64,9 @@
     <sv:property sv:name="prop" sv:type="String">
       <sv:value>Old</sv:value>
     </sv:property>
+    <sv:property sv:name="mod" sv:type="String">
+      <sv:value>Old</sv:value>
+    </sv:property>
   </sv:node>
 
   <sv:node sv:name="testRemoveSessionRefresh">
