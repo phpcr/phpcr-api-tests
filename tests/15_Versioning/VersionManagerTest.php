@@ -18,6 +18,7 @@ class VersionManagerTest extends \PHPCR\Test\BaseCase
     public function setUp()
     {
         parent::setUp();
+        $this->renewSession();
         $this->node = $this->sharedFixture['session']->getNode('/tests_version_base/versionable');
         $this->vm = $this->sharedFixture['session']->getWorkspace()->getVersionManager();
     }
@@ -56,6 +57,17 @@ class VersionManagerTest extends \PHPCR\Test\BaseCase
         $node->setProperty('foo', 'bar2');
         $this->sharedFixture['session']->save();
 
+    }
+
+    /**
+     * @expectedException PHPCR\InvalidItemStateException
+     */
+    public function testCheckinModifiedNode()
+    {
+        $this->vm->checkout('/tests_version_base/versioned');
+        $node = $this->sharedFixture['session']->getNode('/tests_version_base/versioned');
+        $node->setProperty('foo', 'modified');
+        $this->vm->checkin('/tests_version_base/versioned');
     }
 
     public function testCheckpoint()
@@ -198,8 +210,7 @@ class VersionManagerTest extends \PHPCR\Test\BaseCase
         // Restore the first version aka 'bar'
         $this->vm->restore(true, $version->getName(), $nodePath);
 
-        // Read the NEW value and test if the cache has been cleared.
-        $node = $this->sharedFixture['session']->getNode($nodePath);
+        // Read the NEW value and test if it was reset
         $this->assertEquals('bar', $node->getProperty('foo')->getValue());
 
         // Read the NEW value out of the var after the session is renewed and the cache clear
@@ -239,14 +250,33 @@ class VersionManagerTest extends \PHPCR\Test\BaseCase
         // Restore the first version aka 'bar'
         $this->vm->restore(true, $version);
 
-        // Read the NEW value and test if the cache has been cleared.
-        $node = $this->sharedFixture['session']->getNode($nodePath);
+        // Read the NEW value and test if it was reset
         $this->assertEquals('bar', $node->getProperty('foo')->getValue());
 
         // Read the NEW value out of the var after the session is renewed and the cache clear
         $this->renewSession();
         $node = $this->sharedFixture['session']->getNode($nodePath);
         $this->assertEquals('bar', $node->getProperty('foo')->getValue());
+    }
+
+    /**
+     * @expectedException PHPCR\InvalidItemStateException
+     */
+    public function testRestorePendingChanges()
+    {
+        $nodePath = '/tests_version_base/versioned';
+        $this->vm->checkout($nodePath);
+        $node = $this->sharedFixture['session']->getNode($nodePath);
+
+        $node->setProperty('foo', 'bar');
+        $this->sharedFixture['session']->save();
+        $version = $this->vm->checkin($nodePath);
+        $this->vm->checkout($nodePath);
+        $this->vm->checkin($nodePath);
+
+        $node->setProperty('foo', 'bar2');
+
+        $this->vm->restore(true, $version);
     }
 
     // TODO: test restore with removeExisting false and having an id clash
