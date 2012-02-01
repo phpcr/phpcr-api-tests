@@ -42,7 +42,7 @@ class VersionTest extends \PHPCR\Test\BaseCase
 
         $this->vm = $this->sharedFixture['session']->getWorkspace()->getVersionManager();
 
-        $this->version = $this->vm->getBaseVersion("/tests_version_base/versioned");
+        $this->version = $this->vm->getBaseVersion('/tests_version_base/versioned');
 
         $this->assertInstanceOf('PHPCR\Version\VersionInterface', $this->version);
     }
@@ -93,7 +93,7 @@ class VersionTest extends \PHPCR\Test\BaseCase
     public function testFrozenNode()
     {
         $frozen = $this->version->getFrozenNode();
-        $frozen->setProperty("foo", "should not work");
+        $frozen->setProperty('foo', 'should not work');
         self::$staticSharedFixture['session']->save();
     }
 }

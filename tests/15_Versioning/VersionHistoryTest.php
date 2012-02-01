@@ -77,7 +77,7 @@ class VersionHistoryTest extends \PHPCR\Test\BaseCase
      */
     public function testGetVersionHistoryNonversionable()
     {
-        $this->vm->getVersionHistory("/tests_version_base/unversionable");
+        $this->vm->getVersionHistory('/tests_version_base/unversionable');
     }
 
     /**
@@ -85,6 +85,6 @@ class VersionHistoryTest extends \PHPCR\Test\BaseCase
      */
     public function testGetVersionHistoryNonexisting()
     {
-        $this->vm->getVersionHistory("/not-existing-node");
+        $this->vm->getVersionHistory('/not-existing-node');
     }
 }

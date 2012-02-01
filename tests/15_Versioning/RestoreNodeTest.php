@@ -23,32 +23,32 @@ class RestoreNodeTest extends \PHPCR\Test\BaseCase
 
     public function testRestoreversion()
     {
-        $this->vm->checkout("/tests_version_base/versioned");
+        $this->vm->checkout('/tests_version_base/versioned');
         $node = $this->sharedFixture['session']->getNode('/tests_version_base/versioned');
 
         $node->setProperty('foo', 'bar');
         $this->sharedFixture['session']->save();
-        $this->vm->checkin("/tests_version_base/versioned");
+        $version = $this->vm->checkin('/tests_version_base/versioned');
 
-        $this->vm->checkout("/tests_version_base/versioned");
+        $this->vm->checkout('/tests_version_base/versioned');
 
         $node->setProperty('foo', 'bar2');
         $this->sharedFixture['session']->save();
-        $this->vm->checkin("/tests_version_base/versioned");
+        $this->vm->checkin('/tests_version_base/versioned');
 
-        $this->vm->checkout("/tests_version_base/versioned");
+        $this->vm->checkout('/tests_version_base/versioned');
         $node = $this->sharedFixture['session']->getNode('/tests_version_base/versioned');
 
         $node->setProperty('foo', 'bar3');
         $this->sharedFixture['session']->save();
-        $this->vm->checkin("/tests_version_base/versioned");
+        $this->vm->checkin('/tests_version_base/versioned');
 
         $node = $this->sharedFixture['session']->getNode('/tests_version_base/versioned');
         // Read the OLD value out of the var and fill the cache
         $this->assertEquals('bar3', $node->getProperty('foo')->getValue());
 
         // Restore the 1.0 value aka 'bar'
-        $this->vm->restore(true, "1.0", "/tests_version_base/versioned"); // TODO: is 1.0 implementation specific? should use the VersionInterface object probably
+        $this->vm->restore(true, $version->getName(), '/tests_version_base/versioned');
 
         // Read the NEW value and test if the cache has been cleared.
         $node = $this->sharedFixture['session']->getNode('/tests_version_base/versioned');

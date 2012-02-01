@@ -63,8 +63,8 @@ class DeleteVersionTest extends \PHPCR\Test\BaseCase
      */
     public function testDeleteLatestVersion()
     {
-        $version = $this->vm->checkpoint("/tests_version_base/versioned");
-        $history = $this->vm->getVersionHistory("/tests_version_base/versioned");
+        $version = $this->vm->checkpoint('/tests_version_base/versioned');
+        $history = $this->vm->getVersionHistory('/tests_version_base/versioned');
         $history->removeVersion($version->getName());
     }
 
@@ -75,8 +75,8 @@ class DeleteVersionTest extends \PHPCR\Test\BaseCase
      */
     public function testDeleteUnexistingVersion()
     {
-        $version = $this->vm->checkpoint("/tests_version_base/versioned");
-        $history = $this->vm->getVersionHistory("/tests_version_base/versioned");
+        $version = $this->vm->checkpoint('/tests_version_base/versioned');
+        $history = $this->vm->getVersionHistory('/tests_version_base/versioned');
         $history->removeVersion('unexisting');
     }
 
@@ -87,7 +87,7 @@ class DeleteVersionTest extends \PHPCR\Test\BaseCase
      */
     public function testNodeRemoveOnVersion()
     {
-        $version = $this->vm->checkpoint("/tests_version_base/versioned");
+        $version = $this->vm->checkpoint('/tests_version_base/versioned');
         $version->remove();
     }
 
