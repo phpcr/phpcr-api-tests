@@ -1,0 +1,304 @@
+<?php
+namespace PHPCR\Tests\Versioning;
+
+require_once(__DIR__ . '/../../inc/BaseCase.php');
+
+/**
+ * Testing version manager functions
+ *
+ * Covering jcr-2.8.3 spec $15.1
+ */
+class VersionManagerTest extends \PHPCR\Test\BaseCase
+{
+    static public function setupBeforeClass($fixtures = '15_Versioning/base')
+    {
+        parent::setupBeforeClass($fixtures);
+    }
+
+    public function setUp()
+    {
+        parent::setUp();
+        $this->node = $this->sharedFixture['session']->getNode('/tests_version_base/versionable');
+        $this->vm = $this->sharedFixture['session']->getWorkspace()->getVersionManager();
+    }
+
+
+    public function testCheckinCheckoutVersion()
+    {
+        $history = $this->vm->getVersionHistory('/tests_version_base/versioned');
+        $this->assertEquals(1, count($history->getAllVersions()));
+
+        $this->vm->checkout('/tests_version_base/versioned');
+        $node = $this->sharedFixture['session']->getNode('/tests_version_base/versioned');
+        $node->setProperty('foo', 'bar');
+        $this->sharedFixture['session']->save();
+
+        $this->vm->checkin('/tests_version_base/versioned');
+        $this->assertEquals(2, count($history->getAllVersions()));
+
+        $this->renewSession();
+        $node = $this->sharedFixture['session']->getNode('/tests_version_base/versioned');
+        $this->assertTrue($node->hasProperty('foo'));
+        $this->assertEquals('bar', $node->getPropertyValue('foo'));
+    }
+
+    public function testWriteNotCheckedOutVersion()
+    {
+        $this->vm->checkout('/tests_version_base/versioned');
+        $node = $this->sharedFixture['session']->getNode('/tests_version_base/versioned');
+
+        $node->setProperty('foo', 'bar');
+        $this->sharedFixture['session']->save();
+        $this->vm->checkin('/tests_version_base/versioned');
+
+        // all this should have worked, now we try something that should fail
+        $this->setExpectedException('PHPCR\Version\VersionException');
+        $node->setProperty('foo', 'bar2');
+        $this->sharedFixture['session']->save();
+
+    }
+
+    public function testCheckpoint()
+    {
+        $this->vm->checkout('/tests_version_base/versioned');
+        $this->vm->checkpoint('/tests_version_base/versioned');
+
+        $node = $this->sharedFixture['session']->getNode('/tests_version_base/versioned');
+
+        $node->setProperty('foo', 'babar');
+        $this->sharedFixture['session']->save();
+        $newNode = $this->vm->checkin('/tests_version_base/versioned');
+
+        $this->assertInstanceOf('\PHPCR\Version\VersionInterface', $newNode);
+    }
+
+    public function testCheckinTwice()
+    {
+        $version = $this->vm->checkin('/tests_version_base/versioned'); // make sure node is checked in
+
+        $history = $this->vm->getVersionHistory('/tests_version_base/versioned');
+        $count = count($history->getAllVersions());
+
+        $version2 = $this->vm->checkin('/tests_version_base/versioned'); // this should not create a new version
+
+        $this->assertEquals($count, count($history->getAllVersions()));
+        $session = $this->saveAndRenewSession();
+        $history = $session->getWorkspace()->getVersionManager()->getVersionHistory('/tests_version_base/versioned');
+        $this->assertEquals($count, count($history->getAllVersions()));
+
+        $this->assertSame($version, $version2, 'must be the same version instance');
+    }
+
+
+
+    public function testGetBaseVersion()
+    {
+        $version = $this->vm->getBaseVersion('/tests_version_base/versioned');
+        $this->assertInstanceOf('PHPCR\\Version\\VersionInterface', $version);
+    }
+
+    /**
+     * @expectedException PHPCR\UnsupportedRepositoryOperationException
+     */
+    public function testGetBaseVersionNonversionable()
+    {
+        $version = $this->vm->getBaseVersion('/tests_version_base/unversionable');
+    }
+
+    /**
+     * @expectedException PHPCR\RepositoryException
+     */
+    public function testGetBaseVersionNotfound()
+    {
+        $version = $this->vm->getBaseVersion('/tests_version_base/not_existing');
+    }
+
+
+    public function testGetVersionHistory()
+    {
+        $nodePath = '/tests_version_base/versioned';
+        $history = $this->vm->getVersionHistory($nodePath);
+        $this->assertInstanceOf('PHPCR\\Version\\VersionHistoryInterface', $history);
+        $this->assertSame($history, $this->vm->getVersionHistory($nodePath));
+    }
+
+    /**
+     * @expectedException PHPCR\UnsupportedRepositoryOperationException
+     */
+    public function testGetVersionHistoryNonversionable()
+    {
+        $this->vm->getVersionHistory('/tests_version_base/unversionable');
+    }
+
+    /**
+     * @expectedException PHPCR\RepositoryException
+     */
+    public function testGetVersionHistoryNotfound()
+    {
+        $this->vm->getVersionHistory('/tests_version_base/not_existing');
+    }
+
+    /**
+     * @depends testCheckinCheckoutVersion
+     */
+    public function testIsCheckedOut()
+    {
+        $nodePath = '/tests_version_base/versioned';
+        $this->vm->checkin($nodePath);
+        $this->assertFalse($this->vm->isCheckedOut($nodePath));
+        $this->vm->checkout($nodePath);
+        $this->assertTrue($this->vm->isCheckedOut($nodePath));
+    }
+
+    /**
+     * @expectedException PHPCR\UnsupportedRepositoryOperationException
+     */
+    public function testIsCheckedOutNonversionable()
+    {
+        $this->vm->isCheckedOut('/tests_version_base/unversionable');
+    }
+    /**
+     * @expectedException PHPCR\RepositoryException
+     */
+    public function testIsCheckedOutNotExisting()
+    {
+        $this->vm->isCheckedOut('/tests_version_base/not_existing');
+    }
+
+
+    public function testRestoreByPathAndName()
+    {
+        $nodePath = '/tests_version_base/versioned';
+        $this->vm->checkout($nodePath);
+        $node = $this->sharedFixture['session']->getNode($nodePath);
+
+        $node->setProperty('foo', 'bar');
+        $this->sharedFixture['session']->save();
+        $version = $this->vm->checkin($nodePath);
+
+        $this->vm->checkout($nodePath);
+
+        $node->setProperty('foo', 'bar2');
+        $this->sharedFixture['session']->save();
+        $this->vm->checkin($nodePath);
+
+        $this->vm->checkout($nodePath);
+        $node = $this->sharedFixture['session']->getNode($nodePath);
+
+        $node->setProperty('foo', 'bar3');
+        $this->sharedFixture['session']->save();
+        $this->vm->checkin($nodePath);
+
+        $node = $this->sharedFixture['session']->getNode($nodePath);
+        // Read the OLD value out of the var and fill the cache
+        $this->assertEquals('bar3', $node->getProperty('foo')->getValue());
+
+        $history = $this->vm->getVersionHistory($nodePath);
+
+        // Restore the first version aka 'bar'
+        $this->vm->restore(true, $version->getName(), $nodePath);
+
+        // Read the NEW value and test if the cache has been cleared.
+        $node = $this->sharedFixture['session']->getNode($nodePath);
+        $this->assertEquals('bar', $node->getProperty('foo')->getValue());
+
+        // Read the NEW value out of the var after the session is renewed and the cache clear
+        $this->renewSession();
+        $this->vm = $this->sharedFixture['session']->getWorkspace()->getVersionManager();
+
+        $node = $this->sharedFixture['session']->getNode($nodePath);
+        $this->assertEquals('bar', $node->getProperty('foo')->getValue());
+    }
+    public function testRestoreByVersionObject()
+    {
+        $nodePath = '/tests_version_base/versioned';
+        $this->vm->checkout($nodePath);
+        $node = $this->sharedFixture['session']->getNode($nodePath);
+
+        $node->setProperty('foo', 'bar');
+        $this->sharedFixture['session']->save();
+        $version = $this->vm->checkin($nodePath);
+
+        $this->vm->checkout($nodePath);
+
+        $node->setProperty('foo', 'bar2');
+        $this->sharedFixture['session']->save();
+        $this->vm->checkin($nodePath);
+
+        $this->vm->checkout($nodePath);
+        $node = $this->sharedFixture['session']->getNode($nodePath);
+
+        $node->setProperty('foo', 'bar3');
+        $this->sharedFixture['session']->save();
+        $this->vm->checkin($nodePath);
+
+        $node = $this->sharedFixture['session']->getNode($nodePath);
+        // Read the OLD value out of the var and fill the cache
+        $this->assertEquals('bar3', $node->getProperty('foo')->getValue());
+
+        // Restore the first version aka 'bar'
+        $this->vm->restore(true, $version);
+
+        // Read the NEW value and test if the cache has been cleared.
+        $node = $this->sharedFixture['session']->getNode($nodePath);
+        $this->assertEquals('bar', $node->getProperty('foo')->getValue());
+
+        // Read the NEW value out of the var after the session is renewed and the cache clear
+        $this->renewSession();
+        $node = $this->sharedFixture['session']->getNode($nodePath);
+        $this->assertEquals('bar', $node->getProperty('foo')->getValue());
+    }
+
+    // TODO: test restore with removeExisting false and having an id clash
+
+    // TODO: testRestoreByVersionArray, testRestoreVersionToPath, testRestoreVersionToExistingPath (expect exception)
+
+    /**
+     * @expectedException PHPCR\UnsupportedRepositoryOperationException
+     */
+    public function testRestoreNonversionablePath()
+    {
+        $this->vm->restore(true, 'something', '/tests_version_base/unversionable');
+    }
+    /**
+     * @expectedException PHPCR\RepositoryException
+     */
+    public function testRestoreNonexistingPath()
+    {
+        $this->vm->restore(true, 'something', '/tests_version_base/not_existing');
+    }
+    /**
+     * @expectedException PHPCR\Version\VersionException
+     */
+    public function testRestoreNonexistingName()
+    {
+        $this->vm->restore(true, 'not-existing', '/tests_version_base/versioned');
+    }
+    public function testRestoreNonsenseArguments()
+    {
+        try {
+            $this->vm->restore(true, 'something');
+            $this->fail('restoring with version name and no path should throw an exception');
+        } catch (\Exception $e) {
+            // we expect something to be thrown
+        }
+        try {
+            $this->vm->restore(true, $this);
+            $this->fail('restoring with non-version object');
+        } catch (\Exception $e) {
+            // we expect something to be thrown
+        }
+    }
+    /**
+     * @expectedException PHPCR\Version\VersionException
+     */
+    public function testRestoreRootVersion()
+    {
+        $rootVersion = $this->vm->getVersionHistory('/tests_version_base/versioned')->getRootVersion();
+        $this->vm->restore(true, $rootVersion);
+    }
+
+
+    // TODO: cancelMerge, merge, doneMerge, createConfiguration, createActivity, setActivity, getActivity, removeActivity, restoreByLabel
+
+}
