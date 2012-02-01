@@ -93,18 +93,18 @@ class LockManagerTest extends \PHPCR\Test\BaseCase
      */
     public function testCanLockLockableNodes()
     {
-        $this->recreateTestNode('lockable');
+        $node = $this->recreateTestNode('lockable');
         $lock = $this->lm->lock('/lockable', false, true, 3);
         $this->assertNotNull($lock);
-        $this->assertLockEquals($lock, 'admin', false, true, 3);
+        $this->assertLockEquals($lock, $node, 'admin', false, true, 3);
     }
 
     public function testLockExpire()
     {
-        $this->recreateTestNode('lockable-expire');
+        $node = $this->recreateTestNode('lockable-expire');
         $lock = $this->lm->lock('/lockable-expire', false, true, 1);
         $this->assertNotNull($lock);
-        $this->assertLockEquals($lock, 'admin', false, true, 1);
+        $this->assertLockEquals($lock, $node, 'admin', false, true, 1);
         $this->assertTrue($this->lm->isLocked('/lockable-expire'));
         $this->assertTrue($lock->isLive());
         sleep(2);
@@ -130,10 +130,10 @@ class LockManagerTest extends \PHPCR\Test\BaseCase
 
     public function testCanLockLockableNodeInfiniteTimeout()
     {
-        $this->recreateTestNode('lockable-infinite');
+        $node = $this->recreateTestNode('lockable-infinite');
         $lock = $this->lm->lock('/lockable-infinite', false, true, PHP_INT_MAX);
         $this->assertNotNull($lock);
-        $this->assertLockEquals($lock, 'admin', false, true, PHP_INT_MAX);
+        $this->assertLockEquals($lock, $node, 'admin', false, true, PHP_INT_MAX);
     }
 
     /**
@@ -179,10 +179,10 @@ class LockManagerTest extends \PHPCR\Test\BaseCase
      */
     public function testLockOwner()
     {
-        $this->recreateTestNode('lockable-owner');
+        $node = $this->recreateTestNode('lockable-owner');
         $lock = $this->lm->lock('/lockable-owner', false, true, 3, 'testownerstring');
         $this->assertNotNull($lock);
-        $this->assertLockEquals($lock, 'testownerstring', false, true, 3);
+        $this->assertLockEquals($lock, $node, 'testownerstring', false, true, 3);
     }
 
     // ----- ISLOCKED TESTS ---------------------------------------------------
@@ -282,14 +282,16 @@ class LockManagerTest extends \PHPCR\Test\BaseCase
     /**
      * Helper function to simplify the test of valid Lock objects
      * @param \PHPCR\Lock\LockInterface $lock The lock to check
+     * @param NodeInterface the expected node of this lock
      * @param string $expectedOwner
      * @param boolean $expectedIsDeep
      * @param boolean $expectedIsSessionScoped
      * @param int $timeout the expected seconds remaining. One second less remaining is accepted too to permit for one second change
      */
-    protected function assertLockEquals(\PHPCR\Lock\LockInterface $lock, $expectedOwner, $expectedIsDeep, $expectedIsSessionScoped, $timeout)
+    protected function assertLockEquals($lock, $expectedNode, $expectedOwner, $expectedIsDeep, $expectedIsSessionScoped, $timeout)
     {
         $this->assertInstanceOf('\PHPCR\Lock\LockInterface', $lock);
+        $this->assertSame($expectedNode, $lock->getNode());
         $this->assertEquals($expectedOwner, $lock->getLockOwner());
         $this->assertEquals($expectedIsDeep, $lock->isDeep());
         $this->assertEquals($expectedIsSessionScoped, $lock->isSessionScoped());
