@@ -320,28 +320,6 @@ class DeleteMethodsTest extends \PHPCR\Test\BaseCase
         $property->refresh(false);
     }
 
-
-    /**
-     * add node at place where there already was an other
-     */
-    public function testAddNodeOverRemoved()
-    {
-        //relies on the base class setup trick to have the node populated from the fixtures
-        $this->assertInstanceOf('PHPCR\NodeInterface', $this->node);
-
-        $name = $this->node->getName();
-        $path = $this->node->getPath();
-        $parent = $this->node->getParent();
-        $this->node->remove();
-        $new = $parent->addNode($name, 'nt:unstructured');
-        $item = $this->sharedFixture['session']->getNode($path);
-        $this->assertEquals($new, $item);
-
-        $this->saveAndRenewSession();
-
-        $this->assertNotNull($this->node);
-    }
-
     /**
      * deleting a node must cascade to its children
      */

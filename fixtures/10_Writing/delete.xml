@@ -123,11 +123,6 @@
       <sv:value>124</sv:value>
     </sv:property>
   </sv:node>
-  <sv:node sv:name="testAddNodeOverRemoved">
-    <sv:property sv:name="jcr:primaryType" sv:type="Name">
-      <sv:value>nt:unstructured</sv:value>
-    </sv:property>
-  </sv:node>
 
   <sv:node sv:name="testDeleteCascade">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
