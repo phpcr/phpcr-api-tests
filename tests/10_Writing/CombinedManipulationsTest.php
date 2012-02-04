@@ -84,6 +84,46 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
         $this->assertFalse($session->getNode($parentpath)->hasNode('child'));
     }
 
+    /**
+     * remove a node and then add a new one at the same path and then remove again
+     *
+     * in the end, the node must disapear
+     */
+    public function testAddAndRemoveAndAdd()
+    {
+        $session = $this->sharedFixture['session'];
+
+        $parentpath = $this->node->getPath();
+        $path = "$parentpath/child";
+
+        $node = $this->node->addNode('child', 'nt:folder');
+
+        $this->assertTrue($session->nodeExists($path));
+        $this->assertTrue($this->node->hasNode('child'));
+
+        $node->remove();
+        $this->assertFalse($session->nodeExists($path));
+        $this->assertFalse($this->node->hasNode('child'));
+
+        $newnode = $this->node->addNode('child', 'nt:unstructured');
+        $this->assertNotSame($node, $newnode);
+
+        $this->assertTrue($session->nodeExists($path));
+        $this->assertTrue($this->node->hasNode('child'));
+
+        $session->save();
+
+        $this->assertTrue($session->nodeExists($path));
+        $this->assertTrue($this->node->hasNode('child'));
+
+        $session = $this->renewSession();
+
+        $this->assertTrue($session->nodeExists($path));
+        $this->assertTrue($session->getNode($parentpath)->hasNode('child'));
+        $node = $session->getNode($parentpath)->getNode('child');
+        $this->assertTrue($node->isNodeType('nt:unstructured'));
+    }
+
     public function testRemoveAndAddToplevelNode()
     {
         $nodename = 'toBeDeleted';
