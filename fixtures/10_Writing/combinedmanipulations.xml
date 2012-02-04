@@ -7,6 +7,12 @@
     <sv:value>2009-04-27T13:00:54.082+02:00</sv:value>
   </sv:property>
 
+  <sv:node sv:name="testAddAndRemove">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>nt:unstructured</sv:value>
+    </sv:property>
+  </sv:node>
+
   <sv:node sv:name="testRemoveAndAdd">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
       <sv:value>nt:unstructured</sv:value>
