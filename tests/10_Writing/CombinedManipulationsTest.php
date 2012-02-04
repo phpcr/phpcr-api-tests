@@ -39,7 +39,7 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
         $node->remove();
         $this->assertFalse($session->nodeExists($path));
         $this->assertFalse($this->node->hasNode('child'));
-        $newnode = $this->node->addNode('child', 'nt:folder');
+        $this->node->addNode('child', 'nt:folder');
 
         $this->assertTrue($session->nodeExists($path));
         $this->assertTrue($this->node->hasNode('child'));
@@ -52,6 +52,72 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
         $this->assertInstanceOf('PHPCR\NodeInterface', $node);
         $this->assertSame('nt:folder', $node->getPrimaryNodeType()->getName());
         $this->assertFalse($node->hasNodes());
+    }
+
+    /**
+     * remove a node and then add a new one at the same path and then remove again
+     *
+     * in the end, the node must disapear
+     */
+    public function testRemoveAndAddAndRemove()
+    {
+        $session = $this->sharedFixture['session'];
+        $node = $this->node->getNode('child');
+        $path = $node->getPath();
+        $parentpath = $this->node->getPath();
+
+        $node->remove();
+        $this->assertFalse($session->nodeExists($path));
+        $this->assertFalse($this->node->hasNode('child'));
+        $node = $this->node->addNode('child', 'nt:folder');
+
+        $this->assertTrue($session->nodeExists($path));
+        $this->assertTrue($this->node->hasNode('child'));
+
+        $node->remove();
+        $this->assertFalse($session->nodeExists($path));
+        $this->assertFalse($this->node->hasNode('child'));
+
+        $session = $this->saveAndRenewSession();
+
+        $this->assertFalse($session->nodeExists($path));
+        $this->assertFalse($session->getNode($parentpath)->hasNode('child'));
+    }
+
+    public function testRemoveAndAddToplevelNode()
+    {
+        $nodename = 'toBeDeleted';
+        if (! $this->rootNode->hasNode($nodename)) {
+            $this->rootNode->addNode($nodename, 'nt:unstructured');
+        }
+        $session = $this->saveAndRenewSession();
+        $node = $this->sharedFixture['session']->getNode("/$nodename");
+
+        // remove + add
+        $node->remove();
+        $node = $this->rootNode->addNode($nodename, 'nt:unstructured');
+        $this->assertTrue($node->isNew());
+        $session->save();
+
+        $this->assertTrue($session->nodeExists("/$nodename"));
+
+        $this->renewSession();
+
+        $this->assertTrue($this->sharedFixture['session']->nodeExists("/$nodename"));
+        $node = $this->sharedFixture['session']->getNode("/$nodename");
+
+        // remove + add + remove
+        $node->remove();
+        $node = $this->rootNode->addNode($nodename, 'nt:unstructured');
+        $this->assertTrue($node->isNew());
+        $node->remove();
+        $this->sharedFixture['session']->save();
+
+        $this->renewSession();
+
+        $this->setExpectedException('\PHPCR\PathNotFoundException');
+        $this->sharedFixture['session']->getNode("/$nodename");
+
     }
 
     /**

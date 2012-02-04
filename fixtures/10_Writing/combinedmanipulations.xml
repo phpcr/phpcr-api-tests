@@ -18,6 +18,24 @@
     </sv:node>
   </sv:node>
 
+  <sv:node sv:name="testRemoveAndAddAndRemove">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>nt:unstructured</sv:value>
+    </sv:property>
+    <sv:node sv:name="child">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>nt:unstructured</sv:value>
+      </sv:property>
+    </sv:node>
+  </sv:node>
+
+  <!-- this test will create its own node, but sanity checks test for this node to exist -->
+  <sv:node sv:name="testRemoveAndAddToplevelNode">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>nt:unstructured</sv:value>
+    </sv:property>
+  </sv:node>
+
   <sv:node sv:name="testRemoveAndMove">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
       <sv:value>nt:unstructured</sv:value>

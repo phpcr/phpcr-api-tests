@@ -446,34 +446,4 @@ class DeleteMethodsTest extends \PHPCR\Test\BaseCase
 
         $this->assertFalse($this->node->hasNode('idExample'));
     }
-
-    public function testRemoveReaddNode()
-    {
-        $this->rootNode->addNode('toBeDeleted', 'nt:unstructured');
-        $this->sharedFixture['session']->save();
-
-        $this->renewSession();
-
-        $node = $this->sharedFixture['session']->getNode('/toBeDeleted');
-
-        // remove + add
-        $node->remove();
-        $this->rootNode->addNode('toBeDeleted', 'nt:unstructured');
-        $this->sharedFixture['session']->save();
-
-        $this->renewSession();
-
-        $node = $this->sharedFixture['session']->getNode('/toBeDeleted');
-
-        // remove + add + remove
-        $node->remove();
-        $node = $this->rootNode->addNode('toBeDeleted', 'nt:unstructured');
-        $node->remove();
-        $this->sharedFixture['session']->save();
-
-        $this->renewSession();
-
-        $this->setExpectedException('\PHPCR\PathNotFoundException');
-        $this->sharedFixture['session']->getNode('/toBeDeleted');
-    }
 }
