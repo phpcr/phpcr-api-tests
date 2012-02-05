@@ -12,6 +12,7 @@ require_once(__DIR__ . '/../../inc/BaseCase.php');
 class NodeNodeTypeReadMethodsTest extends \PHPCR\Test\BaseCase
 {
     protected $versioned;
+    protected $simpleVersioned;
 
     static public function setupBeforeClass($fixtures = '15_Versioning/base')
     {
@@ -23,16 +24,21 @@ class NodeNodeTypeReadMethodsTest extends \PHPCR\Test\BaseCase
         parent::setUp();
 
         $this->versioned = $this->sharedFixture['session']->getNode('/tests_version_base/versioned');
+        $this->simpleVersioned = $this->sharedFixture['session']->getNode('/tests_version_base/simpleVersioned');
     }
 
     public function testIsMixin()
     {
         $this->assertTrue($this->versioned->isNodeType('mix:versionable'));
+        $this->assertTrue($this->versioned->isNodeType('mix:simpleVersionable'));
+        $this->assertFalse($this->simpleVersioned->isNodeType('mix:versionable'));
+        $this->assertTrue($this->simpleVersioned->isNodeType('mix:simpleVersionable'));
     }
 
     public function testIsParentMixin()
     {
         $this->assertTrue($this->versioned->isNodeType('mix:referenceable'));
+        $this->assertFalse($this->simpleVersioned->isNodeType('mix:referenceable'));
     }
 
     public function testIsNotMixin()

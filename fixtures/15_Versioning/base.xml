@@ -27,4 +27,15 @@
           <sv:value>something</sv:value>
       </sv:property>
     </sv:node>
+    <sv:node sv:name="simpleVersioned">
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+            <sv:value>nt:unstructured</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+            <sv:value>mix:simpleVersionable</sv:value>
+        </sv:property>
+        <sv:property sv:name="foo" sv:type="String">
+            <sv:value>something</sv:value>
+        </sv:property>
+    </sv:node>
 </sv:node>
