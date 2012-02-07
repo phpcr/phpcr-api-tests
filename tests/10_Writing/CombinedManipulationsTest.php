@@ -242,7 +242,6 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
     {
         $session = $this->sharedFixture['session'];
         $node = $this->node;
-        $path = $node->getPath();
 
         $node->setProperty('prop', 'New');
         $this->assertEquals('New', $node->getPropertyValue('prop'));
@@ -254,7 +253,7 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
         $othersession->save();
 
         $session->refresh(false);
-        // TODO: fix this $this->assertFalse($session->hasPendingChanges());
+        $this->assertFalse($session->hasPendingChanges());
         $this->assertEquals('Other', $node->getPropertyValue('prop'));
         $this->assertTrue($node->hasProperty('newprop'));
         $this->assertEquals('Test', $node->getPropertyValue('newprop'));
@@ -315,7 +314,7 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
         $this->assertFalse($session->nodeExists($node->getPath() . '/child'));
 
         $session->refresh(false);
-        // TODO: fix this $this->assertFalse($session->hasPendingChanges());
+        $this->assertFalse($session->hasPendingChanges());
         $this->assertEquals('Old', $node->getPropertyValue('prop'));
         $this->assertTrue($node->hasNode('child'));
         $this->assertTrue($session->nodeExists($node->getPath() . '/child'));
@@ -431,10 +430,6 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
         $this->assertFalse($target->hasNode('childnew'));
     }
 
-
-    /**
-     * @group x
-     */
     public function testMoveSessionRefreshKeepChanges()
     {
         $session = $this->sharedFixture['session'];
@@ -488,7 +483,7 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
         $node->setProperty('prop', 'Test');
 
         $session->refresh(false);
-        // TODO: fix this $this->assertFalse($session->hasPendingChanges());
+        $this->assertFalse($session->hasPendingChanges());
 
         $this->assertFalse($node->hasNode('child'));
         $this->assertFalse($node->hasProperty('prop'));
@@ -545,8 +540,8 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
         $session = $this->sharedFixture['session'];
         $node = $this->node;
 
-        $child = $node->addNode('child');
-        $property = $node->setProperty('other', 'Test');
+        $node->addNode('child');
+        $node->setProperty('other', 'Test');
         $existingProperty = $node->setProperty('prop', 'New');
 
         $node->refresh(false);
