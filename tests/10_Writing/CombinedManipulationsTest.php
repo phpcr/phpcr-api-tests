@@ -43,6 +43,9 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
 
         $this->assertTrue($session->nodeExists($path));
         $this->assertTrue($this->node->hasNode('child'));
+        $session->save();
+        $this->assertTrue($session->nodeExists($path));
+        $this->assertTrue($this->node->hasNode('child'));
 
         $session = $this->saveAndRenewSession();
 
@@ -52,6 +55,38 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
         $this->assertInstanceOf('PHPCR\NodeInterface', $node);
         $this->assertSame('nt:folder', $node->getPrimaryNodeType()->getName());
         $this->assertFalse($node->hasNodes());
+    }
+
+    /**
+     * remove a node, save and then add a new one at the same path
+     *
+     * almost the same as above, but we had bugs in jackalope with internal
+     * state tracking in this situation
+     */
+    public function testRemoveSaveAndAdd()
+    {
+        $session = $this->sharedFixture['session'];
+        $node = $this->node->getNode('child');
+        $path = $node->getPath();
+        $this->assertInstanceOf('PHPCR\NodeType\NodeTypeInterface', $node->getPrimaryNodeType());
+        $this->assertSame('nt:unstructured', $node->getPrimaryNodeType()->getName());
+
+        $node->remove();
+        $this->node->setProperty('test', 'toast');
+
+        $session->save();
+        $newnode = $this->node->addNode('child', 'nt:folder');
+        $this->assertNotSame($node, $newnode); // adding the node has to create a new object
+
+        $this->node->getPropertyValue('test');
+        $this->assertSame($newnode, $this->node->getNode($newnode->getPath()));
+        $this->assertSame($newnode, $session->getNode($path));
+
+        $session->save();
+
+        $this->assertTrue($session->nodeExists($path));
+        $this->assertTrue($this->node->hasNode('child'));
+
     }
 
     /**
