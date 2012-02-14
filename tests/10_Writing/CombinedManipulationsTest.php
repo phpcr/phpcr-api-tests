@@ -79,7 +79,7 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
         $this->assertNotSame($node, $newnode); // adding the node has to create a new object
 
         $this->node->getPropertyValue('test');
-        $this->assertSame($newnode, $this->node->getNode($newnode->getPath()));
+        $this->assertSame($newnode, $this->node->getNode($newnode->getName()));
         $this->assertSame($newnode, $session->getNode($path));
 
         $session->save();
