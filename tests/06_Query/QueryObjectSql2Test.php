@@ -6,7 +6,7 @@ require_once('QueryBaseCase.php');
 /**
  * test the Query interface. $ 6.9
  *
- * setLimit, setOffset, bindValue, getBindVariableNames
+ * bindValue, getBindVariableNames
  */
 class QueryObjectSql2Test extends QueryBaseCase
 {
@@ -27,6 +27,31 @@ class QueryObjectSql2Test extends QueryBaseCase
         $qr = $query->execute();
         $this->assertInstanceOf('PHPCR\Query\QueryResultInterface', $qr);
         //content of result is tested in QueryResults
+    }
+
+    public function testExecuteLimit()
+    {
+        $this->query->setLimit(2);
+        $qr = $this->query->execute();
+        $this->assertInstanceOf('PHPCR\Query\QueryResultInterface', $qr);
+        $this->assertCount(2, $qr->getRows());
+    }
+
+    public function testExecuteOffset()
+    {
+        $this->query->setOffset(2);
+        $qr = $this->query->execute();
+        $this->assertInstanceOf('PHPCR\Query\QueryResultInterface', $qr);
+        $this->assertCount(3, $qr->getRows());
+    }
+
+    public function testExecuteLimitAndOffset()
+    {
+        $this->query->setOffset(2);
+        $this->query->setLimit(1);
+        $qr = $this->query->execute();
+        $this->assertInstanceOf('PHPCR\Query\QueryResultInterface', $qr);
+        $this->assertCount(1, $qr->getRows());
     }
 
     /**
@@ -62,7 +87,7 @@ class QueryObjectSql2Test extends QueryBaseCase
         $query = $this->sharedFixture['qm']->createQuery($this->simpleQuery, \PHPCR\Query\QueryInterface::JCR_SQL2);
         $query->getStoredQueryPath();
     }
-    /* this is level 2 only */
+    /* this is only with write support only */
     /*
     public function testStoreAsNode()
     {
