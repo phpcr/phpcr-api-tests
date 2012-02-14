@@ -106,17 +106,17 @@ class NodeReadMethodsTest extends \PHPCR\Test\BaseCase
 
     /*** node specific methods ***/
 
-    public function testGetNodeAbsolutePath()
-    {
-        $node = $this->rootNode->getNode('/tests_general_base');
-        $this->assertInstanceOf('PHPCR\NodeInterface', $node);
-    }
-
     public function testGetNodeRelativePath()
     {
         $node = $this->rootNode->getNode('tests_general_base');
         $this->assertInstanceOf('PHPCR\NodeInterface', $node);
         $this->assertEquals('tests_general_base', $node->getName());
+    }
+
+    public function testGetNodeRelativePathParent()
+    {
+        $node = $this->node->getNode('..');
+        $this->assertSame($this->rootNode, $node);
     }
 
     /**
@@ -125,6 +125,14 @@ class NodeReadMethodsTest extends \PHPCR\Test\BaseCase
     public function testGetNodePathNotFoundException()
     {
         $this->rootNode->getNode('foobar');
+    }
+
+    /**
+     * @expectedException \PHPCR\PathNotFoundException
+     */
+    public function testGetNodeAbsolutePath()
+    {
+        $this->rootNode->getNode('/tests_general_base');
     }
 
     /**
@@ -175,7 +183,7 @@ class NodeReadMethodsTest extends \PHPCR\Test\BaseCase
     }
     public function testGetNodesNameGlobs()
     {
-        $node = $this->rootNode->getNode('/tests_general_base');
+        $node = $this->rootNode->getNode('tests_general_base');
         $iterator = $node->getNodes(array('idExample', 'test:*', 'jcr:*'));
         $nodes = array();
         foreach ($iterator as $n) {
@@ -254,7 +262,7 @@ class NodeReadMethodsTest extends \PHPCR\Test\BaseCase
 
     public function testGetPropertiesValuesAll()
     {
-        $node = $this->rootNode->getNode('/tests_general_base/idExample/jcr:content/weakreference_source1');
+        $node = $this->sharedFixture['session']->getNode('/tests_general_base/idExample/jcr:content/weakreference_source1');
         $props = $node->getPropertiesValues();
         $this->assertInternalType('array', $props);
         $this->assertArrayHasKey('ref1', $props);
@@ -263,7 +271,7 @@ class NodeReadMethodsTest extends \PHPCR\Test\BaseCase
 
     public function testGetPropertiesValuesAllNoDereference()
     {
-        $node = $this->rootNode->getNode('/tests_general_base/idExample/jcr:content/weakreference_source1');
+        $node = $this->sharedFixture['session']->getNode('/tests_general_base/idExample/jcr:content/weakreference_source1');
         $props = $node->getPropertiesValues(null,false);
         $this->assertInternalType('array', $props);
         $this->assertArrayHasKey('ref1', $props);
@@ -272,7 +280,7 @@ class NodeReadMethodsTest extends \PHPCR\Test\BaseCase
 
     public function testGetPropertiesValuesGlob()
     {
-        $node = $this->rootNode->getNode('/tests_general_base/idExample/jcr:content/weakreference_source1');
+        $node = $this->sharedFixture['session']->getNode('/tests_general_base/idExample/jcr:content/weakreference_source1');
         $props = $node->getPropertiesValues("jcr:*");
         $this->assertInternalType('array', $props);
         /*
