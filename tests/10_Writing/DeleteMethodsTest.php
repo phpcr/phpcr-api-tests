@@ -308,7 +308,7 @@ class DeleteMethodsTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * try to remove a node that has already been removed in this session
+     * try to call refresh on a property that has been removed in this session
      * @expectedException \PHPCR\InvalidItemStateException
      */
     public function testRefreshRemovedProperty()
