@@ -37,8 +37,13 @@ class MoveMethodsTest extends \PHPCR\Test\BaseCase
         $dstNode = $session->getNode($dst);
         $this->assertInstanceOf('PHPCR\NodeInterface', $dstNode);
 
+        $session->save();
+        $this->assertTrue($session->nodeExists($dst), 'Destination node not found [B]');
+        $this->assertFalse($session->nodeExists($src), 'Source node still exists [B]');
+        $this->assertTrue($session->nodeExists($dst.'/srcFile/jcr:content'), 'Destination child node not found [B]');
+
         // Backend
-        $session = $this->saveAndRenewSession();
+        $session = $this->renewSession();
         $this->assertTrue($session->nodeExists($dst), 'Destination node not found [B]');
         $this->assertFalse($session->nodeExists($src), 'Source node still exists [B]');
         $this->assertTrue($session->nodeExists($dst.'/srcFile/jcr:content'), 'Destination child node not found [B]');
@@ -80,10 +85,11 @@ class MoveMethodsTest extends \PHPCR\Test\BaseCase
         $dst = '/tests_write_manipulation_move/testSessionMovePathUpdated/dstNode/srcNode';
 
         // load node into cache
-        $session->getNode($src);
+        $node = $session->getNode($src);
 
         $session->move($src, $dst);
 
+        $this->assertEquals($dst, $node->getPath(), 'Path of locally cached node was not updated');
         $this->assertEquals($dst, $session->getNode($dst)->getPath(), 'Path of locally cached node was not updated');
     }
 
