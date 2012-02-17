@@ -224,7 +224,6 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
 
         $this->setExpectedException('\PHPCR\PathNotFoundException');
         $this->sharedFixture['session']->getNode("/$nodename");
-
     }
 
     /**
@@ -251,6 +250,21 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
         $this->assertInstanceOf('PHPCR\NodeInterface', $node);
         $this->assertSame('nt:folder', $node->getPrimaryNodeType()->getName());
         $this->assertFalse($node->hasNodes());
+    }
+
+    public function testAddAndChildAddAndMove()
+    {
+        $session = $this->sharedFixture['session'];
+        $path = $this->node->getPath();
+        $node = $this->node->getNode('node');
+
+        $child = $node->addNode('child');
+        $session->save();
+
+        $session->move("$path/node", "$path/target");
+        $session->save();
+
+        $this->assertEquals("$path/target/child", $child->getPath());
     }
 
     /*
@@ -402,6 +416,7 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
         $session = $this->sharedFixture['session'];
         $node = $this->node;
         $path = $node->getPath();
+        $child = $node->getNode('childnode');
         $childprop = $session->getProperty($node->getPath().'/child/childprop');
 
         $node->setProperty('newprop', 'Value');
@@ -410,17 +425,25 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
         $othernode = $othersession->getNode($node->getPath());
         $othernode->setProperty('prop', null);
         $othernode->getNode('child')->remove();
+        $othernode->getNode('childnode')->remove();
         $othersession->save();
 
         $childprop->refresh(true);
         try {
             $childprop->getValue();
             $this->fail('Should not be possible to get the value of a deleted property');
-        } catch(\Exception $e) {
+        } catch(\PHPCR\RepositoryException $e) {
             //expected
         }
         $session->refresh(true);
+
         $this->assertTrue($session->hasPendingChanges());
+        try {
+            $child->getPath();
+            $this->fail('getting the path of deleted child should throw exception');
+        } catch(\PHPCR\RepositoryException $e) {
+            // expected
+        }
         $this->assertFalse($node->hasProperty('prop'));
         $this->assertFalse($node->hasNode('child'));
         $this->assertTrue($node->hasProperty('newprop'));

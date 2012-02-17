@@ -213,6 +213,31 @@
       </sv:property>
     </sv:node>
   </sv:node>
+    <sv:node sv:name="testSessionMoveReplace">
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+            <sv:value>nt:unstructured</sv:value>
+        </sv:property>
+        <sv:node sv:name="node">
+            <sv:property sv:name="jcr:primaryType" sv:type="Name">
+                <sv:value>nt:unstructured</sv:value>
+            </sv:property>
+            <sv:node sv:name="child">
+                <sv:property sv:name="jcr:primaryType" sv:type="Name">
+                    <sv:value>nt:unstructured</sv:value>
+                </sv:property>
+            </sv:node>
+        </sv:node>
+        <sv:node sv:name="replacement">
+            <sv:property sv:name="jcr:primaryType" sv:type="Name">
+                <sv:value>nt:unstructured</sv:value>
+            </sv:property>
+            <sv:node sv:name="child">
+                <sv:property sv:name="jcr:primaryType" sv:type="Name">
+                    <sv:value>nt:unstructured</sv:value>
+                </sv:property>
+            </sv:node>
+        </sv:node>
+    </sv:node>
   <sv:node sv:name="testSessionDeleteMoved">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
       <sv:value>nt:unstructured</sv:value>
