@@ -19,6 +19,10 @@ class TransactionMethodsTest extends \PHPCR\Test\BaseCase
 
     public function setUp()
     {
+        if (!self::$staticSharedFixture['session']->getRepository()->getDescriptor('option.transactions.supported')) {
+            $this->markTestSkipped('PHPCR repository doesn\'t support transactions');
+        }
+
         $this->renewSession();
         parent::setUp();
         $this->assertInstanceOf('PHPCR\NodeInterface', $this->node, "Something went wrong with fixture loading");
