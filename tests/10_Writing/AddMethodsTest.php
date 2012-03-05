@@ -231,15 +231,23 @@ class AddMethodsTest extends \PHPCR\Test\BaseCase
 
     /**
      * try to add a property of the wrong type
-     *
-     * @expectedException \PHPCR\NodeType\ConstraintViolationException
      */
     public function testAddPropertyWrongType()
     {
         $file = $this->node->addNode('file', 'nt:file');
         $data = $file->addNode('jcr:content', 'nt:resource');
-        $data->setProperty('jcr:data', 'abc', \PHPCR\PropertyType::STRING);
-        $this->saveAndRenewSession();
+        try {
+            $data->setProperty('jcr:lastModified', true);
+            $this->saveAndRenewSession();
+        } catch (\PHPCR\ValueFormatException $e) {
+            //correct according to JSR-287 3.6.4 Property Type Conversion
+            return;
+        } catch (\PHPCR\NodeType\ConstraintViolationException $e) {
+            //also correct
+            return;
+        } 
+        $this->fail("Expected PHPCR\\NodeType\\ConstraintViolationException or PHPCR\\ValueFormatException");
+           
     }
 
     /**
