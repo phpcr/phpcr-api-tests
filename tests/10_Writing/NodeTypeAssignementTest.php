@@ -89,9 +89,6 @@ class NodeTypeAssignementTest extends \PHPCR\Test\BaseCase
         $this->node->addMixin('mix:referenceable'); // this mixin is already in the fixtures
         $this->assertFalse($this->node->isModified());
 
-        $this->markTestIncomplete('TODO: fix adding mixin when there is already one existing');
-        // maybe similar to http://mail-archives.apache.org/mod_mbox/jackrabbit-users/201108.mbox/%3C1314168796503-3764635.post@n4.nabble.com%3E
-
         $this->node->addMixin('mix:mimeType');
         $this->assertTrue($this->node->isModified());
         $this->sharedFixture['session']->save();
