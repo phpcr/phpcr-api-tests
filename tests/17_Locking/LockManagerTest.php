@@ -4,10 +4,13 @@ namespace PHPCR\Tests\Locking;
 require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 /**
-* Tests for the LockManager
-*
-* Covering jcr-2.8.3 spec $17.1
-*/
+ * Tests for the LockManager
+ *
+ * NOTE: Some of these tests depend on each other. Please see the @depends
+ *  annotations to see how they depend.
+ *
+ * Covering jcr-2.8.3 spec $17.1
+ */
 class LockManagerTest extends \PHPCR\Test\BaseCase
 {
     public function setUp()
