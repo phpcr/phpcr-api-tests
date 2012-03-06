@@ -25,7 +25,7 @@
     ],
     "require": {
         "php": ">=5.3.0",
-        "phpcr/phpcr-implementation": ">=0"
+        "phpcr/phpcr-implementation": "2.1.0-beta3"
     },
     "autoload": {
         "psr-0": {
