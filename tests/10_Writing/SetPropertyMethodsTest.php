@@ -77,6 +77,33 @@ class SetPropertyMethodsTest extends \PHPCR\Test\BaseCase
     }
 
     /**
+     * Setting a property with the same name as an existing child node
+     *
+     * this is valid in jcr 2.0
+     * http://www.day.com/specs/jcr/2.0/3_Repository_Model.html#3.4.2.2
+     *
+     * \PHPCR\NodeInterface::setProperty
+     */
+    public function testSetPropertyNewExistingNode()
+    {
+        $node = $this->sharedFixture['session']->getNode('/tests_general_base/idExample/jcr:content');
+        //$node->getNode('weakreference_source1')->remove();
+        $this->sharedFixture['session']->save();
+
+        $property = $node->setProperty('weakreference_source1', 123);
+        $this->assertEquals(123, $property->getLong());
+        $this->assertTrue($property->isNew());
+        $this->sharedFixture['session']->save();
+        $this->assertFalse($property->isNew());
+        $this->assertFalse($property->isModified());
+
+        $this->renewSession();
+        $prop = $this->sharedFixture['session']->getNode('/tests_general_base/idExample/jcr:content')->getProperty('weakreference_source1');
+        $this->assertInstanceOf('PHPCR\PropertyInterface', $prop);
+        $this->assertEquals(123, $prop->getLong());
+    }
+
+    /**
      * change type of existing property
      * \PHPCR\NodeInterface::setProperty
      */
