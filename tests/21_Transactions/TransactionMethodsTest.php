@@ -57,10 +57,17 @@ class TransactionMethodsTest extends \PHPCR\Test\BaseCase
     public function testTransactionRollback()
     {
         $session = self::$staticSharedFixture['session'];
-        $utx = $session->getWorkspace()->getTransactionManager();
+        
+        $copy = $this->node->addNode('copyTransaction');
+        $copiedNodePath = $this->node->getPath()."/copyTransactionCopy";
+        $session->save();
 
+        $utx = $session->getWorkspace()->getTransactionManager();
+        
         $child = $this->node->addNode('insideTransaction');
         $utx->begin();
+        //workspace operation
+        $session->getWorkspace()->copy($copy->getPath(),$copiedNodePath);
         $session->save();
         $this->assertFalse($child->isNew());
         $utx->rollback();
@@ -69,6 +76,7 @@ class TransactionMethodsTest extends \PHPCR\Test\BaseCase
 
         $sessionafterrollback = self::$loader->getSession();
         $this->assertFalse($sessionafterrollback->nodeExists($child->getPath()));
+        $this->assertFalse($sessionafterrollback->nodeExists($copiedNodePath));
 
         // semantics of rollback is that the local session state does not roll back
         // this must work
@@ -76,6 +84,7 @@ class TransactionMethodsTest extends \PHPCR\Test\BaseCase
 
         $sessionaftersave = self::$loader->getSession();
         $this->assertFalse($sessionaftersave->nodeExists($child->getPath()));
+        $this->assertFalse($sessionaftersave->nodeExists($copiedNodePath));
     }
 
     public function testInTransaction()
