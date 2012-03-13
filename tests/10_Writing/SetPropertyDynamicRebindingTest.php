@@ -79,6 +79,7 @@ class SetPropertyDynamicRebindingTest extends \PHPCR\Test\BaseCase
             $this->assertEquals($this->referenceable_node_uuid, $prop->getString());
         } elseif ($sourcePropType === PropertyType::DATE) {
             // To avoid problems with the representation of the TZ, we compare timestamps
+            $this->assertInstanceOf('DateTime', $prop->getValue());
             $this->assertEquals($sourcePropValue->getTimestamp(), $prop->getValue()->getTimestamp());
         } elseif ($sourcePropType !== \PHPCR\PropertyType::BINARY) {
             $this->assertEquals($sourcePropValue, $prop->getValue(), 'Initial property value does not match after saving');
@@ -101,9 +102,11 @@ class SetPropertyDynamicRebindingTest extends \PHPCR\Test\BaseCase
 
         $this->assertEquals($destPropType, $prop->getType(), 'Property type does not match after re-binding');
         // If this is DateTime object, convert to string and then compare.
-        // It's done to avoid issues with timezone provided by DateTime object 
+        // It's done to avoid issues with timezone provided by DateTime object
         if ($destPropValue instanceof \DateTime) {
-            $this->assertEquals($destPropValue->format('c'), $destPropValue->format('c'), 'Datetime value does not match after re-binding');
+            $date = $prop->getValue();
+            $this->assertInstanceOf('DateTime', $date);
+            $this->assertEquals($destPropValue->getTimestamp(), $date->getTimestamp(), 'Datetime value does not match after re-binding');
         } else {
             $this->assertEquals($destPropValue, $prop->$getterFunc(), 'Property value does not match after re-binding');
         }
@@ -116,6 +119,7 @@ class SetPropertyDynamicRebindingTest extends \PHPCR\Test\BaseCase
 
         if ($destPropType === PropertyType::DATE) {
             // To avoid problems with the representation of the TZ, we compare timestamps
+            $this->assertInstanceOf('DateTime', $prop->getValue());
             $this->assertEquals($destPropValue->getTimestamp(), $prop->getValue()->getTimestamp());
         } else {
             $this->assertEquals($destPropValue, $prop->$getterFunc(), 'Property value does not match after re-binding and save');

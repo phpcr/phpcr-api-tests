@@ -39,7 +39,8 @@ class MixinReferenceableTest extends \PHPCR\Test\BaseCase
         // Load a non-referenceable node and make it referenceable
         $referenced_node = $this->sharedFixture['session']->getNode('/tests_general_base/emptyExample');
         $referenced_node->addMixin('mix:referenceable');
-        $this->saveAndRenewSession();
+
+        $this->sharedFixture['session']->save();
 
         // Re-read the node to be sure it has a UUID
         $referenced_node = $this->sharedFixture['session']->getNode('/tests_general_base/emptyExample');
@@ -47,6 +48,7 @@ class MixinReferenceableTest extends \PHPCR\Test\BaseCase
         // Reference it from another node
         $source_node = $this->sharedFixture['session']->getNode('/tests_general_base/index.txt/jcr:content');
         $source_node->setProperty('reference', $referenced_node, \PHPCR\PropertyType::WEAKREFERENCE);
+
         $this->sharedFixture['session']->save();
 
         $this->assertInstanceOf('PHPCR\NodeInterface', $source_node->getPropertyValue('reference'));
@@ -62,10 +64,36 @@ class MixinReferenceableTest extends \PHPCR\Test\BaseCase
 
         // Reference it from another node
         $source_node = $this->sharedFixture['session']->getNode('/tests_general_base/index.txt/jcr:content');
-        $source_node->setProperty('reference', $referenced_node, \PHPCR\PropertyType::WEAKREFERENCE);
+        $source_node->setProperty('oreference', $referenced_node, \PHPCR\PropertyType::WEAKREFERENCE);
         $this->sharedFixture['session']->save();
 
-        $this->assertInstanceOf('PHPCR\NodeInterface', $source_node->getPropertyValue('reference'));
+        $this->assertInstanceOf('PHPCR\NodeInterface', $source_node->getPropertyValue('oreference'));
+    }
+
+    /**
+     * Test that we can update a reference
+     */
+    public function testUpdateReference()
+    {
+        $referenced1 = $this->sharedFixture['session']->getNode('/tests_general_base/emptyExample');
+        $referenced1->addMixin('mix:referenceable');
+        $this->sharedFixture['session']->save();
+
+        // Load a referenceable node
+        $referenced2 = $this->sharedFixture['session']->getNode('/tests_general_base/idExample');
+
+        // Reference it from another node
+        $source_node = $this->sharedFixture['session']->getNode('/tests_general_base/index.txt/jcr:content');
+
+        $source_node->setProperty('reference', $referenced1, \PHPCR\PropertyType::WEAKREFERENCE);
+        $this->sharedFixture['session']->save();
+        $source_node->setProperty('reference', $referenced2, \PHPCR\PropertyType::WEAKREFERENCE);
+        $this->sharedFixture['session']->save();
+        $this->assertSame($referenced2, $source_node->getPropertyValue('reference'));
+
+        $session = $this->renewSession();
+        $referenced2 = $session->getNode('/tests_general_base/idExample');
+        $this->assertSame($referenced2, $session->getProperty('/tests_general_base/index.txt/jcr:content/reference')->getValue());
     }
 
 }
