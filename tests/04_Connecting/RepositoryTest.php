@@ -5,7 +5,11 @@ require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 class RepositoryTest extends \PHPCR\Test\BaseCase
 {
-    //don't care about fixtures
+    public static function setupBeforeClass($fixtures=null)
+    {
+        //don't care about fixtures
+        parent::setupBeforeClass($fixtures);
+    }
 
     // 4.1 Repository
     public function testRepository()
