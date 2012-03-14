@@ -32,7 +32,6 @@ class MixinReferenceableTest extends \PHPCR\Test\BaseCase
 
     /**
      * Test that a node with newly set mix:referenceable type can be referenced
-     * @group test
      */
     public function testReferenceOnNewlyReferenceableNode()
     {
@@ -40,9 +39,8 @@ class MixinReferenceableTest extends \PHPCR\Test\BaseCase
         $referenced_node = $this->sharedFixture['session']->getNode('/tests_general_base/emptyExample');
         $referenced_node->addMixin('mix:referenceable');
 
-        $this->sharedFixture['session']->save();
-
         // Re-read the node to be sure it has a UUID
+        $this->saveAndRenewSession();
         $referenced_node = $this->sharedFixture['session']->getNode('/tests_general_base/emptyExample');
 
         // Reference it from another node
@@ -52,6 +50,10 @@ class MixinReferenceableTest extends \PHPCR\Test\BaseCase
         $this->sharedFixture['session']->save();
 
         $this->assertInstanceOf('PHPCR\NodeInterface', $source_node->getPropertyValue('reference'));
+
+        // referrers only required to work once save happened
+        $this->assertCount(0, $referenced_node->getReferences());
+        $this->assertCount(1, $referenced_node->getWeakReferences());
     }
 
     /**
