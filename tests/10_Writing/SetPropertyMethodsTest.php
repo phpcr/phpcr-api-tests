@@ -43,9 +43,10 @@ class SetPropertyMethodsTest extends \PHPCR\Test\BaseCase
     public function testSetPropertyExisting()
     {
         $this->assertTrue($this->node->hasProperty('longNumber'));
-        $property = $this->node->setProperty('longNumber', 1024);
+        $this->assertSame(1024, $this->node->getPropertyValue('longNumber'));
+        $property = $this->node->setProperty('longNumber', 1023);
         $this->assertInstanceOf('PHPCR\PropertyInterface', $property);
-        $this->assertEquals(1024, $property->getLong());
+        $this->assertEquals(1023, $property->getLong());
         $this->assertTrue($property->isModified());
         $this->sharedFixture['session']->save();
         $this->assertFalse($property->isModified());
@@ -53,7 +54,7 @@ class SetPropertyMethodsTest extends \PHPCR\Test\BaseCase
         $this->renewSession();
         $prop = $this->sharedFixture['session']->getNode($this->nodePath)->getProperty('longNumber');
         $this->assertInstanceOf('PHPCR\PropertyInterface', $prop);
-        $this->assertEquals(1024, $prop->getLong());
+        $this->assertEquals(1023, $prop->getLong());
     }
 
 
@@ -150,6 +151,26 @@ class SetPropertyMethodsTest extends \PHPCR\Test\BaseCase
         $this->assertEquals(\PHPCR\PropertyType::LONG, $prop->getType());
         $this->assertTrue($prop->isMultiple());
         $this->assertEquals(array(1,2,3), $prop->getValue('multivalue'));
+    }
+
+    public function testSetPropertyMultivalueRef()
+    {
+        $ids = array('842e61c0-09ab-42a9-87c0-308ccc90e6f4', '13543fc6-1abf-4708-bfcc-e49511754b40', '14e18ef3-be20-4985-bee9-7bb4763b31de');
+        $prop = $this->node->setProperty('multiref', $ids, \PHPCR\PropertyType::WEAKREFERENCE);
+        $this->assertEquals($ids, $this->node->getProperty('multiref')->getString());
+        $this->assertEquals(\PHPCR\PropertyType::WEAKREFERENCE, $prop->getType());
+        $this->assertTrue($prop->isMultiple());
+
+        $this->saveAndRenewSession();
+        $node = $this->sharedFixture['session']->getNode($this->nodePath);
+        $prop = $node->getProperty('multiref');
+        $this->assertEquals(\PHPCR\PropertyType::WEAKREFERENCE, $prop->getType());
+        $this->assertTrue($prop->isMultiple());
+        $this->assertEquals($ids, $prop->getString('multiref'));
+        $nodes = $prop->getValue();
+        $this->assertInternalType('array', $nodes);
+        $this->assertCount(3, $nodes);
+        $this->assertInstanceOf('PHPCR\\NodeInterface', reset($nodes));
     }
 
     public function testPropertyAddValue()

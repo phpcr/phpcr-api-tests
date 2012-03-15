@@ -142,30 +142,43 @@ class SetPropertyTypesTest extends \PHPCR\Test\BaseCase
     public function testCreateValueNode()
     {
         $node = $this->sharedFixture['session']->getNode('/tests_general_base/multiValueProperty');
+        $identifier = $node->getIdentifier();
         $value = $this->node->setProperty('propNode', $node);
         $this->assertInstanceOf('PHPCR\PropertyInterface', $value);
         $this->assertEquals(\PHPCR\PropertyType::REFERENCE, $value->getType(), 'wrong type');
         $this->assertEquals($node->getIdentifier(), $value->getString(), 'different uuid');
+        $this->assertSame($node, $value->getValue());
 
         $this->saveAndRenewSession();
         $value = $this->sharedFixture['session']->getProperty('/tests_general_base/numberPropertyNode/jcr:content/propNode');
         $this->assertEquals(\PHPCR\PropertyType::REFERENCE, $value->getType(), 'wrong type');
-        $this->assertEquals($node->getIdentifier(), $value->getString(), 'different uuid');
+        $this->assertEquals($identifier, $value->getString(), 'different uuid');
     }
 
     public function testCreateValueNodeWeak()
     {
         $node = $this->sharedFixture['session']->getRootNode()->getNode('tests_general_base/multiValueProperty');
+
+        $identifier = $node->getIdentifier();
         $value = $this->node->setProperty('propNodeWeak', $node, \PHPCR\PropertyType::WEAKREFERENCE);
-        $this->assertInstanceOf('PHPCR\NodeInterface', $node);
+
         $this->assertInstanceOf('PHPCR\PropertyInterface', $value);
         $this->assertEquals(\PHPCR\PropertyType::WEAKREFERENCE, $value->getType());
         $this->assertEquals($node->getIdentifier(), $value->getString());
+        $this->assertSame($node, $value->getValue());
 
-        $this->saveAndRenewSession();
+        $this->sharedFixture['session']->save();
+        $this->assertEquals(\PHPCR\PropertyType::WEAKREFERENCE, $value->getType());
+        $this->assertEquals($identifier, $value->getString());
+        $node = $value->getValue();
+        $this->assertInstanceOf('PHPCR\\NodeInterface', $node);
+
+        $this->renewSession();
         $value = $this->sharedFixture['session']->getProperty('/tests_general_base/numberPropertyNode/jcr:content/propNodeWeak');
         $this->assertEquals(\PHPCR\PropertyType::WEAKREFERENCE, $value->getType());
-        $this->assertEquals($node->getIdentifier(), $value->getString());
+        $this->assertEquals($identifier, $value->getString());
+        $node = $value->getValue();
+        $this->assertInstanceOf('PHPCR\\NodeInterface', $node);
     }
 
     /**
