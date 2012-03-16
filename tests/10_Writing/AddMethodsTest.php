@@ -40,25 +40,6 @@ class AddMethodsTest extends \PHPCR\Test\BaseCase
 
     }
 
-    public function testAddNodeAndChild()
-    {
-        $path = $this->node->getPath();
-
-        $new = $this->node->addNode('parentNode', 'nt:unstructured');
-        $child = $new->addNode('childNode', 'nt:unstructured');
-        $this->assertNotNull($this->sharedFixture['session']->getNode("$path/parentNode/childNode"));
-        $this->sharedFixture['session']->save();
-        $this->assertFalse($new->isNew(), 'Node was not saved');
-        $this->assertFalse($child->isNew(), 'Node was not saved');
-
-        $this->renewSession();
-
-        $this->assertTrue($this->sharedFixture['session']->nodeExists("$path/parentNode/childNode"));
-        $this->assertNotNull($this->sharedFixture['session']->getNode("$path/parentNode/childNode"));
-        $this->assertTrue($this->sharedFixture['session']->nodeExists("$path/parentNode"));
-        $this->assertNotNull($this->sharedFixture['session']->getNode("$path/parentNode"));
-    }
-
     public function testAddNodeWithPath()
     {
         $new = $this->node->addNode('test:namespacedNode/newNode', 'nt:unstructured');
@@ -277,22 +258,30 @@ class AddMethodsTest extends \PHPCR\Test\BaseCase
         $this->node->addNode('name[3]', 'nt:unstructured');
     }
 
+    /**
+     * Add a node and a child node to it
+     */
     public function testAddNodeChild()
     {
         $newNode = $this->node->addNode('parent', 'nt:unstructured');
-        $newNode->addNode('child', 'nt:unstructured');
+        $newChild = $newNode->addNode('child', 'nt:unstructured');
+        $path = $newChild->getPath();
 
         $this->assertTrue($this->sharedFixture['session']->nodeExists('/tests_write_manipulation_add/testAddNodeChild/parent/child'), 'Child node not found [Session]');
 
+        $this->sharedFixture['session']->save();
+        $this->assertFalse($newChild->isNew(), 'Node was not saved');
+
         // dispatch to backend
         $session = $this->saveAndRenewSession();
-        $this->assertTrue($session->nodeExists('/tests_write_manipulation_add/testAddNodeChild/parent/child'), 'Child node not found [Backend]');
+        $this->assertTrue($session->nodeExists($path));
+        $this->assertInstanceOf('PHPCR\\NodeInterface', $session->getNode($path));
     }
 
     /**
-     * a more complex case with child nodes and properties
+     * Add a node and a child node with some properties
      */
-    public function testAddNodeAndChildNode()
+    public function testAddNodeChildProperties()
     {
         $parent = $this->node->addNode('parent', 'nt:folder');
         $child = $parent->addNode('child', 'nt:file');
