@@ -25,11 +25,9 @@ class ObservationManagerTest extends \PHPCR\Test\BaseCase
         $consumerOm = $consumerSession->getWorkspace()->getObservationManager();
 
         // Produce some events in the producer session
-
         $this->produceEvents($producerSession);
 
         // Read the events in the consumer session
-
         $this->expectEvents($consumerOm->getEventJournal(), $curTime);
     }
 
@@ -59,7 +57,7 @@ class ObservationManagerTest extends \PHPCR\Test\BaseCase
     protected function produceEvents($session)
     {
         $root = $session->getRootNode();
-        $node = $root->addNode('child');             // Will cause a PROPERTY_ADDED + a NODE_ADDED event
+        $node = $root->addNode('child');             // Will cause a PROPERTY_ADDED + a NODE_ADDED events
         $session->save();                            // Will cause a PERSIST event
 
         $prop = $node->setProperty('prop', 'value'); // Will case a PROPERTY_ADDED event
@@ -71,10 +69,11 @@ class ObservationManagerTest extends \PHPCR\Test\BaseCase
         $prop->remove();                             // Will cause a PROPERTY_REMOVED event
         $session->save();                            // Will cause a PERSIST event
 
-        $node->remove();                             // Will cause a NODE_REMOVED event
+        $session->move('/child', '/moved');          // Will cause a NODE_REMOVED + NODE_ADDED + NODE_MOVED events
         $session->save();                            // Will cause a PERSIST event
 
-        // TODO: cause a NODE_MOVED event
+        $node->remove();                             // Will cause a NODE_REMOVED event
+        $session->save();                            // Will cause a PERSIST event
     }
 
     /**
@@ -96,10 +95,17 @@ class ObservationManagerTest extends \PHPCR\Test\BaseCase
 
         $this->assertTrue($journal->valid());
 
-        $this->assertEvent(EventInterface::PROPERTY_ADDED, '/child/jcr%3aprimaryType', $journal->current());
-
-        $journal->next();
-        $this->assertEvent(EventInterface::NODE_ADDED, '/child/', $journal->current());
+        // Adding a node will cause a NODE_ADDED + PROPERTY_ADDED (for the primary node type)
+        // The order is implementation specific (Jackrabbit will trigger the prop added before the node added event)
+        if ($journal->current()->getType() === EventInterface::NODE_ADDED) {
+            $this->assertEvent(EventInterface::NODE_ADDED, '/child/', $journal->current());
+            $journal->next();
+            $this->assertEvent(EventInterface::PROPERTY_ADDED, '/child/jcr%3aprimaryType', $journal->current());
+        } else {
+            $this->assertEvent(EventInterface::PROPERTY_ADDED, '/child/jcr%3aprimaryType', $journal->current());
+            $journal->next();
+            $this->assertEvent(EventInterface::NODE_ADDED, '/child/', $journal->current());
+        }
 
         $journal->next();
         $this->assertEvent(EventInterface::PERSIST, '', $journal->current());
@@ -123,7 +129,28 @@ class ObservationManagerTest extends \PHPCR\Test\BaseCase
         $this->assertEvent(EventInterface::PERSIST, '', $journal->current());
 
         $journal->next();
-        $this->assertEvent(EventInterface::NODE_REMOVED, '/child/', $journal->current());
+        // Same problem as before. Moving a node will cause a NODE_REMOVED + NODE_ADDED + NODE_MOVED
+        // The order of the events is implementation specific.
+        // TODO: here we expect the NODE_MOVED event to be the last one. This might be wrong on some implementations !
+        if ($journal->current()->getType() === EventInterface::NODE_REMOVED) {
+            $this->assertEvent(EventInterface::NODE_REMOVED, '/child/', $journal->current());
+            $journal->next();
+            $this->assertEvent(EventInterface::NODE_ADDED, '/moved/', $journal->current());
+            $journal->next();
+            $this->assertEvent(EventInterface::NODE_MOVED, '/moved', $journal->current());
+        } else {
+            $this->assertEvent(EventInterface::NODE_ADDED, '/moved/', $journal->current());
+            $journal->next();
+            $this->assertEvent(EventInterface::NODE_REMOVED, '/child/', $journal->current());
+            $journal->next();
+            $this->assertEvent(EventInterface::NODE_MOVED, '/moved', $journal->current());
+        }
+
+        $journal->next();
+        $this->assertEvent(EventInterface::PERSIST, '', $journal->current());
+
+        $journal->next();
+        $this->assertEvent(EventInterface::NODE_REMOVED, '/moved/', $journal->current());
 
         $journal->next();
         $this->assertEvent(EventInterface::PERSIST, '', $journal->current());
