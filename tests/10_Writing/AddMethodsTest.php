@@ -40,6 +40,25 @@ class AddMethodsTest extends \PHPCR\Test\BaseCase
 
     }
 
+    public function testAddNodeAndChild()
+    {
+        $path = $this->node->getPath();
+
+        $new = $this->node->addNode('parentNode', 'nt:unstructured');
+        $child = $new->addNode('childNode', 'nt:unstructured');
+        $this->assertNotNull($this->sharedFixture['session']->getNode("$path/parentNode/childNode"));
+        $this->sharedFixture['session']->save();
+        $this->assertFalse($new->isNew(), 'Node was not saved');
+        $this->assertFalse($child->isNew(), 'Node was not saved');
+
+        $this->renewSession();
+
+        $this->assertTrue($this->sharedFixture['session']->nodeExists("$path/parentNode/childNode"));
+        $this->assertNotNull($this->sharedFixture['session']->getNode("$path/parentNode/childNode"));
+        $this->assertTrue($this->sharedFixture['session']->nodeExists("$path/parentNode"));
+        $this->assertNotNull($this->sharedFixture['session']->getNode("$path/parentNode"));
+    }
+
     public function testAddNodeWithPath()
     {
         $new = $this->node->addNode('test:namespacedNode/newNode', 'nt:unstructured');
@@ -245,9 +264,9 @@ class AddMethodsTest extends \PHPCR\Test\BaseCase
         } catch (\PHPCR\NodeType\ConstraintViolationException $e) {
             //also correct
             return;
-        } 
+        }
         $this->fail("Expected PHPCR\\NodeType\\ConstraintViolationException or PHPCR\\ValueFormatException");
-           
+
     }
 
     /**
