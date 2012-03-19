@@ -6,9 +6,19 @@ require_once(__DIR__ . '/../../inc/BaseCase.php');
 //6.5 Import Repository Content
 class ImportRepositoryContentTest extends \PHPCR\Test\BaseCase
 {
-    public function testImportXML()
+    public static function setupBeforeClass($fixtures = '11_Import/empty')
     {
-        $this->markTestSkipped('TODO: have document and system view to import and validate success. share with export test');
-        //$this->sharedFixture['session']->importXML('/', input stream, behaviour flags);
+        parent::setupBeforeClass($fixtures);
+    }
+
+    public function testImportXMLSystem()
+    {
+        $this->sharedFixture['session']->importXML('/', __DIR__.'/../../fixtures/general/base.xml', 0);
+
+    }
+
+    public function testImportXMLDocument()
+    {
+        $this->sharedFixture['session']->importXML('/', __DIR__.'/../../fixtures/07_Export/documentview.xml', 0);
     }
 }
