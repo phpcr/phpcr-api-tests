@@ -42,14 +42,14 @@ class ObservationManagerTest extends \PHPCR\Test\BaseCase
 
         $this->produceEvents($session);
 
-        $this->testFilterOnEventType($om, $curTime);
-        $this->testFilterOnPathNoMatch($om, $curTime);
-        $this->testFilterOnPathNoDeep($om, $curTime);
-        $this->testFilterOnPathDeep($om, $curTime);
-        $this->testFilterOnUuidNoMatch($om, $curTime);
+        $this->assertFilterOnEventType($om, $curTime);
+        $this->assertFilterOnPathNoMatch($om, $curTime);
+        $this->assertFilterOnPathNoDeep($om, $curTime);
+        $this->assertFilterOnPathDeep($om, $curTime);
+        $this->assertFilterOnUuidNoMatch($om, $curTime);
     }
 
-    protected function testFilterOnEventType($observationManager, $curTime)
+    protected function assertFilterOnEventType($observationManager, $curTime)
     {
         $journal = $observationManager->getEventJournal(EventInterface::PROPERTY_ADDED);
         $journal->skipTo($curTime);
@@ -63,7 +63,7 @@ class ObservationManagerTest extends \PHPCR\Test\BaseCase
         }
     }
 
-    protected function testFilterOnPathNoDeep($observationManager, $curTime)
+    protected function assertFilterOnPathNoDeep($observationManager, $curTime)
     {
         $journal = $observationManager->getEventJournal(null, '/child');
         $journal->skipTo($curTime);
@@ -77,7 +77,7 @@ class ObservationManagerTest extends \PHPCR\Test\BaseCase
         }
     }
 
-    protected function testFilterOnPathDeep($observationManager, $curTime)
+    protected function assertFilterOnPathDeep($observationManager, $curTime)
     {
         $journal = $observationManager->getEventJournal(null, '/child', true);
         $journal->skipTo($curTime);
@@ -93,14 +93,14 @@ class ObservationManagerTest extends \PHPCR\Test\BaseCase
         }
     }
 
-    protected function testFilterOnPathNoMatch($observationManager, $curTime)
+    protected function assertFilterOnPathNoMatch($observationManager, $curTime)
     {
         $journal = $observationManager->getEventJournal(null, '/unexisting-path');
         $journal->skipTo($curTime);
         $this->assertFalse($journal->valid()); // No entry match
     }
 
-    protected function testFilterOnUuidNoMatch($observationManager, $curTime)
+    protected function assertFilterOnUuidNoMatch($observationManager, $curTime)
     {
         $journal = $observationManager->getEventJournal(null, null, null, array());
         $journal->skipTo($curTime);
@@ -180,7 +180,7 @@ class ObservationManagerTest extends \PHPCR\Test\BaseCase
         } else {
             $this->assertEvent(EventInterface::PROPERTY_ADDED, '/child/jcr%3aprimaryType', $journal->current());
             $journal->next();
-            $this->assertEvent(EventInterface::NODE_ADDED, '/child/', $journal->current());
+            $this->assertEvent(EventInterface::NODE_ADDED, '/child', $journal->current());
         }
 
         $journal->next();
@@ -209,15 +209,15 @@ class ObservationManagerTest extends \PHPCR\Test\BaseCase
         // The order of the events is implementation specific.
         // TODO: here we expect the NODE_MOVED event to be the last one. This might be wrong on some implementations !
         if ($journal->current()->getType() === EventInterface::NODE_REMOVED) {
-            $this->assertEvent(EventInterface::NODE_REMOVED, '/child/', $journal->current());
+            $this->assertEvent(EventInterface::NODE_REMOVED, '/child', $journal->current());
             $journal->next();
-            $this->assertEvent(EventInterface::NODE_ADDED, '/moved/', $journal->current());
+            $this->assertEvent(EventInterface::NODE_ADDED, '/moved', $journal->current());
             $journal->next();
             $this->assertEvent(EventInterface::NODE_MOVED, '/moved', $journal->current());
         } else {
-            $this->assertEvent(EventInterface::NODE_ADDED, '/moved/', $journal->current());
+            $this->assertEvent(EventInterface::NODE_ADDED, '/moved', $journal->current());
             $journal->next();
-            $this->assertEvent(EventInterface::NODE_REMOVED, '/child/', $journal->current());
+            $this->assertEvent(EventInterface::NODE_REMOVED, '/child', $journal->current());
             $journal->next();
             $this->assertEvent(EventInterface::NODE_MOVED, '/moved', $journal->current());
         }
@@ -226,7 +226,7 @@ class ObservationManagerTest extends \PHPCR\Test\BaseCase
         $this->assertEvent(EventInterface::PERSIST, '', $journal->current());
 
         $journal->next();
-        $this->assertEvent(EventInterface::NODE_REMOVED, '/moved/', $journal->current());
+        $this->assertEvent(EventInterface::NODE_REMOVED, '/moved', $journal->current());
 
         $journal->next();
         $this->assertEvent(EventInterface::PERSIST, '', $journal->current());
