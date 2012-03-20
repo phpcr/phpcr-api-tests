@@ -36,7 +36,7 @@ class WorkspaceManagementTest extends \PHPCR\Test\BaseCase
 
         $session = self::$loader->getRepository()->login(self::$loader->getCredentials(), $workspacename);
 
-        $this->assertTrue($session->nodeExists('/index.txt'));
+        $this->assertTrue($session->nodeExists('/tests_general_base/index.txt'));
     }
 
     /**
