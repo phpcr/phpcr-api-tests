@@ -264,6 +264,63 @@ class ObservationManagerTest extends \PHPCR\Test\BaseCase
     }
 
     /**
+     * Check that the journal only contains the given events (in any order)
+     *
+     * Algorithm:
+     *      - construct an array of hash for the expected events
+     *      - foreach occured event:
+     *          - construct the hash
+     *          - if it's in the expected events array, remove it
+     *          - else it's an unexpected event
+     *      - if they are still events in the expected array then all the expected events did not occur
+     *
+     * WARNING: this is a simple implementation that will not work if you expect the same event more than once.
+     * For example if your list of expected events contains more than one PERSIST event (without path) then
+     * this method will not work ! If really needed it should not be too hard to add a counter to the constructed
+     * hash in order to allow the same event more than once.
+     *
+     * @param $journal The event journal to check
+     * @param array $events An array of type array(array(eventType, eventPath)) containing all the expected events in an arbitrary order.
+     * @return void
+     */
+    protected function expectEventsInAnyOrder($journal, $events)
+    {
+        // Construct an hash map with the expected events
+        $expectedEvents = array();
+        foreach ($events as $event) {
+
+            if (!is_array($event) || count($event) !== 2) {
+                throw new \InvalidArgumentException("Invalid expected events array !");
+            }
+            // Construct an hash based on the event type and path
+            $hash = sprintf('%s-%s', md5($event[0]), md5($event[1]));
+
+            $expectedEvents[$hash] = true;
+        }
+
+        // Read the correct number of events from the journal
+        $occuredEvents = array();
+        for ($i = 1; $i <= count($events); $i++) {
+            $occuredEvents[] = $journal->current();
+            $journal->next();
+        }
+
+        // Now check we only got the expected events
+        foreach ($occuredEvents as $event) {
+            $hash = sprintf('%s-%s', md5($event->getType()), md5($event->getPath()));
+
+            if (array_key_exists($hash, $expectedEvents)) {
+                unset($expectedEvents[$hash]);
+            } else {
+                var_dump($hash);
+                $this->Fail(sprintf("Unexpected event found, type = %s, path = %s", $event->getType(), $event->getPath()));
+            }
+        }
+
+        $this->assertEmpty($expectedEvents, 'Some expected events did not occur');
+    }
+
+    /**
      * Check if the expected events are in the event journal.
      *
      * WARNING:
@@ -284,17 +341,13 @@ class ObservationManagerTest extends \PHPCR\Test\BaseCase
 
         // Adding a node will cause a NODE_ADDED + PROPERTY_ADDED (for the primary node type)
         // The order is implementation specific (Jackrabbit will trigger the prop added before the node added event)
-        if ($journal->current()->getType() === EventInterface::NODE_ADDED) {
-            $this->assertEvent(EventInterface::NODE_ADDED, '/child/', $journal->current());
-            $journal->next();
-            $this->assertEvent(EventInterface::PROPERTY_ADDED, '/child/jcr%3aprimaryType', $journal->current());
-        } else {
-            $this->assertEvent(EventInterface::PROPERTY_ADDED, '/child/jcr%3aprimaryType', $journal->current());
-            $journal->next();
-            $this->assertEvent(EventInterface::NODE_ADDED, '/child', $journal->current());
-        }
+        $this->expectEventsInAnyOrder($journal,
+            array(
+                array(EventInterface::NODE_ADDED, '/child'),
+                array(EventInterface::PROPERTY_ADDED, '/child/jcr%3aprimaryType'),
+            )
+        );
 
-        $journal->next();
         $this->assertEvent(EventInterface::PERSIST, '', $journal->current());
 
         $journal->next();
@@ -316,24 +369,17 @@ class ObservationManagerTest extends \PHPCR\Test\BaseCase
         $this->assertEvent(EventInterface::PERSIST, '', $journal->current());
 
         $journal->next();
+
         // Same problem as before. Moving a node will cause a NODE_REMOVED + NODE_ADDED + NODE_MOVED
         // The order of the events is implementation specific.
-        // TODO: here we expect the NODE_MOVED event to be the last one. This might be wrong on some implementations !
-        if ($journal->current()->getType() === EventInterface::NODE_REMOVED) {
-            $this->assertEvent(EventInterface::NODE_REMOVED, '/child', $journal->current());
-            $journal->next();
-            $this->assertEvent(EventInterface::NODE_ADDED, '/moved', $journal->current());
-            $journal->next();
-            $this->assertEvent(EventInterface::NODE_MOVED, '/moved', $journal->current());
-        } else {
-            $this->assertEvent(EventInterface::NODE_ADDED, '/moved', $journal->current());
-            $journal->next();
-            $this->assertEvent(EventInterface::NODE_REMOVED, '/child', $journal->current());
-            $journal->next();
-            $this->assertEvent(EventInterface::NODE_MOVED, '/moved', $journal->current());
-        }
+        $this->expectEventsInAnyOrder($journal,
+            array(
+                array(EventInterface::NODE_REMOVED, '/child'),
+                array(EventInterface::NODE_ADDED, '/moved'),
+                array(EventInterface::NODE_MOVED, '/moved'),
+            )
+        );
 
-        $journal->next();
         $this->assertEvent(EventInterface::PERSIST, '', $journal->current());
 
         $journal->next();
