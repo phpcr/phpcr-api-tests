@@ -60,11 +60,6 @@
       <sv:value>nt:folder</sv:value>
     </sv:property>
   </sv:node>
-  <sv:node sv:name="testAddNodeAndChildNode">
-    <sv:property sv:name="jcr:primaryType" sv:type="Name">
-      <sv:value>nt:unstructured</sv:value>
-    </sv:property>
-  </sv:node>
   <sv:node sv:name="testAddPropertyOnUnstructured">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
       <sv:value>nt:unstructured</sv:value>
@@ -161,12 +156,7 @@
       <sv:value>nt:unstructured</sv:value>
     </sv:property>
   </sv:node>
-  <sv:node sv:name="testAddMixinOnNewNode">
-    <sv:property sv:name="jcr:primaryType" sv:type="Name">
-      <sv:value>nt:unstructured</sv:value>
-    </sv:property>
-  </sv:node>
-  <sv:node sv:name="testAddMixinOnExistingNode">
+  <sv:node sv:name="testAddNodeChildProperties">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
       <sv:value>nt:unstructured</sv:value>
     </sv:property>
