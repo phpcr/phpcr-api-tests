@@ -92,10 +92,9 @@ class SetPropertyDynamicRebindingTest extends \PHPCR\Test\BaseCase
             // Re-bind the property to the new type/value and save it
             $prop->setValue($destPropValue, $destPropType);
         } catch (\PHPCR\UnsupportedRepositoryOperationException $e) {
-            // if we try to change the type, the repository may throw this
-            // exception instead of supporting dynamic rebinding
-            // if we set type parameter but its the same as the property
-            // already has, this is a NOOP
+            // If the implementation does not support dynamic re-binding, an
+            // UnsupportedRepositoryException is thrown if the type parameter is
+            // present and different from the current type.
             $this->assertNotEquals($sourcePropType, $destPropType, 'explicit type parameters that do not change the type may not provoke the unsupported exception');
             return;
         }
