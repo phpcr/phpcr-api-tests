@@ -304,7 +304,7 @@ class AddMethodsTest extends \PHPCR\Test\BaseCase
         $namespace = 'testUnregisteredNamespace';
         $nodeName =  'child';
 
-        //add the node with an unregistered namespace
+        //add the node with an unregistered namespace, should throw a RepositoryException
         $this->node->addNode($namespace . ':' . $nodeName, 'nt:unstructured');
 
         //save the changes
