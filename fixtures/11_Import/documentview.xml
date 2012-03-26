@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<tests_import jcr:primaryType="nt:unstructured" jcr:created="2011-06-01T16:52:07.000+02:00" jcr:createdBy="admin"
+              xmlns:mix="http://www.jcp.org/jcr/mix/1.0" xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
+              xmlns:fn="http://www.w3.org/2005/xpath-functions" xmlns:fn_old="http://www.w3.org/2004/10/xpath-functions"
+              xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:jcr="http://www.jcp.org/jcr/1.0"
+              xmlns:sv="http://www.jcp.org/jcr/sv/1.0" xmlns:test="http://liip.to/jackalope">
+    <My_x005f_x0020_x0020_Documents jcr:primaryType="nt:unstructured"/>
+    <index.txt jcr:primaryType="nt:file" jcr:created="2011-06-01T16:52:07.000+02:00" jcr:createdBy="admin">
+        <jcr:content jcr:primaryType="nt:unstructured"
+                     jcr:data="aDEuIENoYXB0ZXIgMSBUaXRsZQoKKiBmb28KKiBiYXIKKiogZm9vMgoqKiBmb28zCiogZm9vMAoKfHwgaGVhZGVyIHx8IGJhciB8fAp8IGggfCBqIHwKCntjb2RlfQpoZWxsbyB3b3JsZAp7Y29kZX0KCiMgZm9vCg=="
+                     jcr:lastModified="2009-04-27T13:01:07.000+02:00" jcr:mimeType="text/plain"
+                     mydateprop="2011-04-21T14:34:20.000+01:00" zeronumber="0"/>
+    </index.txt>
+    <idExample jcr:primaryType="nt:unstructured" jcr:uuid="842e61c0-09ab-42a9-87c0-308ccc90e6f4"
+               jcr:created="2011-06-01T16:52:07.672+02:00" jcr:createdBy="admin">
+        <jcr:content jcr:primaryType="nt:unstructured"
+                     jcr:data="aDEuIENoYXB0ZXIgMSBUaXRsZQoKKiBmb28KKiBiYXIKKiogZm9vMgoqKiBmb28zCiogZm9vMAoKfHwgaGVhZGVyIHx8IGJhciB8fAp8IGggfCBqIHwKCntjb2RlfQpoZWxsbyB3b3JsZAp7Y29kZX0KCiMgZm9vCg=="
+                     jcr:lastModified="2009-04-27T13:01:07.000+02:00" jcr:mimeType="text/plain">
+            <weakreference_target jcr:primaryType="nt:unstructured" jcr:uuid="13543fc6-1abf-4708-bfcc-e49511754b40"/>
+            <weakreference_source1 jcr:primaryType="nt:unstructured" ref1="13543fc6-1abf-4708-bfcc-e49511754b40"/>
+            <weakreference_source2 jcr:primaryType="nt:unstructured" ref2="13543fc6-1abf-4708-bfcc-e49511754b40"/>
+        </jcr:content>
+    </idExample>
+    <test:namespacedNode jcr:primaryType="nt:folder" jcr:created="2011-06-01T16:52:07.674+02:00" jcr:createdBy="admin"/>
+    <emptyExample jcr:primaryType="nt:folder" jcr:created="2011-06-01T16:52:07.675+02:00" jcr:createdBy="admin"/>
+    <multiValueProperty jcr:primaryType="nt:folder" jcr:uuid="14e18ef3-be20-4985-bee9-7bb4763b31de"
+                        jcr:created="2011-06-01T16:52:07.675+02:00" jcr:createdBy="admin">
+        <deepnode jcr:primaryType="nt:folder" jcr:created="2011-06-01T16:52:07.675+02:00" jcr:createdBy="admin"/>
+    </multiValueProperty>
+    <numberPropertyNode jcr:created="2011-06-01T16:52:07.676+02:00" jcr:createdBy="admin">
+        <jcr:content jcr:primaryType="nt:unstructured" foo="bar baz" invalidPath="/not/existing"
+                     invalidweak="842e61c0-09ab-42a9-87c0-000000000000"
+                     jcr:data="aDEuIENoYXB0ZXIgMSBUaXRsZQoKKiBmb28KKiBiYXIKKiogZm9vMgoqKiBmb28zCiogZm9vMAoKfHwgaGVhZGVyIHx8IGJhciB8fAp8IGggfCBqIHwKCntjb2RlfQpoZWxsbyB3b3JsZAp7Y29kZX0KCiMgZm9vCg=="
+                     jcr:lastModified="2009-04-27T13:01:07.000+02:00" jcr:mimeType="text/plain" longNumber="999"
+                     propertyPath="foo" ref="842e61c0-09ab-42a9-87c0-308ccc90e6f4" specialChars="üöäøéáñâêèàçæëìíîïþ"
+                     yesOrNo="true"/>
+    </numberPropertyNode>
+</tests_import>
