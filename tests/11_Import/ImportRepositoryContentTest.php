@@ -334,12 +334,42 @@ class ImportRepositoryContentTest extends \PHPCR\Test\BaseCase
 
     public function testImportXMLDocument()
     {
+        // TODO: have a node that tests unescaping in the documentview.xml and check
+
         self::$staticSharedFixture['ie']->import('11_Import/idnode');
         $session = $this->renewSession();
         $session->importXML('/', __DIR__.'/../../fixtures/11_Import/documentview.xml', ImportUUIDBehaviorInterface::IMPORT_UUID_CREATE_NEW);
 
+        // existing node did not change its uuid
+        $this->assertTrue($session->nodeExists('/idExample'));
+        $idExample = $session->getNode('/idExample');
+        $this->assertEquals('842e61c0-09ab-42a9-87c0-308ccc90e6f4', $idExample->getIdentifier());
+
+        $this->assertTrue($session->nodeExists('/tests_import'));
+
+        $this->assertTrue($session->nodeExists('/tests_import/idExample'));
+        $id = $session->getNode('/tests_import/idExample');
+        $this->assertTrue($id->isNodeType('mix:referenceable'));
+
+        $this->assertTrue($session->propertyExists('/tests_import/idExample/jcr:content/weakreference_source1/ref1'));
+        $ref = $session->getProperty('/tests_import/idExample/jcr:content/weakreference_source1/ref1');
+        $this->assertTrue(\PHPCR\Util\UUIDHelper::isUUID($ref->getString()));
+
         $session = $this->saveAndRenewSession();
 
+        // existing node did not change its uuid
+        $this->assertTrue($session->nodeExists('/idExample'));
+        $idExample = $session->getNode('/idExample');
+        $this->assertEquals('842e61c0-09ab-42a9-87c0-308ccc90e6f4', $idExample->getIdentifier());
 
+        $this->assertTrue($session->nodeExists('/tests_import'));
+
+        $this->assertTrue($session->nodeExists('/tests_import/idExample'));
+        $id = $session->getNode('/tests_import/idExample');
+        $this->assertTrue($id->isNodeType('mix:referenceable'));
+
+        $this->assertTrue($session->propertyExists('/tests_import/idExample/jcr:content/weakreference_source1/ref1'));
+        $ref = $session->getProperty('/tests_import/idExample/jcr:content/weakreference_source1/ref1');
+        $this->assertTrue(\PHPCR\Util\UUIDHelper::isUUID($ref->getString()));
     }
 }
