@@ -60,11 +60,16 @@
       <sv:value>nt:folder</sv:value>
     </sv:property>
   </sv:node>
-  <sv:node sv:name="testAddNodeWithUnregisteredNamespace">
-    <sv:property sv:name="jcr:primaryType" sv:type="Name">
-      <sv:value>nt:unstructured</sv:value>
-    </sv:property>
-  </sv:node>
+    <sv:node sv:name="testAddNodeWithUnregisteredNamespace">
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+            <sv:value>nt:unstructured</sv:value>
+        </sv:property>
+    </sv:node>
+    <sv:node sv:name="testAddPropertyWithUnregisteredNamespace">
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+            <sv:value>nt:unstructured</sv:value>
+        </sv:property>
+    </sv:node>
   <sv:node sv:name="testAddPropertyOnUnstructured">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
       <sv:value>nt:unstructured</sv:value>
