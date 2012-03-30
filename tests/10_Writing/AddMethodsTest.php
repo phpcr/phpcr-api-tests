@@ -295,4 +295,19 @@ class AddMethodsTest extends \PHPCR\Test\BaseCase
         $this->assertInstanceOf('PHPCR\NodeInterface', $child);
     }
 
+    /**
+     * try to add a node with an unregistered namespace
+     * @expectedException \PHPCR\RepositoryException
+     */
+    public function testAddNodeWithUnregisteredNamespace()
+    {
+        $namespace = 'testUnregisteredNamespace';
+        $nodeName =  'child';
+
+        //add the node with an unregistered namespace, should throw a RepositoryException
+        $this->node->addNode($namespace . ':' . $nodeName, 'nt:unstructured');
+
+        //save the changes
+        $this->saveAndRenewSession();
+    }
 }
