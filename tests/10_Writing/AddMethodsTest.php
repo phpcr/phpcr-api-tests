@@ -310,4 +310,20 @@ class AddMethodsTest extends \PHPCR\Test\BaseCase
         //save the changes
         $this->saveAndRenewSession();
     }
+
+    /**
+     * try to add a property with an unregistered namespace
+     * @expectedException \PHPCR\RepositoryException
+     */
+    public function testAddPropertyWithUnregisteredNamespace()
+    {
+        $namespace = 'testUnregisteredNamespace';
+        $propertyName =  'prop';
+
+        //add a property with an unregistered namespace, should throw a RepositoryException
+        $this->node->setProperty($namespace . ':' . $propertyName, 'some value');
+
+        //save the changes
+        $this->saveAndRenewSession();
+    }
 }
