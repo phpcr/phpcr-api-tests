@@ -372,4 +372,22 @@ class ImportRepositoryContentTest extends \PHPCR\Test\BaseCase
         $ref = $session->getProperty('/tests_import/idExample/jcr:content/weakreference_source1/ref1');
         $this->assertTrue(\PHPCR\Util\UUIDHelper::isUUID($ref->getString()));
     }
+
+    public function testImportXMLDocumentSimple()
+    {
+        self::$staticSharedFixture['ie']->import('11_Import/empty');
+        $session = $this->renewSession();
+
+        $session->importXML('/', __DIR__.'/../../fixtures/11_Import/simple.xml', ImportUUIDBehaviorInterface::IMPORT_UUID_COLLISION_THROW);
+
+        $this->assertTrue($session->nodeExists('/data/node'));
+        $this->assertTrue($session->nodeExists('/data/sibling/child1'));
+        $this->assertEquals('Test', $session->getProperty('/data/sibling/title')->getValue());
+
+        $session = $this->saveAndRenewSession();
+
+        $this->assertTrue($session->nodeExists('/data/node'));
+        $this->assertTrue($session->nodeExists('/data/sibling/child1'));
+        $this->assertEquals('Test', $session->getProperty('/data/sibling/title')->getValue());
+    }
 }
