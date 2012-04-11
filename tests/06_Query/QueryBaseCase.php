@@ -27,7 +27,6 @@ abstract class QueryBaseCase extends \PHPCR\Test\BaseCase
         parent::setUp();
 
         $this->query = $this->sharedFixture['qm']->createQuery("SELECT * FROM [nt:folder]", \PHPCR\Query\QueryInterface::JCR_SQL2);
-        $this->query = $this->sharedFixture['qm']->createQuery("//element(*,nt:folder)", \PHPCR\Query\QueryInterface::JCR_XPATH);
 
         // the query result is not ordered, but these are the nodes that are to be expected in any order
         $this->resultPaths = array("/tests_general_base",
