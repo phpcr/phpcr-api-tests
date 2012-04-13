@@ -22,7 +22,6 @@ class QueryOperationsTest extends QueryBaseCase
         foreach ($result->getNodes() as $node) {
             $vals[] = $node->getPropertyValue('foo');
         }
-        var_dump($vals);
         $this->assertEquals(array('bar'), $vals);
 
         $vals = array();
@@ -61,7 +60,7 @@ class QueryOperationsTest extends QueryBaseCase
     {
         $query = $this->sharedFixture['qm']->createQuery(
             'SELECT zeronumber
-             FROM nt:unstructured 
+             FROM nt:unstructured
              ORDER BY zeronumber',
             \PHPCR\Query\QueryInterface::JCR_SQL
         );
