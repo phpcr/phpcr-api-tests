@@ -69,7 +69,7 @@ class QueryObjectQOMTest extends QueryBaseCase
 
     public function testGetLanguage()
     {
-        $this->assertEquals(\PHPCR\Query\QueryInterface::JCR_JQOM, $this->query->getLanguage());
+        $this->assertEquals(\PHPCR\Query\QueryInterface::JCR_SQL2, $this->query->getLanguage());
     }
 
     /**
