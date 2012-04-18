@@ -16,7 +16,7 @@ abstract class QueryBaseCase extends \PHPCR\Tests\Query\QueryBaseCase
     {
         parent::setUp();
 
-        $this->query = $this->sharedFixture['qm']->createQuery("//element(*,nt:folder)", \PHPCR\Query\QueryInterface::JCR_XPATH);
+        $this->query = $this->sharedFixture['qm']->createQuery("//element(*,nt:folder)", \PHPCR\Query\QueryInterface::XPATH);
     }
-        
+
 }
