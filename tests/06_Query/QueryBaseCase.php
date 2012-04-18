@@ -9,6 +9,18 @@ require_once(__DIR__ . '/../../inc/BaseCase.php');
 abstract class QueryBaseCase extends \PHPCR\Test\BaseCase
 {
     /**
+     * @var \PHPCR\Query\QueryInterface
+     */
+    protected $query;
+
+    /**
+     * The results to be expected in $this->query
+     *
+     * @var array
+     */
+    protected $resultPaths;
+
+    /**
      * in addition to base stuff, prepare the query manager and load general/query fixture
      *
      * @param string $fixture name of the fixture to load, defaults to general/base

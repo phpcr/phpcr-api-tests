@@ -12,7 +12,7 @@ class QueryOperationsTest extends QueryBaseCase
     {
         $query = $this->sharedFixture['qm']->createQuery(
             '//element(*,nt:unstructured)[@foo = "bar"]/@foo',
-            \PHPCR\Query\QueryInterface::JCR_XPATH
+            \PHPCR\Query\QueryInterface::XPATH
         );
 
         $this->assertInstanceOf('\PHPCR\Query\QueryInterface', $query);
@@ -35,7 +35,7 @@ class QueryOperationsTest extends QueryBaseCase
     {
         $query = $this->sharedFixture['qm']->createQuery(
             '//element(*,nt:unstructured)/@foo',
-            \PHPCR\Query\QueryInterface::JCR_XPATH
+            \PHPCR\Query\QueryInterface::XPATH
         );
 
         $this->assertInstanceOf('\PHPCR\Query\QueryInterface', $query);
@@ -60,7 +60,7 @@ class QueryOperationsTest extends QueryBaseCase
     {
         $query = $this->sharedFixture['qm']->createQuery(
             '//element(*, nt:unstructured)/@zeronumber order by @zeronumber',
-            \PHPCR\Query\QueryInterface::JCR_XPATH
+            \PHPCR\Query\QueryInterface::XPATH
         );
 
         $this->assertInstanceOf('\PHPCR\Query\QueryInterface', $query);
