@@ -12,7 +12,7 @@ class QueryOperationsTest extends QueryBaseCase
     {
         $query = $this->sharedFixture['qm']->createQuery(
                 "SELECT foo FROM nt:unstructured WHERE foo = 'bar'",
-            \PHPCR\Query\QueryInterface::JCR_SQL
+            \PHPCR\Query\QueryInterface::SQL
         );
 
         $this->assertInstanceOf('\PHPCR\Query\QueryInterface', $query);
@@ -35,7 +35,7 @@ class QueryOperationsTest extends QueryBaseCase
     {
         $query = $this->sharedFixture['qm']->createQuery(
             'SELECT foo FROM nt:unstructured',
-            \PHPCR\Query\QueryInterface::JCR_SQL
+            \PHPCR\Query\QueryInterface::SQL
         );
 
         $this->assertInstanceOf('\PHPCR\Query\QueryInterface', $query);
@@ -62,7 +62,7 @@ class QueryOperationsTest extends QueryBaseCase
             'SELECT zeronumber
              FROM nt:unstructured
              ORDER BY zeronumber',
-            \PHPCR\Query\QueryInterface::JCR_SQL
+            \PHPCR\Query\QueryInterface::SQL
         );
 
         $this->assertInstanceOf('\PHPCR\Query\QueryInterface', $query);
