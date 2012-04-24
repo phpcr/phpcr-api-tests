@@ -252,19 +252,44 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
         $this->assertFalse($node->hasNodes());
     }
 
+    /**
+     * Add a node to an existing node. Move the node under a new node. Add another node underneath.
+     *
+     * And add a node, save, then move the parent.
+     */
     public function testAddAndChildAddAndMove()
     {
         $session = $this->sharedFixture['session'];
         $path = $this->node->getPath();
-        $node = $this->node->getNode('node');
 
+        $node = $this->node->getNode('node');
         $child = $node->addNode('child');
+
+        $existing = $this->node->getNode('existing');
+        $existingchild = $existing->addNode('child');
+
+        // move an existing node into a tree of new nodes
+        $session->move("$path/existing", "$path/node/child/existing");
+        $this->assertEquals("$path/node/child/existing/child", $existingchild->getPath());
+        $session->getNode("$path/node/child/existing")->addNode('otherchild');
+
         $session->save();
+
+        $this->assertTrue($session->nodeExists("$path/node/child/existing"));
+        $this->assertTrue($session->nodeExists("$path/node/child/existing/child"));
+        $this->assertTrue($session->nodeExists("$path/node/child/existing/otherchild"));
 
         $session->move("$path/node", "$path/target");
         $session->save();
 
         $this->assertEquals("$path/target/child", $child->getPath());
+
+        $session = $this->renewSession();
+
+        $this->assertTrue($session->nodeExists("$path/target/child"));
+        $this->assertTrue($session->nodeExists("$path/target/child/existing"));
+        $this->assertTrue($session->nodeExists("$path/target/child/existing/child"));
+        $this->assertTrue($session->nodeExists("$path/target/child/existing/otherchild"));
     }
 
     /*

@@ -1,0 +1,11 @@
+<data>
+    <node title="Test" content="This is some test content" />
+    <sibling title="Test" content="This is another test content">
+        <child1/>
+        <child2  />
+        <otherchild/>
+        <yetanother>
+            <child/>
+        </yetanother>
+    </sibling>
+</data>

@@ -245,9 +245,9 @@ class AddMethodsTest extends \PHPCR\Test\BaseCase
         } catch (\PHPCR\NodeType\ConstraintViolationException $e) {
             //also correct
             return;
-        } 
+        }
         $this->fail("Expected PHPCR\\NodeType\\ConstraintViolationException or PHPCR\\ValueFormatException");
-           
+
     }
 
     /**
@@ -258,22 +258,30 @@ class AddMethodsTest extends \PHPCR\Test\BaseCase
         $this->node->addNode('name[3]', 'nt:unstructured');
     }
 
+    /**
+     * Add a node and a child node to it
+     */
     public function testAddNodeChild()
     {
         $newNode = $this->node->addNode('parent', 'nt:unstructured');
-        $newNode->addNode('child', 'nt:unstructured');
+        $newChild = $newNode->addNode('child', 'nt:unstructured');
+        $path = $newChild->getPath();
 
         $this->assertTrue($this->sharedFixture['session']->nodeExists('/tests_write_manipulation_add/testAddNodeChild/parent/child'), 'Child node not found [Session]');
 
+        $this->sharedFixture['session']->save();
+        $this->assertFalse($newChild->isNew(), 'Node was not saved');
+
         // dispatch to backend
         $session = $this->saveAndRenewSession();
-        $this->assertTrue($session->nodeExists('/tests_write_manipulation_add/testAddNodeChild/parent/child'), 'Child node not found [Backend]');
+        $this->assertTrue($session->nodeExists($path));
+        $this->assertInstanceOf('PHPCR\\NodeInterface', $session->getNode($path));
     }
 
     /**
-     * a more complex case with child nodes and properties
+     * Add a node and a child node with some properties
      */
-    public function testAddNodeAndChildNode()
+    public function testAddNodeChildProperties()
     {
         $parent = $this->node->addNode('parent', 'nt:folder');
         $child = $parent->addNode('child', 'nt:file');
@@ -287,4 +295,35 @@ class AddMethodsTest extends \PHPCR\Test\BaseCase
         $this->assertInstanceOf('PHPCR\NodeInterface', $child);
     }
 
+    /**
+     * try to add a node with an unregistered namespace
+     * @expectedException \PHPCR\RepositoryException
+     */
+    public function testAddNodeWithUnregisteredNamespace()
+    {
+        $namespace = 'testUnregisteredNamespace';
+        $nodeName =  'child';
+
+        //add the node with an unregistered namespace, should throw a RepositoryException
+        $this->node->addNode($namespace . ':' . $nodeName, 'nt:unstructured');
+
+        //save the changes
+        $this->saveAndRenewSession();
+    }
+
+    /**
+     * try to add a property with an unregistered namespace
+     * @expectedException \PHPCR\RepositoryException
+     */
+    public function testAddPropertyWithUnregisteredNamespace()
+    {
+        $namespace = 'testUnregisteredNamespace';
+        $propertyName =  'prop';
+
+        //add a property with an unregistered namespace, should throw a RepositoryException
+        $this->node->setProperty($namespace . ':' . $propertyName, 'some value');
+
+        //save the changes
+        $this->saveAndRenewSession();
+    }
 }

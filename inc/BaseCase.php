@@ -75,12 +75,13 @@ abstract class BaseCase extends \PHPUnit_Framework_TestCase
         self::$staticSharedFixture = array();
         date_default_timezone_set('Europe/Zurich'); //TODO put this here?
 
-        self::$staticSharedFixture['session'] = self::$loader->getSession();
         self::$staticSharedFixture['ie'] = self::$loader->getFixtureLoader();
-
         if ($fixtures) {
             self::$staticSharedFixture['ie']->import($fixtures);
         }
+
+        // only load session once fixtures have been imported (relevant i.e. for jackalope-doctrine-dbal)
+        self::$staticSharedFixture['session'] = self::$loader->getSession();
     }
 
     protected function setUp()
