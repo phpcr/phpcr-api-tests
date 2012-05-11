@@ -55,7 +55,7 @@ class MoveMethodsTest extends \PHPCR\Test\BaseCase
      * src:     /my/path
      * dst:     /my/new/path
      *
-     * where the following node exists in the arborescence:
+     * where the following node exists in the tree:
      * prob:    /my/pathSomething
      *
      * the moveNodes method should'nt consider the prob node
