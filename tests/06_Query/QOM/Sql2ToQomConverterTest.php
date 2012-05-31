@@ -14,6 +14,7 @@ class Sql2ToQomConverterTest extends \PHPCR\Test\BaseCase
 
     protected $qomQueries;
 
+    /** @var Sql2ToQomQueryConverter */
     protected $parser;
 
     public function setUp()
