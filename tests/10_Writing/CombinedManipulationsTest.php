@@ -240,6 +240,7 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
         $node->remove();
         $this->assertFalse($session->nodeExists($path));
         $session->move($this->node->getPath().'/other', $path);
+
         $this->assertTrue($session->nodeExists($path));
         $parent = $this->node->getNode('parent');
         $this->assertTrue($parent->hasNode('child'));
