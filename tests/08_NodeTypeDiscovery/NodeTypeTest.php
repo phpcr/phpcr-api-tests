@@ -137,6 +137,7 @@ class NodeTypeTest extends \PHPCR\Test\BaseCase
     public function testIsNodeTypePrimary()
     {
         $this->assertTrue(self::$file->isNodeType('nt:file'));
+        $this->assertTrue(self::$file->isNodeType('nt:hierarchyNode'));
         $this->assertTrue(self::$file->isNodeType('nt:base'));
         $this->assertFalse(self::$file->isNodeType('nt:resource'));
     }
