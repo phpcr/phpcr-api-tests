@@ -226,7 +226,19 @@ class DeleteMethodsTest extends \PHPCR\Test\BaseCase
     {
         //relies on the base class setup trick to have the node populated from the fixtures
         $this->assertInstanceOf('PHPCR\NodeInterface', $this->node);
-        $this->node->setProperty('jcr:created', null);
+        $this->node->setProperty('jcr:created', null); //removes the property
+        $this->sharedFixture['session']->save();
+    }
+
+    /**
+     * \PHPCR\NodeInterface::setProperty
+     * @expectedException \PHPCR\NodeType\ConstraintViolationException
+     */
+    public function testRemovePropertyConstraintViolation()
+    {
+        //relies on the base class setup trick to have the node populated from the fixtures
+        $this->assertInstanceOf('PHPCR\NodeInterface', $this->node);
+        $this->node->setProperty('jcr:primaryType', null); //removes the property
         $this->sharedFixture['session']->save();
     }
 
