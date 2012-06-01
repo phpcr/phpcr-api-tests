@@ -67,6 +67,10 @@ class QueryObjectQOMTest extends QueryBaseCase
         $this->assertEquals('SELECT * FROM [nt:folder] AS data', $this->query->getStatement());
     }
 
+    /**
+     * Even though the query is defined with QOM, it must return JCR_SQL2 as langugae:
+     * http://www.day.com/specs/jcr/2.0/6_Query.html#6.9.3%20Getting%20the%20Language
+     */
     public function testGetLanguage()
     {
         $this->assertEquals(\PHPCR\Query\QueryInterface::JCR_SQL2, $this->query->getLanguage());
