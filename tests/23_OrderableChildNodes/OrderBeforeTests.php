@@ -292,6 +292,73 @@ class OrderBeforeTest extends \PHPCR\Test\BaseCase
         $node = $session->getNode($path);
         $this->assertChildOrder(array('newfirst', 'four', 'two', 'new'), $node);
     }
+
+    /**
+     * \PHPCR\NodeInterface::orderBefore
+     */
+    public function testNodeOrderOnAdd()
+    {
+        $session = $this->sharedFixture['session'];
+        $this->assertInstanceOf('\PHPCR\NodeInterface', $this->node);
+        $path = $this->node->getPath();
+
+        $this->node->addNode('new');
+        $this->assertChildOrder(array('one', 'two', 'three', 'new'), $this->node);
+
+        $session->save();
+        $this->assertChildOrder(array('one', 'two', 'three', 'new'), $this->node);
+
+        $session = $this->renewSession();
+
+        $node = $session->getNode($path);
+        $this->assertChildOrder(array('one', 'two', 'three', 'new'), $node);
+    }
+
+    /**
+     * \PHPCR\NodeInterface::orderBefore
+     */
+    public function testNodeOrderOnMultipleAdds()
+    {
+        $session = $this->sharedFixture['session'];
+        $this->assertInstanceOf('\PHPCR\NodeInterface', $this->node);
+        $path = $this->node->getPath();
+
+        $this->node->addNode('new1');
+        $this->node->addNode('new2');
+        $this->assertChildOrder(array('one', 'two', 'three', 'new1', 'new2'), $this->node);
+
+        $session->save();
+        $this->assertChildOrder(array('one', 'two', 'three', 'new1', 'new2'), $this->node);
+
+        $session = $this->renewSession();
+
+        $node = $session->getNode($path);
+        $this->assertChildOrder(array('one', 'two', 'three', 'new1', 'new2'), $node);
+    }
+
+    /**
+     * \PHPCR\NodeInterface::orderBefore
+     */
+    public function testNodeOrderOnMultipleAddsAndDelete()
+    {
+        $session = $this->sharedFixture['session'];
+        $this->assertInstanceOf('\PHPCR\NodeInterface', $this->node);
+        $path = $this->node->getPath();
+
+        $this->node->addNode('new1');
+        $this->node->addNode('new2');
+        $this->node->getNode('two')->remove();
+
+        $this->assertChildOrder(array('one', 'three', 'new1', 'new2'), $this->node);
+
+        $session->save();
+        $this->assertChildOrder(array('one', 'three', 'new1', 'new2'), $this->node);
+
+        $session = $this->renewSession();
+
+        $node = $session->getNode($path);
+        $this->assertChildOrder(array('one', 'three', 'new1', 'new2'), $node);
+    }
 }
 
 
