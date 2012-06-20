@@ -13,10 +13,18 @@ abstract class BaseCase extends \PHPUnit_Framework_TestCase
 {
     protected $path = ''; // Describes the path to the test
 
-    /** The root node of the fixture, initialized for each test */
+    /**
+     * The root node of the fixture, initialized for each test
+     *
+     * @var \PHPCR\NodeInterface
+     */
     protected $rootNode = null;
 
-    /** The node in the current fixture at /test_class_name/testMethod */
+    /**
+     * The node in the current fixture at /test_class_name/testMethod
+     *
+     * @var \PHPCR\NodeInterface
+     */
     protected $node = null;
 
     /**
@@ -35,6 +43,8 @@ abstract class BaseCase extends \PHPUnit_Framework_TestCase
      * Contains the fields
      * - session (the PHPCR Session)
      * - ie (the fixture loader instance)
+     *
+     * @var array
      */
     protected static $staticSharedFixture = null;
 
