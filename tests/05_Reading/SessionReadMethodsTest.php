@@ -72,6 +72,7 @@ class SessionReadMethodsTest extends \PHPCR\Test\BaseCase
             '/tests_general_base',
             '/tests_general_base/numberPropertyNode',
             '/not_existing',
+            '/tests_general_base/../not_existing',
         ));
         $this->assertCount(2, $nodes);
         $this->assertTrue(isset($nodes['/tests_general_base']));
