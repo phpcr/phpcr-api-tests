@@ -102,7 +102,7 @@ class MoveMethodsTest extends \PHPCR\Test\BaseCase
     {
         $session = $this->sharedFixture['session'];
 
-        $src = '/tests_write_manipulation_move/testSessionMoveWhitespace/src Node';
+        $src = '/tests_write_manipulation_move/testSessionMoveWhitespace/jcr:src Node';
         $dst = '/tests_write_manipulation_move/testSessionMoveWhitespace/dst Node/srcNode';
 
         $session->move($src, $dst);
