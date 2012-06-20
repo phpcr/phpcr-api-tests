@@ -298,7 +298,7 @@
                 <sv:value>nt:unstructured</sv:value>
             </sv:property>
         </sv:node>
-    </sv:node> 
+    </sv:node>
 
     <sv:node sv:name="testNodeOrderOnMultipleAdds">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -319,7 +319,7 @@
                 <sv:value>nt:unstructured</sv:value>
             </sv:property>
         </sv:node>
-    </sv:node> 
+    </sv:node>
 
     <sv:node sv:name="testNodeOrderOnMultipleAddsAndDelete">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -340,5 +340,27 @@
                 <sv:value>nt:unstructured</sv:value>
             </sv:property>
         </sv:node>
-    </sv:node> 
+    </sv:node>
+
+    <sv:node sv:name="testNodeOrderNamespaces">
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+            <sv:value>nt:unstructured</sv:value>
+        </sv:property>
+        <sv:node sv:name="jcr:one">
+            <sv:property sv:name="jcr:primaryType" sv:type="Name">
+                <sv:value>nt:unstructured</sv:value>
+            </sv:property>
+        </sv:node>
+        <sv:node sv:name="one">
+            <sv:property sv:name="jcr:primaryType" sv:type="Name">
+                <sv:value>nt:unstructured</sv:value>
+            </sv:property>
+        </sv:node>
+        <sv:node sv:name="sv:one">
+            <sv:property sv:name="jcr:primaryType" sv:type="Name">
+                <sv:value>nt:unstructured</sv:value>
+            </sv:property>
+        </sv:node>
+    </sv:node>
+
 </sv:node>

@@ -29,7 +29,7 @@ class OrderBeforeTest extends \PHPCR\Test\BaseCase
     private function assertChildOrder($names, $node)
     {
         $children = array();
-        foreach ($node as $name => $node) {
+        foreach ($node as $name => $dummy) {
             $children[] = $name;
         }
         $this->assertEquals($names, $children);
@@ -358,6 +358,30 @@ class OrderBeforeTest extends \PHPCR\Test\BaseCase
 
         $node = $session->getNode($path);
         $this->assertChildOrder(array('one', 'three', 'new1', 'new2'), $node);
+    }
+
+    /**
+     * \PHPCR\NodeInterface::orderBefore
+     */
+    public function testNodeOrderNamespaces()
+    {
+        $session = $this->sharedFixture['session'];
+        $this->assertInstanceOf('\PHPCR\NodeInterface', $this->node);
+        $path = $this->node->getPath();
+
+        $this->assertChildOrder(array('jcr:one', 'one', 'sv:one'), $this->node);
+
+        $this->node->orderBefore('sv:one', 'one');
+
+        $this->assertChildOrder(array('jcr:one', 'sv:one', 'one'), $this->node);
+
+        $session->save();
+        $this->assertChildOrder(array('jcr:one', 'sv:one', 'one'), $this->node);
+
+        $session = $this->renewSession();
+
+        $node = $session->getNode($path);
+        $this->assertChildOrder(array('jcr:one', 'sv:one', 'one'), $node);
     }
 }
 
