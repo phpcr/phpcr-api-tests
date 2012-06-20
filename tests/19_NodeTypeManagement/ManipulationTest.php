@@ -89,9 +89,7 @@ class ManipulationTest extends \PHPCR\Test\BaseCase
      *
      * TODO: move this into jackalope functional tests
      *
-     * \Jackalope\NodeTypeManager::registerNodeTypesCnd
-     *
-     * @expectedException \PHPCR\NodeType\NodeTypeExistsException
+     * @covers \Jackalope\NodeTypeManager::registerNodeTypesCnd
      */
     public function testPrimaryItem()
     {
