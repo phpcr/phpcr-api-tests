@@ -84,11 +84,21 @@
     <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
       <sv:value>mix:created</sv:value>
     </sv:property>
-</sv:node>
+  </sv:node>
   <sv:node sv:name="testRemoveNode">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
       <sv:value>nt:unstructured</sv:value>
     </sv:property>
+  </sv:node>
+  <sv:node sv:name="testRemoveNodeWhitespace">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>nt:unstructured</sv:value>
+    </sv:property>
+    <sv:node sv:name="child whitespace">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>nt:unstructured</sv:value>
+      </sv:property>
+    </sv:node>
   </sv:node>
   <sv:node sv:name="testRemoveNodeParentState">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">

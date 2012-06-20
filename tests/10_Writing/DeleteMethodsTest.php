@@ -100,6 +100,21 @@ class DeleteMethodsTest extends \PHPCR\Test\BaseCase
         $this->assertFalse($this->sharedFixture['session']->nodeExists($path));
     }
 
+    public function testRemoveNodeWhitespace()
+    {
+        //relies on the base class setup trick to have the node populated from the fixtures
+        $this->assertInstanceOf('PHPCR\NodeInterface', $this->node);
+        $node = $this->node->getNode('child whitespace');
+        $this->assertInstanceOf('PHPCR\NodeInterface', $node);
+
+        $path = $node->getPath();
+
+        $node->remove();
+        $this->saveAndRenewSession();
+
+        $this->assertFalse($this->sharedFixture['session']->nodeExists($path));
+    }
+
     /**
      * Check if state of parent that was not cached when delete was executed is correct
      *
