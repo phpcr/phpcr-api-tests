@@ -173,7 +173,7 @@ abstract class BaseCase extends \PHPUnit_Framework_TestCase
      * this is similar to doing self::$loader->getSession($credentials) but
      * does error handling and asserts the session is a valid SessionInterface
      *
-     * @return PHPCR\SessionInterface the session from the login
+     * @return \PHPCR\SessionInterface the session from the login
      */
     protected function assertSession($credentials = false)
     {
