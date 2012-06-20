@@ -98,6 +98,35 @@ class MoveMethodsTest extends \PHPCR\Test\BaseCase
         $this->assertFalse($session->nodeExists($probDst), 'Sibling nodes should\'nt be moved');
     }
 
+    public function testSessionMoveWhitespace()
+    {
+        $session = $this->sharedFixture['session'];
+
+        $src = '/tests_write_manipulation_move/testSessionMoveWhitespace/src Node';
+        $dst = '/tests_write_manipulation_move/testSessionMoveWhitespace/dst Node/srcNode';
+
+        $session->move($src, $dst);
+
+        // Session
+        $this->assertTrue($session->nodeExists($dst), 'Destination node not found [S]');
+        $this->assertFalse($session->nodeExists($src), 'Source node still exists [S]');
+        $this->assertTrue($session->nodeExists($dst.'/srcFile/jcr:content'), 'Destination child node not found [S]');
+
+        $dstNode = $session->getNode($dst);
+        $this->assertInstanceOf('PHPCR\NodeInterface', $dstNode);
+
+        $session->save();
+        $this->assertTrue($session->nodeExists($dst), 'Destination node not found [B]');
+        $this->assertFalse($session->nodeExists($src), 'Source node still exists [B]');
+        $this->assertTrue($session->nodeExists($dst.'/srcFile/jcr:content'), 'Destination child node not found [B]');
+
+        // Backend
+        $session = $this->renewSession();
+        $this->assertTrue($session->nodeExists($dst), 'Destination node not found [B]');
+        $this->assertFalse($session->nodeExists($src), 'Source node still exists [B]');
+        $this->assertTrue($session->nodeExists($dst.'/srcFile/jcr:content'), 'Destination child node not found [B]');
+    }
+
     /**
      * Makes sure that UUID is not modified during a move for mix:referenceable nodes
      */
