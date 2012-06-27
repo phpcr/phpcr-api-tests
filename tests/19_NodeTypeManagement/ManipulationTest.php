@@ -65,6 +65,24 @@ class ManipulationTest extends \PHPCR\Test\BaseCase
     }
 
     /**
+     * TODO: depend on the non-cnd type
+     * @depends testRegisterNodeTypesCnd
+     */
+    public function testValidateCustomNodeType()
+    {
+        $node = $this->rootNode->getNode('tests_general_base');
+        try {
+            // the node is of type nt:folder - it can only have allowed properties
+            $node->setProperty('phpcr:prop', 'test');
+            $this->fail('This node should not accept the property');
+        } catch (\PHPCR\NodeType\ConstraintViolationException $e) {
+            // expected
+        }
+        $node->addMixin('phpcr:test');
+        $node->setProperty('phpcr:prop', 'test');
+    }
+
+    /**
      * A test for a jackalope specific feature. Is automatically skipped if
      * your implementation is something different.
      *
