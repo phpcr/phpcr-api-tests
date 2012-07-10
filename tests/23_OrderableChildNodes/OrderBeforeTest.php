@@ -383,6 +383,45 @@ class OrderBeforeTest extends \PHPCR\Test\BaseCase
         $node = $session->getNode($path);
         $this->assertChildOrder(array('jcr:one', 'sv:one', 'one'), $node);
     }
+
+    /**
+     * \PHPCR\NodeInterface::orderBefore
+     */
+    public function testNodeOrderAfterOrderAndMove()
+    {
+        $session = $this->sharedFixture['session'];
+        $this->assertInstanceOf('\PHPCR\NodeInterface', $this->node);
+
+        $src = '/tests_write_manipulation_move/testNodeOrderAfterOrderAndMove/src';
+        $dst = '/tests_write_manipulation_move/testNodeOrderAfterOrderAndMove/dst';
+
+        $srcParentNode = $session->getNode($src);
+        $dstParentNode = $session->getNode($dst);
+
+        $srcParentNode->orderBefore('three', 'two');
+        $dstParentNode->orderBefore('three', 'two');
+        
+        $session->move($src . '/three', $dst . '/moved-three');
+        $dstNode = $session->getNode($dst . '/moved-three');        
+        $this->assertInstanceOf('PHPCR\NodeInterface', $dstNode);
+        
+        $dstParentNode = $session->getNode($dst);        
+        $this->assertChildOrder(array('one', 'three', 'two', 'four', 'moved-three'), $dstParentNode);
+
+        $srcParentNode = $session->getNode($src);        
+        $this->assertChildOrder(array('one', 'two', 'four'), $srcParentNode);
+
+        $session->save();
+
+        $session = $this->renewSession();
+
+        $dstNode = $session->getNode($dst . '/moved-three');
+        $this->assertInstanceOf('PHPCR\NodeInterface', $dstNode);
+
+        $dstParentNode = $session->getNode($dst);        
+        $this->assertChildOrder(array('one', 'three', 'two', 'four', 'moved-three'), $dstParentNode);
+
+        $srcParentNode = $session->getNode($src);        
+        $this->assertChildOrder(array('one', 'two', 'four'), $srcParentNode);
+    }
 }
-
-

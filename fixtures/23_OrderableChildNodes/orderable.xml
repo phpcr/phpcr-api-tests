@@ -363,4 +363,60 @@
         </sv:node>
     </sv:node>
 
+    <sv:node sv:name="testNodeOrderAfterOrderAndMove">
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+            <sv:value>nt:unstructured</sv:value>
+        </sv:property>
+        <sv:node sv:name="src">
+            <sv:property sv:name="jcr:primaryType" sv:type="Name">
+                <sv:value>nt:unstructured</sv:value>
+            </sv:property>
+            <sv:node sv:name="one">
+                <sv:property sv:name="jcr:primaryType" sv:type="Name">
+                  <sv:value>nt:unstructured</sv:value>
+                </sv:property>
+            </sv:node>
+            <sv:node sv:name="two">
+                <sv:property sv:name="jcr:primaryType" sv:type="Name">
+                    <sv:value>nt:unstructured</sv:value>
+                </sv:property>
+            </sv:node>
+            <sv:node sv:name="three">
+                <sv:property sv:name="jcr:primaryType" sv:type="Name">
+                    <sv:value>nt:unstructured</sv:value>
+                </sv:property>
+            </sv:node>
+            <sv:node sv:name="four">
+                <sv:property sv:name="jcr:primaryType" sv:type="Name">
+                    <sv:value>nt:unstructured</sv:value>
+                </sv:property>
+            </sv:node>
+        </sv:node>
+        <sv:node sv:name="dst">
+            <sv:property sv:name="jcr:primaryType" sv:type="Name">
+                <sv:value>nt:unstructured</sv:value>
+            </sv:property>
+            <sv:node sv:name="one">
+                <sv:property sv:name="jcr:primaryType" sv:type="Name">
+                  <sv:value>nt:unstructured</sv:value>
+                </sv:property>
+            </sv:node>
+            <sv:node sv:name="two">
+                <sv:property sv:name="jcr:primaryType" sv:type="Name">
+                    <sv:value>nt:unstructured</sv:value>
+                </sv:property>
+            </sv:node>
+            <sv:node sv:name="three">
+                <sv:property sv:name="jcr:primaryType" sv:type="Name">
+                    <sv:value>nt:unstructured</sv:value>
+                </sv:property>
+            </sv:node>
+            <sv:node sv:name="four">
+                <sv:property sv:name="jcr:primaryType" sv:type="Name">
+                    <sv:value>nt:unstructured</sv:value>
+                </sv:property>
+            </sv:node>
+        </sv:node>
+    </sv:node>
+
 </sv:node>
