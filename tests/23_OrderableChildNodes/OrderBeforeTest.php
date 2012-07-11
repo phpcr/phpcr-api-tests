@@ -212,6 +212,7 @@ class OrderBeforeTest extends \PHPCR\Test\BaseCase
      */
     public function testNodeOrderBeforeUpAndRefresh()
     {
+        /** @var $session \PHPCR\SessionInterface */
         $session = $this->sharedFixture['session'];
         $this->assertInstanceOf('\PHPCR\NodeInterface', $this->node);
         $path = $this->node->getPath();
@@ -389,6 +390,7 @@ class OrderBeforeTest extends \PHPCR\Test\BaseCase
      */
     public function testNodeOrderAfterOrderAndMove()
     {
+        /** @var $session \PHPCR\SessionInterface */
         $session = $this->sharedFixture['session'];
         $this->assertInstanceOf('\PHPCR\NodeInterface', $this->node);
 
@@ -400,15 +402,15 @@ class OrderBeforeTest extends \PHPCR\Test\BaseCase
 
         $srcParentNode->orderBefore('three', 'two');
         $dstParentNode->orderBefore('three', 'two');
-        
+
         $session->move($src . '/three', $dst . '/moved-three');
-        $dstNode = $session->getNode($dst . '/moved-three');        
+        $dstNode = $session->getNode($dst . '/moved-three');
         $this->assertInstanceOf('PHPCR\NodeInterface', $dstNode);
-        
-        $dstParentNode = $session->getNode($dst);        
+
+        $dstParentNode = $session->getNode($dst);
         $this->assertChildOrder(array('one', 'three', 'two', 'four', 'moved-three'), $dstParentNode);
 
-        $srcParentNode = $session->getNode($src);        
+        $srcParentNode = $session->getNode($src);
         $this->assertChildOrder(array('one', 'two', 'four'), $srcParentNode);
 
         $session->save();
@@ -418,10 +420,10 @@ class OrderBeforeTest extends \PHPCR\Test\BaseCase
         $dstNode = $session->getNode($dst . '/moved-three');
         $this->assertInstanceOf('PHPCR\NodeInterface', $dstNode);
 
-        $dstParentNode = $session->getNode($dst);        
+        $dstParentNode = $session->getNode($dst);
         $this->assertChildOrder(array('one', 'three', 'two', 'four', 'moved-three'), $dstParentNode);
 
-        $srcParentNode = $session->getNode($src);        
+        $srcParentNode = $session->getNode($src);
         $this->assertChildOrder(array('one', 'two', 'four'), $srcParentNode);
     }
 }
