@@ -39,6 +39,8 @@ class QueryObjectSql2Test extends QueryBaseCase
 
     public function testExecuteOffset()
     {
+        $this->markTestSkipped('see: https://github.com/jackalope/jackalope-doctrine-dbal/pull/46#issuecomment-6990082');
+
         $this->query->setLimit(3);
         $this->query->setOffset(2);
         $qr = $this->query->execute();
