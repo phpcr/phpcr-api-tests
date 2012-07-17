@@ -39,6 +39,7 @@ class QueryObjectSql2Test extends QueryBaseCase
 
     public function testExecuteOffset()
     {
+        $this->query->setLimit(3);
         $this->query->setOffset(2);
         $qr = $this->query->execute();
         $this->assertInstanceOf('PHPCR\Query\QueryResultInterface', $qr);
