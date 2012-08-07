@@ -45,12 +45,12 @@ class Sql2TestQueries {
         /**
         * 6.7.13. AndConstraint
         */
-        $queries['6.7.13.And'] = 'SELECT * FROM [nt:file] WHERE sel1.prop1 IS NOT NULL AND sel2.prop2 IS NOT NULL';
+        $queries['6.7.13.And'] = 'SELECT * FROM [nt:file] WHERE (sel1.prop1 IS NOT NULL AND sel2.prop2 IS NOT NULL)';
 
         /**
         * 6.7.14. OrConstraint
         */
-        $queries['6.7.14.Or'] = 'SELECT * FROM [nt:file] WHERE sel1.prop1 IS NOT NULL OR sel2.prop2 IS NOT NULL';
+        $queries['6.7.14.Or'] = 'SELECT * FROM [nt:file] WHERE (sel1.prop1 IS NOT NULL OR sel2.prop2 IS NOT NULL)';
 
         /**
         * 6.7.15. NotConstraint
