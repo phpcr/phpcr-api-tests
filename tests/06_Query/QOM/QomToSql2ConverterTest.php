@@ -86,10 +86,20 @@ class QomToSql2ConverterTest extends \PHPCR\Test\BaseCase
         $condition = new QOM\SameNodeJoinCondition('sel1', 'sel2');
         $this->assertQuery($this->queries['6.7.9.SameNodeJoinCondition.Simple'], $this->factory->join($left, $right, Constants::JCR_JOIN_TYPE_INNER, $condition));
 
-        //TODO: should path be surronded by quotes?
         $condition = new QOM\SameNodeJoinCondition('sel1', 'sel2', '/home');
         $this->assertQuery($this->queries['6.7.9.SameNodeJoinCondition.Path'], $this->factory->join($left, $right, Constants::JCR_JOIN_TYPE_INNER, $condition));
+    }
 
+    /**
+     * 6.7.9. SameNodeJoinCondition with space in path
+     */
+    public function testSameNodeJoinSpace()
+    {
+        $left = $this->factory->selector('nt:file');
+        $right = $this->factory->selector('nt:folder');
+
+        $condition = new QOM\SameNodeJoinCondition('sel1', 'sel2', '/home node');
+        $this->assertQuery($this->queries['6.7.9.SameNodeJoinCondition.Path_Space'], $this->factory->join($left, $right, Constants::JCR_JOIN_TYPE_INNER, $condition));
     }
 
     /**
@@ -189,6 +199,16 @@ class QomToSql2ConverterTest extends \PHPCR\Test\BaseCase
     }
 
     /**
+     * 6.7.20. SameNode with space in path
+     */
+    public function testSameNodeSpace()
+    {
+        $selector = $this->factory->selector('nt:file');
+        $this->assertQuery($this->queries['6.7.20.SameNode.Simple_Space'], $selector, array(), $this->factory->sameNode('/home node'), array());
+        $this->assertQuery($this->queries['6.7.20.SameNode.Selector_Space'], $selector, array(), $this->factory->sameNode('/home node', 'sel1'), array());
+    }
+
+    /**
      * 6.7.21. ChildNode
      */
     public function testChildNode()
@@ -199,6 +219,16 @@ class QomToSql2ConverterTest extends \PHPCR\Test\BaseCase
     }
 
     /**
+     * 6.7.21. ChildNode with space in path
+     */
+    public function testChildNodeSpace()
+    {
+        $selector = $this->factory->selector('nt:file');
+        $this->assertQuery($this->queries['6.7.21.ChildNode.Simple_Space'], $selector, array(), $this->factory->childNode('/home node'), array());
+        $this->assertQuery($this->queries['6.7.21.ChildNode.Selector_Space'], $selector, array(), $this->factory->childNode('/home node', 'sel1'), array());
+    }
+
+    /**
      * 6.7.22. DescendantNode
      */
     public function testDescendantNode()
@@ -206,6 +236,16 @@ class QomToSql2ConverterTest extends \PHPCR\Test\BaseCase
         $selector = $this->factory->selector('nt:file');
         $this->assertQuery($this->queries['6.7.22.DescendantNode.Simple'], $selector, array(), $this->factory->descendantNode('/home'), array());
         $this->assertQuery($this->queries['6.7.22.DescendantNode.Selector'], $selector, array(), $this->factory->descendantNode('/home', 'sel1'), array());
+    }
+
+    /**
+     * 6.7.22. DescendantNode with space in path
+     */
+    public function testDescendantNodeSpace()
+    {
+        $selector = $this->factory->selector('nt:file');
+        $this->assertQuery($this->queries['6.7.22.DescendantNode.Simple_Space'], $selector, array(), $this->factory->descendantNode('/home node'), array());
+        $this->assertQuery($this->queries['6.7.22.DescendantNode.Selector_Space'], $selector, array(), $this->factory->descendantNode('/home node', 'sel1'), array());
     }
 
     /**

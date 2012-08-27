@@ -31,6 +31,7 @@ class Sql2TestQueries {
         */
         $queries['6.7.9.SameNodeJoinCondition.Simple'] = 'SELECT * FROM [nt:file] INNER JOIN [nt:folder] ON ISSAMENODE(sel1, sel2)';
         $queries['6.7.9.SameNodeJoinCondition.Path'] = 'SELECT * FROM [nt:file] INNER JOIN [nt:folder] ON ISSAMENODE(sel1, sel2, [/home])';
+        $queries['6.7.9.SameNodeJoinCondition.Path_Space'] = 'SELECT * FROM [nt:file] INNER JOIN [nt:folder] ON ISSAMENODE(sel1, sel2, ["/home node"])';
 
         /**
         * 6.7.10 ChildNodeJoinCondition
@@ -77,18 +78,24 @@ class Sql2TestQueries {
         */
         $queries['6.7.20.SameNode.Simple'] = 'SELECT * FROM [nt:file] WHERE ISSAMENODE([/home])';
         $queries['6.7.20.SameNode.Selector'] = 'SELECT * FROM [nt:file] WHERE ISSAMENODE(sel1, [/home])';
+        $queries['6.7.20.SameNode.Simple_Space'] = 'SELECT * FROM [nt:file] WHERE ISSAMENODE(["/home node"])';
+        $queries['6.7.20.SameNode.Selector_Space'] = 'SELECT * FROM [nt:file] WHERE ISSAMENODE(sel1, ["/home node"])';
 
         /**
         * 6.7.21. ChildNode
         */
         $queries['6.7.21.ChildNode.Simple'] = 'SELECT * FROM [nt:file] WHERE ISCHILDNODE([/home])';
         $queries['6.7.21.ChildNode.Selector'] = 'SELECT * FROM [nt:file] WHERE ISCHILDNODE(sel1, [/home])';
+        $queries['6.7.21.ChildNode.Simple_Space'] = 'SELECT * FROM [nt:file] WHERE ISCHILDNODE(["/home node"])';
+        $queries['6.7.21.ChildNode.Selector_Space'] = 'SELECT * FROM [nt:file] WHERE ISCHILDNODE(sel1, ["/home node"])';
 
         /**
         * 6.7.22. DescendantNode
         */
         $queries['6.7.22.DescendantNode.Simple'] = 'SELECT * FROM [nt:file] WHERE ISDESCENDANTNODE([/home])';
         $queries['6.7.22.DescendantNode.Selector'] = 'SELECT * FROM [nt:file] WHERE ISDESCENDANTNODE(sel1, [/home])';
+        $queries['6.7.22.DescendantNode.Simple_Space'] = 'SELECT * FROM [nt:file] WHERE ISDESCENDANTNODE(["/home node"])';
+        $queries['6.7.22.DescendantNode.Selector_Space'] = 'SELECT * FROM [nt:file] WHERE ISDESCENDANTNODE(sel1, ["/home node"])';
 
         /**
         * 6.7.27. ProperyValue
