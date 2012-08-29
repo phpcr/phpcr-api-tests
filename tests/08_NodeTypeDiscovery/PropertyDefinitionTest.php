@@ -30,7 +30,7 @@ class PropertyDefinitionTest extends \PHPCR\Test\BaseCase
 
     static public function setupBeforeClass($fixtures = false)
     {
-        parent::setupBeforeClass($fixtures);
+        parent::setupBeforeClass(); // load default fixtures
         $ntm = self::$staticSharedFixture['session']->getWorkspace()->getNodeTypeManager();
         self::$base = $ntm->getNodeType('nt:base');
         self::$address = $ntm->getNodeType('nt:address');
@@ -41,6 +41,7 @@ class PropertyDefinitionTest extends \PHPCR\Test\BaseCase
 
     public function setUp()
     {
+        parent::setUp();
         try {
             $defs = self::$base->getPropertyDefinitions();
             $this->assertInternalType('array', $defs);
@@ -216,5 +217,25 @@ class PropertyDefinitionTest extends \PHPCR\Test\BaseCase
         $this->assertFalse($this->pathprop->isProtected());
         $this->assertTrue($this->created->isProtected());
         $this->assertFalse($this->data->isProtected());
+    }
+
+    // some tests about Property::getDefinition()
+
+    public function testGetPropertyDefinitionExact()
+    {
+        $node = $this->rootNode->getNode('tests_general_base');
+        $createdProperty = $node->getProperty('jcr:created');
+        $propDef = $createdProperty->getDefinition();
+        $this->assertInstanceOf('PHPCR\\NodeType\\PropertyDefinitionInterface', $propDef);
+        $this->assertEquals('jcr:created', $propDef->getName());
+    }
+
+    public function estGetPropertyDefinitionWildcard()
+    {
+        $node = $this->rootNode->getNode('tests_general_base/numberPropertyNode/jcr:content');
+        $valProperty = $node->getProperty('foo');
+        $propDef = $valProperty->getDefinition();
+        $this->assertInstanceOf('PHPCR\\NodeType\\PropertyDefinitionInterface', $propDef);
+        $this->assertEquals('*', $propDef->getName());
     }
 }
