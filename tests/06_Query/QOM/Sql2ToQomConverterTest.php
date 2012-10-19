@@ -64,8 +64,15 @@ class Sql2ToQomConverterTest extends \PHPCR\Test\BaseCase
     {
         foreach ($this->qomQueries as $name => $query) {
             $sql2 = $this->sql2Queries[$name];
-            $qom = $this->parser->parse($sql2);
-            $this->assertEquals($query, $qom, "Original query = $sql2");
+            if (is_array($sql2)) {
+                foreach ($sql2 as $sql2Variation) {
+                    $qom = $this->parser->parse($sql2Variation);
+                    $this->assertEquals($query, $qom, "Original query = $sql2Variation");
+                }
+            } else {
+                $qom = $this->parser->parse($sql2);
+                $this->assertEquals($query, $qom, "Original query = $sql2");
+            }
         }
     }
 }
