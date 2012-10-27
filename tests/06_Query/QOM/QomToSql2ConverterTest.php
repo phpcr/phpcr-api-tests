@@ -413,6 +413,12 @@ class QomToSql2ConverterTest extends \PHPCR\Test\BaseCase
         $factory = $this->getMockBuilder('Jackalope\FactoryInterface')->disableOriginalConstructor()->getMock();
         $om = $this->getMockBuilder('Jackalope\ObjectManager')->disableOriginalConstructor()->getMock();
         $query = new QOM\QueryObjectModel($factory, $om, $source, $constraint, $ordering, $columns);
-        $this->assertEquals($expectedSql2, $this->parser->convert($query));
+
+        $result = $this->parser->convert($query);
+        if (is_array($expectedSql2)) {
+            $this->assertTrue(in_array($result, $expectedSql2), "The statement '$result' does not match an expected variation");
+        } else {
+            $this->assertEquals($expectedSql2, $result);
+        }
     }
 }
