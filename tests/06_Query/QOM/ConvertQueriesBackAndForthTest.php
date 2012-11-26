@@ -44,7 +44,7 @@ class ConvertQueriesBackAndForthTest extends \PHPCR\Test\BaseCase
                 $passed = false;
                 foreach ($originalSql2Query as $query) {
                     $qom = $this->sql2Parser->parse($query);
-                    if ($originalQomQuery == $qom) {
+                    if ($originalQomQuery->getStatement() == $qom->getStatement()) {
                         $sql2 = $this->qomParser->convert($qom);
                         if ($sql2 == $query) {
                             $passed = true;
