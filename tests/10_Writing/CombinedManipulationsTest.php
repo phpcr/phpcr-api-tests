@@ -41,8 +41,8 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
         $this->assertFalse($this->node->hasNode('child'));
         $this->node->addNode('child', 'nt:folder');
 
-        $this->assertTrue($session->nodeExists($path));
-        $this->assertTrue($this->node->hasNode('child'));
+        $this->assertTrue($session->nodeExists($path), "No node at $path");
+        $this->assertTrue($this->node->hasNode('child'), "No child 'child' at $path");
         $session->save();
         $this->assertTrue($session->nodeExists($path));
         $this->assertTrue($this->node->hasNode('child'));

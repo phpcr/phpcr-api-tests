@@ -1,5 +1,8 @@
 <?php
+
 namespace PHPCR\Test;
+
+use PHPCR\RepositoryFactoryInterface;
 
 /**
  * Base class for the bootstrapping to load your phpcr implementation for the
@@ -72,22 +75,26 @@ abstract class AbstractLoader
      * The default implementation uses the factory, but if the factory has an
      * error, you will get failing tests all over.
      *
-     * @return PHPCR\RepositoryInstance the repository instance
+     * @return \PHPCR\RepositoryInterface the repository instance
      */
     public function getRepository()
     {
         $factoryclass = $this->getRepositoryFactoryClass();
         $factory = new $factoryclass;
+        if (! $factory instanceof RepositoryFactoryInterface) {
+            throw new \Exception("$factoryclass is not of type RepositoryFactoryInterface");
+        }
+        /** @var $factory RepositoryFactoryInterface */
         return $factory->getRepository($this->getRepositoryFactoryParameters());
     }
 
     /**
-     * @return PHPCR\CredentialsInterface the login credentials that lead to successful login into the repository
+     * @return \PHPCR\CredentialsInterface the login credentials that lead to successful login into the repository
      */
     public abstract function getCredentials();
 
     /**
-     * @return PHPCR\CredentialsInterface the login credentials that lead to login failure
+     * @return \PHPCR\CredentialsInterface the login credentials that lead to login failure
      */
     public abstract function getInvalidCredentials();
 
@@ -97,7 +104,7 @@ abstract class AbstractLoader
      *
      * The user may not have write access to /tests_general_base/numberPropertyNode/jcr:content/foo
      *
-     * @return PHPCR\CredentialsInterface the login credentials with limited permissions for testing impersonate and access control
+     * @return \PHPCR\CredentialsInterface the login credentials with limited permissions for testing impersonate and access control
      */
     public abstract function getRestrictedCredentials();
 
@@ -118,7 +125,7 @@ abstract class AbstractLoader
      * Get a session for this implementation.
      *
      * @param \PHPCR\CredentialsInterface $credentials The credentials to log into the repository. If omitted, self::getCredentials should be used
-     * @return PHPCR\SessionInterface the session resulting from logging into the repository with the provided credentials
+     * @return \PHPCR\SessionInterface the session resulting from logging into the repository with the provided credentials
      */
     public function getSession($credentials = false)
     {
@@ -151,7 +158,7 @@ abstract class AbstractLoader
     }
 
     /**
-     * @return PHPCR\Test\FixtureLoaderInterface implementation that is used to load test fixtures
+     * @return \PHPCR\Test\FixtureLoaderInterface implementation that is used to load test fixtures
      */
     public abstract function getFixtureLoader();
 

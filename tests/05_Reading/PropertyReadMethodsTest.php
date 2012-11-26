@@ -14,10 +14,35 @@ require_once(__DIR__ . '/../../inc/BaseCase.php');
  */
 class PropertyReadMethodsTest extends \PHPCR\Test\BaseCase
 {
+    /**
+     * @var \PHPCR\PropertyInterface
+     */
     protected $rootNode;
+
+    /**
+     * @var \PHPCR\PropertyInterface
+     */
     protected $node;
-    protected $property;
-    protected $multiProperty;
+
+    /**
+     * @var \PHPCR\PropertyInterface
+     */
+    protected $createdProperty;
+
+    /**
+     * @var \PHPCR\PropertyInterface
+     */
+    protected $dateProperty;
+
+    /**
+     * @var \PHPCR\PropertyInterface
+     */
+    protected $valProperty;
+
+    /**
+     * @var \PHPCR\PropertyInterface
+     */
+    protected $multiValueProperty;
 
     public function setUp()
     {
@@ -135,9 +160,7 @@ class PropertyReadMethodsTest extends \PHPCR\Test\BaseCase
     {
         $date = $this->createdProperty->getDate();
         $this->assertInstanceOf('DateTime', $date);
-        $diff = time() - $date->getTimestamp();
-        // allow the tests to need 10 minutes to run, this should be plenty
-        $this->assertTrue($diff < 60*10, "jcr:created should be current date as fixture was just imported: ".$date->format('c'));
+        // we can not assume a specific age here, as the fixtures might be anything
     }
 
     public function testGetStringMulti()

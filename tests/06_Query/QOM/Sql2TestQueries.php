@@ -31,6 +31,10 @@ class Sql2TestQueries {
         */
         $queries['6.7.9.SameNodeJoinCondition.Simple'] = 'SELECT * FROM [nt:file] INNER JOIN [nt:folder] ON ISSAMENODE(sel1, sel2)';
         $queries['6.7.9.SameNodeJoinCondition.Path'] = 'SELECT * FROM [nt:file] INNER JOIN [nt:folder] ON ISSAMENODE(sel1, sel2, [/home])';
+        $queries['6.7.9.SameNodeJoinCondition.Path_Space'] = array(
+            'SELECT * FROM [nt:file] INNER JOIN [nt:folder] ON ISSAMENODE(sel1, sel2, ["/home node"])',
+            'SELECT * FROM [nt:file] INNER JOIN [nt:folder] ON ISSAMENODE(sel1, sel2, [/home node])',
+        );
 
         /**
         * 6.7.10 ChildNodeJoinCondition
@@ -45,12 +49,18 @@ class Sql2TestQueries {
         /**
         * 6.7.13. AndConstraint
         */
-        $queries['6.7.13.And'] = 'SELECT * FROM [nt:file] WHERE sel1.prop1 IS NOT NULL AND sel2.prop2 IS NOT NULL';
+        $queries['6.7.13.And'] = array(
+            'SELECT * FROM [nt:file] WHERE sel1.prop1 IS NOT NULL AND sel2.prop2 IS NOT NULL',
+            'SELECT * FROM [nt:file] WHERE (sel1.prop1 IS NOT NULL AND sel2.prop2 IS NOT NULL)',
+        );
 
         /**
         * 6.7.14. OrConstraint
         */
-        $queries['6.7.14.Or'] = 'SELECT * FROM [nt:file] WHERE sel1.prop1 IS NOT NULL OR sel2.prop2 IS NOT NULL';
+        $queries['6.7.14.Or'] = array(
+            'SELECT * FROM [nt:file] WHERE sel1.prop1 IS NOT NULL OR sel2.prop2 IS NOT NULL',
+            'SELECT * FROM [nt:file] WHERE (sel1.prop1 IS NOT NULL OR sel2.prop2 IS NOT NULL)',
+         );
 
         /**
         * 6.7.15. NotConstraint
@@ -77,18 +87,42 @@ class Sql2TestQueries {
         */
         $queries['6.7.20.SameNode.Simple'] = 'SELECT * FROM [nt:file] WHERE ISSAMENODE([/home])';
         $queries['6.7.20.SameNode.Selector'] = 'SELECT * FROM [nt:file] WHERE ISSAMENODE(sel1, [/home])';
+        $queries['6.7.20.SameNode.Simple_Space'] = array(
+            'SELECT * FROM [nt:file] WHERE ISSAMENODE(["/home node"])',
+            'SELECT * FROM [nt:file] WHERE ISSAMENODE([/home node])',
+        );
+        $queries['6.7.20.SameNode.Selector_Space'] = array(
+            'SELECT * FROM [nt:file] WHERE ISSAMENODE(sel1, ["/home node"])',
+            'SELECT * FROM [nt:file] WHERE ISSAMENODE(sel1, [/home node])',
+        );
 
         /**
         * 6.7.21. ChildNode
         */
         $queries['6.7.21.ChildNode.Simple'] = 'SELECT * FROM [nt:file] WHERE ISCHILDNODE([/home])';
         $queries['6.7.21.ChildNode.Selector'] = 'SELECT * FROM [nt:file] WHERE ISCHILDNODE(sel1, [/home])';
+        $queries['6.7.21.ChildNode.Simple_Space'] = array(
+            'SELECT * FROM [nt:file] WHERE ISCHILDNODE(["/home node"])',
+            'SELECT * FROM [nt:file] WHERE ISCHILDNODE([/home node])',
+        );
+        $queries['6.7.21.ChildNode.Selector_Space'] = array(
+            'SELECT * FROM [nt:file] WHERE ISCHILDNODE(sel1, ["/home node"])',
+            'SELECT * FROM [nt:file] WHERE ISCHILDNODE(sel1, [/home node])',
+        );
 
         /**
         * 6.7.22. DescendantNode
         */
         $queries['6.7.22.DescendantNode.Simple'] = 'SELECT * FROM [nt:file] WHERE ISDESCENDANTNODE([/home])';
         $queries['6.7.22.DescendantNode.Selector'] = 'SELECT * FROM [nt:file] WHERE ISDESCENDANTNODE(sel1, [/home])';
+        $queries['6.7.22.DescendantNode.Simple_Space'] = array(
+            'SELECT * FROM [nt:file] WHERE ISDESCENDANTNODE(["/home node"])',
+            'SELECT * FROM [nt:file] WHERE ISDESCENDANTNODE([/home node])',
+        );
+        $queries['6.7.22.DescendantNode.Selector_Space'] = array(
+            'SELECT * FROM [nt:file] WHERE ISDESCENDANTNODE(sel1, ["/home node"])',
+            'SELECT * FROM [nt:file] WHERE ISDESCENDANTNODE(sel1, [/home node])'
+        );
 
         /**
         * 6.7.27. ProperyValue

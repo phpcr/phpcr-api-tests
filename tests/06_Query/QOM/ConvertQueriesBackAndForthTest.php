@@ -39,13 +39,26 @@ class ConvertQueriesBackAndForthTest extends \PHPCR\Test\BaseCase
     public function testBackAndForth()
     {
         foreach ($this->qomQueries as $name => $originalQomQuery) {
-
             $originalSql2Query = $this->sql2Queries[$name];
-            $qom = $this->sql2Parser->parse($originalSql2Query);
-            $this->assertEquals($originalQomQuery, $qom, "QOM-->SQL2: Original query = $originalSql2Query");
-
-            $sql2 = $this->qomParser->convert($qom);
-            $this->assertEquals($originalSql2Query, $sql2, "SQL2-->QOM: Original query = $originalSql2Query");
+            if (is_array($originalSql2Query)) {
+                $passed = false;
+                foreach ($originalSql2Query as $query) {
+                    $qom = $this->sql2Parser->parse($query);
+                    if ($originalQomQuery == $qom) {
+                        $sql2 = $this->qomParser->convert($qom);
+                        if ($sql2 == $query) {
+                            $passed = true;
+                            break;
+                        }
+                    }
+                }
+                $this->assertTrue($passed, "QOM-->SQL2->QOM: Original query variation = ".$query);
+            } else {
+                $qom = $this->sql2Parser->parse($originalSql2Query);
+                $this->assertEquals($originalQomQuery, $qom, "QOM-->SQL2: Original query = $originalSql2Query");
+                $sql2 = $this->qomParser->convert($qom);
+                $this->assertEquals($originalSql2Query, $sql2, "SQL2-->QOM: Original query = $originalSql2Query");
+            }
         }
     }
 }

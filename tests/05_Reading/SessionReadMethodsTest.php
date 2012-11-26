@@ -65,6 +65,24 @@ class SessionReadMethodsTest extends \PHPCR\Test\BaseCase
         $this->assertInstanceOf('PHPCR\NodeInterface', $node);
         $this->assertEquals('index.txt', $node->getName());
     }
+
+    public function testGetNodes()
+    {
+        $nodes = $this->sharedFixture['session']->getNodes(array(
+            '/tests_general_base',
+            '/tests_general_base/numberPropertyNode',
+            '/not_existing',
+            '/tests_general_base/../not_existing',
+        ));
+        $this->assertCount(2, $nodes);
+        $this->assertTrue(isset($nodes['/tests_general_base']));
+        $this->assertTrue(isset($nodes['/tests_general_base/numberPropertyNode']));
+        foreach ($nodes as $key => $node) {
+            $this->assertInstanceOf('PHPCR\NodeInterface', $node);
+            $this->assertEquals($key, $node->getPath());
+        }
+    }
+
     /**
      * Get something that is a property and not a node
      * @expectedException \PHPCR\PathNotFoundException
