@@ -150,6 +150,14 @@ class NodeReadMethodsTest extends \PHPCR\Test\BaseCase
         $iterator = $this->rootNode->getNodes();
         $this->assertInstanceOf('Iterator', $iterator);
     }
+
+    public function testGetNodeNamess()
+    {
+        $node1 = $this->rootNode->getNode('tests_general_base');
+        $iterator = $this->rootNode->getNodeNames();
+        $this->assertInstanceOf('Iterator', $iterator);
+    }
+
     /**
      * @expectedException \PHPCR\RepositoryException
      */
@@ -223,6 +231,36 @@ class NodeReadMethodsTest extends \PHPCR\Test\BaseCase
     public function testGetPropertyRepositoryException()
     {
         $this->node->getProperty('//');
+    }
+
+    public function testGetPropertyValue()
+    {
+        $node = $this->node->getNode('numberPropertyNode/jcr:content');
+        $value = $node->getPropertyValue('foo');
+        $this->assertEquals('bar', $value);
+    }
+
+    /**
+     * @expectedException \PHPCR\PathNotFoundException
+     */
+    public function testGetPropertyValueNotFound()
+    {
+        $node = $this->node->getNode('numberPropertyNode/jcr:content');
+        $node->getPropertyValue('notexisting');
+    }
+
+    public function testGetPropertyValueWithDefault()
+    {
+        $node = $this->node->getNode('numberPropertyNode/jcr:content');
+        $value = $node->getPropertyValueWithDefault('foo', 'other');
+        $this->assertEquals('bar', $value);
+    }
+
+    public function testGetPropertyValueWithDefaultNotExisting()
+    {
+        $node = $this->node->getNode('numberPropertyNode/jcr:content');
+        $value = $node->getPropertyValueWithDefault('notexisting', 'other');
+        $this->assertEquals('other', $value);
     }
 
     public function testGetPropertiesAll()
