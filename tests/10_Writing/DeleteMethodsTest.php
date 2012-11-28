@@ -335,16 +335,17 @@ class DeleteMethodsTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * try to call refresh on a property that has been removed in this session
+     * Try to call revert on a property that has been removed in this session
+     *
      * @expectedException \PHPCR\InvalidItemStateException
      */
-    public function testRefreshRemovedProperty()
+    public function testRevertRemovedProperty()
     {
         //relies on the base class setup trick to have the node populated from the fixtures
         $this->assertInstanceOf('PHPCR\NodeInterface', $this->node);
         $property = $this->node->getProperty('longNumber');
         $this->node->setProperty('longNumber', null);
-        $property->refresh(false);
+        $property->revert();
     }
 
     /**
