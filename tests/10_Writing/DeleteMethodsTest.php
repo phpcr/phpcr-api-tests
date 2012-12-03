@@ -401,7 +401,7 @@ class DeleteMethodsTest extends \PHPCR\Test\BaseCase
     /**
      * It is not allowed to delete a referenced node
      *
-     * @expectedException PHPCR\ReferentialIntegrityException
+     * @expectedException \PHPCR\ReferentialIntegrityException
      */
     public function testDeleteReferencedNodeException()
     {
@@ -451,5 +451,52 @@ class DeleteMethodsTest extends \PHPCR\Test\BaseCase
         $this->saveAndRenewSession();
 
         $this->assertFalse($this->node->hasNode('idExample'));
+    }
+
+    public function testWorkspaceDelete()
+    {
+        //relies on the base class setup trick to have the node populated from the fixtures
+        $this->assertInstanceOf('PHPCR\NodeInterface', $this->node);
+
+        /** @var $session \PHPCR\SessionInterface */
+        $session = $this->sharedFixture['session'];
+
+        $workspace = $session->getWorkspace();
+        $path = $this->node->getPath();
+
+        $property = $this->node->getProperty('prop');
+        $workspace->removeItem($path);
+
+        // Session
+        $this->assertFalse($session->nodeExists($path));
+        $this->assertFalse($session->nodeExists($path.'/child'));
+        $this->assertFalse($session->propertyExists($path.'/child/prop'));
+        try {
+            $this->node->getPath();
+            $this->fail('Node was not notified that it is deleted');
+        } catch (\PHPCR\InvalidItemStateException $e) {
+            // success
+        }
+        try {
+            $property->getValue();
+            $this->fail('Property was not notified that it is deleted');
+        } catch (\PHPCR\InvalidItemStateException $e) {
+            // success
+        }
+
+        // Backend
+        $session = $this->saveAndRenewSession();
+        $this->assertFalse($session->nodeExists($path));
+        $this->assertFalse($session->nodeExists($path.'/child'));
+    }
+
+    /**
+     * @expectedException \PHPCR\PathNotFoundException
+     */
+    public function testWorkspaceDeleteNonExisting()
+    {
+        $session = $this->sharedFixture['session'];
+        $workspace = $session->getWorkspace();
+        $workspace->removeItem('/not/existing');
     }
 }
