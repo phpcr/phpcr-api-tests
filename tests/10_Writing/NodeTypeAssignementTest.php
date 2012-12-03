@@ -129,4 +129,93 @@ class NodeTypeAssignementTest extends \PHPCR\Test\BaseCase
         $this->node->addMixin('mix:nonexisting');
         $this->saveAndRenewSession();
     }
+
+    public function testRemoveMixin()
+    {
+        $this->assertTrue($this->node->isNodeType('mix:mimeType'));
+        $this->node->removeMixin('mix:mimeType');
+
+        $this->assertTrue($this->node->isModified());
+        $this->assertFalse($this->node->isNodeType('mix:mimeType'));
+
+        $this->saveAndRenewSession();
+
+        $this->assertFalse($this->node->isNodeType('mix:mimeType'));
+    }
+
+    public function testRemoveMixinLast()
+    {
+        $this->assertTrue($this->node->isNodeType('mix:mimeType'));
+        $this->node->removeMixin('mix:mimeType');
+        $this->assertTrue($this->node->isModified());
+
+        $this->assertFalse($this->node->isNodeType('mix:mimeType'));
+
+        $this->saveAndRenewSession();
+
+        $this->assertFalse($this->node->isNodeType('mix:mimeType'));
+    }
+
+    /**
+     * @expectedException \PHPCR\NodeType\NoSuchNodeTypeException
+     */
+    public function testRemoveMixinNotSet()
+    {
+        $this->node->removeMixin('mix:referenceable');
+        $this->saveAndRenewSession();
+    }
+
+    /**
+     * @expectedException \PHPCR\NodeType\NoSuchNodeTypeException
+     */
+    public function testRemoveMixinNone()
+    {
+        $this->node->removeMixin('mix:mimeType');
+        $this->saveAndRenewSession();
+    }
+
+    public function testSetMixins()
+    {
+        $this->node->setMixins(array('mix:referenceable', 'mix:mimeType'));
+        $this->assertTrue($this->node->isModified());
+
+        $this->assertTrue($this->node->isNodeType('mix:mimeType'));
+        $this->assertTrue($this->node->isNodeType('mix:referenceable'));
+
+        $this->saveAndRenewSession();
+
+        $this->assertTrue($this->node->isNodeType('mix:mimeType'));
+        $this->assertTrue($this->node->isNodeType('mix:referenceable'));
+    }
+
+    public function testSetMixinsReplace()
+    {
+        $this->assertTrue($this->node->isNodeType('mix:referenceable'));
+        $this->node->setMixins(array('mix:mimeType'));
+        $this->assertTrue($this->node->isModified());
+
+        $this->assertTrue($this->node->isNodeType('mix:mimeType'));
+        $this->assertFalse($this->node->isNodeType('mix:referenceable'));
+
+        $this->assertTrue($this->node->isNodeType('mix:mimeType'));
+        $this->assertFalse($this->node->isNodeType('mix:referenceable'));
+    }
+
+    /**
+     * @expectedException \PHPCR\NodeType\NoSuchNodeTypeException
+     */
+    public function testSetMixinsNotFound()
+    {
+        $this->node->setMixins(array('mix:referenceable', 'mix:nonexisting'));
+        $this->saveAndRenewSession();
+    }
+
+    /**
+     * @expectedException \PHPCR\NodeType\ConstraintViolationException
+     */
+    public function testSetMixinsConstraintViolation()
+    {
+        $this->node->setMixins(array('mix:referenceable', 'nt:folder'));
+        $this->saveAndRenewSession();
+    }
 }
