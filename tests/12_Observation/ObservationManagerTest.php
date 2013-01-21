@@ -2,8 +2,10 @@
 
 namespace PHPCR\Tests\Observation;
 
-use \PHPCR\Observation\EventInterface;
-
+use PHPCR\SessionInterface;
+use PHPCR\Observation\EventInterface;
+use PHPCR\Observation\ObservationManagerInterface;
+use PHPCR\Observation\EventJournalInterface;
 
 require_once(__DIR__ . '/../../inc/BaseCase.php');
 
@@ -36,7 +38,7 @@ class ObservationManagerTest extends \PHPCR\Test\BaseCase
         $this->produceEvents($producerSession);
 
         // Read the events in the consumer session
-        $this->expectEvents($consumerOm->getEventJournal(), $curTime);
+        $this->expectEvents($consumerOm->getEventJournal($consumerOm->createEventFilter()), $curTime);
     }
 
     public function testFilteredEventJournal()
@@ -77,17 +79,21 @@ class ObservationManagerTest extends \PHPCR\Test\BaseCase
 
         $uuid = $session->getRootNode()->getIdentifier();
 
-        // The journal now contains 2 events a PROP_ADDED (for the prop /ref) and a PERSIST.
+        // The journal now contains 2 events:
+        // a PROP_ADDED (for the prop /ref) and a PERSIST.
         // Filtering on the root node UUID should return only one event in the journal (instead
         // of 2), because the only the PROP_ADDED event was done on a node which parent node
         // has the given UUID.
-        $journal = $om->getEventJournal(null, null, null, array($uuid));
+        $filter = $om->createEventFilter();
+        $filter->setIdentifiers(array($uuid));
+        $journal = $om->getEventJournal($filter);
         $journal->skipTo($curTime);
         $this->assertTrue($journal->valid());
         $this->assertEquals('/ref', $journal->current()->getPath());
         $this->assertEquals(EventInterface::PROPERTY_ADDED, $journal->current()->getType());
 
         $journal->next();
+
         $this->assertFalse($journal->valid());
     }
 
@@ -101,13 +107,15 @@ class ObservationManagerTest extends \PHPCR\Test\BaseCase
 
         // Make the root node have a UUID
         $root = $session->getRootNode();
-        $node = $root->addNode('unstructured');
+        $root->addNode('unstructured');
         $session->save();
 
         // At this point the journal contains 3 events: PROP_ADDED (for setting the node type of the new node)
         // NODE_ADDED and PERSIST. The only of those event whose concerned node is of type nt:unstructured
         // is the NODE_ADDED event.
-        $journal = $om->getEventJournal(null, null, null, null, array('nt:unstructured'));
+        $filter = $om->createEventFilter();
+        $filter->setNodeTypes(array('nt:unstructured'));
+        $journal = $om->getEventJournal($filter);
         $journal->skipTo($curTime);
 
         // At this point the journal
@@ -149,13 +157,16 @@ class ObservationManagerTest extends \PHPCR\Test\BaseCase
             $this->produceEvents($producerSession);
 
             // Read the events in the consumer session
-            $this->expectEventsWithUserData($consumerOm->getEventJournal(), $curTime, $expectedUserDataValues[$key]);
+            $filter = $consumerOm->createEventFilter();
+            $this->expectEventsWithUserData($consumerOm->getEventJournal($filter), $curTime, $expectedUserDataValues[$key]);
         }
     }
 
-    protected function assertFilterOnEventType($observationManager, $curTime)
+    protected function assertFilterOnEventType(ObservationManagerInterface $observationManager, $curTime)
     {
-        $journal = $observationManager->getEventJournal(EventInterface::PROPERTY_ADDED);
+        $filter = $observationManager->createEventFilter();
+        $filter->setEventTypes(EventInterface::PROPERTY_ADDED);
+        $journal = $observationManager->getEventJournal($filter);
         $journal->skipTo($curTime);
 
         $this->assertTrue($journal->valid()); // There must be some events in the journal
@@ -167,9 +178,11 @@ class ObservationManagerTest extends \PHPCR\Test\BaseCase
         }
     }
 
-    protected function assertFilterOnPathNoDeep($observationManager, $curTime)
+    protected function assertFilterOnPathNoDeep(ObservationManagerInterface $observationManager, $curTime)
     {
-        $journal = $observationManager->getEventJournal(null, '/child');
+        $filter = $observationManager->createEventFilter();
+        $filter->setAbsPath('/child');
+        $journal = $observationManager->getEventJournal($filter);
         $journal->skipTo($curTime);
 
         $this->assertTrue($journal->valid()); // There must be some events in the journal
@@ -181,9 +194,12 @@ class ObservationManagerTest extends \PHPCR\Test\BaseCase
         }
     }
 
-    protected function assertFilterOnPathDeep($observationManager, $curTime)
+    protected function assertFilterOnPathDeep(ObservationManagerInterface $observationManager, $curTime)
     {
-        $journal = $observationManager->getEventJournal(null, '/child', true);
+        $filter = $observationManager->createEventFilter();
+        $filter->setAbsPath('/child');
+        $filter->setIsDeep(true);
+        $journal = $observationManager->getEventJournal($filter);
         $journal->skipTo($curTime);
 
         $this->assertTrue($journal->valid()); // There must be some events in the journal
@@ -197,23 +213,31 @@ class ObservationManagerTest extends \PHPCR\Test\BaseCase
         }
     }
 
-    protected function assertFilterOnPathNoMatch($observationManager, $curTime)
+    protected function assertFilterOnPathNoMatch(ObservationManagerInterface $observationManager, $curTime)
     {
-        $journal = $observationManager->getEventJournal(null, '/unexisting-path');
+        $filter = $observationManager->createEventFilter();
+        $filter->setAbsPath('/nonexisting-path');
+        $journal = $observationManager->getEventJournal($filter);
         $journal->skipTo($curTime);
         $this->assertFalse($journal->valid()); // No entry match
     }
 
-    protected function assertFilterOnUuidNoMatch($observationManager, $curTime)
+    protected function assertFilterOnUuidNoMatch(ObservationManagerInterface $observationManager, $curTime)
     {
-        $journal = $observationManager->getEventJournal(null, null, null, array());
+        $filter = $observationManager->createEventFilter();
+        $filter->setIdentifiers(array());
+
+        $journal = $observationManager->getEventJournal($filter);
         $journal->skipTo($curTime);
         $this->assertFalse($journal->valid());
     }
 
-    protected function assertFilterOnNodeTypeNoMatch($observationManager, $curTime)
+    protected function assertFilterOnNodeTypeNoMatch(ObservationManagerInterface $observationManager, $curTime)
     {
-        $journal = $observationManager->getEventJournal(null, null, null, null, array('non:existing'));
+        $filter = $observationManager->createEventFilter();
+        $filter->setNodeTypes(array('non:existing'));
+
+        $journal = $observationManager->getEventJournal($filter);
         $journal->skipTo($curTime);
         $this->assertFalse($journal->valid());
     }
@@ -241,7 +265,7 @@ class ObservationManagerTest extends \PHPCR\Test\BaseCase
      * @param $session
      * @return void
      */
-    protected function produceEvents($session)
+    protected function produceEvents(SessionInterface $session)
     {
         $root = $session->getRootNode();
         $node = $root->addNode('child');             // Will cause a PROPERTY_ADDED + a NODE_ADDED events
@@ -279,11 +303,10 @@ class ObservationManagerTest extends \PHPCR\Test\BaseCase
      * this method will not work ! If really needed it should not be too hard to add a counter to the constructed
      * hash in order to allow the same event more than once.
      *
-     * @param $journal The event journal to check
-     * @param array $events An array of type array(array(eventType, eventPath)) containing all the expected events in an arbitrary order.
-     * @return void
+     * @param EventJournalInterface $journal The event journal to check
+     * @param array                 $events An array of type array(array(eventType, eventPath)) containing all the expected events in an arbitrary order.
      */
-    protected function expectEventsInAnyOrder($journal, $events)
+    protected function expectEventsInAnyOrder(EventJournalInterface $journal, $events)
     {
         // Construct an hash map with the expected events
         $expectedEvents = array();
@@ -299,6 +322,7 @@ class ObservationManagerTest extends \PHPCR\Test\BaseCase
         }
 
         // Read the correct number of events from the journal
+        /** @var $occuredEvents EventInterface[] */
         $occuredEvents = array();
         for ($i = 1; $i <= count($events); $i++) {
             $occuredEvents[] = $journal->current();
@@ -329,11 +353,10 @@ class ObservationManagerTest extends \PHPCR\Test\BaseCase
      * to adapt this function so that it expects the correct events in the
      * correct order.
      *
-     * @param $journal
-     * @param int $startDate The timestamp to use with EventJournal::skipTo to reach the wanted events
-     * @return void
+     * @param EventJournalInterface $journal
+     * @param int                   $startDate The timestamp to use with EventJournal::skipTo to reach the wanted events
      */
-    protected function expectEvents($journal, $startDate)
+    protected function expectEvents(EventJournalInterface $journal, $startDate)
     {
         $journal->skipTo($startDate);
 
@@ -408,12 +431,12 @@ class ObservationManagerTest extends \PHPCR\Test\BaseCase
 
     /**
      * Assert events in the journal have the expected userdata
-     * @param $journal
-     * @param int $startDate unix timestamp
-     * @param mixed $userData string or null
-     * @return void
+     *
+     * @param EventJournalInterface $journal
+     * @param int                   $startDate unix timestamp
+     * @param mixed                 $userData  string or null
      */
-    protected function expectEventsWithUserData($journal, $startDate, $expectedUserData)
+    protected function expectEventsWithUserData(EventJournalInterface $journal, $startDate, $expectedUserData)
     {
         $journal->skipTo($startDate);
 

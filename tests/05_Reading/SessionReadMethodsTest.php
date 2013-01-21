@@ -109,6 +109,23 @@ class SessionReadMethodsTest extends \PHPCR\Test\BaseCase
         $this->assertEquals('nt:file', $prop->getString());
     }
 
+    public function testGetProperties()
+    {
+        $properties = $this->sharedFixture['session']->getProperties(array(
+            '/tests_general_base/jcr:primaryType',
+            '/tests_general_base/numberPropertyNode/jcr:primaryType',
+            '/not_existing/jcr:primaryType',
+            '/tests_general_base/../not_existing/jcr:primaryType',
+        ));
+        $this->assertCount(2, $properties);
+        $this->assertTrue(isset($properties['/tests_general_base/jcr:primaryType']));
+        $this->assertTrue(isset($properties['/tests_general_base/numberPropertyNode/jcr:primaryType']));
+        foreach ($properties as $key => $property) {
+            $this->assertInstanceOf('PHPCR\PropertyInterface', $property);
+            $this->assertEquals($key, $property->getPath());
+        }
+    }
+
     /**
      * it is forbidden to call getItem on the session with a relative path
      * @expectedException \PHPCR\PathNotFoundException

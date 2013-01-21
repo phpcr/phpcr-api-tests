@@ -94,6 +94,26 @@ class AddMethodsTest extends \PHPCR\Test\BaseCase
         $this->node->addNode(null, 'nt:folder');
     }
 
+
+    public function testAddNodeAutoNamed()
+    {
+        $node = $this->node->getNode('jcr:content');
+        $new = $node->addNodeAutoNamed('test:', 'nt:unstructured');
+        $this->assertInstanceOf('PHPCR\\NodeInterface', $new);
+        $nodes = $node->getNodes();
+        $this->assertCount(1, $nodes);
+        $newnode = current($nodes);
+        $name = $newnode->getName();
+        $this->assertEquals('test:', substr($name, 0, 5));
+
+        $this->sharedFixture['session']->save();
+        $this->assertFalse($new->isNew(), 'Node was not saved');
+
+        $this->renewSession();
+
+        $this->assertNotNull($this->sharedFixture['session']->getNode($this->node->getPath() . '/jcr:content/' . $name), 'Node newNode was not properly saved');
+    }
+
     public function testAddPropertyOnUnstructured()
     {
         $path = $this->node->getPath();

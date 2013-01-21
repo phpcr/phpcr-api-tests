@@ -438,6 +438,7 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
      */
     public function testRemoveOtherSessionRefreshKeepChanges()
     {
+        /** @var $session \PHPCR\SessionInterface */
         $session = $this->sharedFixture['session'];
         $node = $this->node;
         $path = $node->getPath();
@@ -453,14 +454,13 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
         $othernode->getNode('childnode')->remove();
         $othersession->save();
 
-        $childprop->refresh(true);
+        $session->refresh(true);
         try {
             $childprop->getValue();
             $this->fail('Should not be possible to get the value of a deleted property');
         } catch(\PHPCR\RepositoryException $e) {
             //expected
         }
-        $session->refresh(true);
 
         $this->assertTrue($session->hasPendingChanges());
         try {
@@ -618,7 +618,7 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
         $this->assertTrue($session->propertyExists($node->getPath().'/prop'));
     }
 
-    public function testNodeRefresh()
+    public function testNodeRevert()
     {
         $session = $this->sharedFixture['session'];
         $node = $this->node;
@@ -627,7 +627,7 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
         $node->setProperty('other', 'Test');
         $existingProperty = $node->setProperty('prop', 'New');
 
-        $node->refresh(false);
+        $node->revert();
 
         $this->assertSame($existingProperty, $node->getProperty('prop'));
         $this->assertSame('Old', $existingProperty->getValue());
@@ -638,26 +638,5 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
 
         $this->setExpectedException('\PHPCR\PathNotFoundException');
         $node->getPropertyValue('other');
-    }
-
-    public function testNodeRefreshKeepChanges()
-    {
-        $session = $this->sharedFixture['session'];
-        $node = $this->node;
-
-        $child = $node->addNode('child');
-        $property = $node->setProperty('other', 'Test');
-        $existingProperty = $node->setProperty('prop', 'New');
-
-        $node->refresh(true);
-
-        $this->assertSame($existingProperty, $node->getProperty('prop'));
-        $this->assertSame('New', $existingProperty->getValue());
-        $this->assertTrue($node->hasNode('child'));
-        $this->assertTrue($node->hasProperty('other'));
-        $this->assertTrue($session->nodeExists($node->getPath().'/child'));
-        $this->assertTrue($session->propertyExists($node->getPath().'/other'));
-
-        $this->assertSame($property, $node->getProperty('other'));
     }
 }

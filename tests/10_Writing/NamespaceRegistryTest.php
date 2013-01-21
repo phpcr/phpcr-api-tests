@@ -99,7 +99,7 @@ class NamespaceRegistryTest extends \PHPCR\Test\BaseCase
         $prefix = 'removable_prefix';
 
         $this->nr->registerNamespace($prefix, $uri);
-        $this->nr->unregisterNamespace($prefix);
+        $this->nr->unregisterNamespaceByURI($uri);
         $this->assertNotContains($prefix, $this->nr->getPrefixes());
         $this->assertNotContains($uri, $this->nr->getURIs());
     }
@@ -125,7 +125,7 @@ class NamespaceRegistryTest extends \PHPCR\Test\BaseCase
      */
     public function testUnregisterNamespaceException()
     {
-        $this->nr->unregisterNamespace('http://thisshouldnotexist.org/0.0');
+        $this->nr->unregisterNamespaceByURI('http://thisshouldnotexist.org/0.0');
     }
 
     public function testIterator()
