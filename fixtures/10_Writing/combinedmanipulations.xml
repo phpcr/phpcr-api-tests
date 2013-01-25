@@ -234,16 +234,7 @@
     </sv:property>
   </sv:node>
 
-  <sv:node sv:name="testNodeRefresh">
-    <sv:property sv:name="jcr:primaryType" sv:type="Name">
-      <sv:value>nt:unstructured</sv:value>
-    </sv:property>
-    <sv:property sv:name="prop" sv:type="String">
-      <sv:value>Old</sv:value>
-    </sv:property>
-  </sv:node>
-
-  <sv:node sv:name="testNodeRefreshKeepChanges">
+  <sv:node sv:name="testNodeRevert">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
       <sv:value>nt:unstructured</sv:value>
     </sv:property>

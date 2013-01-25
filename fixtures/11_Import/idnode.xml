@@ -8,15 +8,17 @@
          xmlns:sv="http://www.jcp.org/jcr/sv/1.0"
          xmlns:test="http://liip.to/jackalope"
 
-         sv:name="idExample">
+         sv:name="container">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>nt:unstructured</sv:value>
     </sv:property>
-    <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
-        <sv:value>mix:referenceable</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>842e61c0-09ab-42a9-87c0-308ccc90e6f4</sv:value>
-    </sv:property>
+    <sv:node sv:name="idExample">
+        <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+            <sv:value>mix:referenceable</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:uuid" sv:type="String">
+            <sv:value>842e61c0-09ab-42a9-87c0-308ccc90e6f4</sv:value>
+        </sv:property>
+    </sv:node>
 
 </sv:node>

@@ -13,6 +13,9 @@ require_once(__DIR__ . '/../../inc/BaseCase.php');
  */
 class LockManagerTest extends \PHPCR\Test\BaseCase
 {
+    /** @var \PHPCR\Lock\LockManagerInterface */
+    private $lm;
+
     public function setUp()
     {
         parent::setUp();
@@ -147,8 +150,29 @@ class LockManagerTest extends \PHPCR\Test\BaseCase
         $this->recreateTestNode('deep-lock');
         $this->recreateTestNode('deep-lock/child');
         $this->recreateTestNode('deep-lock/child/subchild');
-        $lock = $this->lm->lock('/deep-lock', true, true, 3);
+        $this->lm->lock('/deep-lock', true, true, 3);
 
+        $this->assertDeepLock();
+    }
+
+    /**
+     * Check deep lock with the LockInfo
+     */
+    public function testDeepLockInfo()
+    {
+        $this->recreateTestNode('deep-lock');
+        $this->recreateTestNode('deep-lock/child');
+        $this->recreateTestNode('deep-lock/child/subchild');
+        $lockInfo = $this->lm->createLockInfo();
+        $lockInfo->setIsDeep(true);
+        $lockInfo->setIsSessionScoped(true);
+        $this->lm->lockWithInfo('/deep-lock', $lockInfo);
+
+        $this->assertDeepLock();
+    }
+
+    private function assertDeepLock()
+    {
         $this->assertTrue($this->lm->isLocked('/deep-lock'));
         $this->assertTrue($this->lm->isLocked('/deep-lock/child'));
         $this->assertTrue($this->lm->isLocked('/deep-lock/child/subchild'));

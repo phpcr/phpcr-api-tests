@@ -5,10 +5,6 @@ require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 /**
  * Covering jcr-2.8.3 spec $19
- *
- * (only a few tests, lots is tested by unit tests)
- *
- * This test case contains some tests for jackalope that should be in jackalope functional tests
  */
 class ManipulationTest extends \PHPCR\Test\BaseCase
 {
@@ -19,29 +15,8 @@ class ManipulationTest extends \PHPCR\Test\BaseCase
         parent::setUp();
     }
 
-
-    /**
-     * registerNodeTypesCnd is implementation specific.
-     * tests that test that method should only be executed when testing jackalope
-     */
-    protected function checkJackalope()
-    {
-        if (! $this->sharedFixture['session']->getWorkspace() instanceof \Jackalope\Workspace) {
-            $this->markTestSkipped('This is a test for jackalope specific functionality');
-        }
-    }
-
-    /**
-     * A test for a jackalope specific feature. Is automatically skipped if
-     * your implementation is something different.
-     *
-     * TODO: move this into jackalope functional tests
-     *
-     * \Jackalope\NodeTypeManager::registerNodeTypesCnd
-     */
     public function testRegisterNodeTypesCnd()
     {
-        $this->checkJackalope();
         $workspace = $this->sharedFixture['session']->getWorkspace();
         $ntm = $workspace->getNodeTypeManager();
 
@@ -56,16 +31,9 @@ class ManipulationTest extends \PHPCR\Test\BaseCase
         $props = $type->getDeclaredPropertyDefinitions();
         $this->assertEquals(1, count($props), 'Wrong number of properties in phpcr:test');
         $this->assertEquals('phpcr:prop', $props[0]->getName());
-
-        /* we could test if all options of cdn are properly translated, but that
-         * is jackrabbit code and tested over there.
-         * we just read the created nodes from the server. reading everything
-         * properly is to be tested in node type read tests.
-         */
     }
 
     /**
-     * TODO: depend on the non-cnd type
      * @depends testRegisterNodeTypesCnd
      */
     public function testValidateCustomNodeType()
@@ -83,36 +51,18 @@ class ManipulationTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * A test for a jackalope specific feature. Is automatically skipped if
-     * your implementation is something different.
-     *
-     * TODO: move this into jackalope functional tests
-     *
-     * \Jackalope\NodeTypeManager::registerNodeTypesCnd
-     *
      * @expectedException \PHPCR\NodeType\NodeTypeExistsException
      */
     public function testRegisterNodeTypesCndNoUpdate()
     {
-        $this->checkJackalope();
         $workspace = $this->sharedFixture['session']->getWorkspace();
         $ntm = $workspace->getNodeTypeManager();
         $types = $ntm->registerNodeTypesCnd($this->cnd, false);
         $types = $ntm->registerNodeTypesCnd($this->cnd, false);
     }
 
-    /**
-     * A test for a jackalope specific feature. Is automatically skipped if
-     * your implementation is something different.
-     *
-     * TODO: move this into jackalope functional tests
-     *
-     * @covers \Jackalope\NodeTypeManager::registerNodeTypesCnd
-     */
     public function testPrimaryItem()
     {
-        $this->checkJackalope();
-
         // Create the node type
         $session = $this->sharedFixture['session'];
         $ntm = $session->getWorkspace()->getNodeTypeManager();

@@ -20,6 +20,20 @@ class MoveMethodsTest extends \PHPCR\Test\BaseCase
         parent::setUp();
     }
 
+    public function testNodeRename()
+    {
+        $first = $this->node->getNode('firstNode');
+        $child = $first->getNode('child');
+
+        $first->rename('otherName');
+        $this->assertEquals($this->node->getPath() . '/otherName', $first->getPath());
+        $this->assertEquals($first->getPath() . '/child', $child->getPath());
+
+        $session = $this->saveAndRenewSession();
+
+        $this->assertTrue($session->nodeExists('/tests_write_manipulation_move/testNodeRename/otherName'));
+    }
+
     public function testSessionMove()
     {
         $session = $this->sharedFixture['session'];
