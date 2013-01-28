@@ -94,17 +94,54 @@ class AddMethodsTest extends \PHPCR\Test\BaseCase
         $this->node->addNode(null, 'nt:folder');
     }
 
-
-    public function testAddNodeAutoNamed()
+    public function testAddNodeAutoNamedEmptyNamehint()
     {
         $node = $this->node->getNode('jcr:content');
-        $new = $node->addNodeAutoNamed('test:', 'nt:unstructured');
+        $new = $node->addNodeAutoNamed('', 'nt:unstructured');
         $this->assertInstanceOf('PHPCR\\NodeInterface', $new);
         $nodes = $node->getNodes();
         $this->assertCount(1, $nodes);
         $newnode = current($nodes);
         $name = $newnode->getName();
-        $this->assertEquals('test:', substr($name, 0, 5));
+        $this->assertEquals(0, substr_count(':', $name));
+
+        $this->sharedFixture['session']->save();
+        $this->assertFalse($new->isNew(), 'Node was not saved');
+
+        $this->renewSession();
+
+        $this->assertNotNull($this->sharedFixture['session']->getNode($this->node->getPath() . '/jcr:content/' . $name), 'Node newNode was not properly saved');
+    }
+
+    public function testAddNodeAutoNamedNullNamehint()
+    {
+        $node = $this->node->getNode('jcr:content');
+        $new = $node->addNodeAutoNamed(null, 'nt:unstructured');
+        $this->assertInstanceOf('PHPCR\\NodeInterface', $new);
+        $nodes = $node->getNodes();
+        $this->assertCount(1, $nodes);
+        $newnode = current($nodes);
+        $name = $newnode->getName();
+        $this->assertEquals('jcr:', substr($name, 0, 4));
+
+        $this->sharedFixture['session']->save();
+        $this->assertFalse($new->isNew(), 'Node was not saved');
+
+        $this->renewSession();
+
+        $this->assertNotNull($this->sharedFixture['session']->getNode($this->node->getPath() . '/jcr:content/' . $name), 'Node newNode was not properly saved');
+    }
+
+    public function testAddNodeAutoNamedValidNamespaceNamehint()
+    {
+        $node = $this->node->getNode('jcr:content');
+        $new = $node->addNodeAutoNamed('jcr:', 'nt:unstructured');
+        $this->assertInstanceOf('PHPCR\\NodeInterface', $new);
+        $nodes = $node->getNodes();
+        $this->assertCount(1, $nodes);
+        $newnode = current($nodes);
+        $name = $newnode->getName();
+        $this->assertEquals('jcr:', substr($name, 0, 4));
 
         $this->sharedFixture['session']->save();
         $this->assertFalse($new->isNew(), 'Node was not saved');
