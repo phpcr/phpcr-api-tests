@@ -490,6 +490,28 @@ class DeleteMethodsTest extends \PHPCR\Test\BaseCase
         $this->assertFalse($session->nodeExists($path.'/child'));
     }
 
+    public function testWorkspaceDeleteProperty()
+    {
+        //relies on the base class setup trick to have the node populated from the fixtures
+        $this->assertInstanceOf('PHPCR\NodeInterface', $this->node);
+
+        /** @var $session \PHPCR\SessionInterface */
+        $session = $this->sharedFixture['session'];
+
+        $workspace = $session->getWorkspace();
+        $path = $this->node->getPath();
+        $workspace->removeItem("$path/prop");
+
+        // Session
+        $this->assertFalse($session->propertyExists("$path/prop"));
+
+        // Backend
+        $session = $this->saveAndRenewSession();
+        $this->assertFalse($session->propertyExists("$path/prop"));
+    }
+
+
+
     /**
      * @expectedException \PHPCR\PathNotFoundException
      */
