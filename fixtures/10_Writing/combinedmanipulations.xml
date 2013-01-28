@@ -96,6 +96,72 @@
         </sv:node>
     </sv:node>
 
+    <sv:node sv:name="testRemoveMoveRemove">
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+            <sv:value>nt:unstructured</sv:value>
+        </sv:property>
+        <sv:node sv:name="src">
+            <sv:property sv:name="jcr:primaryType" sv:type="Name">
+                <sv:value>nt:unstructured</sv:value>
+            </sv:property>
+            <sv:node sv:name="parent">
+                <sv:property sv:name="jcr:primaryType" sv:type="Name">
+                    <sv:value>nt:unstructured</sv:value>
+                </sv:property>
+                <sv:node sv:name="child">
+                    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+                        <sv:value>nt:unstructured</sv:value>
+                    </sv:property>
+                </sv:node>
+            </sv:node>
+        </sv:node>
+    </sv:node>
+
+    <sv:node sv:name="testMoveRemovepropertyMove">
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+            <sv:value>nt:unstructured</sv:value>
+        </sv:property>
+        <sv:node sv:name="src">
+            <sv:property sv:name="jcr:primaryType" sv:type="Name">
+                <sv:value>nt:unstructured</sv:value>
+            </sv:property>
+            <sv:node sv:name="parent">
+                <sv:property sv:name="jcr:primaryType" sv:type="Name">
+                    <sv:value>nt:unstructured</sv:value>
+                </sv:property>
+                <sv:node sv:name="child">
+                    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+                        <sv:value>nt:unstructured</sv:value>
+                    </sv:property>
+                    <sv:property sv:name="test" sv:type="String">
+                        <sv:value>value</sv:value>
+                    </sv:property>
+                </sv:node>
+            </sv:node>
+        </sv:node>
+    </sv:node>
+
+    <sv:node sv:name="testLoadchildMovedNode">
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+            <sv:value>nt:unstructured</sv:value>
+        </sv:property>
+        <sv:node sv:name="src">
+            <sv:property sv:name="jcr:primaryType" sv:type="Name">
+                <sv:value>nt:unstructured</sv:value>
+            </sv:property>
+            <sv:node sv:name="parent">
+                <sv:property sv:name="jcr:primaryType" sv:type="Name">
+                    <sv:value>nt:unstructured</sv:value>
+                </sv:property>
+                <sv:node sv:name="child">
+                    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+                        <sv:value>nt:unstructured</sv:value>
+                    </sv:property>
+                </sv:node>
+            </sv:node>
+        </sv:node>
+    </sv:node>
+
   <sv:node sv:name="testSessionHasPendingChanges">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
       <sv:value>nt:unstructured</sv:value>
@@ -195,7 +261,6 @@
         <sv:value>nt:unstructured</sv:value>
       </sv:property>
     </sv:node>
-
   </sv:node>
 
   <sv:node sv:name="testMoveSessionRefreshKeepChanges">
