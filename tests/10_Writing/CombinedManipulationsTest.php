@@ -153,6 +153,34 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
         $this->assertFalse($session->propertyExists($path));
     }
 
+    /**
+     * Remove a property and in the same session remove its containing node
+     */
+    public function testRemovePropertyAndNode()
+    {
+        /** @var $session \PHPCR\SessionInterface */
+        $session = $this->sharedFixture['session'];
+
+        $property = $this->node->setProperty('prop', 'test');
+        $nodepath = $this->node->getPath();
+        $proppath = $property->getPath();
+
+        $property->remove();
+        $this->node->remove();
+
+        $this->assertFalse($session->nodeExists($nodepath));
+        $this->assertFalse($session->propertyExists($proppath));
+
+        $session->save();
+
+        $this->assertFalse($session->nodeExists($nodepath));
+        $this->assertFalse($session->propertyExists($proppath));
+
+        $session = $this->renewSession();
+
+        $this->assertFalse($session->nodeExists($nodepath));
+        $this->assertFalse($session->propertyExists($proppath));
+    }
 
     /**
      * remove a node and then add a new one at the same path and then remove again
