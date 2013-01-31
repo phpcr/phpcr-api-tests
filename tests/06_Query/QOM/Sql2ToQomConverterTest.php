@@ -48,11 +48,11 @@ class Sql2ToQomConverterTest extends \PHPCR\Test\BaseCase
         $this->assertEquals(3, count($cols));
 
         $this->assertEquals('prop1', $cols[0]->getPropertyName());
-        $this->assertNull($cols[0]->getselectorName());
-        $this->assertNull($cols[0]->getColumnName());
+        $this->assertNotNull($cols[0]->getSelectorName());
+        $this->assertNotNull($cols[0]->getColumnName());
 
         $this->assertEquals('prop2', $cols[1]->getPropertyName());
-        $this->assertNull($cols[1]->getselectorName());
+        $this->assertNotNull($cols[1]->getSelectorName());
         $this->assertEquals('col2', $cols[1]->getColumnName());
 
         $this->assertEquals('prop3', $cols[2]->getPropertyName());
