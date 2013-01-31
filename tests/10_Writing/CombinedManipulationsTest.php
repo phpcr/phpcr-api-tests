@@ -107,6 +107,7 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
         $this->assertTrue($this->node->hasNode('child'));
 
         $node->remove();
+
         $this->assertFalse($session->nodeExists($path));
         $this->assertFalse($this->node->hasNode('child'));
 
@@ -115,11 +116,43 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
         $this->assertFalse($session->nodeExists($path));
         $this->assertFalse($this->node->hasNode('child'));
 
-        $session = $this->saveAndRenewSession();
+        $session = $this->renewSession();
 
         $this->assertFalse($session->nodeExists($path));
         $this->assertFalse($session->getNode($parentpath)->hasNode('child'));
     }
+
+    /**
+     * add a property and remove it immediately without persisting
+     *
+     * should not do anything at the backend
+     */
+    public function testAddAndRemoveProperty()
+    {
+        /** @var $session \PHPCR\SessionInterface */
+        $session = $this->sharedFixture['session'];
+
+        $property = $this->node->setProperty('prop', 'test');
+        $path = $property->getPath();
+
+        $this->assertTrue($session->propertyExists($path));
+        $this->assertTrue($this->node->hasProperty('prop'));
+
+        $property->remove();
+
+        $this->assertFalse($session->propertyExists($path));
+        $this->assertFalse($this->node->hasProperty('prop'));
+
+        $session->save();
+
+        $this->assertFalse($session->propertyExists($path));
+        $this->assertFalse($this->node->hasProperty('prop'));
+
+        $session = $this->renewSession();
+
+        $this->assertFalse($session->propertyExists($path));
+    }
+
 
     /**
      * remove a node and then add a new one at the same path and then remove again
