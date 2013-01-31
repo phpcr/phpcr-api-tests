@@ -122,7 +122,6 @@ class AddMethodsTest extends \PHPCR\Test\BaseCase
         $this->assertCount(1, $nodes);
         $newnode = current($nodes);
         $name = $newnode->getName();
-        $this->assertEquals('jcr:', substr($name, 0, 4));
 
         $this->sharedFixture['session']->save();
         $this->assertFalse($new->isNew(), 'Node was not saved');
