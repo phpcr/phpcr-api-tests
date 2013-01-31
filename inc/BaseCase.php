@@ -103,7 +103,7 @@ abstract class BaseCase extends \PHPUnit_Framework_TestCase
         $chapter = '';
 
         for($i = 2; $i < $case_n; $i++) {
-            $chapter .= $parts[$i] . '\\'; 
+            $chapter .= $parts[$i] . '\\';
         }
 
         $case = $chapter . $case;
