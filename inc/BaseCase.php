@@ -97,9 +97,16 @@ abstract class BaseCase extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $fqn = get_called_class();
-        list($phpcr, $tests, $chapter, $case) = explode('\\', $fqn);
+        $parts = explode('\\', $fqn);
+        $case_n = count($parts)-1;
+        $case = $parts[$case_n];
+        $chapter = '';
 
-        $case = "$chapter\\$case";
+        for($i = 2; $i < $case_n; $i++) {
+            $chapter .= $parts[$i] . '\\'; 
+        }
+
+        $case = $chapter . $case;
         $test = "$case::".$this->getName();
 
         if (! self::$loader->getTestSupported($chapter, $case, $test)) {
