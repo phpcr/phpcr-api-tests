@@ -153,6 +153,21 @@ class SetPropertyMethodsTest extends \PHPCR\Test\BaseCase
         $this->assertEquals(array(1,2,3), $prop->getValue('multivalue'));
     }
 
+    public function testSetPropertyMultivalueOne()
+    {
+        $prop = $this->node->setProperty('multivalue2', array(1));
+        $this->assertEquals(array(1), $this->node->getPropertyValue('multivalue2'));
+        $this->assertEquals(\PHPCR\PropertyType::LONG, $prop->getType());
+        $this->assertTrue($prop->isMultiple());
+
+        $this->saveAndRenewSession();
+        $node = $this->sharedFixture['session']->getNode($this->nodePath);
+        $prop = $node->getProperty('multivalue2');
+        $this->assertEquals(\PHPCR\PropertyType::LONG, $prop->getType());
+        $this->assertTrue($prop->isMultiple());
+        $this->assertEquals(array(1), $prop->getValue('multivalue2'));
+    }
+
     public function testSetPropertyMultivalueRef()
     {
         $ids = array('842e61c0-09ab-42a9-87c0-308ccc90e6f4', '13543fc6-1abf-4708-bfcc-e49511754b40', '14e18ef3-be20-4985-bee9-7bb4763b31de');
@@ -251,6 +266,4 @@ class SetPropertyMethodsTest extends \PHPCR\Test\BaseCase
         $this->saveAndRenewSession();
         $this->assertFalse($this->sharedFixture['session']->propertyExists($nodePath . '/jcr:data'));
     }
-
-    //TODO: is this all creation modes? the types are tested in SetPropertyTypes
 }
