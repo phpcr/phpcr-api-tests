@@ -34,7 +34,7 @@ class PurgeTest extends BaseCase
         $b->setProperty('ref', $a, PropertyType::REFERENCE);
         $session->save();
 
-        NodeHelper::purgeWorkspace($session);
+        NodeHelper::deleteAllNodes($session);
         $session->save();
 
         // if there where system nodes, they should still be here
