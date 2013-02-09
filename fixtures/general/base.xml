@@ -180,6 +180,10 @@
         <sv:property sv:name="jcr:uuid" sv:type="String">
             <sv:value>14e18ef3-be20-4985-bee9-7bb4763b31de</sv:value>
         </sv:property>
+        <sv:property sv:name="tags" sv:multiple="1" sv:type="String">
+            <sv:value>foo</sv:value>
+            <sv:value>bar</sv:value>
+        </sv:property>
 
         <sv:node sv:name="deepnode">
 

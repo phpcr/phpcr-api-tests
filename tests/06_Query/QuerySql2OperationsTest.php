@@ -138,4 +138,26 @@ class QuerySql2OperationsTest extends QueryBaseCase
         $this->assertEquals(array(null, null, null, null, null, null, null, 0), $vals);
     }
 
+    public function testQueryMultiValuedProperty()
+    {
+        /** @var $query \PHPCR\Query\QueryInterface */
+        $query = $this->sharedFixture['qm']->createQuery(
+            'SELECT data.tags
+            FROM [nt:folder] AS data
+            WHERE data.tags = "foo"
+            AND data.tags="bar"
+            ',
+            \PHPCR\Query\QueryInterface::JCR_SQL2
+        );
+
+        $this->assertInstanceOf('\PHPCR\Query\QueryInterface', $query);
+        $result = $query->execute();
+        $this->assertInstanceOf('\PHPCR\Query\QueryResultInterface', $result);
+
+        $rows = $result->getRows();
+
+        $this->assertSame(1, count($rows), 'Expected one row with both tags present');
+        $this->assertSame(array('foo', 'bar'), $rows->current()->getValue('tags'));
+    }
+
 }
