@@ -145,7 +145,7 @@ class QuerySql2OperationsTest extends QueryBaseCase
             'SELECT data.tags
             FROM [nt:folder] AS data
             WHERE data.tags = "foo"
-            AND data.tags="bar"
+            AND data.tags = "bar"
             ',
             \PHPCR\Query\QueryInterface::JCR_SQL2
         );
@@ -156,7 +156,7 @@ class QuerySql2OperationsTest extends QueryBaseCase
 
         $rows = $result->getRows();
 
-        $this->assertSame(1, count($rows), 'Expected one row with both tags present');
+        $this->assertCount(1, $rows, 'Expected one row with both tags present');
         $this->assertSame(array('foo', 'bar'), $rows->current()->getValue('tags'));
     }
 
