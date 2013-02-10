@@ -103,6 +103,12 @@
             <sv:property sv:name="jcr:mimeType" sv:type="String">
                 <sv:value>text/plain</sv:value>
             </sv:property>
+            <sv:property sv:name="empty-value" sv:type="String">
+                <sv:value></sv:value>
+            </sv:property>
+            <sv:property sv:name="selfclosing-empty-value" sv:type="String">
+                <sv:value/>
+            </sv:property>
 
             <sv:node sv:name="Test escaping_x0020bla &lt;&gt;'&quot; node"> <!-- TODO: if https://issues.apache.org/jira/browse/JCR-2997 is fixed, add a space after _x0020 -->
                 <sv:property sv:name="jcr:primaryType" sv:type="Name">
