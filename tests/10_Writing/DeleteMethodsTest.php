@@ -426,9 +426,6 @@ class DeleteMethodsTest extends \PHPCR\Test\BaseCase
         $sourceprop = $this->node->getProperty('reference');
         $sourceprop->remove();
 
-        // 3) Save and renew session
-        $this->saveAndRenewSession();
-
         // 4) Load the previously referenced node and remove it
         $destnode = $this->node->getNode('idExample');
 

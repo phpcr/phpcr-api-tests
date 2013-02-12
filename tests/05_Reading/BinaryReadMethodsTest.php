@@ -31,7 +31,6 @@ hello world
 
     public function setUp()
     {
-        // All those tests are disabled because at this point, we dont implement PHPCR\BinaryInterface, maybee later for performance improvements.
         parent::setUp();
         $this->node = $this->sharedFixture['session']->getRootNode()->getNode('tests_general_base/numberPropertyNode/jcr:content');
         $this->binaryProperty = $this->node->getProperty('jcr:data');

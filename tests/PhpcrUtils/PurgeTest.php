@@ -11,7 +11,12 @@ use PHPCR\Test\BaseCase;
 
 class PurgeTest extends BaseCase
 {
-    public function setUp()
+    public static function setupBeforeClass($fixtures = '11_Import/empty')
+    {
+        parent::setupBeforeClass($fixtures);
+    }
+
+    protected function setUp()
     {
         if (! class_exists('PHPCR\Util\NodeHelper')) {
             $this->markTestSkipped('This testbed does not have phpcr-utils available');
@@ -22,7 +27,7 @@ class PurgeTest extends BaseCase
     {
         /** @var $session \PHPCR\SessionInterface */
         $session = $this->sharedFixture['session'];
-        $emptycount = count($session->getRootNode()->getNodes()) - 1; // already has one node from fixtures
+        $systemNodeCount = count($session->getRootNode()->getNodes());
 
         $a = $session->getRootNode()->addNode('a', 'nt:unstructured');
         $a->addMixin('mix:referenceable');
@@ -38,6 +43,6 @@ class PurgeTest extends BaseCase
         $session->save();
 
         // if there where system nodes, they should still be here
-        $this->assertCount($emptycount, $session->getRootNode()->getNodes());
+        $this->assertCount($systemNodeCount, $session->getRootNode()->getNodes());
     }
 }
