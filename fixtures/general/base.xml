@@ -104,6 +104,11 @@
                 <sv:value>text/plain</sv:value>
             </sv:property>
 
+            <sv:property sv:name="tags" sv:multiple="true" sv:type="String">
+                <sv:value>foo</sv:value>
+                <sv:value>bar</sv:value>
+            </sv:property>
+
             <sv:node sv:name="Test escaping_x0020bla &lt;&gt;'&quot; node"> <!-- TODO: if https://issues.apache.org/jira/browse/JCR-2997 is fixed, add a space after _x0020 -->
                 <sv:property sv:name="jcr:primaryType" sv:type="Name">
                     <sv:value>nt:unstructured</sv:value>
