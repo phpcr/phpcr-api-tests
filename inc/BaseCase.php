@@ -87,6 +87,15 @@ abstract class BaseCase extends \PHPUnit_Framework_TestCase
 
         self::$staticSharedFixture['ie'] = self::$loader->getFixtureLoader();
         if ($fixtures) {
+            $ntm = self::$loader->getSession()->getWorkspace()->getNodeTypeManager();
+            if (! $ntm->hasNodeType('phpcr:versionCascade')) {
+                $cnd = <<<END_CND
+[phpcr:versionCascade] > nt:unstructured
+    + * multiple copy
+END_CND;
+                $ntm->registerNodeTypesCnd($cnd, false);
+            }
+
             self::$staticSharedFixture['ie']->import($fixtures);
         }
 

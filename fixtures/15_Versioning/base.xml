@@ -18,7 +18,7 @@
     </sv:node>
     <sv:node sv:name="versioned">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
-        <sv:value>nt:unstructured</sv:value>
+        <sv:value>phpcr:versionCascade</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
         <sv:value>mix:versionable</sv:value>
@@ -26,6 +26,17 @@
       <sv:property sv:name="foo" sv:type="String">
           <sv:value>something</sv:value>
       </sv:property>
+      <sv:node sv:name="version_child">
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+          <sv:value>phpcr:versionCascade</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+          <sv:value>mix:versionable</sv:value>
+        </sv:property>
+        <sv:property sv:name="foo_c" sv:type="String">
+          <sv:value>something_c</sv:value>
+        </sv:property>
+      </sv:node>
     </sv:node>
     <sv:node sv:name="simpleVersioned">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
