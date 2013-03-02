@@ -8,8 +8,11 @@ require_once(__DIR__ . '/../../inc/BaseCase.php');
  */
 class NodeReadMethodsTest extends \PHPCR\Test\BaseCase
 {
+    /** @var \PHPCR\NodeInterface */
     protected $rootNode;
+    /** @var \PHPCR\NodeInterface */
     protected $node;
+    /** @var \PHPCR\NodeInterface */
     protected $deepnode;
 
     public function setUp()
@@ -151,11 +154,18 @@ class NodeReadMethodsTest extends \PHPCR\Test\BaseCase
         $this->assertInstanceOf('Iterator', $iterator);
     }
 
-    public function testGetNodeNamess()
+    public function testGetNodeNames()
     {
         $node1 = $this->rootNode->getNode('tests_general_base');
-        $iterator = $this->rootNode->getNodeNames();
+        $iterator = $node1->getNodeNames();
         $this->assertInstanceOf('Iterator', $iterator);
+
+        $names = array();
+        foreach($iterator as $name) {
+            $names[] = $name;
+        }
+
+        $this->assertContains('idExample', $names);
     }
 
     /**
@@ -169,32 +179,39 @@ class NodeReadMethodsTest extends \PHPCR\Test\BaseCase
     public function testGetNodesPattern()
     {
         $iterator = $this->node->getNodes("idExample");
-        $this->nodes = array();
+        $nodes = array();
         foreach ($iterator as $n) {
-            array_push($this->nodes, $n->getName());
+            $this->assertInstanceOf('PHPCR\NodeInterface', $n);
+            /** @var $n \PHPCR\NodeInterface */
+            array_push($nodes, $n->getName());
         }
-        $this->assertContains('idExample', $this->nodes);
-        $this->assertNotContains('index.txt', $this->nodes);
+        $this->assertContains('idExample', $nodes);
+        $this->assertNotContains('index.txt', $nodes);
     }
 
     public function testGetNodesPatternAdvanced()
     {
         $this->node = $this->rootNode->getNode('tests_general_base');
         $iterator = $this->node->getNodes("test:* | idExample");
-        $this->nodes = array();
+        $nodes = array();
         foreach ($iterator as $n) {
-            array_push($this->nodes, $n->getName());
+            $this->assertInstanceOf('PHPCR\NodeInterface', $n);
+            /** @var $n \PHPCR\NodeInterface */
+            array_push($nodes, $n->getName());
         }
-        $this->assertContains('idExample', $this->nodes);
-        $this->assertContains('test:namespacedNode', $this->nodes);
-        $this->assertNotContains('index.txt', $this->nodes);
+        $this->assertContains('idExample', $nodes);
+        $this->assertContains('test:namespacedNode', $nodes);
+        $this->assertNotContains('index.txt', $nodes);
     }
+
     public function testGetNodesNameGlobs()
     {
         $node = $this->rootNode->getNode('tests_general_base');
         $iterator = $node->getNodes(array('idExample', 'test:*', 'jcr:*'));
         $nodes = array();
         foreach ($iterator as $n) {
+            $this->assertInstanceOf('PHPCR\NodeInterface', $n);
+            /** @var $n \PHPCR\NodeInterface */
             array_push($nodes, $n->getName());
         }
         $this->assertEquals(2, count($nodes));
