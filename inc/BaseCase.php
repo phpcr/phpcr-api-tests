@@ -91,7 +91,8 @@ abstract class BaseCase extends \PHPUnit_Framework_TestCase
             if (! $ntm->hasNodeType('phpcr:versionCascade')) {
                 $cnd = <<<END_CND
 [phpcr:versionCascade] > nt:unstructured
-    + * multiple copy
+    - copy
+    + * copy
 END_CND;
                 $ntm->registerNodeTypesCnd($cnd, false);
             }
