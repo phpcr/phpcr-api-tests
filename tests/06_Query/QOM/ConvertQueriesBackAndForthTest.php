@@ -5,19 +5,30 @@ require_once(__DIR__ . '/../../../inc/BaseCase.php');
 require_once('Sql2TestQueries.php');
 require_once('QomTestQueries.php');
 
-use PHPCR\Util\QOM\Sql2Scanner;
 use PHPCR\Util\QOM\Sql2Generator;
 use PHPCR\Util\QOM\Sql2ToQomQueryConverter;
 use PHPCR\Util\QOM\QomToSql2QueryConverter;
 
 class ConvertQueriesBackAndForthTest extends \PHPCR\Test\BaseCase
 {
+    /**
+     * @var string[]
+     */
     protected $sql2Queries;
 
+    /**
+     * @var \PHPCR\Query\QOM\QueryObjectModelInterface[]
+     */
     protected $qomQueries;
 
+    /**
+     * @var Sql2ToQomQueryConverter
+     */
     protected $sql2Parser;
 
+    /**
+     * @var QomToSql2QueryConverter
+     */
     protected $qomParser;
 
     public function setUp()
@@ -31,7 +42,7 @@ class ConvertQueriesBackAndForthTest extends \PHPCR\Test\BaseCase
 
         try {
             $this->sql2Parser = new Sql2ToQomQueryConverter($factory);
-        } catch(\PHPCR\UnsupportedRepositoryException $e) {
+        } catch(\PHPCR\UnsupportedRepositoryOperationException $e) {
             $this->markTestSkipped('Repository does not support the QOM factory');
         }
     }
