@@ -1,6 +1,8 @@
 <?php
 namespace PHPCR\Tests\Connecting;
 
+use PHPCR\LoginException;
+
 require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 class RepositoryTest extends \PHPCR\Test\BaseCase
@@ -23,6 +25,7 @@ class RepositoryTest extends \PHPCR\Test\BaseCase
         $repository = self::$loader->getRepository();
         $session = $repository->login(self::$loader->getCredentials(), self::$loader->getWorkspaceName());
         $this->assertInstanceOf('PHPCR\SessionInterface', $session);
+        $this->assertEquals(self::$loader->getWorkspaceName(), $session->getWorkspace()->getName());
     }
 
     public function testDefaultWorkspace()
@@ -33,17 +36,29 @@ class RepositoryTest extends \PHPCR\Test\BaseCase
         $this->assertEquals('default', $session->getWorkspace()->getName());
     }
 
-    /** external authentication */
+    /**
+     * external authentication
+     */
     public function testNoLogin()
     {
         $repository = self::$loader->getRepository();
+        if (! self::$loader->prepareAnonymousLogin()) {
+            $this->setExpectedException('PHPCR\LoginException');
+        }
         $session = $repository->login(null, self::$loader->getWorkspaceName());
         $this->assertInstanceOf('PHPCR\SessionInterface', $session);
+        $this->assertEquals(self::$loader->getWorkspaceName(), $session->getWorkspace()->getName());
     }
 
+    /**
+     * external authentication
+     */
     public function testNoLoginAndWorkspace()
     {
         $repository = self::$loader->getRepository();
+        if (! self::$loader->prepareAnonymousLogin()) {
+            $this->setExpectedException('PHPCR\LoginException');
+        }
         $session = $repository->login();
         $this->assertInstanceOf('PHPCR\SessionInterface', $session);
         $this->assertEquals('default', $session->getWorkspace()->getName());
@@ -55,16 +70,16 @@ class RepositoryTest extends \PHPCR\Test\BaseCase
     public function testLoginException()
     {
         $repository = self::$loader->getRepository();
-        $session = $repository->login(self::$loader->getInvalidCredentials());
+        $repository->login(self::$loader->getInvalidCredentials());
     }
 
     /**
-     * @expectedException PHPCR\NoSuchWorkspaceException
+     * @expectedException \PHPCR\NoSuchWorkspaceException
      */
     public function testLoginNoSuchWorkspace()
     {
         $repository = self::$loader->getRepository();
-        $session = $repository->login(self::$loader->getCredentials(), 'notexistingworkspace');
+        $repository->login(self::$loader->getCredentials(), 'notexistingworkspace');
     }
 
     /**
@@ -73,6 +88,6 @@ class RepositoryTest extends \PHPCR\Test\BaseCase
     public function testLoginRepositoryException()
     {
         $repository = self::$loader->getRepository();
-        $session = $repository->login(self::$loader->getCredentials(), '//');
+        $repository->login(self::$loader->getCredentials(), '//');
     }
 }
