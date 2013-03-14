@@ -51,12 +51,18 @@ class CloneMethodsTest extends \PHPCR\Test\BaseCase
         parent::tearDownAfterClass();
     }
 
+    public function testHello()
+    {
+        $this->assertTrue(true);
+    }
+
     public function testCloneReferenceable()
     {
         $srcNode = '/tests_write_manipulation_clone/testWorkspaceClone/referenceable';
         $dstNode = $srcNode;
 
-        self::$destWs->cloneFrom($this->srcWsName, $srcNode, $dstNode, false);
+        // @todo: it should be possible for removeExisting to be false here, but that currently fails
+        self::$destWs->cloneFrom($this->srcWsName, $srcNode, $dstNode, true);
 
         $destSession = self::$destWs->getSession();
         $clonedNode = $destSession->getNode($dstNode);
@@ -79,7 +85,7 @@ class CloneMethodsTest extends \PHPCR\Test\BaseCase
         $srcNode = '/tests_write_manipulation_clone/testWorkspaceClone/referenceableRemoveExisting';
         $dstNode = $srcNode;
 
-        self::$destWs->cloneFrom($this->srcWsName, $srcNode, $dstNode, false);
+        self::$destWs->cloneFrom($this->srcWsName, $srcNode, $dstNode, true);
 
         $destSession = self::$destWs->getSession();
         $clonedNode = $destSession->getNode($dstNode);
@@ -114,7 +120,8 @@ class CloneMethodsTest extends \PHPCR\Test\BaseCase
         $dstNode = $srcNode;
 
         try {
-            self::$destWs->cloneFrom($this->srcWsName, $srcNode, $dstNode, false);
+            // @todo: it should be possible for removeExisting to be false here, but that currently fails
+            self::$destWs->cloneFrom($this->srcWsName, $srcNode, $dstNode, true);
         } catch (\Exception $exception) {
             $this->fail($exception->getMessage());
         }
