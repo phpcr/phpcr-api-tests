@@ -14,6 +14,7 @@ abstract class AbstractLoader
 {
     protected $factoryclass;
     protected $workspacename;
+    protected $additionalworkspacename;
 
     /**
      * array with chapter names to skip all test cases in (without the numbers)
@@ -35,11 +36,14 @@ abstract class AbstractLoader
      *      RepositoryFactory. You can pass null but then you must overwrite
      *      the getRepository method.
      * @param string $workspacename the workspace to use for the tests, defaults to 'tests'
+     * @param string $additionalworkspacename name of second workspace, defaults to 'testsAdditional'
+     *      Needed to test certain operations, such as clone, that span workspaces.
      */
-    protected function __construct($factoryclass, $workspacename = 'tests')
+    protected function __construct($factoryclass, $workspacename = 'tests', $additionalworkspacename = 'testsAdditional')
     {
         $this->factoryclass = $factoryclass;
         $this->workspacename = $workspacename;
+        $this->additionalworkspacename = $additionalworkspacename;
     }
 
     /**
@@ -122,6 +126,14 @@ abstract class AbstractLoader
     }
 
     /**
+     * @return string the additional workspace name used for tests that need it
+     */
+    public function getAdditionalWorkspaceName()
+    {
+        return $this->additionalworkspacename;
+    }
+
+    /**
      * Get a session for this implementation.
      *
      * @param \PHPCR\CredentialsInterface $credentials The credentials to log into the repository. If omitted, self::getCredentials should be used
@@ -129,12 +141,18 @@ abstract class AbstractLoader
      */
     public function getSession($credentials = false)
     {
-        $repository = $this->getRepository();
-        if (false === $credentials) {
-            $credentials = $this->getCredentials();
-        }
+        return $this->getSessionForWorkspace($credentials, $this->getWorkspaceName());
+    }
 
-        return $repository->login($credentials, $this->getWorkspaceName());
+    /**
+     * Get a session corresponding to the additional workspace for this implementation.
+     *
+     * @param \PHPCR\CredentialsInterface $credentials The credentials to log into the repository. If omitted, self::getCredentials should be used
+     * @return \PHPCR\SessionInterface the session resulting from logging into the repository with the provided credentials
+     */
+    public function getAdditionalSession($credentials = false)
+    {
+        return $this->getSessionForWorkspace($credentials, $this->getAdditionalWorkspaceName());
     }
 
     /**
@@ -162,4 +180,18 @@ abstract class AbstractLoader
      */
     public abstract function getFixtureLoader();
 
+    /**
+     * @param $credentials
+     * @param $workspaceName
+     * @return mixed
+     */
+    private function getSessionForWorkspace($credentials, $workspaceName)
+    {
+        $repository = $this->getRepository();
+        if (false === $credentials) {
+            $credentials = $this->getCredentials();
+        }
+
+        return $repository->login($credentials, $workspaceName);
+    }
 }

@@ -90,8 +90,9 @@ abstract class BaseCase extends \PHPUnit_Framework_TestCase
             self::$staticSharedFixture['ie']->import($fixtures);
         }
 
-        // only load session once fixtures have been imported (relevant i.e. for jackalope-doctrine-dbal)
+        // only load sessions once fixtures have been imported (relevant i.e. for jackalope-doctrine-dbal)
         self::$staticSharedFixture['session'] = self::$loader->getSession();
+        self::$staticSharedFixture['additionalSession'] = self::$loader->getAdditionalSession();
     }
 
     protected function setUp()

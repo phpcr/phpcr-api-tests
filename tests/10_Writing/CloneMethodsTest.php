@@ -26,13 +26,10 @@ class CloneMethodsTest extends \PHPCR\Test\BaseCase
     {
         parent::setupBeforeClass($fixtures);
 
-        self::$destWsName = 'testClone' . time();
-        $workspace = self::$staticSharedFixture['session']->getWorkspace();
-        $workspace->createWorkspace(self::$destWsName);
+        self::$destWs = self::$staticSharedFixture['additionalSession']->getWorkspace();
+        self::$destWsName = self::$destWs->getName();
 
-        $destSession = self::$loader->getRepository()->login(self::$loader->getCredentials(), self::$destWsName);
-        self::$destWs = $destSession->getWorkspace();
-
+        $destSession = self::$destWs->getSession();
         $rootNode = $destSession->getRootNode();
         $node = $rootNode->addNode('tests_write_manipulation_clone');
         $node->addNode('testWorkspaceClone');
