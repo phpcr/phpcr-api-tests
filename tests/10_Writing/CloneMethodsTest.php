@@ -51,53 +51,62 @@ class CloneMethodsTest extends \PHPCR\Test\BaseCase
         parent::tearDownAfterClass();
     }
 
-    public function testHello()
-    {
-        $this->assertTrue(true);
-    }
-
-    public function testCloneReferenceable()
+    /**
+     * Main test for cloning a referenceable node and its child, making sure all properties copied over.
+     */
+    public function testCloneReferenceableWithChild()
     {
         $srcNode = '/tests_write_manipulation_clone/testWorkspaceClone/referenceable';
         $dstNode = $srcNode;
-
-        // @todo: it should be possible for removeExisting to be false here, but that currently fails
-        self::$destWs->cloneFrom($this->srcWsName, $srcNode, $dstNode, true);
-
+        $dstChildNode = $srcNode . '/cloneChild';
         $destSession = self::$destWs->getSession();
+
+        self::$destWs->cloneFrom($this->srcWsName, $srcNode, $dstNode, false);
+
         $clonedNode = $destSession->getNode($dstNode);
         $this->assertInstanceOf('Jackalope\Node', $clonedNode);
-
         $this->assertCount(4, $clonedNode->getProperties());
-        $this->assertTrue($clonedNode->hasProperty('jcr:uuid'));
-        $this->assertTrue($clonedNode->hasProperty('jcr:primaryType'));
-        $this->assertTrue($clonedNode->hasProperty('jcr:mixinTypes'));
-        $this->assertTrue($clonedNode->hasProperty('foo'));
+        $this->checkNodeProperty($clonedNode, 'jcr:uuid', '842e61c0-09ab-42a9-87c0-308ccc90e6f6');
+        $this->checkNodeProperty($clonedNode, 'jcr:primaryType', 'nt:unstructured');
+        $this->checkNodeProperty($clonedNode, 'jcr:mixinTypes', array('mix:referenceable'));
+        $this->checkNodeProperty($clonedNode, 'foo', 'bar_1');
 
-        $srcProperties = $this->srcWs->getSession()->getNode($srcNode)->getProperties();
-        foreach ($srcProperties as $srcName => $srcValue) {
-            $this->assertEquals($srcValue->getValue(), $clonedNode->getProperty($srcName)->getValue());
-        }
+        $this->assertTrue($destSession->nodeExists($dstChildNode));
+        $cloneChild = $destSession->getNode($dstChildNode);
+        $this->assertInstanceOf('Jackalope\Node', $cloneChild);
+        $this->assertCount(4, $cloneChild->getProperties());
+        $this->checkNodeProperty($cloneChild, 'jcr:uuid', '9da62173-d674-4413-87a4-8f538e033021');
+        $this->checkNodeProperty($cloneChild, 'jcr:primaryType', 'nt:unstructured');
+        $this->checkNodeProperty($cloneChild, 'jcr:mixinTypes', array('mix:referenceable'));
+        $this->checkNodeProperty($cloneChild, 'fooChild', 'barChild');
     }
 
-    public function testCloneRemoveExistingReferenceable()
+    /**
+     * Clone a referenceable node, then clone again with 'remove existing' feature.
+     */
+    public function testCloneReferenceableRemoveExisting()
     {
         $srcNode = '/tests_write_manipulation_clone/testWorkspaceClone/referenceableRemoveExisting';
         $dstNode = $srcNode;
-
-        self::$destWs->cloneFrom($this->srcWsName, $srcNode, $dstNode, true);
-
         $destSession = self::$destWs->getSession();
+
+        self::$destWs->cloneFrom($this->srcWsName, $srcNode, $dstNode, false);
+
         $clonedNode = $destSession->getNode($dstNode);
         $this->assertInstanceOf('Jackalope\Node', $clonedNode);
         $this->assertCount(4, $clonedNode->getProperties());
-        $this->assertEquals('bar', $clonedNode->getProperty('foo')->getValue());
+        $this->checkNodeProperty($clonedNode, 'jcr:uuid', '091d157f-dfaf-42eb-aedd-88183ff8fa3d');
+        $this->checkNodeProperty($clonedNode, 'jcr:primaryType', 'nt:unstructured');
+        $this->checkNodeProperty($clonedNode, 'jcr:mixinTypes', array('mix:referenceable'));
+        $this->checkNodeProperty($clonedNode, 'foo', 'bar_2');
 
+        // Update the source node after cloning it
         $node = $this->srcWs->getSession()->getNode($srcNode);
         $node->setProperty('foo', 'bar-updated');
         $node->setProperty('newProperty', 'hello');
         $this->srcWs->getSession()->save();
 
+        // Clone the updated source node
         self::$destWs->cloneFrom($this->srcWsName, $srcNode, $dstNode, true);
 
         $this->renewDestinationSession();
@@ -105,28 +114,56 @@ class CloneMethodsTest extends \PHPCR\Test\BaseCase
         $clonedReplacedNode = self::$destWs->getSession()->getNode($dstNode);
         $this->assertInstanceOf('Jackalope\Node', $clonedReplacedNode);
         $this->assertCount(5, $clonedReplacedNode->getProperties());
-        $this->assertTrue($clonedReplacedNode->hasProperty('foo'));
-        $this->assertEquals('bar-updated', $clonedReplacedNode->getProperty('foo')->getValue());
-        $this->assertTrue($clonedReplacedNode->hasProperty('newProperty'));
-        $this->assertEquals('hello', $clonedReplacedNode->getProperty('newProperty')->getValue());
+        $this->checkNodeProperty($clonedReplacedNode, 'jcr:uuid', '091d157f-dfaf-42eb-aedd-88183ff8fa3d');
+        $this->checkNodeProperty($clonedReplacedNode, 'jcr:primaryType', 'nt:unstructured');
+        $this->checkNodeProperty($clonedReplacedNode, 'jcr:mixinTypes', array('mix:referenceable'));
+        $this->checkNodeProperty($clonedReplacedNode, 'foo', 'bar-updated');
+        $this->checkNodeProperty($clonedReplacedNode, 'newProperty', 'hello');
     }
 
     /**
      * @expectedException   \PHPCR\ItemExistsException
      */
-    public function testCloneNoRemoveExisting()
+    public function testCloneReferenceableNoRemoveExisting()
     {
-        $srcNode = '/tests_write_manipulation_clone/testWorkspaceClone/referenceableNoRemoveExisting';
+        $srcNode = '/tests_write_manipulation_clone/testWorkspaceClone/referenceableNoRemoveExisting_1';
         $dstNode = $srcNode;
+        $destSession = self::$destWs->getSession();
 
         try {
-            // @todo: it should be possible for removeExisting to be false here, but that currently fails
-            self::$destWs->cloneFrom($this->srcWsName, $srcNode, $dstNode, true);
+            self::$destWs->cloneFrom($this->srcWsName, $srcNode, $dstNode, false);
         } catch (\Exception $exception) {
             $this->fail($exception->getMessage());
         }
 
+        $clonedNode = $destSession->getNode($dstNode);
+        $this->assertInstanceOf('Jackalope\Node', $clonedNode);
+        $this->assertCount(3, $clonedNode->getProperties());
+
         self::$destWs->cloneFrom($this->srcWsName, $srcNode, $dstNode, false);
+    }
+
+    /**
+     * @expectedException   \PHPCR\ItemExistsException
+     */
+    public function testCloneNoRemoveExistingNewLocation()
+    {
+        $srcNode = '/tests_write_manipulation_clone/testWorkspaceClone/referenceableNoRemoveExisting_2';
+        $dstNode = $srcNode;
+        $secondDstNode = '/tests_write_manipulation_clone/testWorkspaceClone/thisShouldStillConflict';;
+        $destSession = self::$destWs->getSession();
+
+        try {
+            self::$destWs->cloneFrom($this->srcWsName, $srcNode, $dstNode, false);
+        } catch (\Exception $exception) {
+            $this->fail($exception->getMessage());
+        }
+
+        $clonedNode = $destSession->getNode($dstNode);
+        $this->assertInstanceOf('Jackalope\Node', $clonedNode);
+        $this->assertCount(3, $clonedNode->getProperties());
+
+        self::$destWs->cloneFrom($this->srcWsName, $srcNode, $secondDstNode, false);
     }
 
     /**
@@ -195,9 +232,100 @@ class CloneMethodsTest extends \PHPCR\Test\BaseCase
         self::$destWs->cloneFrom($this->srcWsName, $srcNode, $dstNode, true);
     }
 
+    /**
+     * Main test for cloning a non-referenceable node
+     */
+    public function testCloneNonReferenceable()
+    {
+        $srcNode = '/tests_write_manipulation_clone/testWorkspaceClone/nonReferenceable';
+        $dstNode = $srcNode;
+        $destSession = self::$destWs->getSession();
+
+        self::$destWs->cloneFrom($this->srcWsName, $srcNode, $dstNode, false);
+
+        $clonedNode = $destSession->getNode($dstNode);
+        $this->assertInstanceOf('Jackalope\Node', $clonedNode);
+        $this->assertCount(2, $clonedNode->getProperties());
+        $this->checkNodeProperty($clonedNode, 'jcr:primaryType', 'nt:unstructured');
+        $this->checkNodeProperty($clonedNode, 'foo', 'bar_3');
+    }
+
+    /**
+     * Clone a non-referenceable node, then clone again with 'remove existing' feature.
+     */
+    public function testCloneRemoveExistingNonReferenceable()
+    {
+        $srcNode = '/tests_write_manipulation_clone/testWorkspaceClone/nonReferenceableRemoveExisting';
+        $dstNode = $srcNode;
+        $destSession = self::$destWs->getSession();
+
+        self::$destWs->cloneFrom($this->srcWsName, $srcNode, $dstNode, false);
+
+        $clonedNode = $destSession->getNode($dstNode);
+        $this->assertInstanceOf('Jackalope\Node', $clonedNode);
+        $this->assertCount(2, $clonedNode->getProperties());
+        $this->checkNodeProperty($clonedNode, 'jcr:primaryType', 'nt:unstructured');
+        $this->checkNodeProperty($clonedNode, 'foo', 'bar_4');
+
+        // Update the source node after cloning it
+        $node = $this->srcWs->getSession()->getNode($srcNode);
+        $node->setProperty('foo', 'bar-updated');
+        $node->setProperty('newProperty', 'hello');
+        $this->srcWs->getSession()->save();
+
+        // Clone the updated source node
+        self::$destWs->cloneFrom($this->srcWsName, $srcNode, $dstNode, true);
+
+        $this->renewDestinationSession();
+
+        // Check the first cloned node again; it should not have changed
+        $clonedNode = $destSession->getNode($dstNode);
+        $this->assertInstanceOf('Jackalope\Node', $clonedNode);
+        $this->assertCount(2, $clonedNode->getProperties());
+        $this->checkNodeProperty($clonedNode, 'jcr:primaryType', 'nt:unstructured');
+        $this->checkNodeProperty($clonedNode, 'foo', 'bar_4');
+
+        // Second cloned node created with [2] appended to name
+        $replacedDstNode = $srcNode . '[2]';
+        $clonedReplacedNode = self::$destWs->getSession()->getNode($replacedDstNode);
+        $this->assertInstanceOf('Jackalope\Node', $clonedReplacedNode);
+        $this->assertCount(3, $clonedReplacedNode->getProperties());
+        $this->checkNodeProperty($clonedReplacedNode, 'jcr:primaryType', 'nt:unstructured');
+        $this->checkNodeProperty($clonedReplacedNode, 'foo', 'bar-updated');
+        $this->checkNodeProperty($clonedReplacedNode, 'newProperty', 'hello');
+    }
+
+    /**
+     * @expectedException   \PHPCR\ItemExistsException
+     */
+    public function testCloneNonReferenceableNoRemoveExisting()
+    {
+        $srcNode = '/tests_write_manipulation_clone/testWorkspaceClone/nonReferenceableNoRemoveExisting';
+        $dstNode = $srcNode;
+        $destSession = self::$destWs->getSession();
+
+        try {
+            self::$destWs->cloneFrom($this->srcWsName, $srcNode, $dstNode, false);
+        } catch (\Exception $exception) {
+            $this->fail($exception->getMessage());
+        }
+
+        $clonedNode = $destSession->getNode($dstNode);
+        $this->assertInstanceOf('Jackalope\Node', $clonedNode);
+        $this->assertCount(1, $clonedNode->getProperties());
+
+        self::$destWs->cloneFrom($this->srcWsName, $srcNode, $dstNode, false);
+    }
+
     private function renewDestinationSession()
     {
         $destSession = self::$loader->getRepository()->login(self::$loader->getCredentials(), self::$destWsName);
         self::$destWs = $destSession->getWorkspace();
+    }
+
+    private function checkNodeProperty($node, $property, $value)
+    {
+        $this->assertTrue($node->hasProperty($property));
+        $this->assertEquals($value, $node->getProperty($property)->getValue());
     }
 }
