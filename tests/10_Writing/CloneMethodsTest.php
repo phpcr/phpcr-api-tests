@@ -13,23 +13,29 @@ class CloneMethodsTest extends \PHPCR\Test\BaseCase
     /** @var WorkspaceInterface */
     protected $srcWs;
 
+    /** @var string */
+    protected $srcWsName;
+
     /** @var WorkspaceInterface */
     protected static $destWs;
 
-    static public function setupBeforeClass($fixtures = '10_Writing/copy')
+    /** @var string */
+    protected static $destWsName;
+
+    static public function setupBeforeClass($fixtures = '10_Writing/clone')
     {
         parent::setupBeforeClass($fixtures);
 
-        $destWorkspaceName = 'testClone' . time();
+        self::$destWsName = 'testClone' . time();
         $workspace = self::$staticSharedFixture['session']->getWorkspace();
-        $workspace->createWorkspace($destWorkspaceName);
+        $workspace->createWorkspace(self::$destWsName);
 
-        $destSession = self::$loader->getRepository()->login(self::$loader->getCredentials(), $destWorkspaceName);
+        $destSession = self::$loader->getRepository()->login(self::$loader->getCredentials(), self::$destWsName);
         self::$destWs = $destSession->getWorkspace();
 
         $rootNode = $destSession->getRootNode();
-        $node = $rootNode->addNode('tests_write_manipulation_copy');
-        $node->addNode('testWorkspaceCopy');
+        $node = $rootNode->addNode('tests_write_manipulation_clone');
+        $node->addNode('testWorkspaceClone');
         $destSession->save();
     }
 
@@ -38,11 +44,8 @@ class CloneMethodsTest extends \PHPCR\Test\BaseCase
         $this->renewSession(); // get rid of cache from previous tests
         parent::setUp();
 
-        if (self::$destWs->getSession()->nodeExists('/foo')) {
-            self::$destWs->getSession()->removeItem('/foo');
-        }
-
         $this->srcWs = $this->sharedFixture['session']->getWorkspace();
+        $this->srcWsName = $this->sharedFixture['session']->getWorkspace()->getName();
     }
 
     static public function tearDownAfterClass()
@@ -51,23 +54,75 @@ class CloneMethodsTest extends \PHPCR\Test\BaseCase
         parent::tearDownAfterClass();
     }
 
-    public function testCloneFrom()
+    public function testCloneReferenceable()
     {
-        $srcNode = '/tests_write_manipulation_copy/testWorkspaceCopy/srcNode';
-        $dstNode = '/tests_write_manipulation_copy/testWorkspaceCopy/dstNode';
-        $srcWorkspaceName = $this->sharedFixture['session']->getWorkspace()->getName();
+        $srcNode = '/tests_write_manipulation_clone/testWorkspaceClone/referenceable';
+        $dstNode = $srcNode;
 
-        self::$destWs->cloneFrom($srcWorkspaceName, $srcNode, $dstNode, true);
+        self::$destWs->cloneFrom($this->srcWsName, $srcNode, $dstNode, false);
 
         $destSession = self::$destWs->getSession();
         $clonedNode = $destSession->getNode($dstNode);
         $this->assertInstanceOf('Jackalope\Node', $clonedNode);
 
+        $this->assertCount(4, $clonedNode->getProperties());
+        $this->assertTrue($clonedNode->hasProperty('jcr:uuid'));
+        $this->assertTrue($clonedNode->hasProperty('jcr:primaryType'));
+        $this->assertTrue($clonedNode->hasProperty('jcr:mixinTypes'));
+        $this->assertTrue($clonedNode->hasProperty('foo'));
+
         $srcProperties = $this->srcWs->getSession()->getNode($srcNode)->getProperties();
         foreach ($srcProperties as $srcName => $srcValue) {
-            $this->assertTrue($clonedNode->hasProperty($srcName));
             $this->assertEquals($srcValue->getValue(), $clonedNode->getProperty($srcName)->getValue());
         }
+    }
+
+    public function testCloneRemoveExistingReferenceable()
+    {
+        $srcNode = '/tests_write_manipulation_clone/testWorkspaceClone/referenceableRemoveExisting';
+        $dstNode = $srcNode;
+
+        self::$destWs->cloneFrom($this->srcWsName, $srcNode, $dstNode, false);
+
+        $destSession = self::$destWs->getSession();
+        $clonedNode = $destSession->getNode($dstNode);
+        $this->assertInstanceOf('Jackalope\Node', $clonedNode);
+        $this->assertCount(4, $clonedNode->getProperties());
+        $this->assertEquals('bar', $clonedNode->getProperty('foo')->getValue());
+
+        $node = $this->srcWs->getSession()->getNode($srcNode);
+        $node->setProperty('foo', 'bar-updated');
+        $node->setProperty('newProperty', 'hello');
+        $this->srcWs->getSession()->save();
+
+        self::$destWs->cloneFrom($this->srcWsName, $srcNode, $dstNode, true);
+
+        $this->renewDestinationSession();
+
+        $clonedReplacedNode = self::$destWs->getSession()->getNode($dstNode);
+        $this->assertInstanceOf('Jackalope\Node', $clonedReplacedNode);
+        $this->assertCount(5, $clonedReplacedNode->getProperties());
+        $this->assertTrue($clonedReplacedNode->hasProperty('foo'));
+        $this->assertEquals('bar-updated', $clonedReplacedNode->getProperty('foo')->getValue());
+        $this->assertTrue($clonedReplacedNode->hasProperty('newProperty'));
+        $this->assertEquals('hello', $clonedReplacedNode->getProperty('newProperty')->getValue());
+    }
+
+    /**
+     * @expectedException   \PHPCR\ItemExistsException
+     */
+    public function testCloneNoRemoveExisting()
+    {
+        $srcNode = '/tests_write_manipulation_clone/testWorkspaceClone/referenceableNoRemoveExisting';
+        $dstNode = $srcNode;
+
+        try {
+            self::$destWs->cloneFrom($this->srcWsName, $srcNode, $dstNode, false);
+        } catch (\Exception $exception) {
+            $this->fail($exception->getMessage());
+        }
+
+        self::$destWs->cloneFrom($this->srcWsName, $srcNode, $dstNode, false);
     }
 
     /**
@@ -75,11 +130,10 @@ class CloneMethodsTest extends \PHPCR\Test\BaseCase
      */
     public function testCloneNoSuchWorkspace()
     {
-        $srcNode = '/tests_write_manipulation_copy/testWorkspaceCopy/srcNode';
+        $srcNode = '/tests_write_manipulation_clone/testWorkspaceClone/referenceable';
         $dstNode = $srcNode;
-        $srcWorkspaceName = 'thisWorkspaceDoesNotExist';
 
-        self::$destWs->cloneFrom($srcWorkspaceName, $srcNode, $dstNode, true);
+        self::$destWs->cloneFrom('thisWorkspaceDoesNotExist', $srcNode, $dstNode, true);
     }
 
     /**
@@ -87,11 +141,10 @@ class CloneMethodsTest extends \PHPCR\Test\BaseCase
      */
     public function testCloneRelativePaths()
     {
-        $srcNode = 'tests_write_manipulation_copy/testWorkspaceCopy/srcNode';
+        $srcNode = 'tests_write_manipulation_clone/testWorkspaceClone/referenceable';
         $dstNode = $srcNode;
-        $srcWorkspaceName = $this->sharedFixture['session']->getWorkspace()->getName();
 
-        self::$destWs->cloneFrom($srcWorkspaceName, $srcNode, $dstNode, true);
+        self::$destWs->cloneFrom($this->srcWsName, $srcNode, $dstNode, true);
     }
 
     /**
@@ -99,11 +152,10 @@ class CloneMethodsTest extends \PHPCR\Test\BaseCase
      */
     public function testCloneInvalidDstPath()
     {
-        $srcNode = '/tests_write_manipulation_copy/testWorkspaceCopy/srcNode';
+        $srcNode = '/tests_write_manipulation_clone/testWorkspaceClone/referenceable';
         $dstNode = '/InvalidDstPath/foo/bar[x]';
-        $srcWorkspaceName = $this->sharedFixture['session']->getWorkspace()->getName();
 
-        self::$destWs->cloneFrom($srcWorkspaceName, $srcNode, $dstNode, true);
+        self::$destWs->cloneFrom($this->srcWsName, $srcNode, $dstNode, true);
     }
 
     /**
@@ -111,11 +163,10 @@ class CloneMethodsTest extends \PHPCR\Test\BaseCase
      */
     public function testCloneProperty()
     {
-        $srcNode = '/tests_write_manipulation_copy/testWorkspaceCopy/srcNode/jcr:uuid';
-        $dstNode = '/tests_write_manipulation_copy/testWorkspaceCopy/dstNode/jcr:uuid';
-        $srcWorkspaceName = $this->sharedFixture['session']->getWorkspace()->getName();
+        $srcNode = '/tests_write_manipulation_clone/testWorkspaceClone/referenceable/jcr:uuid';
+        $dstNode = $srcNode;
 
-        self::$destWs->cloneFrom($srcWorkspaceName, $srcNode, $dstNode, true);
+        self::$destWs->cloneFrom($this->srcWsName, $srcNode, $dstNode, true);
     }
 
     /**
@@ -125,9 +176,8 @@ class CloneMethodsTest extends \PHPCR\Test\BaseCase
     {
         $srcNode = '/there-is-no-node-here';
         $dstNode = $srcNode;
-        $srcWorkspaceName = $this->sharedFixture['session']->getWorkspace()->getName();
 
-        self::$destWs->cloneFrom($srcWorkspaceName, $srcNode, $dstNode, true);
+        self::$destWs->cloneFrom($this->srcWsName, $srcNode, $dstNode, true);
     }
 
     /**
@@ -135,10 +185,15 @@ class CloneMethodsTest extends \PHPCR\Test\BaseCase
      */
     public function testCloneDstParentNotFound()
     {
-        $srcNode = '/tests_write_manipulation_copy/testWorkspaceCopy/srcNode';
+        $srcNode = '/tests_write_manipulation_clone/testWorkspaceClone/referenceable';
         $dstNode = '/there-is-no-node-here/foo';
-        $srcWorkspaceName = $this->sharedFixture['session']->getWorkspace()->getName();
 
-        self::$destWs->cloneFrom($srcWorkspaceName, $srcNode, $dstNode, true);
+        self::$destWs->cloneFrom($this->srcWsName, $srcNode, $dstNode, true);
+    }
+
+    private function renewDestinationSession()
+    {
+        $destSession = self::$loader->getRepository()->login(self::$loader->getCredentials(), self::$destWsName);
+        self::$destWs = $destSession->getWorkspace();
     }
 }
