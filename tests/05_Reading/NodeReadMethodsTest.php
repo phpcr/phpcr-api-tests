@@ -154,20 +154,6 @@ class NodeReadMethodsTest extends \PHPCR\Test\BaseCase
         $this->assertInstanceOf('Iterator', $iterator);
     }
 
-    public function testGetNodeNames()
-    {
-        $node1 = $this->rootNode->getNode('tests_general_base');
-        $iterator = $node1->getNodeNames();
-        $this->assertInstanceOf('Iterator', $iterator);
-
-        $names = array();
-        foreach($iterator as $name) {
-            $names[] = $name;
-        }
-
-        $this->assertContains('idExample', $names);
-    }
-
     /**
      * @expectedException \PHPCR\RepositoryException
      */
@@ -219,6 +205,31 @@ class NodeReadMethodsTest extends \PHPCR\Test\BaseCase
         $this->assertContains('test:namespacedNode', $nodes);
         $this->assertNotContains('jcr:content', $nodes); //jrc:content is not immediate child
         $this->assertNotContains('index.txt', $nodes);
+    }
+
+    public function testGetNodeNames()
+    {
+        $node1 = $this->rootNode->getNode('tests_general_base');
+        $iterator = $node1->getNodeNames();
+        $this->assertInstanceOf('Iterator', $iterator);
+
+        $names = array();
+        foreach($iterator as $name) {
+            $names[] = $name;
+        }
+
+        $this->assertContains('idExample', $names);
+    }
+
+    public function testGetNodeNamesPattern()
+    {
+        $iterator = $this->node->getNodeNames("id*");
+        $names = array();
+        foreach ($iterator as $n) {
+            array_push($names, $n);
+        }
+        $this->assertContains('idExample', $names);
+        $this->assertNotContains('index.txt', $names);
     }
 
     public function testGetProperty()
