@@ -1,6 +1,8 @@
 <?php
 namespace PHPCR\Test;
 
+use PHPCR\NodeInterface;
+
 // PHPUnit 3.4 compat
 if (method_exists('PHPUnit_Util_Filter', 'addDirectoryToFilter')) {
     require_once 'PHPUnit/Framework.php';
@@ -212,5 +214,18 @@ abstract class BaseCase extends \PHPUnit_Framework_TestCase
     protected function assertTraversableImplemented($obj)
     {
         $this->assertTrue($obj instanceof \Iterator || $obj instanceof \IteratorAggregate, 'To provide Traversable, you have to either implement Iterator or IteratorAggregate');
+    }
+
+    /**
+     * Check specified property exists, then compare property value to the supplied one using assertEquals.
+     *
+     * @param NodeInterface $node
+     * @param string $property
+     * @param mixed $value
+     */
+    protected function checkNodeProperty(NodeInterface $node, $property, $value)
+    {
+        $this->assertTrue($node->hasProperty($property));
+        $this->assertEquals($value, $node->getPropertyValue($property));
     }
 }

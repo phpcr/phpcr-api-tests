@@ -14,7 +14,7 @@ abstract class AbstractLoader
 {
     protected $factoryclass;
     protected $workspacename;
-    protected $additionalworkspacename;
+    protected $otherWorkspacename;
 
     /**
      * array with chapter names to skip all test cases in (without the numbers)
@@ -36,14 +36,14 @@ abstract class AbstractLoader
      *      RepositoryFactory. You can pass null but then you must overwrite
      *      the getRepository method.
      * @param string $workspacename the workspace to use for the tests, defaults to 'tests'
-     * @param string $additionalworkspacename name of second workspace, defaults to 'testsAdditional'
+     * @param string $otherWorkspacename name of second workspace, defaults to 'testsAdditional'
      *      Needed to test certain operations, such as clone, that span workspaces.
      */
-    protected function __construct($factoryclass, $workspacename = 'tests', $additionalworkspacename = 'testsAdditional')
+    protected function __construct($factoryclass, $workspacename = 'tests', $otherWorkspacename = 'testsAdditional')
     {
         $this->factoryclass = $factoryclass;
         $this->workspacename = $workspacename;
-        $this->additionalworkspacename = $additionalworkspacename;
+        $this->otherWorkspacename = $otherWorkspacename;
     }
 
     /**
@@ -128,9 +128,9 @@ abstract class AbstractLoader
     /**
      * @return string the additional workspace name used for tests that need it
      */
-    public function getAdditionalWorkspaceName()
+    public function getOtherWorkspaceName()
     {
-        return $this->additionalworkspacename;
+        return $this->otherWorkspacename;
     }
 
     /**
@@ -152,7 +152,7 @@ abstract class AbstractLoader
      */
     public function getAdditionalSession($credentials = false)
     {
-        return $this->getSessionForWorkspace($credentials, $this->getAdditionalWorkspaceName());
+        return $this->getSessionForWorkspace($credentials, $this->getOtherWorkspaceName());
     }
 
     /**

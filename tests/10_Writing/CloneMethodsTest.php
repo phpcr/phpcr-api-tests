@@ -2,13 +2,14 @@
 namespace PHPCR\Tests\Writing;
 
 use PHPCR\WorkspaceInterface;
+use PHPCR\Test\BaseCase;
 
 require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 /**
  * Covering jcr-283 spec $10.8
  */
-class CloneMethodsTest extends \PHPCR\Test\BaseCase
+class CloneMethodsTest extends BaseCase
 {
     /** @var WorkspaceInterface */
     protected $srcWs;
@@ -66,7 +67,7 @@ class CloneMethodsTest extends \PHPCR\Test\BaseCase
         self::$destWs->cloneFrom($this->srcWsName, $srcNode, $dstNode, false);
 
         $clonedNode = $destSession->getNode($dstNode);
-        $this->assertInstanceOf('Jackalope\Node', $clonedNode);
+        $this->assertInstanceOf('PHPCR\NodeInterface', $clonedNode);
         $this->assertCount(4, $clonedNode->getProperties());
         $this->checkNodeProperty($clonedNode, 'jcr:uuid', '842e61c0-09ab-42a9-87c0-308ccc90e6f6');
         $this->checkNodeProperty($clonedNode, 'jcr:primaryType', 'nt:unstructured');
@@ -75,7 +76,7 @@ class CloneMethodsTest extends \PHPCR\Test\BaseCase
 
         $this->assertTrue($destSession->nodeExists($dstChildNode));
         $cloneChild = $destSession->getNode($dstChildNode);
-        $this->assertInstanceOf('Jackalope\Node', $cloneChild);
+        $this->assertInstanceOf('PHPCR\NodeInterface', $cloneChild);
         $this->assertCount(4, $cloneChild->getProperties());
         $this->checkNodeProperty($cloneChild, 'jcr:uuid', '9da62173-d674-4413-87a4-8f538e033021');
         $this->checkNodeProperty($cloneChild, 'jcr:primaryType', 'nt:unstructured');
@@ -95,7 +96,7 @@ class CloneMethodsTest extends \PHPCR\Test\BaseCase
         self::$destWs->cloneFrom($this->srcWsName, $srcNode, $dstNode, false);
 
         $clonedNode = $destSession->getNode($dstNode);
-        $this->assertInstanceOf('Jackalope\Node', $clonedNode);
+        $this->assertInstanceOf('PHPCR\NodeInterface', $clonedNode);
         $this->assertCount(4, $clonedNode->getProperties());
         $this->checkNodeProperty($clonedNode, 'jcr:uuid', '091d157f-dfaf-42eb-aedd-88183ff8fa3d');
         $this->checkNodeProperty($clonedNode, 'jcr:primaryType', 'nt:unstructured');
@@ -114,7 +115,7 @@ class CloneMethodsTest extends \PHPCR\Test\BaseCase
         $this->renewDestinationSession();
 
         $clonedReplacedNode = self::$destWs->getSession()->getNode($dstNode);
-        $this->assertInstanceOf('Jackalope\Node', $clonedReplacedNode);
+        $this->assertInstanceOf('PHPCR\NodeInterface', $clonedReplacedNode);
         $this->assertCount(5, $clonedReplacedNode->getProperties());
         $this->checkNodeProperty($clonedReplacedNode, 'jcr:uuid', '091d157f-dfaf-42eb-aedd-88183ff8fa3d');
         $this->checkNodeProperty($clonedReplacedNode, 'jcr:primaryType', 'nt:unstructured');
@@ -139,7 +140,7 @@ class CloneMethodsTest extends \PHPCR\Test\BaseCase
         }
 
         $clonedNode = $destSession->getNode($dstNode);
-        $this->assertInstanceOf('Jackalope\Node', $clonedNode);
+        $this->assertInstanceOf('PHPCR\NodeInterface', $clonedNode);
         $this->assertCount(3, $clonedNode->getProperties());
 
         self::$destWs->cloneFrom($this->srcWsName, $srcNode, $dstNode, false);
@@ -162,7 +163,7 @@ class CloneMethodsTest extends \PHPCR\Test\BaseCase
         }
 
         $clonedNode = $destSession->getNode($dstNode);
-        $this->assertInstanceOf('Jackalope\Node', $clonedNode);
+        $this->assertInstanceOf('PHPCR\NodeInterface', $clonedNode);
         $this->assertCount(3, $clonedNode->getProperties());
 
         self::$destWs->cloneFrom($this->srcWsName, $srcNode, $secondDstNode, false);
@@ -246,7 +247,7 @@ class CloneMethodsTest extends \PHPCR\Test\BaseCase
         self::$destWs->cloneFrom($this->srcWsName, $srcNode, $dstNode, false);
 
         $clonedNode = $destSession->getNode($dstNode);
-        $this->assertInstanceOf('Jackalope\Node', $clonedNode);
+        $this->assertInstanceOf('PHPCR\NodeInterface', $clonedNode);
         $this->assertCount(2, $clonedNode->getProperties());
         $this->checkNodeProperty($clonedNode, 'jcr:primaryType', 'nt:unstructured');
         $this->checkNodeProperty($clonedNode, 'foo', 'bar_3');
@@ -264,7 +265,7 @@ class CloneMethodsTest extends \PHPCR\Test\BaseCase
         self::$destWs->cloneFrom($this->srcWsName, $srcNode, $dstNode, false);
 
         $clonedNode = $destSession->getNode($dstNode);
-        $this->assertInstanceOf('Jackalope\Node', $clonedNode);
+        $this->assertInstanceOf('PHPCR\NodeInterface', $clonedNode);
         $this->assertCount(2, $clonedNode->getProperties());
         $this->checkNodeProperty($clonedNode, 'jcr:primaryType', 'nt:unstructured');
         $this->checkNodeProperty($clonedNode, 'foo', 'bar_4');
@@ -282,7 +283,7 @@ class CloneMethodsTest extends \PHPCR\Test\BaseCase
 
         // Check the first cloned node again; it should not have changed
         $clonedNode = $destSession->getNode($dstNode);
-        $this->assertInstanceOf('Jackalope\Node', $clonedNode);
+        $this->assertInstanceOf('PHPCR\NodeInterface', $clonedNode);
         $this->assertCount(2, $clonedNode->getProperties());
         $this->checkNodeProperty($clonedNode, 'jcr:primaryType', 'nt:unstructured');
         $this->checkNodeProperty($clonedNode, 'foo', 'bar_4');
@@ -290,7 +291,7 @@ class CloneMethodsTest extends \PHPCR\Test\BaseCase
         // Second cloned node created with [2] appended to name
         $replacedDstNode = $srcNode . '[2]';
         $clonedReplacedNode = self::$destWs->getSession()->getNode($replacedDstNode);
-        $this->assertInstanceOf('Jackalope\Node', $clonedReplacedNode);
+        $this->assertInstanceOf('PHPCR\NodeInterface', $clonedReplacedNode);
         $this->assertCount(3, $clonedReplacedNode->getProperties());
         $this->checkNodeProperty($clonedReplacedNode, 'jcr:primaryType', 'nt:unstructured');
         $this->checkNodeProperty($clonedReplacedNode, 'foo', 'bar-updated');
@@ -313,7 +314,7 @@ class CloneMethodsTest extends \PHPCR\Test\BaseCase
         }
 
         $clonedNode = $destSession->getNode($dstNode);
-        $this->assertInstanceOf('Jackalope\Node', $clonedNode);
+        $this->assertInstanceOf('PHPCR\NodeInterface', $clonedNode);
         $this->assertCount(1, $clonedNode->getProperties());
 
         self::$destWs->cloneFrom($this->srcWsName, $srcNode, $dstNode, false);
@@ -329,7 +330,7 @@ class CloneMethodsTest extends \PHPCR\Test\BaseCase
         self::$destWs->cloneFrom($this->srcWsName, $srcNode, $dstNode, false);
 
         $node = $this->srcWs->getSession()->getNode($srcNode);
-        $this->assertInstanceOf('Jackalope\Node', $node);
+        $this->assertInstanceOf('PHPCR\NodeInterface', $node);
         $this->assertCount(3, $node->getProperties());
         $this->checkNodeProperty($node, 'jcr:uuid', 'a64bfa45-d5e1-4bf0-a739-1890da40579d');
 
@@ -351,7 +352,7 @@ class CloneMethodsTest extends \PHPCR\Test\BaseCase
         self::$destWs->cloneFrom($this->srcWsName, $srcNode, $dstNode, false);
 
         $node = $sourceSession->getNode($srcNode);
-        $this->assertInstanceOf('Jackalope\Node', $node);
+        $this->assertInstanceOf('PHPCR\NodeInterface', $node);
         $this->assertCount(4, $node->getProperties());
         $this->checkNodeProperty($node, 'jcr:uuid', 'c8996418-3fd9-407c-bfe6-faea6dcfbb40');
         $this->checkNodeProperty($node, 'foo', 'bar_5');
@@ -363,7 +364,7 @@ class CloneMethodsTest extends \PHPCR\Test\BaseCase
         $sourceSession->save();
 
         $clonedNode = $destSession->getNode($dstNode);
-        $this->assertInstanceOf('Jackalope\Node', $clonedNode);
+        $this->assertInstanceOf('PHPCR\NodeInterface', $clonedNode);
         $this->assertCount(4, $clonedNode->getProperties());
         $this->checkNodeProperty($clonedNode, 'jcr:uuid', 'c8996418-3fd9-407c-bfe6-faea6dcfbb40');
 
@@ -373,11 +374,11 @@ class CloneMethodsTest extends \PHPCR\Test\BaseCase
 
         $clonedNode->update($this->srcWsName);
 
-        // @todo - should this be needed here, or handled in Jackalope\Node?
+        // @todo - should this be needed here, or handled in PHPCR\NodeInterface?
         $destSession->getObjectManager()->refresh(false);
 
         $clonedNode = $destSession->getNode($dstNode);
-        $this->assertInstanceOf('Jackalope\Node', $clonedNode);
+        $this->assertInstanceOf('PHPCR\NodeInterface', $clonedNode);
         $this->assertCount(5, $clonedNode->getProperties());
         $this->checkNodeProperty($clonedNode, 'jcr:uuid', 'c8996418-3fd9-407c-bfe6-faea6dcfbb40');
         $this->checkNodeProperty($clonedNode, 'foo', 'foo-updated');
@@ -449,11 +450,5 @@ class CloneMethodsTest extends \PHPCR\Test\BaseCase
     {
         $destSession = self::$loader->getRepository()->login(self::$loader->getCredentials(), self::$destWsName);
         self::$destWs = $destSession->getWorkspace();
-    }
-
-    private function checkNodeProperty($node, $property, $value)
-    {
-        $this->assertTrue($node->hasProperty($property));
-        $this->assertEquals($value, $node->getProperty($property)->getValue());
     }
 }
