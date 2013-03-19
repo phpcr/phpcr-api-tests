@@ -33,6 +33,8 @@ class CloneMethodsTest extends \PHPCR\Test\BaseCase
         $rootNode = $destSession->getRootNode();
         $node = $rootNode->addNode('tests_write_manipulation_clone');
         $node->addNode('testWorkspaceClone');
+        $node->addNode('testWorkspaceCorrespondingNode');
+        $node->addNode('testWorkspaceUpdateNode');
         $destSession->save();
     }
 
@@ -58,7 +60,7 @@ class CloneMethodsTest extends \PHPCR\Test\BaseCase
     {
         $srcNode = '/tests_write_manipulation_clone/testWorkspaceClone/referenceable';
         $dstNode = $srcNode;
-        $dstChildNode = $srcNode . '/cloneChild';
+        $dstChildNode = $dstNode . '/cloneChild';
         $destSession = self::$destWs->getSession();
 
         self::$destWs->cloneFrom($this->srcWsName, $srcNode, $dstNode, false);
@@ -315,6 +317,132 @@ class CloneMethodsTest extends \PHPCR\Test\BaseCase
         $this->assertCount(1, $clonedNode->getProperties());
 
         self::$destWs->cloneFrom($this->srcWsName, $srcNode, $dstNode, false);
+    }
+
+    public function testGetCorrespondingNode()
+    {
+        $this->markTestIncomplete('Not yet implemented');
+
+        $srcNode = '/tests_write_manipulation_clone/testWorkspaceCorrespondingNode/sourceNode';
+        $dstNode = '/tests_write_manipulation_clone/testWorkspaceCorrespondingNode/destNode';;
+
+        self::$destWs->cloneFrom($this->srcWsName, $srcNode, $dstNode, false);
+
+        $node = $this->srcWs->getSession()->getNode($srcNode);
+        $this->assertInstanceOf('Jackalope\Node', $node);
+        $this->assertCount(3, $node->getProperties());
+        $this->checkNodeProperty($node, 'jcr:uuid', 'a64bfa45-d5e1-4bf0-a739-1890da40579d');
+
+        $this->assertEquals($dstNode, $node->getCorrespondingNodePath(self::$destWsName));
+    }
+
+    /**
+     * Main test for cloning and then updating a node and its child
+     */
+    public function testUpdateNodeWithChild()
+    {
+        $srcNode = '/tests_write_manipulation_clone/testWorkspaceUpdateNode/sourceNode';
+        $dstNode = '/tests_write_manipulation_clone/testWorkspaceUpdateNode/destNode';;
+        $srcChildNode = $srcNode . '/cloneChild';
+        $dstChildNode = $dstNode . '/cloneChild';
+        $destSession = self::$destWs->getSession();
+        $sourceSession = $this->srcWs->getSession();
+
+        self::$destWs->cloneFrom($this->srcWsName, $srcNode, $dstNode, false);
+
+        $node = $sourceSession->getNode($srcNode);
+        $this->assertInstanceOf('Jackalope\Node', $node);
+        $this->assertCount(4, $node->getProperties());
+        $this->checkNodeProperty($node, 'jcr:uuid', 'c8996418-3fd9-407c-bfe6-faea6dcfbb40');
+        $this->checkNodeProperty($node, 'foo', 'bar_5');
+        $node->setProperty('foo', 'foo-updated');
+        $node->setProperty('newProperty', 'hello');
+
+        $childNode = $sourceSession->getNode($srcChildNode);
+        $childNode->setProperty('fooChild', 'barChild-updated');
+        $sourceSession->save();
+
+        $clonedNode = $destSession->getNode($dstNode);
+        $this->assertInstanceOf('Jackalope\Node', $clonedNode);
+        $this->assertCount(4, $clonedNode->getProperties());
+        $this->checkNodeProperty($clonedNode, 'jcr:uuid', 'c8996418-3fd9-407c-bfe6-faea6dcfbb40');
+
+        $cloneChild = $destSession->getNode($dstChildNode);
+        $this->assertCount(4, $clonedNode->getProperties());
+        $this->checkNodeProperty($cloneChild, 'jcr:uuid', 'e7683690-0465-4aa8-87c6-f37a67d08469');
+
+        $clonedNode->update($this->srcWsName);
+
+        // @todo - should this be needed here, or handled in Jackalope\Node?
+        $destSession->getObjectManager()->refresh(false);
+
+        $clonedNode = $destSession->getNode($dstNode);
+        $this->assertInstanceOf('Jackalope\Node', $clonedNode);
+        $this->assertCount(5, $clonedNode->getProperties());
+        $this->checkNodeProperty($clonedNode, 'jcr:uuid', 'c8996418-3fd9-407c-bfe6-faea6dcfbb40');
+        $this->checkNodeProperty($clonedNode, 'foo', 'foo-updated');
+        $this->checkNodeProperty($clonedNode, 'newProperty', 'hello');
+
+        $cloneChild = $destSession->getNode($dstChildNode);
+        $this->assertCount(4, $cloneChild->getProperties());
+        $this->checkNodeProperty($cloneChild, 'jcr:uuid', 'e7683690-0465-4aa8-87c6-f37a67d08469');
+        $this->checkNodeProperty($cloneChild, 'fooChild', 'barChild-updated');
+    }
+
+    /**
+     * @expectedException   \PHPCR\NoSuchWorkspaceException
+     */
+    public function testUpdateNoSuchWorkspace()
+    {
+        $srcNode = '/tests_write_manipulation_clone/testWorkspaceUpdateNode/updateNoSuchWorkspace';
+        $dstNode = $srcNode;
+        $destSession = self::$destWs->getSession();
+
+        self::$destWs->cloneFrom($this->srcWsName, $srcNode, $dstNode, false);
+
+        $clonedNode = $destSession->getNode($dstNode);
+        $this->checkNodeProperty($clonedNode, 'jcr:uuid', '8cd0ab49-1e3d-4b92-bfe4-48bf3e5efdb3');
+
+        $clonedNode->update('non-existent-workspace');
+    }
+
+    /**
+     * Test that update has no effect if the source node not found
+     * (from JCR spec 10.8.3: "If this node does not have a corresponding node in srcWorkspace, then the method has no effect.")
+     */
+    public function testUpdateSrcNotFound()
+    {
+        $srcNode = '/tests_write_manipulation_clone/testWorkspaceUpdateNode/updateSrcNotFound';
+        $dstNode = $srcNode;
+        $srcSession = $this->srcWs->getSession();
+        $destSession = self::$destWs->getSession();
+
+        self::$destWs->cloneFrom($this->srcWsName, $srcNode, $dstNode, false);
+
+        $clonedNode = $destSession->getNode($dstNode);
+        $this->assertCount(4, $clonedNode->getProperties());
+        $this->checkNodeProperty($clonedNode, 'jcr:uuid', '1d392bcb-3e49-4f0e-b0af-7c30ab838122');
+        $this->checkNodeProperty($clonedNode, 'foo', 'bar_6');
+
+        // Update but then remove source node
+        $node = $srcSession->getNode($srcNode);
+        $node->setProperty('foo', 'foo-updated');
+        $srcSession->removeItem($srcNode);
+        $srcSession->save();
+
+        try {
+            $clonedNode->update($this->srcWsName);
+        } catch (\Exception $exception) {
+            $this->fail("'update' method should not raise an error when source not found, got error: " . $exception->getMessage());
+        }
+
+        $destSession->getObjectManager()->refresh(false);
+
+        // Cloned node should not get any updates that were made to the source node before it was removed
+        $clonedNode = $destSession->getNode($dstNode);
+        $this->assertCount(4, $clonedNode->getProperties());
+        $this->checkNodeProperty($clonedNode, 'jcr:uuid', '1d392bcb-3e49-4f0e-b0af-7c30ab838122');
+        $this->checkNodeProperty($clonedNode, 'foo', 'bar_6');
     }
 
     private function renewDestinationSession()

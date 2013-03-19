@@ -93,4 +93,81 @@
       </sv:property>
     </sv:node>
   </sv:node>
+  <sv:node sv:name="testWorkspaceCorrespondingNode">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>nt:unstructured</sv:value>
+    </sv:property>
+    <sv:node sv:name="sourceNode">
+      <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+        <sv:value>mix:referenceable</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>nt:unstructured</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:uuid" sv:type="String">
+        <sv:value>a64bfa45-d5e1-4bf0-a739-1890da40579d</sv:value>
+      </sv:property>
+    </sv:node>
+  </sv:node>
+  <sv:node sv:name="testWorkspaceUpdateNode">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>nt:unstructured</sv:value>
+    </sv:property>
+    <sv:node sv:name="sourceNode">
+      <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+        <sv:value>mix:referenceable</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>nt:unstructured</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:uuid" sv:type="String">
+        <sv:value>c8996418-3fd9-407c-bfe6-faea6dcfbb40</sv:value>
+      </sv:property>
+      <sv:property sv:name="foo" sv:type="Name">
+        <sv:value>bar_5</sv:value>
+      </sv:property>
+      <sv:node sv:name="cloneChild">
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+          <sv:value>nt:unstructured</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+          <sv:value>mix:referenceable</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:uuid" sv:type="String">
+          <sv:value>e7683690-0465-4aa8-87c6-f37a67d08469</sv:value>
+        </sv:property>
+        <sv:property sv:name="fooChild" sv:type="Name">
+          <sv:value>barChild</sv:value>
+        </sv:property>
+      </sv:node>
+    </sv:node>
+    <sv:node sv:name="updateNoSuchWorkspace">
+      <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+        <sv:value>mix:referenceable</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>nt:unstructured</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:uuid" sv:type="String">
+        <sv:value>8cd0ab49-1e3d-4b92-bfe4-48bf3e5efdb3</sv:value>
+      </sv:property>
+      <sv:property sv:name="foo" sv:type="Name">
+        <sv:value>bar_5</sv:value>
+      </sv:property>
+    </sv:node>
+    <sv:node sv:name="updateSrcNotFound">
+      <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+        <sv:value>mix:referenceable</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>nt:unstructured</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:uuid" sv:type="String">
+        <sv:value>1d392bcb-3e49-4f0e-b0af-7c30ab838122</sv:value>
+      </sv:property>
+      <sv:property sv:name="foo" sv:type="Name">
+        <sv:value>bar_6</sv:value>
+      </sv:property>
+    </sv:node>
+  </sv:node>
 </sv:node>
