@@ -108,6 +108,17 @@
         <sv:value>a64bfa45-d5e1-4bf0-a739-1890da40579d</sv:value>
       </sv:property>
     </sv:node>
+    <sv:node sv:name="nodeThatWillNotBeCloned">
+      <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+        <sv:value>mix:referenceable</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>nt:unstructured</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:uuid" sv:type="String">
+        <sv:value>e7c14901-aec8-4e9b-8e76-704197d24794</sv:value>
+      </sv:property>
+    </sv:node>
   </sv:node>
   <sv:node sv:name="testWorkspaceUpdateNode">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">

@@ -322,19 +322,67 @@ class CloneMethodsTest extends BaseCase
 
     public function testGetCorrespondingNode()
     {
-        $this->markTestIncomplete('Not yet implemented');
-
         $srcNode = '/tests_write_manipulation_clone/testWorkspaceCorrespondingNode/sourceNode';
         $dstNode = '/tests_write_manipulation_clone/testWorkspaceCorrespondingNode/destNode';;
+        $destSession = self::$destWs->getSession();
 
         self::$destWs->cloneFrom($this->srcWsName, $srcNode, $dstNode, false);
 
         $node = $this->srcWs->getSession()->getNode($srcNode);
         $this->assertInstanceOf('PHPCR\NodeInterface', $node);
-        $this->assertCount(3, $node->getProperties());
         $this->checkNodeProperty($node, 'jcr:uuid', 'a64bfa45-d5e1-4bf0-a739-1890da40579d');
 
         $this->assertEquals($dstNode, $node->getCorrespondingNodePath(self::$destWsName));
+
+        $clonedNode = $destSession->getNode($dstNode);
+        $this->assertInstanceOf('PHPCR\NodeInterface', $clonedNode);
+        $this->checkNodeProperty($clonedNode, 'jcr:uuid', 'a64bfa45-d5e1-4bf0-a739-1890da40579d');
+
+        $this->assertEquals($srcNode, $clonedNode->getCorrespondingNodePath($this->srcWsName));
+    }
+
+    /**
+     * @expectedException   \PHPCR\NoSuchWorkspaceException
+     */
+    public function testGetCorrespondingNodeNoSuchWorkspace()
+    {
+        $srcNode = '/tests_write_manipulation_clone/testWorkspaceCorrespondingNode/nodeThatWillNotBeCloned';
+
+        $node = $this->srcWs->getSession()->getNode($srcNode);
+        $this->assertInstanceOf('PHPCR\NodeInterface', $node);
+        $this->checkNodeProperty($node, 'jcr:uuid', 'e7c14901-aec8-4e9b-8e76-704197d24794');
+
+        $node->getCorrespondingNodePath('thisWorkspaceDoesNotExist');
+    }
+
+    /**
+     * @expectedException   \PHPCR\ItemNotFoundException
+     */
+    public function testGetCorrespondingNodeItemNotFound()
+    {
+        $srcNode = '/tests_write_manipulation_clone/testWorkspaceCorrespondingNode/nodeThatWillNotBeCloned';
+
+        $node = $this->srcWs->getSession()->getNode($srcNode);
+        $this->assertInstanceOf('PHPCR\NodeInterface', $node);
+        $this->checkNodeProperty($node, 'jcr:uuid', 'e7c14901-aec8-4e9b-8e76-704197d24794');
+
+        $node->getCorrespondingNodePath(self::$destWsName);
+    }
+
+    /**
+     * @expectedException   \LogicException
+     */
+    public function testGetCorrespondingNodeNotLoggedIn()
+    {
+        $srcNode = '/tests_write_manipulation_clone/testWorkspaceCorrespondingNode/nodeThatWillNotBeCloned';
+        $sourceSession = $this->srcWs->getSession();
+
+        $node = $this->srcWs->getSession()->getNode($srcNode);
+        $this->assertInstanceOf('PHPCR\NodeInterface', $node);
+        $this->checkNodeProperty($node, 'jcr:uuid', 'e7c14901-aec8-4e9b-8e76-704197d24794');
+
+        $sourceSession->logout();
+        $node->getCorrespondingNodePath($this->srcWsName);
     }
 
     /**
