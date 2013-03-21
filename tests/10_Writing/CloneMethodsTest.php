@@ -370,30 +370,17 @@ class CloneMethodsTest extends BaseCase
     }
 
     /**
-     * @expectedException   \LogicException
+     * Main test for cloning and then updating a node and its children.
+     * Using two levels of children to make sure copy works recursively (and affected nodes not cached)
      */
-    public function testGetCorrespondingNodeNotLoggedIn()
-    {
-        $srcNode = '/tests_write_manipulation_clone/testWorkspaceCorrespondingNode/nodeThatWillNotBeCloned';
-        $sourceSession = $this->srcWs->getSession();
-
-        $node = $this->srcWs->getSession()->getNode($srcNode);
-        $this->assertInstanceOf('PHPCR\NodeInterface', $node);
-        $this->checkNodeProperty($node, 'jcr:uuid', 'e7c14901-aec8-4e9b-8e76-704197d24794');
-
-        $sourceSession->logout();
-        $node->getCorrespondingNodePath($this->srcWsName);
-    }
-
-    /**
-     * Main test for cloning and then updating a node and its child
-     */
-    public function testUpdateNodeWithChild()
+    public function testUpdateNodeWithChildren()
     {
         $srcNode = '/tests_write_manipulation_clone/testWorkspaceUpdateNode/sourceNode';
         $dstNode = '/tests_write_manipulation_clone/testWorkspaceUpdateNode/destNode';;
         $srcChildNode = $srcNode . '/cloneChild';
         $dstChildNode = $dstNode . '/cloneChild';
+        $srcChildOfChildNode = $srcChildNode . '/childOfChild';
+        $dstChildOfChildNode = $dstChildNode . '/childOfChild';
         $destSession = self::$destWs->getSession();
         $sourceSession = $this->srcWs->getSession();
 
@@ -411,6 +398,10 @@ class CloneMethodsTest extends BaseCase
         $childNode->setProperty('fooChild', 'barChild-updated');
         $sourceSession->save();
 
+        $childOfChildNode = $sourceSession->getNode($srcChildOfChildNode);
+        $childOfChildNode->setProperty('fooChildOfChild', 'barChildOfChild-updated');
+        $sourceSession->save();
+
         $clonedNode = $destSession->getNode($dstNode);
         $this->assertInstanceOf('PHPCR\NodeInterface', $clonedNode);
         $this->assertCount(4, $clonedNode->getProperties());
@@ -420,10 +411,11 @@ class CloneMethodsTest extends BaseCase
         $this->assertCount(4, $clonedNode->getProperties());
         $this->checkNodeProperty($cloneChild, 'jcr:uuid', 'e7683690-0465-4aa8-87c6-f37a67d08469');
 
-        $clonedNode->update($this->srcWsName);
+        $cloneChildOfChild = $destSession->getNode($dstChildOfChildNode);
+        $this->assertCount(4, $cloneChildOfChild->getProperties());
+        $this->checkNodeProperty($cloneChildOfChild, 'jcr:uuid', '7547cb47-3c13-4e23-b6d1-29685a434c88');
 
-        // @todo - should this be needed here, or handled in PHPCR\NodeInterface?
-        $destSession->getObjectManager()->refresh(false);
+        $clonedNode->update($this->srcWsName);
 
         $clonedNode = $destSession->getNode($dstNode);
         $this->assertInstanceOf('PHPCR\NodeInterface', $clonedNode);
@@ -436,6 +428,11 @@ class CloneMethodsTest extends BaseCase
         $this->assertCount(4, $cloneChild->getProperties());
         $this->checkNodeProperty($cloneChild, 'jcr:uuid', 'e7683690-0465-4aa8-87c6-f37a67d08469');
         $this->checkNodeProperty($cloneChild, 'fooChild', 'barChild-updated');
+
+        $cloneChildOfChild = $destSession->getNode($dstChildOfChildNode);
+        $this->assertCount(4, $cloneChildOfChild->getProperties());
+        $this->checkNodeProperty($cloneChildOfChild, 'jcr:uuid', '7547cb47-3c13-4e23-b6d1-29685a434c88');
+        $this->checkNodeProperty($cloneChildOfChild, 'fooChildOfChild', 'barChildOfChild-updated');
     }
 
     /**
