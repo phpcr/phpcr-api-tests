@@ -280,6 +280,9 @@
             <sv:property sv:name="thisIsNo" sv:type="Boolean">
                 <sv:value>false</sv:value>
             </sv:property>
+            <sv:property sv:name="thisIsYes" sv:type="Boolean">
+                <sv:value>true</sv:value>
+            </sv:property>
             <sv:property sv:name="multiBoolean" sv:type="Boolean" sv:multiple="true">
                 <sv:value>false</sv:value>
                 <sv:value>true</sv:value>
@@ -291,4 +294,83 @@
 
         </sv:node>
     </sv:node>
+
+     <sv:node sv:name="NumberPropertyNodeToCompare1">
+
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+            <sv:value>nt:file</sv:value>
+        </sv:property>
+
+        <sv:property sv:name="jcr:created" sv:type="Date">
+            <sv:value>2011-03-21T14:34:20.452+01:00</sv:value>
+        </sv:property>
+
+        <sv:property sv:name="jcr:createdBy" sv:type="String">
+            <sv:value>admin</sv:value>
+        </sv:property>
+
+        <sv:node sv:name="jcr:content">
+
+            <sv:property sv:name="jcr:primaryType" sv:type="Name">
+                <sv:value>nt:unstructured</sv:value>
+            </sv:property>
+
+            <sv:property sv:name="jcr:lastModified" sv:type="Date">
+                <sv:value>2009-04-27T13:01:07.472+02:00</sv:value>
+            </sv:property>
+
+            <sv:property sv:name="jcr:mimeType" sv:type="String">
+                <sv:value>text/plain</sv:value>
+            </sv:property>
+
+            <sv:property sv:name="longNumberToCompare" sv:type="Long">
+                <sv:value>2</sv:value>
+            </sv:property>
+
+            <sv:property sv:name="stringToCompare" sv:type="String">
+                <sv:value>2</sv:value>
+            </sv:property>
+
+        </sv:node>
+    </sv:node>
+
+    <sv:node sv:name="NumberPropertyNodeToCompare2">
+
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+            <sv:value>nt:file</sv:value>
+        </sv:property>
+
+        <sv:property sv:name="jcr:created" sv:type="Date">
+            <sv:value>2011-03-21T14:34:20.452+01:00</sv:value>
+        </sv:property>
+
+        <sv:property sv:name="jcr:createdBy" sv:type="String">
+            <sv:value>admin</sv:value>
+        </sv:property>
+
+        <sv:node sv:name="jcr:content">
+
+            <sv:property sv:name="jcr:primaryType" sv:type="Name">
+                <sv:value>nt:unstructured</sv:value>
+            </sv:property>
+
+            <sv:property sv:name="jcr:lastModified" sv:type="Date">
+                <sv:value>2009-04-27T13:01:07.472+02:00</sv:value>
+            </sv:property>
+
+            <sv:property sv:name="jcr:mimeType" sv:type="String">
+                <sv:value>text/plain</sv:value>
+            </sv:property>
+
+            <sv:property sv:name="longNumberToCompare" sv:type="Long">
+                <sv:value>10</sv:value>
+            </sv:property>
+
+             <sv:property sv:name="stringToCompare" sv:type="String">
+                <sv:value>10</sv:value>
+            </sv:property>
+
+        </sv:node>
+    </sv:node>
+
 </sv:node>
