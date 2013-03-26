@@ -46,14 +46,14 @@ class QuerySql2OperationsTest extends QueryBaseCase
             $vals[] = ($node->hasProperty('foo') ? $node->getPropertyValue('foo') : null);
         }
         $this->assertContains('bar', $vals);
-        $this->assertEquals(8, count($vals));
+        $this->assertEquals(10, count($vals));
 
         $vals = array();
         foreach ($result->getRows() as $row) {
             $vals[] = $row->getValue('foo');
         }
         $this->assertContains('bar', $vals);
-        $this->assertEquals(8, count($vals));
+        $this->assertEquals(10, count($vals));
     }
 
     public function testQueryFieldSelector()
@@ -135,7 +135,7 @@ class QuerySql2OperationsTest extends QueryBaseCase
             $vals[] = $row->getValue('data.zeronumber');
         }
         // rows that do not have that field are null. empty is before fields with values
-        $this->assertEquals(array(null, null, null, null, null, null, null, 0), $vals);
+        $this->assertEquals(array(null, null, null, null, null, null, null, null, null, 0), $vals);
     }
 
     public function testQueryMultiValuedProperty()
