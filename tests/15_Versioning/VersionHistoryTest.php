@@ -126,6 +126,92 @@ class VersionHistoryTest extends \PHPCR\Test\BaseCase
         $this->assertEquals(0, count($lastVersion->getSuccessors()));
     }
 
+    /**
+     * Check version history (allVersions), add more versions, then check the history updates correctly.
+     */
+    public function testMixingCreateAndGetAllVersions()
+    {
+        $vm = $this->sharedFixture['session']->getWorkspace()->getVersionManager();
+        $baseNode = $this->sharedFixture['session']->getNode('/tests_version_base');
+
+        $node = $baseNode->addNode('versioned_all', 'nt:unstructured');
+        $node->addMixin('mix:versionable');
+        $node->setProperty('foo', 'bar');
+        $this->sharedFixture['session']->save();
+
+        $history = $vm->getVersionHistory('/tests_version_base/versioned_all');
+        $this->assertCount(1, $history->getAllVersions());
+        foreach ($history->getAllVersions() as $name => $version) {
+            $this->assertInstanceOf('PHPCR\Version\VersionInterface', $version);
+            $this->assertEquals($version->getName(), $name);
+        }
+
+        $vm->checkpoint('/tests_version_base/versioned_all');
+        $node->setProperty('foo', 'bar2');
+        $this->sharedFixture['session']->save();
+        $this->assertCount(2, $history->getAllVersions());
+
+        $vm->checkin('/tests_version_base/versioned_all');
+        $this->assertCount(3, $history->getAllVersions());
+
+        foreach ($history->getAllVersions() as $name => $version) {
+            $this->assertInstanceOf('PHPCR\Version\VersionInterface', $version);
+            $this->assertEquals($version->getName(), $name);
+        }
+
+        $finalVersions = $history->getAllVersions();
+        $firstVersion = reset($finalVersions);
+        $lastVersion = end($finalVersions);
+        $currentVersion = $this->vm->getBaseVersion('/tests_version_base/versioned_all');
+
+        $this->assertSame($currentVersion, $lastVersion);
+        $this->assertEquals(0, count($firstVersion->getPredecessors()));
+        $this->assertEquals(1, count($firstVersion->getSuccessors()));
+        $this->assertEquals(1, count($lastVersion->getPredecessors()));
+        $this->assertEquals(0, count($lastVersion->getSuccessors()));
+    }
+
+    /**
+     * Check version history (allLinearVersions), add more versions, then check the history updates correctly.
+     */
+    public function testMixingCreateAndGetAllLinearVersions()
+    {
+        $vm = $this->sharedFixture['session']->getWorkspace()->getVersionManager();
+        $baseNode = $this->sharedFixture['session']->getNode('/tests_version_base');
+
+        $node = $baseNode->addNode('versioned_all_linear', 'nt:unstructured');
+        $node->addMixin('mix:versionable');
+        $node->setProperty('foo', 'bar');
+        $this->sharedFixture['session']->save();
+
+        $history = $vm->getVersionHistory('/tests_version_base/versioned_all_linear');
+        $this->assertCount(1, $history->getAllLinearVersions());
+
+        $vm->checkpoint('/tests_version_base/versioned_all_linear');
+        $node->setProperty('foo', 'bar2');
+        $this->sharedFixture['session']->save();
+        $this->assertCount(2, $history->getAllLinearVersions());
+
+        $vm->checkin('/tests_version_base/versioned_all_linear');
+        $this->assertCount(3, $history->getAllLinearVersions());
+
+        foreach ($history->getAllLinearVersions() as $name => $version) {
+            $this->assertInstanceOf('PHPCR\Version\VersionInterface', $version);
+            $this->assertEquals($version->getName(), $name);
+        }
+
+        $finalVersions = $history->getAllLinearVersions();
+        $firstVersion = reset($finalVersions);
+        $lastVersion = end($finalVersions);
+        $currentVersion = $this->vm->getBaseVersion('/tests_version_base/versioned_all_linear');
+
+        $this->assertSame($currentVersion, $lastVersion);
+        $this->assertEquals(0, count($firstVersion->getPredecessors()));
+        $this->assertEquals(1, count($firstVersion->getSuccessors()));
+        $this->assertEquals(1, count($lastVersion->getPredecessors()));
+        $this->assertEquals(0, count($lastVersion->getSuccessors()));
+    }
+
     public function testGetRootVersion()
     {
         $rootVersion = $this->history->getRootVersion();

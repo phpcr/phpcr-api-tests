@@ -1,6 +1,8 @@
 <?php
 namespace PHPCR\Test;
 
+use PHPCR\NodeInterface;
+
 // PHPUnit 3.4 compat
 if (method_exists('PHPUnit_Util_Filter', 'addDirectoryToFilter')) {
     require_once 'PHPUnit/Framework.php';
@@ -90,16 +92,24 @@ abstract class BaseCase extends \PHPUnit_Framework_TestCase
             self::$staticSharedFixture['ie']->import($fixtures);
         }
 
-        // only load session once fixtures have been imported (relevant i.e. for jackalope-doctrine-dbal)
+        // only load sessions once fixtures have been imported (relevant i.e. for jackalope-doctrine-dbal)
         self::$staticSharedFixture['session'] = self::$loader->getSession();
+        self::$staticSharedFixture['additionalSession'] = self::$loader->getAdditionalSession();
     }
 
     protected function setUp()
     {
         $fqn = get_called_class();
-        list($phpcr, $tests, $chapter, $case) = explode('\\', $fqn);
+        $parts = explode('\\', $fqn);
+        $case_n = count($parts)-1;
+        $case = $parts[$case_n];
+        $chapter = '';
 
-        $case = "$chapter\\$case";
+        for($i = 2; $i < $case_n; $i++) {
+            $chapter .= $parts[$i] . '\\';
+        }
+
+        $case = $chapter . $case;
         $test = "$case::".$this->getName();
 
         if (! self::$loader->getTestSupported($chapter, $case, $test)) {
@@ -204,5 +214,18 @@ abstract class BaseCase extends \PHPUnit_Framework_TestCase
     protected function assertTraversableImplemented($obj)
     {
         $this->assertTrue($obj instanceof \Iterator || $obj instanceof \IteratorAggregate, 'To provide Traversable, you have to either implement Iterator or IteratorAggregate');
+    }
+
+    /**
+     * Check specified property exists, then compare property value to the supplied one using assertEquals.
+     *
+     * @param NodeInterface $node
+     * @param string $property
+     * @param mixed $value
+     */
+    protected function checkNodeProperty(NodeInterface $node, $property, $value)
+    {
+        $this->assertTrue($node->hasProperty($property));
+        $this->assertEquals($value, $node->getPropertyValue($property));
     }
 }

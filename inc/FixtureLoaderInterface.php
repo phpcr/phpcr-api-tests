@@ -16,7 +16,9 @@ interface FixtureLoaderInterface
      * Default fixtures in the jcr system view format live folder fixtures/
      *
      * @param string $fixture the fixtures "name", i.e. "general/base"
+     * @param string $workspaceKey the config key for the target workspace, optional
+     *
      * @return void
      */
-    public function import($fixture);
+    public function import($fixture, $workspaceKey = 'workspace');
 }

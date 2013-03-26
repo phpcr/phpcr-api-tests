@@ -104,7 +104,7 @@ class ImportRepositoryContentTest extends \PHPCR\Test\BaseCase
     {
         self::$staticSharedFixture['ie']->import('11_Import/idnode');
         $session = $this->renewSession();
-        $session->importXML('/idExample', __DIR__.'/../../fixtures/general/base.xml', ImportUUIDBehaviorInterface::IMPORT_UUID_COLLISION_REMOVE_EXISTING);
+        $session->importXML('/container/idExample', __DIR__.'/../../fixtures/general/base.xml', ImportUUIDBehaviorInterface::IMPORT_UUID_COLLISION_REMOVE_EXISTING);
     }
 
     /**
@@ -115,7 +115,7 @@ class ImportRepositoryContentTest extends \PHPCR\Test\BaseCase
     {
         self::$staticSharedFixture['ie']->import('11_Import/idnode');
         $session = $this->renewSession();
-        $session->getWorkspace()->importXML('/idExample', __DIR__.'/../../fixtures/general/base.xml', ImportUUIDBehaviorInterface::IMPORT_UUID_COLLISION_REMOVE_EXISTING);
+        $session->getWorkspace()->importXML('/container/idExample', __DIR__.'/../../fixtures/general/base.xml', ImportUUIDBehaviorInterface::IMPORT_UUID_COLLISION_REMOVE_EXISTING);
     }
 
     public function testImportXMLUuidNewSession()
@@ -135,8 +135,8 @@ class ImportRepositoryContentTest extends \PHPCR\Test\BaseCase
         $connect->importXML('/', __DIR__.'/../../fixtures/general/base.xml', ImportUUIDBehaviorInterface::IMPORT_UUID_CREATE_NEW);
 
         // existing node did not change its uuid
-        $this->assertTrue($session->nodeExists('/idExample'));
-        $idExample = $session->getNode('/idExample');
+        $this->assertTrue($session->nodeExists('/container/idExample'));
+        $idExample = $session->getNode('/container/idExample');
         $this->assertEquals('842e61c0-09ab-42a9-87c0-308ccc90e6f4', $idExample->getIdentifier());
 
         $this->assertTrue($session->nodeExists('/tests_general_base'));
@@ -149,8 +149,8 @@ class ImportRepositoryContentTest extends \PHPCR\Test\BaseCase
         $session = $this->saveAndRenewSession();
 
         // existing node did not change its uuid
-        $this->assertTrue($session->nodeExists('/idExample'));
-        $idExample = $session->getNode('/idExample');
+        $this->assertTrue($session->nodeExists('/container/idExample'));
+        $idExample = $session->getNode('/container/idExample');
         $this->assertEquals('842e61c0-09ab-42a9-87c0-308ccc90e6f4', $idExample->getIdentifier());
 
         $this->assertTrue($session->nodeExists('/tests_general_base'));
@@ -190,12 +190,13 @@ class ImportRepositoryContentTest extends \PHPCR\Test\BaseCase
         $session = $this->renewSession();
         $this->doTestImportXMLUuidRemoveExisting($session->getWorkspace(), $session);
     }
+
     private function doTestImportXMLUuidRemoveExisting($connect, $session)
     {
         $connect->importXML('/', __DIR__.'/../../fixtures/general/base.xml', ImportUUIDBehaviorInterface::IMPORT_UUID_COLLISION_REMOVE_EXISTING);
 
         // existing node removed
-        $this->assertFalse($session->nodeExists('/idExample'));
+        $this->assertFalse($session->nodeExists('/container/idExample'));
 
         // the rest is the same as with empty repo
         $this->assertTrue($session->nodeExists('/tests_general_base'));
@@ -215,7 +216,7 @@ class ImportRepositoryContentTest extends \PHPCR\Test\BaseCase
         $session = $this->saveAndRenewSession();
 
         // existing node removed
-        $this->assertFalse($session->nodeExists('/idExample'));
+        $this->assertFalse($session->nodeExists('/container/idExample'));
 
         // the rest is the same as with empty repo
         $this->assertTrue($session->nodeExists('/tests_general_base'));
@@ -246,11 +247,11 @@ class ImportRepositoryContentTest extends \PHPCR\Test\BaseCase
         $session->importXML('/', __DIR__.'/../../fixtures/general/base.xml', ImportUUIDBehaviorInterface::IMPORT_UUID_COLLISION_REPLACE_EXISTING);
 
         // existing node replaced
-        $this->assertTrue($session->nodeExists('/idExample'));
-        $idExample = $session->getNode('/idExample');
+        $this->assertTrue($session->nodeExists('/container/idExample'));
+        $idExample = $session->getNode('/container/idExample');
         $this->assertEquals('nt:file', $idExample->getPrimaryNodeType()->getName());
         $this->assertEquals('842e61c0-09ab-42a9-87c0-308ccc90e6f4', $idExample->getIdentifier());
-        $this->assertTrue($session->nodeExists('/idExample/jcr:content'));
+        $this->assertTrue($session->nodeExists('/container/idExample/jcr:content'));
 
         $this->assertFalse($session->nodeExists('/tests_general_base/idExample'));
 
@@ -258,18 +259,18 @@ class ImportRepositoryContentTest extends \PHPCR\Test\BaseCase
         $this->assertTrue($session->nodeExists('/tests_general_base'));
         $this->assertTrue($session->nodeExists('/tests_general_base/test:namespacedNode'));
 
-        $ref = $session->getProperty('/idExample/jcr:content/weakreference_source1/ref1');
+        $ref = $session->getProperty('/container/idExample/jcr:content/weakreference_source1/ref1');
         $this->assertEquals(\PHPCR\PropertyType::WEAKREFERENCE, $ref->getType());
         $this->assertEquals('13543fc6-1abf-4708-bfcc-e49511754b40', $ref->getString());
 
         $session = $this->saveAndRenewSession();
 
         // existing node replaced
-        $this->assertTrue($session->nodeExists('/idExample'));
-        $idExample = $session->getNode('/idExample');
+        $this->assertTrue($session->nodeExists('/container/idExample'));
+        $idExample = $session->getNode('/container/idExample');
         $this->assertEquals('nt:file', $idExample->getPrimaryNodeType()->getName());
         $this->assertEquals('842e61c0-09ab-42a9-87c0-308ccc90e6f4', $idExample->getIdentifier());
-        $this->assertTrue($session->nodeExists('/idExample/jcr:content'));
+        $this->assertTrue($session->nodeExists('/container/idExample/jcr:content'));
 
         $this->assertFalse($session->nodeExists('/tests_general_base/idExample'));
 
@@ -277,7 +278,7 @@ class ImportRepositoryContentTest extends \PHPCR\Test\BaseCase
         $this->assertTrue($session->nodeExists('/tests_general_base'));
         $this->assertTrue($session->nodeExists('/tests_general_base/test:namespacedNode'));
 
-        $ref = $session->getProperty('/idExample/jcr:content/weakreference_source1/ref1');
+        $ref = $session->getProperty('/container/idExample/jcr:content/weakreference_source1/ref1');
         $this->assertEquals(\PHPCR\PropertyType::WEAKREFERENCE, $ref->getType());
         $this->assertEquals('13543fc6-1abf-4708-bfcc-e49511754b40', $ref->getString());
     }
@@ -341,8 +342,8 @@ class ImportRepositoryContentTest extends \PHPCR\Test\BaseCase
         $session->importXML('/', __DIR__.'/../../fixtures/11_Import/documentview.xml', ImportUUIDBehaviorInterface::IMPORT_UUID_CREATE_NEW);
 
         // existing node did not change its uuid
-        $this->assertTrue($session->nodeExists('/idExample'));
-        $idExample = $session->getNode('/idExample');
+        $this->assertTrue($session->nodeExists('/container/idExample'));
+        $idExample = $session->getNode('/container/idExample');
         $this->assertEquals('842e61c0-09ab-42a9-87c0-308ccc90e6f4', $idExample->getIdentifier());
 
         $this->assertTrue($session->nodeExists('/tests_import'));
@@ -358,8 +359,8 @@ class ImportRepositoryContentTest extends \PHPCR\Test\BaseCase
         $session = $this->saveAndRenewSession();
 
         // existing node did not change its uuid
-        $this->assertTrue($session->nodeExists('/idExample'));
-        $idExample = $session->getNode('/idExample');
+        $this->assertTrue($session->nodeExists('/container/idExample'));
+        $idExample = $session->getNode('/container/idExample');
         $this->assertEquals('842e61c0-09ab-42a9-87c0-308ccc90e6f4', $idExample->getIdentifier());
 
         $this->assertTrue($session->nodeExists('/tests_import'));

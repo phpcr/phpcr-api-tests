@@ -8,8 +8,11 @@ require_once(__DIR__ . '/../../inc/BaseCase.php');
  */
 class NodeReadMethodsTest extends \PHPCR\Test\BaseCase
 {
+    /** @var \PHPCR\NodeInterface */
     protected $rootNode;
+    /** @var \PHPCR\NodeInterface */
     protected $node;
+    /** @var \PHPCR\NodeInterface */
     protected $deepnode;
 
     public function setUp()
@@ -150,6 +153,7 @@ class NodeReadMethodsTest extends \PHPCR\Test\BaseCase
         $iterator = $this->rootNode->getNodes();
         $this->assertInstanceOf('Iterator', $iterator);
     }
+
     /**
      * @expectedException \PHPCR\RepositoryException
      */
@@ -161,32 +165,39 @@ class NodeReadMethodsTest extends \PHPCR\Test\BaseCase
     public function testGetNodesPattern()
     {
         $iterator = $this->node->getNodes("idExample");
-        $this->nodes = array();
+        $nodes = array();
         foreach ($iterator as $n) {
-            array_push($this->nodes, $n->getName());
+            $this->assertInstanceOf('PHPCR\NodeInterface', $n);
+            /** @var $n \PHPCR\NodeInterface */
+            array_push($nodes, $n->getName());
         }
-        $this->assertContains('idExample', $this->nodes);
-        $this->assertNotContains('index.txt', $this->nodes);
+        $this->assertContains('idExample', $nodes);
+        $this->assertNotContains('index.txt', $nodes);
     }
 
     public function testGetNodesPatternAdvanced()
     {
         $this->node = $this->rootNode->getNode('tests_general_base');
         $iterator = $this->node->getNodes("test:* | idExample");
-        $this->nodes = array();
+        $nodes = array();
         foreach ($iterator as $n) {
-            array_push($this->nodes, $n->getName());
+            $this->assertInstanceOf('PHPCR\NodeInterface', $n);
+            /** @var $n \PHPCR\NodeInterface */
+            array_push($nodes, $n->getName());
         }
-        $this->assertContains('idExample', $this->nodes);
-        $this->assertContains('test:namespacedNode', $this->nodes);
-        $this->assertNotContains('index.txt', $this->nodes);
+        $this->assertContains('idExample', $nodes);
+        $this->assertContains('test:namespacedNode', $nodes);
+        $this->assertNotContains('index.txt', $nodes);
     }
+
     public function testGetNodesNameGlobs()
     {
         $node = $this->rootNode->getNode('tests_general_base');
         $iterator = $node->getNodes(array('idExample', 'test:*', 'jcr:*'));
         $nodes = array();
         foreach ($iterator as $n) {
+            $this->assertInstanceOf('PHPCR\NodeInterface', $n);
+            /** @var $n \PHPCR\NodeInterface */
             array_push($nodes, $n->getName());
         }
         $this->assertEquals(2, count($nodes));
@@ -194,6 +205,31 @@ class NodeReadMethodsTest extends \PHPCR\Test\BaseCase
         $this->assertContains('test:namespacedNode', $nodes);
         $this->assertNotContains('jcr:content', $nodes); //jrc:content is not immediate child
         $this->assertNotContains('index.txt', $nodes);
+    }
+
+    public function testGetNodeNames()
+    {
+        $node1 = $this->rootNode->getNode('tests_general_base');
+        $iterator = $node1->getNodeNames();
+        $this->assertInstanceOf('Iterator', $iterator);
+
+        $names = array();
+        foreach($iterator as $name) {
+            $names[] = $name;
+        }
+
+        $this->assertContains('idExample', $names);
+    }
+
+    public function testGetNodeNamesPattern()
+    {
+        $iterator = $this->node->getNodeNames("id*");
+        $names = array();
+        foreach ($iterator as $n) {
+            array_push($names, $n);
+        }
+        $this->assertContains('idExample', $names);
+        $this->assertNotContains('index.txt', $names);
     }
 
     public function testGetProperty()
@@ -223,6 +259,36 @@ class NodeReadMethodsTest extends \PHPCR\Test\BaseCase
     public function testGetPropertyRepositoryException()
     {
         $this->node->getProperty('//');
+    }
+
+    public function testGetPropertyValue()
+    {
+        $node = $this->node->getNode('numberPropertyNode/jcr:content');
+        $value = $node->getPropertyValue('foo');
+        $this->assertEquals('bar', $value);
+    }
+
+    /**
+     * @expectedException \PHPCR\PathNotFoundException
+     */
+    public function testGetPropertyValueNotFound()
+    {
+        $node = $this->node->getNode('numberPropertyNode/jcr:content');
+        $node->getPropertyValue('notexisting');
+    }
+
+    public function testGetPropertyValueWithDefault()
+    {
+        $node = $this->node->getNode('numberPropertyNode/jcr:content');
+        $value = $node->getPropertyValueWithDefault('foo', 'other');
+        $this->assertEquals('bar', $value);
+    }
+
+    public function testGetPropertyValueWithDefaultNotExisting()
+    {
+        $node = $this->node->getNode('numberPropertyNode/jcr:content');
+        $value = $node->getPropertyValueWithDefault('notexisting', 'other');
+        $this->assertEquals('other', $value);
     }
 
     public function testGetPropertiesAll()

@@ -20,6 +20,20 @@ class MoveMethodsTest extends \PHPCR\Test\BaseCase
         parent::setUp();
     }
 
+    public function testNodeRename()
+    {
+        $first = $this->node->getNode('firstNode');
+        $child = $first->getNode('child');
+
+        $first->rename('otherName');
+        $this->assertEquals($this->node->getPath() . '/otherName', $first->getPath());
+        $this->assertEquals($first->getPath() . '/child', $child->getPath());
+
+        $session = $this->saveAndRenewSession();
+
+        $this->assertTrue($session->nodeExists('/tests_write_manipulation_move/testNodeRename/otherName'));
+    }
+
     public function testSessionMove()
     {
         $session = $this->sharedFixture['session'];
@@ -97,6 +111,59 @@ class MoveMethodsTest extends \PHPCR\Test\BaseCase
         $this->assertTrue($session->nodeExists($probSrc), 'Sibling nodes should\'nt be moved');
         $this->assertFalse($session->nodeExists($probDst), 'Sibling nodes should\'nt be moved');
     }
+
+    /**
+     * Try to move nodes that are already held in memory:
+     *
+     * src:     /my/path
+     * dst:     /my/new/path
+     *
+     * where the following node exists in the tree, and is already in memory:
+     * prob:    /my/pathSomething
+     *
+     * the moveNodes method should'nt consider the prob node
+     */
+    public function testSessionMoveSimilarSiblingsInMemory()
+    {
+        $session = $this->sharedFixture['session'];
+
+        $src = '/tests_write_manipulation_move/testSessionMoveSimilarSiblingsInMemory/srcNode';
+        $dst = '/tests_write_manipulation_move/testSessionMoveSimilarSiblingsInMemory/dstNode/srcNode';
+
+        $probSrc = '/tests_write_manipulation_move/testSessionMoveSimilarSiblingsInMemory/srcNodeSibling';
+        $probDst = '/tests_write_manipulation_move/testSessionMoveSimilarSiblingsInMemory/dstNode/srcNodeSibling';
+
+        $session->getNode($src);
+        $session->getNode($probSrc);
+
+        $session->move($src, $dst);
+
+        // Session
+        $this->assertTrue($session->nodeExists($dst), 'Destination node not found [S]');
+        $this->assertFalse($session->nodeExists($src), 'Source node still exists [S]');
+        $this->assertTrue($session->nodeExists($dst . '/another'), 'Destination child node not found [S]');
+        $this->assertFalse($session->nodeExists($src . '/another'), 'Source child node still exists [S]');
+        $this->assertTrue($session->nodeExists($probSrc), 'Sibling nodes should\'nt be moved');
+        $this->assertFalse($session->nodeExists($probDst), 'Sibling nodes should\'nt be moved');
+
+        $session->save();
+        $this->assertTrue($session->nodeExists($dst), 'Destination node not found [B]');
+        $this->assertFalse($session->nodeExists($src), 'Source node still exists [B]');
+        $this->assertTrue($session->nodeExists($dst . '/another'), 'Destination child node not found [B]');
+        $this->assertFalse($session->nodeExists($src . '/another'), 'Source child node still exists [B]');
+        $this->assertTrue($session->nodeExists($probSrc), 'Sibling nodes should\'nt be moved');
+        $this->assertFalse($session->nodeExists($probDst), 'Sibling nodes should\'nt be moved');
+
+        // Backend
+        $session = $this->renewSession();
+        $this->assertTrue($session->nodeExists($dst), 'Destination node not found [B]');
+        $this->assertFalse($session->nodeExists($src), 'Source node still exists [B]');
+        $this->assertTrue($session->nodeExists($dst . '/another'), 'Destination child node not found [B]');
+        $this->assertFalse($session->nodeExists($src. '/another'), 'Source child node still exists [B]');
+        $this->assertTrue($session->nodeExists($probSrc), 'Sibling nodes should\'nt be moved');
+        $this->assertFalse($session->nodeExists($probDst), 'Sibling nodes should\'nt be moved');
+    }
+
 
     public function testSessionMoveWhitespace()
     {

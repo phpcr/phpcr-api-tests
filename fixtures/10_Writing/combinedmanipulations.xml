@@ -13,6 +13,21 @@
     </sv:property>
   </sv:node>
 
+    <sv:node sv:name="testAddAndRemoveProperty">
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+            <sv:value>nt:unstructured</sv:value>
+        </sv:property>
+    </sv:node>
+
+    <sv:node sv:name="testRemovePropertyAndNode">
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+            <sv:value>nt:unstructured</sv:value>
+        </sv:property>
+        <sv:property sv:name="prop" sv:type="String">
+            <sv:value>Testvalue</sv:value>
+        </sv:property>
+    </sv:node>
+
   <sv:node sv:name="testRemoveAndAdd">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
       <sv:value>nt:unstructured</sv:value>
@@ -58,6 +73,12 @@
       <sv:value>nt:unstructured</sv:value>
     </sv:property>
   </sv:node>
+  <!-- this test will create its own node, but sanity checks test for this node to exist -->
+  <sv:node sv:name="testRemoveAndAddAndRemoveToplevelNode">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>nt:unstructured</sv:value>
+    </sv:property>
+  </sv:node>
 
   <sv:node sv:name="testRemoveAndMove">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -93,6 +114,72 @@
             <sv:property sv:name="jcr:primaryType" sv:type="Name">
                 <sv:value>nt:unstructured</sv:value>
             </sv:property>
+        </sv:node>
+    </sv:node>
+
+    <sv:node sv:name="testRemoveMoveRemove">
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+            <sv:value>nt:unstructured</sv:value>
+        </sv:property>
+        <sv:node sv:name="src">
+            <sv:property sv:name="jcr:primaryType" sv:type="Name">
+                <sv:value>nt:unstructured</sv:value>
+            </sv:property>
+            <sv:node sv:name="parent">
+                <sv:property sv:name="jcr:primaryType" sv:type="Name">
+                    <sv:value>nt:unstructured</sv:value>
+                </sv:property>
+                <sv:node sv:name="child">
+                    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+                        <sv:value>nt:unstructured</sv:value>
+                    </sv:property>
+                </sv:node>
+            </sv:node>
+        </sv:node>
+    </sv:node>
+
+    <sv:node sv:name="testMoveRemovepropertyMove">
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+            <sv:value>nt:unstructured</sv:value>
+        </sv:property>
+        <sv:node sv:name="src">
+            <sv:property sv:name="jcr:primaryType" sv:type="Name">
+                <sv:value>nt:unstructured</sv:value>
+            </sv:property>
+            <sv:node sv:name="parent">
+                <sv:property sv:name="jcr:primaryType" sv:type="Name">
+                    <sv:value>nt:unstructured</sv:value>
+                </sv:property>
+                <sv:node sv:name="child">
+                    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+                        <sv:value>nt:unstructured</sv:value>
+                    </sv:property>
+                    <sv:property sv:name="test" sv:type="String">
+                        <sv:value>value</sv:value>
+                    </sv:property>
+                </sv:node>
+            </sv:node>
+        </sv:node>
+    </sv:node>
+
+    <sv:node sv:name="testLoadchildMovedNode">
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+            <sv:value>nt:unstructured</sv:value>
+        </sv:property>
+        <sv:node sv:name="src">
+            <sv:property sv:name="jcr:primaryType" sv:type="Name">
+                <sv:value>nt:unstructured</sv:value>
+            </sv:property>
+            <sv:node sv:name="parent">
+                <sv:property sv:name="jcr:primaryType" sv:type="Name">
+                    <sv:value>nt:unstructured</sv:value>
+                </sv:property>
+                <sv:node sv:name="child">
+                    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+                        <sv:value>nt:unstructured</sv:value>
+                    </sv:property>
+                </sv:node>
+            </sv:node>
         </sv:node>
     </sv:node>
 
@@ -195,7 +282,6 @@
         <sv:value>nt:unstructured</sv:value>
       </sv:property>
     </sv:node>
-
   </sv:node>
 
   <sv:node sv:name="testMoveSessionRefreshKeepChanges">
@@ -234,16 +320,7 @@
     </sv:property>
   </sv:node>
 
-  <sv:node sv:name="testNodeRefresh">
-    <sv:property sv:name="jcr:primaryType" sv:type="Name">
-      <sv:value>nt:unstructured</sv:value>
-    </sv:property>
-    <sv:property sv:name="prop" sv:type="String">
-      <sv:value>Old</sv:value>
-    </sv:property>
-  </sv:node>
-
-  <sv:node sv:name="testNodeRefreshKeepChanges">
+  <sv:node sv:name="testNodeRevert">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
       <sv:value>nt:unstructured</sv:value>
     </sv:property>

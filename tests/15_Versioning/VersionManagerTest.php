@@ -27,6 +27,7 @@ class VersionManagerTest extends \PHPCR\Test\BaseCase
     public function testCheckinCheckoutVersion()
     {
         $history = $this->vm->getVersionHistory('/tests_version_base/versioned');
+        $this->assertInstanceOf('PHPCR\Version\VersionHistoryInterface', $history);
         $this->assertEquals(1, count($history->getAllVersions()));
 
         $this->vm->checkout('/tests_version_base/versioned');

@@ -1,6 +1,8 @@
 <?php
 namespace PHPCR\Tests\Writing;
 
+use PHPCR\WorkspaceInterface;
+
 require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 /**
@@ -8,8 +10,8 @@ require_once(__DIR__ . '/../../inc/BaseCase.php');
  */
 class CopyMethodsTest extends \PHPCR\Test\BaseCase
 {
+    /** @var WorkspaceInterface */
     protected $ws;
-
 
     static public function setupBeforeClass($fixtures = '10_Writing/copy')
     {
@@ -31,7 +33,15 @@ class CopyMethodsTest extends \PHPCR\Test\BaseCase
 
         $this->ws->copy($src, $dst);
 
-        // not really required as we haven't read the nodes but...
+        $snode = $this->sharedFixture['session']->getNode($src);
+        $dnode = $this->sharedFixture['session']->getNode($dst);
+        $this->assertNotEquals($snode->getIdentifier(), $dnode->getIdentifier());
+
+        $schild = $this->sharedFixture['session']->getNode("$src/srcFile");
+        $dchild = $this->sharedFixture['session']->getNode("$dst/srcFile");
+        $this->assertNotEquals($schild->getIdentifier(), $dchild->getIdentifier());
+
+        // do not save, workspace should do directly
         $this->renewSession();
 
         $this->assertTrue($this->sharedFixture['session']->nodeExists($dst));
@@ -40,8 +50,25 @@ class CopyMethodsTest extends \PHPCR\Test\BaseCase
         $dnode = $this->sharedFixture['session']->getNode($dst);
         $this->assertNotEquals($snode->getIdentifier(), $dnode->getIdentifier(), 'UUID was not changed');
 
+        $schild = $this->sharedFixture['session']->getNode("$src/srcFile");
+        $dchild = $this->sharedFixture['session']->getNode("$dst/srcFile");
+        $this->assertNotEquals($schild->getIdentifier(), $dchild->getIdentifier());
+
         $this->assertTrue($this->sharedFixture['session']->nodeExists($dst.'/srcFile/jcr:content'), 'Did not copy the whole subgraph');
 
+        $sfile = $this->sharedFixture['session']->getNode("$src/srcFile/jcr:content");
+        $dfile = $this->sharedFixture['session']->getNode("$dst/srcFile/jcr:content");
+        $this->assertEquals($sfile->getPropertyValue('jcr:data'), $dfile->getPropertyValue('jcr:data'));
+
+        $dfile->setProperty('jcr:data', 'changed content');
+        $this->assertNotEquals($sfile->getPropertyValue('jcr:data'), $dfile->getPropertyValue('jcr:data'));
+        $this->sharedFixture['session']->save();
+
+        $this->saveAndRenewSession();
+
+        $sfile = $this->sharedFixture['session']->getNode("$src/srcFile/jcr:content");
+        $dfile = $this->sharedFixture['session']->getNode("$dst/srcFile/jcr:content");
+        $this->assertNotEquals($sfile->getPropertyValue('jcr:data'), $dfile->getPropertyValue('jcr:data'));
     }
 
     /**
