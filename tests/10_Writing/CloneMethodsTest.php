@@ -27,6 +27,8 @@ class CloneMethodsTest extends BaseCase
     {
         parent::setupBeforeClass($fixtures);
 
+        self::$staticSharedFixture['ie']->import('general/additionalWorkspace', 'additionalWorkspace');
+
         self::$destWs = self::$staticSharedFixture['additionalSession']->getWorkspace();
         self::$destWsName = self::$destWs->getName();
 

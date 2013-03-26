@@ -2,6 +2,7 @@
 
 namespace PHPCR\Test;
 
+use PHPCR\NoSuchWorkspaceException;
 use PHPCR\RepositoryFactoryInterface;
 
 /**
@@ -204,6 +205,20 @@ abstract class AbstractLoader
             $credentials = $this->getCredentials();
         }
 
-        return $repository->login($credentials, $workspaceName);
+        try {
+            return $repository->login($credentials, $workspaceName);
+        } catch (NoSuchWorkspaceException $e) {
+            $adminRepository = $this->getRepository(); // get a new repository to log into
+            $session = $adminRepository->login($this->getCredentials(), 'default');
+            $workspace = $session->getWorkspace();
+            if (in_array($workspaceName, $workspace->getAccessibleWorkspaceNames())) {
+                throw new \Exception("Failed to log into $workspaceName");
+            }
+            $workspace->createWorkspace($workspaceName);
+
+            $repository = $this->getRepository(); // get a new repository to log into
+
+            return $repository->login($credentials, $workspaceName);
+        }
     }
 }
