@@ -17,6 +17,8 @@ class QueryResultsTest extends QueryBaseCase
         $this->qr = $this->query->execute();
         //sanity check
         $this->assertInstanceOf('PHPCR\Query\QueryResultInterface', $this->qr);
+
+        //echo get_class($this);
     }
 
     public function testBindValue()
@@ -108,5 +110,70 @@ class QueryResultsTest extends QueryBaseCase
         $this->assertInstanceOf('PHPCR\PropertyInterface', $prop);
         $this->assertEquals('jcr:uuid', $prop->getName());
         $this->assertEquals('14e18ef3-be20-4985-bee9-7bb4763b31de', $prop->getString());
+    }
+
+    public function testCompareNumberFields()
+    {
+        $query = $this->sharedFixture['qm']->createQuery(
+            'SELECT data.longNumberToCompare FROM [nt:unstructured] AS data WHERE data.longNumberToCompare > 2',
+            \PHPCR\Query\QueryInterface::JCR_SQL2
+        );
+        $result = $query->execute();
+
+        $rows = array();
+        foreach ($result->getRows() as $row) {
+            $rows[] = $row;
+        }
+
+        $this->assertEquals(1, count($rows));
+        $this->assertEquals(10, $rows[0]->getValue('data.longNumberToCompare'));
+    }
+
+    public function testCompareStringFields()
+    {
+        $query = $this->sharedFixture['qm']->createQuery(
+            'SELECT data.stringToCompare FROM [nt:unstructured] AS data WHERE data.stringToCompare > "10"',
+            \PHPCR\Query\QueryInterface::JCR_SQL2
+        );
+        $result = $query->execute();
+
+        $rows = array();
+        foreach ($result->getRows() as $row) {
+            $rows[] = $row;
+        }
+
+        $this->assertEquals(1, count($rows));
+        $this->assertEquals(2, $rows[0]->getValue('data.stringToCompare'));
+    }
+
+    public function testBooleanField()
+    {
+        $query = $this->sharedFixture['qm']->createQuery(
+            'SELECT data.thisIsNo FROM [nt:unstructured] as data WHERE data.thisIsNo = false',
+             \PHPCR\Query\QueryInterface::JCR_SQL2
+        );
+        $result = $query->execute();
+
+        $rows = array();
+        foreach ($result->getRows() as $row) {
+            $rows[] = $row;
+        }
+
+        $this->assertEquals(1, count($rows));
+        $this->assertEquals(false, $rows[0]->getValue('data.thisIsNo'));
+
+         $query = $this->sharedFixture['qm']->createQuery(
+            'SELECT data.thisIsYes FROM [nt:unstructured] as data WHERE data.thisIsYes = true',
+             \PHPCR\Query\QueryInterface::JCR_SQL2
+        );
+        $result = $query->execute();
+
+        $rows = array();
+        foreach ($result->getRows() as $row) {
+            $rows[] = $row;
+        }
+
+        $this->assertEquals(1, count($rows));
+        $this->assertEquals(true, $rows[0]->getValue('data.thisIsYes'));
     }
 }
