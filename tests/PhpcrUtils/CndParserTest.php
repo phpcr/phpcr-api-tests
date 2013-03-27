@@ -1,28 +1,26 @@
 <?php
 
-namespace PHPCR\Tests\NodeTypeManagement\CND;
-
-// TODO: fix coding style
+namespace PHPCR\Tests\PhpcrUtils;
 
 require_once(__DIR__ . '/../../inc/BaseCase.php');
 
-use PHPCR\Util\CND\Helper\NodeTypeGenerator,
-    PHPCR\Util\CND\Reader\BufferReader,
-    PHPCR\Util\CND\Parser\CndParser,
-    PHPCR\Util\CND\Scanner\GenericScanner,
-    PHPCR\Util\CND\Scanner\Context,
-    PHPCR\PropertyType,
-    PHPCR\Version\OnParentVersionAction;
+use PHPCR\PropertyType;
+use PHPCR\NodeType\PropertyDefinitionTemplateInterface;
+use PHPCR\Version\OnParentVersionAction;
 
-/**
- * Test for PHPCR\Util\QOM\QomToSql2QueryConverter
- */
+use PHPCR\Util\CND\Helper\NodeTypeGenerator;
+use PHPCR\Util\CND\Reader\BufferReader;
+use PHPCR\Util\CND\Parser\CndParser;
+use PHPCR\Util\CND\Scanner\GenericScanner;
+use PHPCR\Util\CND\Scanner\Context\DefaultScannerContextWithoutSpacesAndComments;
+
 class CndParserTest extends \PHPCR\Test\BaseCase
 {
     function testGenerator()
     {
+        // the worst case example from http://jackrabbit.apache.org/node-type-notation.html
         $cnd = <<<EOT
-/*  An example node type definition */
+/**  An example node type definition */
 <ns ='http://namespace.com/ns'>
 [ns:NodeType] > ns:ParentType1, ns:ParentType2
   orderable mixin
@@ -36,20 +34,12 @@ class CndParserTest extends \PHPCR\Test\BaseCase
     mandatory autocreated protected VERSION
 EOT;
 
-        $reader = new BufferReader($cnd);
-        $scanner = new GenericScanner(new Context\DefaultScannerContextWithoutSpacesAndComments());
-        $queue = $scanner->scan($reader);
-
         //define('DEBUG', true);
 
-        $parser = new CndParser($queue);
+        $parser = new CndParser($this->sharedFixture['session']->getWorkspace()->getNodeTypeManager());
 
-        $generator = new NodeTypeGenerator(
-            $this->sharedFixture['session']->getWorkspace(),
-            $parser->parse()
-        );
+        $res = $parser->parseString($cnd);
 
-        $res = $generator->generate();
         $def = reset($res['nodeTypes']);
 
         $this->assertEquals(array('ns' => 'http://namespace.com/ns'), $res['namespaces']);
@@ -63,6 +53,7 @@ EOT;
         $this->assertFalse($def->isAbstract());
         $this->assertEquals(1, count($def->getPropertyDefinitionTemplates()));
 
+        /** @var $prop PropertyDefinitionTemplateInterface */
         $prop = $def->getPropertyDefinitionTemplates()->getIterator()->current();
 
         $this->assertEquals('ex:property', $prop->getName());
@@ -79,4 +70,12 @@ EOT;
         $this->assertTrue($prop->isQueryOrderable());     // True because there was no "noqueryorder" attribute
     }
 
+    public function testBigFile()
+    {
+        $cnd = file_get_contents(__DIR__ . '/resources/jackrabbit_nodetypes.cnd');
+        $parser = new CndParser($this->sharedFixture['session']->getWorkspace()->getNodeTypeManager());
+
+        $res = $parser->parseString($cnd);
+        // TODO: compare with the types we get from the repository
+    }
 }
