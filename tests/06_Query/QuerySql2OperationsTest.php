@@ -1,6 +1,8 @@
 <?php
 namespace PHPCR\Tests\Query;
 
+use PHPCR\Query\QueryInterface;
+
 require_once('QueryBaseCase.php');
 
 /**
@@ -10,9 +12,10 @@ class QuerySql2OperationsTest extends QueryBaseCase
 {
     public function testQueryField()
     {
+        /** @var $query QueryInterface */
         $query = $this->sharedFixture['qm']->createQuery(
             'SELECT foo FROM [nt:unstructured] WHERE foo = "bar"',
-            \PHPCR\Query\QueryInterface::JCR_SQL2
+            QueryInterface::JCR_SQL2
         );
 
         $this->assertInstanceOf('\PHPCR\Query\QueryInterface', $query);
@@ -33,9 +36,10 @@ class QuerySql2OperationsTest extends QueryBaseCase
 
     public function testQueryFieldSomenull()
     {
+        /** @var $query QueryInterface */
         $query = $this->sharedFixture['qm']->createQuery(
             'SELECT foo FROM [nt:unstructured]',
-            \PHPCR\Query\QueryInterface::JCR_SQL2
+            QueryInterface::JCR_SQL2
         );
 
         $this->assertInstanceOf('\PHPCR\Query\QueryInterface', $query);
@@ -58,9 +62,10 @@ class QuerySql2OperationsTest extends QueryBaseCase
 
     public function testQueryFieldSelector()
     {
+        /** @var $query QueryInterface */
         $query = $this->sharedFixture['qm']->createQuery(
             'SELECT data.foo FROM [nt:unstructured] AS data WHERE data.foo = "bar"',
-            \PHPCR\Query\QueryInterface::JCR_SQL2
+            QueryInterface::JCR_SQL2
         );
 
         $this->assertInstanceOf('\PHPCR\Query\QueryInterface', $query);
@@ -75,6 +80,7 @@ class QuerySql2OperationsTest extends QueryBaseCase
 
     public function testQueryJoin()
     {
+        /** @var $query QueryInterface */
         $query = $this->sharedFixture['qm']->createQuery(
             'SELECT content.longNumber
              FROM [nt:file] AS file
@@ -82,7 +88,7 @@ class QuerySql2OperationsTest extends QueryBaseCase
                ON ISDESCENDANTNODE(content, file)
 
              WHERE content.longNumber = 999',
-            \PHPCR\Query\QueryInterface::JCR_SQL2
+            QueryInterface::JCR_SQL2
         );
 
         $this->assertInstanceOf('\PHPCR\Query\QueryInterface', $query);
@@ -98,6 +104,7 @@ class QuerySql2OperationsTest extends QueryBaseCase
 
     public function testQueryJoinReference()
     {
+        /** @var $query QueryInterface */
         $query = $this->sharedFixture['qm']->createQuery(
             'SELECT source.ref1, target.[jcr:uuid]
              FROM [nt:unstructured] AS source
@@ -105,7 +112,7 @@ class QuerySql2OperationsTest extends QueryBaseCase
                ON source.ref1 = target.[jcr:uuid]
              WHERE ISCHILDNODE(source, "/tests_general_base/idExample/jcr:content")
              ',
-            \PHPCR\Query\QueryInterface::JCR_SQL2
+            QueryInterface::JCR_SQL2
         );
 
         $this->assertInstanceOf('\PHPCR\Query\QueryInterface', $query);
@@ -120,11 +127,12 @@ class QuerySql2OperationsTest extends QueryBaseCase
 
     public function testQueryOrder()
     {
+        /** @var $query QueryInterface */
         $query = $this->sharedFixture['qm']->createQuery(
             'SELECT data.zeronumber
              FROM [nt:unstructured] AS data
              ORDER BY data.zeronumber',
-            \PHPCR\Query\QueryInterface::JCR_SQL2
+            QueryInterface::JCR_SQL2
         );
 
         $this->assertInstanceOf('\PHPCR\Query\QueryInterface', $query);
@@ -140,14 +148,14 @@ class QuerySql2OperationsTest extends QueryBaseCase
 
     public function testQueryMultiValuedProperty()
     {
-        /** @var $query \PHPCR\Query\QueryInterface */
+        /** @var $query QueryInterface */
         $query = $this->sharedFixture['qm']->createQuery(
             'SELECT data.tags
             FROM [nt:unstructured] AS data
             WHERE data.tags = "foo"
             AND data.tags = "bar"
             ',
-            \PHPCR\Query\QueryInterface::JCR_SQL2
+            QueryInterface::JCR_SQL2
         );
 
         $this->assertInstanceOf('\PHPCR\Query\QueryInterface', $query);

@@ -1,6 +1,8 @@
 <?php
 namespace PHPCR\Tests\Query;
 
+use PHPCR\Query\QueryResultInterface;
+
 require_once('QueryBaseCase.php');
 
 /**
@@ -8,6 +10,9 @@ require_once('QueryBaseCase.php');
  */
 class QueryResultsTest extends QueryBaseCase
 {
+    /** @var QueryResultInterface */
+    protected $qr;
+
     public static $expect = array("jcr:createdBy","jcr:created","jcr:primaryType","jcr:path","jcr:score");
 
     public function setUp()
@@ -17,8 +22,6 @@ class QueryResultsTest extends QueryBaseCase
         $this->qr = $this->query->execute();
         //sanity check
         $this->assertInstanceOf('PHPCR\Query\QueryResultInterface', $this->qr);
-
-        //echo get_class($this);
     }
 
     public function testBindValue()
