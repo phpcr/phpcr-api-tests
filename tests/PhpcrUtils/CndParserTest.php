@@ -156,10 +156,10 @@ EOT;
         /** @var $parsed NodeTypeDefinitionInterface */
         $parsed = $def['nt:file'];
         $this->assertEquals('nt:file', $parsed->getName());
-        $this->assertTrue($parsed->isQueryable());
         $this->assertFalse($parsed->isAbstract());
         $this->assertFalse($parsed->hasOrderableChildNodes());
         $this->assertFalse($parsed->isMixin());
+        // queryable default is implementation specific
     }
 
     /**
@@ -185,7 +185,7 @@ EOT;
         $this->assertEquals(array('ns:ParentType1', 'ns:ParentType2'), $def->getDeclaredSuperTypeNames());
         $this->assertTrue($def->hasOrderableChildNodes());
         $this->assertTrue($def->isMixin());
-        $this->assertTrue($def->isQueryable());
+        // queryable default is implementation specific
         $this->assertFalse($def->isAbstract());
         $this->assertEquals(1, count($def->getPropertyDefinitionTemplates()));
 
