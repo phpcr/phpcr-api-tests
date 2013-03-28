@@ -607,8 +607,7 @@
   - rep:disabled (STRING) protected
 
 [rep:Group] > rep:Authorizable
-// TODO: this seems a bug to me, multiple is not allowed on child node definitions
-//  + rep:members (rep:Members) = rep:Members multiple protected VERSION
+  + rep:members (rep:Members) = rep:Members multiple protected VERSION
   - rep:members (WEAKREFERENCE) protected multiple < 'rep:Authorizable'
 
 [rep:AuthorizableFolder] > nt:hierarchyNode
@@ -617,8 +616,7 @@
 
 [rep:Members]
   orderable
-// TODO: this seems a bug to me, multiple is not allowed on child node definitions
-//  + * (rep:Members) = rep:Members protected multiple
+  + * (rep:Members) = rep:Members protected multiple
   - * (WEAKREFERENCE) protected < 'rep:Authorizable'
 
 // -----------------------------------------------------------------------------
