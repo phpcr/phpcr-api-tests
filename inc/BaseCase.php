@@ -113,7 +113,7 @@ abstract class BaseCase extends \PHPUnit_Framework_TestCase
         $test = "$case::".$this->getName();
 
         if (! self::$loader->getTestSupported($chapter, $case, $test)) {
-            $this->markTestSkipped('Feature not supported by this implementation');
+            $this->markTestSkipped('Test ' . $this->getName() . ' not supported by this implementation');
         }
 
         $this->sharedFixture = self::$staticSharedFixture;
