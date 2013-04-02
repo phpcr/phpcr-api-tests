@@ -43,7 +43,6 @@ class CndParserTest extends \PHPCR\Test\BaseCase
         $this->assertExampleCnd($res);
     }
 
-
     public function testParseString()
     {
         // the "worst case" example from http://jackrabbit.apache.org/node-type-notation.html
@@ -62,12 +61,13 @@ class CndParserTest extends \PHPCR\Test\BaseCase
     mandatory autocreated protected VERSION
 EOT;
 
-
         $res = $this->cndParser->parseString($cnd);
         $this->assertExampleCnd($res);
     }
 
     /**
+     * Have invalid-string in the middle of options for a property
+     *
      * @expectedException \PHPCR\Util\CND\Exception\ParserException
      */
     public function testParseError()
@@ -99,6 +99,9 @@ EOT;
     }
 
     /**
+     * Have a comment that is never closed. Starting that at the end of the
+     * file turned out to be particularly nasty.
+     *
      * @expectedException \PHPCR\Util\CND\Exception\ScannerException
      */
     public function testScannerErrorComment()
@@ -111,6 +114,8 @@ EOT;
     }
 
     /**
+     * Have a newline in a name (here the ns declaration)
+     *
      * @expectedException \PHPCR\Util\CND\Exception\ScannerException
      */
     public function testScannerErrorNewline()
@@ -179,7 +184,7 @@ EOT;
         /** @var $def NodeTypeDefinitionInterface */
         list($name, $def) = each($res['nodeTypes']);
 
-            $this->assertEquals('ns:NodeType', $name);
+        $this->assertEquals('ns:NodeType', $name);
         $this->assertInstanceOf('\PHPCR\NodeType\NodeTypeTemplateInterface', $def);
         $this->assertEquals('ns:NodeType', $def->getName());
         $this->assertEquals(array('ns:ParentType1', 'ns:ParentType2'), $def->getDeclaredSuperTypeNames());
