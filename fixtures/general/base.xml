@@ -370,6 +370,9 @@
                 <sv:value>10</sv:value>
             </sv:property>
 
+            <!-- at the very end of the document on purpose -->
+            <sv:property sv:name="multi-empty" sv:type="String" sv:multiple="true"></sv:property>
+            <sv:property sv:name="multi-empty-selfclosing" sv:type="String" sv:multiple="true"/>
         </sv:node>
     </sv:node>
 
