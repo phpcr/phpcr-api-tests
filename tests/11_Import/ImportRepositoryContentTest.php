@@ -60,7 +60,7 @@ class ImportRepositoryContentTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * @expectedException PHPCR\PathNotFoundException
+     * @expectedException \PHPCR\PathNotFoundException
      */
     public function testImportXMLSystemPathNotFoundSession()
     {
@@ -68,7 +68,7 @@ class ImportRepositoryContentTest extends \PHPCR\Test\BaseCase
         $session->importXML('/inexistent-path', __DIR__.'/../../fixtures/general/base.xml', ImportUUIDBehaviorInterface::IMPORT_UUID_COLLISION_THROW);
     }
     /**
-     * @expectedException PHPCR\PathNotFoundException
+     * @expectedException \PHPCR\PathNotFoundException
      */
     public function testImportXMLSystemPathNotFoundWorkspace()
     {
@@ -77,7 +77,7 @@ class ImportRepositoryContentTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * @expectedException PHPCR\ItemExistsException
+     * @expectedException \PHPCR\ItemExistsException
      */
     public function testImportXMLSystemIdCollisionSession()
     {
@@ -87,7 +87,7 @@ class ImportRepositoryContentTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * @expectedException PHPCR\ItemExistsException
+     * @expectedException \PHPCR\ItemExistsException
      */
     public function testImportXMLSystemIdCollisionWorkspace()
     {
@@ -98,7 +98,7 @@ class ImportRepositoryContentTest extends \PHPCR\Test\BaseCase
 
     /**
      * try to replace the path to which we are importing atm
-     * @expectedException PHPCR\NodeType\ConstraintViolationException
+     * @expectedException \PHPCR\NodeType\ConstraintViolationException
      */
     public function testImportXMLUuidRemoveParentSession()
     {
@@ -109,7 +109,7 @@ class ImportRepositoryContentTest extends \PHPCR\Test\BaseCase
 
     /**
      * try to replace the path to which we are importing atm
-     * @expectedException PHPCR\NodeType\ConstraintViolationException
+     * @expectedException \PHPCR\NodeType\ConstraintViolationException
      */
     public function testImportXMLUuidRemoveParentWorkspace()
     {
@@ -316,7 +316,7 @@ class ImportRepositoryContentTest extends \PHPCR\Test\BaseCase
     /**
      * Provoke an io error
      *
-     * @expectedException RuntimeException
+     * @expectedException \RuntimeException
      */
     public function testImportXMLNoFile()
     {
