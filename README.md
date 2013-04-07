@@ -1,6 +1,6 @@
 # PHPCR API tests
 
-Test suite to test implemenations against the PHPCR API interfaces.
+Test suite to test implementations against the PHPCR API interfaces.
 
 The tests are organised by feature, with the numbers referencing the chapter
 numbers in the JCR v2.0 specification, JSR 283.

@@ -1,6 +1,7 @@
 <?php
 namespace PHPCR\Test;
 
+use PHPCR\SessionInterface;
 use PHPCR\NodeInterface;
 
 // PHPUnit 3.4 compat
@@ -13,7 +14,18 @@ if (method_exists('PHPUnit_Util_Filter', 'addDirectoryToFilter')) {
  */
 abstract class BaseCase extends \PHPUnit_Framework_TestCase
 {
-    protected $path = ''; // Describes the path to the test
+    /**
+     * Describes the path to the node for this test, used with writing tests
+     *
+     * @var string
+     */
+    protected $path = '';
+
+    /**
+     *
+     * @var SessionInterface
+     */
+    protected $session;
 
     /**
      * The root node of the fixture, initialized for each test
@@ -158,7 +170,7 @@ abstract class BaseCase extends \PHPUnit_Framework_TestCase
      */
     protected function saveAndRenewSession()
     {
-        $this->sharedFixture['session']->save();
+        $this->session->save();
         $this->renewSession();
         return $this->sharedFixture['session'];
     }
@@ -172,9 +184,10 @@ abstract class BaseCase extends \PHPUnit_Framework_TestCase
      */
     protected function initProperties()
     {
+        $this->session = $this->sharedFixture['session'];
         $this->node = null;
 
-        $this->rootNode = $this->sharedFixture['session']->getRootNode();
+        $this->rootNode = $this->session->getRootNode();
 
         $children = $this->rootNode->getNodes("tests_*");
         $child = current($children);
