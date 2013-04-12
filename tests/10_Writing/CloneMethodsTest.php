@@ -87,7 +87,8 @@ class CloneMethodsTest extends BaseCase
     }
 
     /**
-     * Clone a referenceable node, then clone again with 'remove existing' feature.
+     * Clone a referenceable node, then clone again with removeExisting = true
+     * This should overwrite the existing, corresponding node (same UUID)
      */
     public function testCloneReferenceableRemoveExisting()
     {
@@ -127,6 +128,9 @@ class CloneMethodsTest extends BaseCase
     }
 
     /**
+     * Clone a referenceable node, then clone again with removeExisting = false
+     * This should cause an exception, even with a corresponding node (same UUID)
+     *
      * @expectedException   \PHPCR\ItemExistsException
      */
     public function testCloneReferenceableNoRemoveExisting()
@@ -149,6 +153,10 @@ class CloneMethodsTest extends BaseCase
     }
 
     /**
+     * Clone a referenceable node, then clone again with removeExisting = false.
+     * Even though the second clone is to a new location, because a corresponding node (same UUID)
+     * already exists in the destination workspace, an exception should still be thrown.
+     *
      * @expectedException   \PHPCR\ItemExistsException
      */
     public function testCloneNoRemoveExistingNewLocation()
@@ -169,6 +177,36 @@ class CloneMethodsTest extends BaseCase
         $this->assertCount(3, $clonedNode->getProperties());
 
         self::$destWs->cloneFrom($this->srcWsName, $srcNode, $secondDstNode, false);
+    }
+
+    /**
+     * Check that we don't inadvertently create same name siblings (SNS) with removeExisting = true.
+     * This can happen when cloning from one workspace to another, when a node already exists at the
+     * destination but is not a corresponding node (the nodes have different UUIDs)
+     *
+     * @expectedException   \PHPCR\ItemExistsException
+     */
+    public function testExistingNonCorrespondingNodeRemoveExisting()
+    {
+        $srcNode = '/tests_write_manipulation_clone/testWorkspaceCloneNonCorresponding/sourceRemoveExisting';
+        $dstNode = '/tests_additional_workspace/testWorkspaceCloneNonCorresponding/destRemoveExisting';
+
+        self::$destWs->cloneFrom($this->srcWsName, $srcNode, $dstNode, true);
+    }
+
+    /**
+     * Check that we don't inadvertently create same name siblings (SNS) with removeExisting = false.
+     * This can happen when cloning from one workspace to another, when a node already exists at the
+     * destination but is not a corresponding node (the nodes have different UUIDs)
+     *
+     * @expectedException   \PHPCR\ItemExistsException
+     */
+    public function testExistingNonCorrespondingNodeNoRemoveExisting()
+    {
+        $srcNode = '/tests_write_manipulation_clone/testWorkspaceCloneNonCorresponding/sourceNoRemoveExisting';
+        $dstNode = '/tests_additional_workspace/testWorkspaceCloneNonCorresponding/destNoRemoveExisting';
+
+        self::$destWs->cloneFrom($this->srcWsName, $srcNode, $dstNode, false);
     }
 
     /**
@@ -256,7 +294,7 @@ class CloneMethodsTest extends BaseCase
     }
 
     /**
-     * Clone a non-referenceable node, then clone again with 'remove existing' feature.
+     * Clone a non-referenceable node, then clone again with removeExisting = true
      */
     public function testCloneRemoveExistingNonReferenceable()
     {
