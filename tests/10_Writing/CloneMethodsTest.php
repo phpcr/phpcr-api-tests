@@ -295,6 +295,8 @@ class CloneMethodsTest extends BaseCase
 
     /**
      * Clone a non-referenceable node, then clone again with removeExisting = true
+     *
+     * @expectedException   \PHPCR\ItemExistsException
      */
     public function testCloneRemoveExistingNonReferenceable()
     {
@@ -310,32 +312,8 @@ class CloneMethodsTest extends BaseCase
         $this->checkNodeProperty($clonedNode, 'jcr:primaryType', 'nt:unstructured');
         $this->checkNodeProperty($clonedNode, 'foo', 'bar_4');
 
-        // Update the source node after cloning it
-        $node = $this->srcWs->getSession()->getNode($srcNode);
-        $node->setProperty('foo', 'bar-updated');
-        $node->setProperty('newProperty', 'hello');
-        $this->srcWs->getSession()->save();
-
         // Clone the updated source node
         self::$destWs->cloneFrom($this->srcWsName, $srcNode, $dstNode, true);
-
-        $this->renewDestinationSession();
-
-        // Check the first cloned node again; it should not have changed
-        $clonedNode = $destSession->getNode($dstNode);
-        $this->assertInstanceOf('PHPCR\NodeInterface', $clonedNode);
-        $this->assertCount(2, $clonedNode->getProperties());
-        $this->checkNodeProperty($clonedNode, 'jcr:primaryType', 'nt:unstructured');
-        $this->checkNodeProperty($clonedNode, 'foo', 'bar_4');
-
-        // Second cloned node created with [2] appended to name
-        $replacedDstNode = $srcNode . '[2]';
-        $clonedReplacedNode = self::$destWs->getSession()->getNode($replacedDstNode);
-        $this->assertInstanceOf('PHPCR\NodeInterface', $clonedReplacedNode);
-        $this->assertCount(3, $clonedReplacedNode->getProperties());
-        $this->checkNodeProperty($clonedReplacedNode, 'jcr:primaryType', 'nt:unstructured');
-        $this->checkNodeProperty($clonedReplacedNode, 'foo', 'bar-updated');
-        $this->checkNodeProperty($clonedReplacedNode, 'newProperty', 'hello');
     }
 
     /**
