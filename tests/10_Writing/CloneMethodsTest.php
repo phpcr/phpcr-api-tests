@@ -188,6 +188,8 @@ class CloneMethodsTest extends BaseCase
      */
     public function testExistingNonCorrespondingNodeRemoveExisting()
     {
+        $this->skipIfSameNameSiblingsSupported();
+
         $srcNode = '/tests_write_manipulation_clone/testWorkspaceCloneNonCorresponding/sourceRemoveExisting';
         $dstNode = '/tests_additional_workspace/testWorkspaceCloneNonCorresponding/destRemoveExisting';
 
@@ -203,6 +205,8 @@ class CloneMethodsTest extends BaseCase
      */
     public function testExistingNonCorrespondingNodeNoRemoveExisting()
     {
+        $this->skipIfSameNameSiblingsSupported();
+
         $srcNode = '/tests_write_manipulation_clone/testWorkspaceCloneNonCorresponding/sourceNoRemoveExisting';
         $dstNode = '/tests_additional_workspace/testWorkspaceCloneNonCorresponding/destNoRemoveExisting';
 
@@ -300,6 +304,8 @@ class CloneMethodsTest extends BaseCase
      */
     public function testCloneRemoveExistingNonReferenceable()
     {
+        $this->skipIfSameNameSiblingsSupported();
+
         $srcNode = '/tests_write_manipulation_clone/testWorkspaceClone/nonReferenceableRemoveExisting';
         $dstNode = $srcNode;
         $destSession = self::$destWs->getSession();
@@ -321,6 +327,8 @@ class CloneMethodsTest extends BaseCase
      */
     public function testCloneNonReferenceableNoRemoveExisting()
     {
+        $this->skipIfSameNameSiblingsSupported();
+
         $srcNode = '/tests_write_manipulation_clone/testWorkspaceClone/nonReferenceableNoRemoveExisting';
         $dstNode = $srcNode;
         $destSession = self::$destWs->getSession();
@@ -513,5 +521,12 @@ class CloneMethodsTest extends BaseCase
     {
         $destSession = self::$loader->getRepository()->login(self::$loader->getCredentials(), self::$destWsName);
         self::$destWs = $destSession->getWorkspace();
+    }
+
+    private function skipIfSameNameSiblingsSupported()
+    {
+        if (self::$staticSharedFixture['session']->getRepository()->getDescriptor('node.type.management.same.name.siblings.supported')) {
+            $this->markTestSkipped('Test does not yet cover repositories that support same name siblings.');
+        }
     }
 }
