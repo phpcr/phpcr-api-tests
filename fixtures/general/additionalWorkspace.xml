@@ -14,8 +14,51 @@
          xmlns:sv="http://www.jcp.org/jcr/sv/1.0"
          xmlns:rep="internal"
 
-         sv:name="tests_general_additional_workspace">
+         sv:name="tests_additional_workspace">
+  <sv:property sv:name="jcr:primaryType" sv:type="Name">
+    <sv:value>nt:unstructured</sv:value>
+  </sv:property>
+  <sv:node sv:name="testWorkspaceCloneNonCorresponding">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
-        <sv:value>nt:unstructured</sv:value>
+      <sv:value>nt:unstructured</sv:value>
     </sv:property>
+    <sv:node sv:name="destRemoveExisting">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>nt:unstructured</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+        <sv:value>mix:referenceable</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:uuid" sv:type="String">
+        <sv:value>f8019868-3533-4519-a077-9c8601950627</sv:value>
+      </sv:property>
+    </sv:node>
+    <sv:node sv:name="destNoRemoveExisting">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>nt:unstructured</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+        <sv:value>mix:referenceable</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:uuid" sv:type="String">
+        <sv:value>9aee563c-b5b7-44f7-a16d-f94116f4dfba</sv:value>
+      </sv:property>
+    </sv:node>
+  </sv:node>
+  <sv:node sv:name="testWorkspaceCloneReferenceable">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>nt:unstructured</sv:value>
+    </sv:property>
+    <sv:node sv:name="destExistingNode">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>nt:unstructured</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+        <sv:value>mix:referenceable</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:uuid" sv:type="String">
+        <sv:value>a6e94d5f-6aee-44c8-878e-afca80d3e41c</sv:value>
+      </sv:property>
+    </sv:node>
+  </sv:node>
 </sv:node>

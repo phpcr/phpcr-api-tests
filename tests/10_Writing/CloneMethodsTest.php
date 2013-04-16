@@ -87,7 +87,8 @@ class CloneMethodsTest extends BaseCase
     }
 
     /**
-     * Clone a referenceable node, then clone again with 'remove existing' feature.
+     * Clone a referenceable node, then clone again with removeExisting = true
+     * This should overwrite the existing, corresponding node (same UUID)
      */
     public function testCloneReferenceableRemoveExisting()
     {
@@ -127,6 +128,9 @@ class CloneMethodsTest extends BaseCase
     }
 
     /**
+     * Clone a referenceable node, then clone again with removeExisting = false
+     * This should cause an exception, even with a corresponding node (same UUID)
+     *
      * @expectedException   \PHPCR\ItemExistsException
      */
     public function testCloneReferenceableNoRemoveExisting()
@@ -149,6 +153,10 @@ class CloneMethodsTest extends BaseCase
     }
 
     /**
+     * Clone a referenceable node, then clone again with removeExisting = false.
+     * Even though the second clone is to a new location, because a corresponding node (same UUID)
+     * already exists in the destination workspace, an exception should still be thrown.
+     *
      * @expectedException   \PHPCR\ItemExistsException
      */
     public function testCloneNoRemoveExistingNewLocation()
@@ -169,6 +177,55 @@ class CloneMethodsTest extends BaseCase
         $this->assertCount(3, $clonedNode->getProperties());
 
         self::$destWs->cloneFrom($this->srcWsName, $srcNode, $secondDstNode, false);
+    }
+
+    /**
+     * Check that we don't inadvertently create same name siblings (SNS) with removeExisting = true.
+     * This can happen when cloning from one workspace to another, when a node already exists at the
+     * destination but is not a corresponding node (the nodes have different UUIDs)
+     *
+     * @expectedException   \PHPCR\ItemExistsException
+     */
+    public function testExistingNonCorrespondingNodeRemoveExisting()
+    {
+        $this->skipIfSameNameSiblingsSupported();
+
+        $srcNode = '/tests_write_manipulation_clone/testWorkspaceCloneNonCorresponding/sourceRemoveExisting';
+        $dstNode = '/tests_additional_workspace/testWorkspaceCloneNonCorresponding/destRemoveExisting';
+
+        self::$destWs->cloneFrom($this->srcWsName, $srcNode, $dstNode, true);
+    }
+
+    /**
+     * Check that we don't inadvertently create same name siblings (SNS) with removeExisting = false.
+     * This can happen when cloning from one workspace to another, when a node already exists at the
+     * destination but is not a corresponding node (the nodes have different UUIDs)
+     *
+     * @expectedException   \PHPCR\ItemExistsException
+     */
+    public function testExistingNonCorrespondingNodeNoRemoveExisting()
+    {
+        $this->skipIfSameNameSiblingsSupported();
+
+        $srcNode = '/tests_write_manipulation_clone/testWorkspaceCloneNonCorresponding/sourceNoRemoveExisting';
+        $dstNode = '/tests_additional_workspace/testWorkspaceCloneNonCorresponding/destNoRemoveExisting';
+
+        self::$destWs->cloneFrom($this->srcWsName, $srcNode, $dstNode, false);
+    }
+
+    /**
+     * Test when source node is non-referenceable but a referenceable node exists at destination path
+     *
+     * @expectedException   \PHPCR\ItemExistsException
+     */
+    public function testReferenceableDestNodeWithNonReferenceableSourceNode()
+    {
+        $this->skipIfSameNameSiblingsSupported();
+
+        $srcNode = '/tests_write_manipulation_clone/testWorkspaceClone/nonReferenceable';
+        $dstNode = '/tests_additional_workspace/testWorkspaceCloneReferenceable/destExistingNode';
+
+        self::$destWs->cloneFrom($this->srcWsName, $srcNode, $dstNode, true);
     }
 
     /**
@@ -256,10 +313,14 @@ class CloneMethodsTest extends BaseCase
     }
 
     /**
-     * Clone a non-referenceable node, then clone again with 'remove existing' feature.
+     * Clone a non-referenceable node, then clone again with removeExisting = true
+     *
+     * @expectedException   \PHPCR\ItemExistsException
      */
     public function testCloneRemoveExistingNonReferenceable()
     {
+        $this->skipIfSameNameSiblingsSupported();
+
         $srcNode = '/tests_write_manipulation_clone/testWorkspaceClone/nonReferenceableRemoveExisting';
         $dstNode = $srcNode;
         $destSession = self::$destWs->getSession();
@@ -272,32 +333,8 @@ class CloneMethodsTest extends BaseCase
         $this->checkNodeProperty($clonedNode, 'jcr:primaryType', 'nt:unstructured');
         $this->checkNodeProperty($clonedNode, 'foo', 'bar_4');
 
-        // Update the source node after cloning it
-        $node = $this->srcWs->getSession()->getNode($srcNode);
-        $node->setProperty('foo', 'bar-updated');
-        $node->setProperty('newProperty', 'hello');
-        $this->srcWs->getSession()->save();
-
         // Clone the updated source node
         self::$destWs->cloneFrom($this->srcWsName, $srcNode, $dstNode, true);
-
-        $this->renewDestinationSession();
-
-        // Check the first cloned node again; it should not have changed
-        $clonedNode = $destSession->getNode($dstNode);
-        $this->assertInstanceOf('PHPCR\NodeInterface', $clonedNode);
-        $this->assertCount(2, $clonedNode->getProperties());
-        $this->checkNodeProperty($clonedNode, 'jcr:primaryType', 'nt:unstructured');
-        $this->checkNodeProperty($clonedNode, 'foo', 'bar_4');
-
-        // Second cloned node created with [2] appended to name
-        $replacedDstNode = $srcNode . '[2]';
-        $clonedReplacedNode = self::$destWs->getSession()->getNode($replacedDstNode);
-        $this->assertInstanceOf('PHPCR\NodeInterface', $clonedReplacedNode);
-        $this->assertCount(3, $clonedReplacedNode->getProperties());
-        $this->checkNodeProperty($clonedReplacedNode, 'jcr:primaryType', 'nt:unstructured');
-        $this->checkNodeProperty($clonedReplacedNode, 'foo', 'bar-updated');
-        $this->checkNodeProperty($clonedReplacedNode, 'newProperty', 'hello');
     }
 
     /**
@@ -305,6 +342,8 @@ class CloneMethodsTest extends BaseCase
      */
     public function testCloneNonReferenceableNoRemoveExisting()
     {
+        $this->skipIfSameNameSiblingsSupported();
+
         $srcNode = '/tests_write_manipulation_clone/testWorkspaceClone/nonReferenceableNoRemoveExisting';
         $dstNode = $srcNode;
         $destSession = self::$destWs->getSession();
@@ -497,5 +536,12 @@ class CloneMethodsTest extends BaseCase
     {
         $destSession = self::$loader->getRepository()->login(self::$loader->getCredentials(), self::$destWsName);
         self::$destWs = $destSession->getWorkspace();
+    }
+
+    private function skipIfSameNameSiblingsSupported()
+    {
+        if (self::$staticSharedFixture['session']->getRepository()->getDescriptor('node.type.management.same.name.siblings.supported')) {
+            $this->markTestSkipped('Test does not yet cover repositories that support same name siblings.');
+        }
     }
 }
