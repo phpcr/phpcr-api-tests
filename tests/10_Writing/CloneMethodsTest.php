@@ -214,6 +214,21 @@ class CloneMethodsTest extends BaseCase
     }
 
     /**
+     * Test when source node is non-referenceable but a referenceable node exists at destination path
+     *
+     * @expectedException   \PHPCR\ItemExistsException
+     */
+    public function testReferenceableDestNodeWithNonReferenceableSourceNode()
+    {
+        $this->skipIfSameNameSiblingsSupported();
+
+        $srcNode = '/tests_write_manipulation_clone/testWorkspaceClone/nonReferenceable';
+        $dstNode = '/tests_additional_workspace/testWorkspaceCloneReferenceable/destExistingNode';
+
+        self::$destWs->cloneFrom($this->srcWsName, $srcNode, $dstNode, true);
+    }
+
+    /**
      * @expectedException   \PHPCR\NoSuchWorkspaceException
      */
     public function testCloneNoSuchWorkspace()
