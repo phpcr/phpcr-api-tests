@@ -43,4 +43,105 @@
       </sv:property>
     </sv:node>
   </sv:node>
+  <sv:node sv:name="testRemoveManyNodes">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>nt:unstructured</sv:value>
+    </sv:property>
+    <sv:node sv:name="child">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>nt:unstructured</sv:value>
+      </sv:property>
+      <sv:property sv:name="childNumber" sv:type="String">
+        <sv:value>1</sv:value>
+      </sv:property>
+    </sv:node>
+    <sv:node sv:name="child">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>nt:unstructured</sv:value>
+      </sv:property>
+      <sv:property sv:name="childNumber" sv:type="String">
+        <sv:value>2</sv:value>
+      </sv:property>
+    </sv:node>
+    <sv:node sv:name="child">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>nt:unstructured</sv:value>
+      </sv:property>
+      <sv:property sv:name="childNumber" sv:type="String">
+        <sv:value>3</sv:value>
+      </sv:property>
+    </sv:node>
+    <sv:node sv:name="child">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>nt:unstructured</sv:value>
+      </sv:property>
+      <sv:property sv:name="childNumber" sv:type="String">
+        <sv:value>4</sv:value>
+      </sv:property>
+    </sv:node>
+    <sv:node sv:name="child">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>nt:unstructured</sv:value>
+      </sv:property>
+      <sv:property sv:name="childNumber" sv:type="String">
+        <sv:value>5</sv:value>
+      </sv:property>
+    </sv:node>
+    <sv:node sv:name="child">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>nt:unstructured</sv:value>
+      </sv:property>
+      <sv:property sv:name="childNumber" sv:type="String">
+        <sv:value>6</sv:value>
+      </sv:property>
+    </sv:node>
+    <sv:node sv:name="child">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>nt:unstructured</sv:value>
+      </sv:property>
+      <sv:property sv:name="childNumber" sv:type="String">
+        <sv:value>7</sv:value>
+      </sv:property>
+    </sv:node>
+    <sv:node sv:name="child">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>nt:unstructured</sv:value>
+      </sv:property>
+      <sv:property sv:name="childNumber" sv:type="String">
+        <sv:value>8</sv:value>
+      </sv:property>
+    </sv:node>
+    <sv:node sv:name="child">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>nt:unstructured</sv:value>
+      </sv:property>
+      <sv:property sv:name="childNumber" sv:type="String">
+        <sv:value>9</sv:value>
+      </sv:property>
+    </sv:node>
+    <sv:node sv:name="child">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>nt:unstructured</sv:value>
+      </sv:property>
+      <sv:property sv:name="childNumber" sv:type="String">
+        <sv:value>10</sv:value>
+      </sv:property>
+    </sv:node>
+    <sv:node sv:name="child">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>nt:unstructured</sv:value>
+      </sv:property>
+      <sv:property sv:name="childNumber" sv:type="String">
+        <sv:value>11</sv:value>
+      </sv:property>
+    </sv:node>
+    <sv:node sv:name="child">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>nt:unstructured</sv:value>
+      </sv:property>
+      <sv:property sv:name="childNumber" sv:type="String">
+        <sv:value>12</sv:value>
+      </sv:property>
+    </sv:node>
+  </sv:node>
 </sv:node>
