@@ -36,7 +36,6 @@ class DeleteMethodsSnsTest extends \PHPCR\Test\BaseCase
      */
     public function testRemoveItemMultiple()
     {
-$this->markTestSkipped();
         $parentPath = '/tests_write_manipulation_delete_sns/testRemoveSnsBySession';
         $session = $this->sharedFixture['session'];
         $childNames = array('child', 'child[2]', 'child[3]');
@@ -63,7 +62,6 @@ $this->markTestSkipped();
      */
     public function testRemoveNode()
     {
-$this->markTestSkipped();
         $parentPath = '/tests_write_manipulation_delete_sns/testRemoveSnsByNode';
         $session = $this->sharedFixture['session'];
         $childNames = array('child', 'child[2]', 'child[3]');
