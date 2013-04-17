@@ -1,28 +1,19 @@
 <?php
-namespace PHPCR\Tests\Writing;
+namespace PHPCR\Tests\SameNameSiblings;
 
 require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 /**
  * Test for deleting same name siblings (SNS).
  *
- * The fixtures needed for this test can only be loaded for transports that
- * support SNS.
- *
  * At this point, we are only testing for the ability to delete existing SNS;
  * creating or manipulating them is not supported.
  */
-class DeleteMethodsSnsTest extends \PHPCR\Test\BaseCase
+class DeleteMethodsTest extends \PHPCR\Test\BaseCase
 {
-    static public function setupBeforeClass($fixtures = '10_Writing/delete')
+    static public function setupBeforeClass($fixtures = '22_SameNameSiblings/delete')
     {
-        parent::setupBeforeClass(null);
-
-        if (! self::includeSameNameSiblings()) {
-            self::markTestSkipped();
-        }
-
-        self::$staticSharedFixture['ie']->import('10_Writing/deletesns');
+        parent::setupBeforeClass($fixtures);
     }
 
     public function setUp()
@@ -143,20 +134,6 @@ class DeleteMethodsSnsTest extends \PHPCR\Test\BaseCase
             $this->assertEquals($parentPath . '/' . $child['key'], $node->getPath());
             $this->assertEquals($child['value'], $node->getProperty('childNumber')->getValue());
         }
-    }
-
-    /**
-     * Determine if tests for deleting same name siblings should be included
-     *
-     * @return bool
-     */
-    private static function includeSameNameSiblings()
-    {
-        // Special case; we should really use getRepository()->getDescriptor()
-        // but in this case we don't support creating same name siblings,
-        // but need to be able to delete them.
-        $session = self::$staticSharedFixture['session'];
-        return 'Jackalope\Transport\Jackrabbit\Client' == get_class($session->getTransport());
     }
 
     /**
