@@ -13,8 +13,12 @@ class QuerySql2OperationsTest extends QueryBaseCase
     public function testQueryField()
     {
         /** @var $query QueryInterface */
-        $query = $this->sharedFixture['qm']->createQuery(
-            'SELECT foo FROM [nt:unstructured] WHERE foo = "bar"',
+        $query = $this->sharedFixture['qm']->createQuery('
+            SELECT foo
+            FROM [nt:unstructured]
+            WHERE foo = "bar"
+              AND (ISSAMENODE([/tests_general_base]) OR ISDESCENDANTNODE([/tests_general_base]))
+            ',
             QueryInterface::JCR_SQL2
         );
 
@@ -37,8 +41,11 @@ class QuerySql2OperationsTest extends QueryBaseCase
     public function testQueryFieldSomenull()
     {
         /** @var $query QueryInterface */
-        $query = $this->sharedFixture['qm']->createQuery(
-            'SELECT foo FROM [nt:unstructured]',
+        $query = $this->sharedFixture['qm']->createQuery('
+            SELECT foo
+            FROM [nt:unstructured]
+            WHERE ISDESCENDANTNODE([/tests_general_base])
+            ',
             QueryInterface::JCR_SQL2
         );
 
@@ -50,21 +57,25 @@ class QuerySql2OperationsTest extends QueryBaseCase
             $vals[] = ($node->hasProperty('foo') ? $node->getPropertyValue('foo') : null);
         }
         $this->assertContains('bar', $vals);
-        $this->assertEquals(10, count($vals));
+        $this->assertEquals(9, count($vals));
 
         $vals = array();
         foreach ($result->getRows() as $row) {
             $vals[] = $row->getValue('foo');
         }
         $this->assertContains('bar', $vals);
-        $this->assertEquals(10, count($vals));
+        $this->assertEquals(9, count($vals));
     }
 
     public function testQueryFieldSelector()
     {
         /** @var $query QueryInterface */
-        $query = $this->sharedFixture['qm']->createQuery(
-            'SELECT data.foo FROM [nt:unstructured] AS data WHERE data.foo = "bar"',
+        $query = $this->sharedFixture['qm']->createQuery('
+            SELECT data.foo
+            FROM [nt:unstructured] AS data
+            WHERE data.foo = "bar"
+              AND ISDESCENDANTNODE([/tests_general_base])
+            ',
             QueryInterface::JCR_SQL2
         );
 
@@ -81,13 +92,14 @@ class QuerySql2OperationsTest extends QueryBaseCase
     public function testQueryJoin()
     {
         /** @var $query QueryInterface */
-        $query = $this->sharedFixture['qm']->createQuery(
-            'SELECT content.longNumber
-             FROM [nt:file] AS file
-               INNER JOIN [nt:unstructured] AS content
-               ON ISDESCENDANTNODE(content, file)
-
-             WHERE content.longNumber = 999',
+        $query = $this->sharedFixture['qm']->createQuery('
+            SELECT content.longNumber
+            FROM [nt:file] AS file
+              INNER JOIN [nt:unstructured] AS content
+                ON ISDESCENDANTNODE(content, file)
+            WHERE content.longNumber = 999
+              AND ISDESCENDANTNODE(file, [/tests_general_base])
+            ',
             QueryInterface::JCR_SQL2
         );
 
@@ -128,10 +140,12 @@ class QuerySql2OperationsTest extends QueryBaseCase
     public function testQueryOrder()
     {
         /** @var $query QueryInterface */
-        $query = $this->sharedFixture['qm']->createQuery(
-            'SELECT data.zeronumber
-             FROM [nt:unstructured] AS data
-             ORDER BY data.zeronumber',
+        $query = $this->sharedFixture['qm']->createQuery('
+            SELECT data.zeronumber
+            FROM [nt:unstructured] AS data
+            WHERE ISDESCENDANTNODE([/tests_general_base])
+            ORDER BY data.zeronumber
+            ',
             QueryInterface::JCR_SQL2
         );
 
@@ -143,17 +157,18 @@ class QuerySql2OperationsTest extends QueryBaseCase
             $vals[] = $row->getValue('data.zeronumber');
         }
         // rows that do not have that field are null. empty is before fields with values
-        $this->assertEquals(array(null, null, null, null, null, null, null, null, null, 0), $vals);
+        $this->assertEquals(array(null, null, null, null, null, null, null, null, 0), $vals);
     }
 
     public function testQueryMultiValuedProperty()
     {
         /** @var $query QueryInterface */
-        $query = $this->sharedFixture['qm']->createQuery(
-            'SELECT data.tags
+        $query = $this->sharedFixture['qm']->createQuery('
+            SELECT data.tags
             FROM [nt:unstructured] AS data
             WHERE data.tags = "foo"
-            AND data.tags = "bar"
+              AND data.tags = "bar"
+              AND ISDESCENDANTNODE([/tests_general_base])
             ',
             QueryInterface::JCR_SQL2
         );

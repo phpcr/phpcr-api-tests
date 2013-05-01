@@ -8,15 +8,20 @@
          xmlns:jcr="http://www.jcp.org/jcr/1.0"
          xmlns:sv="http://www.jcp.org/jcr/sv/1.0"
 
-         sv:name="queryNode">
+         sv:name="tests_general_query">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>nt:unstructured</sv:value>
+    </sv:property>
 
-  <sv:property sv:name="jcr:primaryType" sv:type="Name">
-    <sv:value>nt:query</sv:value>
-  </sv:property>
-  <sv:property sv:name="jcr:language" sv:type="String">
-    <sv:value>JCR-SQL2</sv:value>
-  </sv:property>
-  <sv:property sv:name="jcr:statement" sv:type="String">
-    <sv:value>SELECT * FROM [nt:file] WHERE [nt:file].[jcr:mimeType] = "text/plain"</sv:value>
-  </sv:property>
+    <sv:node sv:name="queryNode">
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+            <sv:value>nt:query</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:language" sv:type="String">
+            <sv:value>JCR-SQL2</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:statement" sv:type="String">
+            <sv:value>SELECT * FROM [nt:file] WHERE [nt:file].[jcr:mimeType] = "text/plain"</sv:value>
+        </sv:property>
+    </sv:node>
 </sv:node>

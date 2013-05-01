@@ -37,8 +37,11 @@ class QueryOperationsTest extends QueryBaseCase
     public function testQueryFieldSomenull()
     {
         /** @var $query QueryInterface */
-        $query = $this->sharedFixture['qm']->createQuery(
-            'SELECT foo FROM nt:unstructured',
+        $query = $this->sharedFixture['qm']->createQuery('
+            SELECT foo
+            FROM nt:unstructured
+            WHERE jcr:path LIKE \'/tests_general_base/%\'
+            ',
             QueryInterface::SQL
         );
 
@@ -50,14 +53,14 @@ class QueryOperationsTest extends QueryBaseCase
             $vals[] = ($node->hasProperty('foo') ? $node->getPropertyValue('foo') : null);
         }
         $this->assertContains('bar', $vals);
-        $this->assertEquals(10, count($vals));
+        $this->assertEquals(9, count($vals));
 
         $vals = array();
         foreach ($result->getRows() as $row) {
             $vals[] = $row->getValue('foo');
         }
         $this->assertContains('bar', $vals);
-        $this->assertEquals(10, count($vals));
+        $this->assertEquals(9, count($vals));
     }
 
     public function testQueryOrder()
@@ -66,6 +69,7 @@ class QueryOperationsTest extends QueryBaseCase
         $query = $this->sharedFixture['qm']->createQuery(
             'SELECT zeronumber
              FROM nt:unstructured
+             WHERE jcr:path LIKE \'/tests_general_base/%\'
              ORDER BY zeronumber',
             QueryInterface::SQL
         );
@@ -78,7 +82,7 @@ class QueryOperationsTest extends QueryBaseCase
             $vals[] = $row->getValue('zeronumber');
         }
         // rows that do not have that field are null. empty is before fields with values
-        $this->assertEquals(array(null, null, null, null, null, null, null, null, null, 0), $vals);
+        $this->assertEquals(array(null, null, null, null, null, null, null, null, 0), $vals);
     }
 
 }

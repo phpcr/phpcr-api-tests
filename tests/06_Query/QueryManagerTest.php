@@ -17,12 +17,12 @@ class QueryManagerTest extends QueryBaseCase
 
     public function testCreateQuerySql2()
     {
-        $ret = $this->sharedFixture['qm']->createQuery("SELECT * FROM [nt:folder]", \PHPCR\Query\QueryInterface::JCR_SQL2);
+        $ret = $this->sharedFixture['qm']->createQuery("SELECT * FROM [nt:folder] WHERE ISCHILDNODE('/tests_general/base')", \PHPCR\Query\QueryInterface::JCR_SQL2);
         $this->assertInstanceOf('PHPCR\Query\QueryInterface', $ret);
     }
 
     /**
-     * @expectedException PHPCR\Query\InvalidQueryException
+     * @expectedException \PHPCR\Query\InvalidQueryException
      */
     public function testCreateQueryInvalid()
     {
@@ -31,7 +31,7 @@ class QueryManagerTest extends QueryBaseCase
 
     public function testGetQuery()
     {
-        $qnode = $this->sharedFixture['session']->getRootNode()->getNode('queryNode');
+        $qnode = $this->sharedFixture['session']->getNode('/tests_general_query/queryNode');
         $this->assertInstanceOf('PHPCR\NodeInterface', $qnode);
 
         $query = $this->sharedFixture['qm']->getQuery($qnode);
@@ -39,7 +39,7 @@ class QueryManagerTest extends QueryBaseCase
     }
 
     /**
-     * @expectedException PHPCR\Query\InvalidQueryException
+     * @expectedException \PHPCR\Query\InvalidQueryException
      */
     public function testGetQueryInvalid()
     {
