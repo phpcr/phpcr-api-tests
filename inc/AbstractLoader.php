@@ -139,6 +139,14 @@ abstract class AbstractLoader
     }
 
     /**
+     * @return string name of the default workspace of this repository
+     */
+    public function getDefaultWorkspaceName()
+    {
+        return 'default';
+    }
+
+    /**
      * @return string the additional workspace name used for tests that need it
      */
     public function getOtherWorkspaceName()
