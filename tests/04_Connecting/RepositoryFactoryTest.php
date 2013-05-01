@@ -1,6 +1,8 @@
 <?php
 namespace PHPCR\Tests\Connecting;
 
+use PHPCR\RepositoryFactoryInterface;
+
 require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 class RepositoryFactoryTest extends \PHPCR\Test\BaseCase
@@ -15,7 +17,9 @@ class RepositoryFactoryTest extends \PHPCR\Test\BaseCase
     public function testRepositoryFactory()
     {
         $class = self::$loader->getRepositoryFactoryClass();
-        $repo = $class::getRepository(self::$loader->getRepositoryFactoryParameters());
+        /** @var $factory RepositoryFactoryInterface */
+        $factory = new $class;
+        $repo = $factory->getRepository(self::$loader->getRepositoryFactoryParameters());
         $this->assertInstanceOf('PHPCR\RepositoryInterface', $repo);
     }
 
