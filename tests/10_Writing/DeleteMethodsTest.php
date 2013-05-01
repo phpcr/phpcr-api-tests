@@ -146,10 +146,12 @@ class DeleteMethodsTest extends \PHPCR\Test\BaseCase
      */
     public function testRemoveNodeFromBackend()
     {
-        $node = $this->rootNode->addNode('toBeDeleted', 'nt:unstructured');
-        $this->sharedFixture['session']->save();
-
-        $this->renewSession();
+        $nodename = 'toBeDeleted';
+        if (! $this->rootNode->hasNode($nodename)) {
+            $this->rootNode->addNode($nodename, 'nt:unstructured');
+            $this->sharedFixture['session']->save();
+            $this->renewSession();
+        }
 
         $node = $this->sharedFixture['session']->getNode('/toBeDeleted');
 
@@ -160,7 +162,6 @@ class DeleteMethodsTest extends \PHPCR\Test\BaseCase
 
         $this->setExpectedException('\PHPCR\PathNotFoundException');
         $this->sharedFixture['session']->getNode('/toBeDeleted');
-
     }
 
     /**
