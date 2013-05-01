@@ -14,9 +14,10 @@ class QueryObjectQOMTest extends QueryBaseCase
 {
 
     /**
-     * @var PHPCR\Query\QOM\QueryObjectManagerFactory
+     * @var \PHPCR\Query\QOM\QueryObjectModelFactoryInterface
      */
     protected $factory;
+    /** @var \PHPCR\Query\QueryInterface */
     protected $query;
 
     public function setUp()
@@ -30,7 +31,10 @@ class QueryObjectQOMTest extends QueryBaseCase
         }
 
         $source = $this->factory->selector('nt:folder','data');
-        $constraint = null;
+        $constraint = $this->factory->orConstraint(
+            $this->factory->descendantNode('/tests_general_base'),
+            $this->factory->sameNode('/tests_general_base')
+        );
         $orderings = array();
         $columns = array();
 
@@ -46,7 +50,7 @@ class QueryObjectQOMTest extends QueryBaseCase
     }
 
     /**
-     * @expectedException PHPCR\Query\InvalidQueryException
+     * @expectedException \PHPCR\Query\InvalidQueryException
      *
      * the doc claims there would just be a PHPCR\RepositoryException
      * it makes sense that there is a InvalidQueryException
@@ -64,7 +68,8 @@ class QueryObjectQOMTest extends QueryBaseCase
 
     public function testGetStatement()
     {
-        $this->assertEquals('SELECT * FROM [nt:folder] AS data', $this->query->getStatement());
+        $this->assertEquals('SELECT * FROM [nt:folder] AS data '.
+            'WHERE (ISDESCENDANTNODE([/tests_general_base]) OR ISSAMENODE([/tests_general_base]))', $this->query->getStatement());
     }
 
     /**
@@ -78,7 +83,7 @@ class QueryObjectQOMTest extends QueryBaseCase
 
     /**
      * a transient query has no stored query path
-     * @expectedException PHPCR\ItemNotFoundException
+     * @expectedException \PHPCR\ItemNotFoundException
      */
     public function testGetStoredQueryPathItemNotFound()
     {
@@ -90,7 +95,7 @@ class QueryObjectQOMTest extends QueryBaseCase
     {
         $qstr = '//idExample[jcr:mimeType="text/plain"]';
         $query = $this->sharedFixture['qm']->createQuery($qstr, 'xpath');
-        $query->storeAsNode('/queryNode');
+        $query->storeAsNode('/test_query/queryNode');
         $this->sharedFixture['session']->save();
     }
     */
