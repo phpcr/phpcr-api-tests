@@ -23,6 +23,7 @@ class PurgeTest extends BaseCase
         }
         parent::setUp();
     }
+
     public function testPurge()
     {
         /** @var $session \PHPCR\SessionInterface */
@@ -40,6 +41,10 @@ class PurgeTest extends BaseCase
         $session->save();
 
         NodeHelper::purgeWorkspace($session);
+        if ($session->getWorkspace()->getName() == 'crx.default') {
+            // if we would continue, we would delete all content from the only real workspace
+            $this->markTestIncomplete('TODO: how to test this with crx where we have no workspaces?');
+        }
         $session->save();
 
         // if there where system nodes, they should still be here

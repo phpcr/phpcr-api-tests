@@ -107,7 +107,8 @@ class ObservationManagerTest extends \PHPCR\Test\BaseCase
 
         // Make the root node have a UUID
         $root = $session->getRootNode();
-        $root->addNode('unstructured');
+        $node = $root->addNode('/tests_observation');
+        $node->addNode('unstructured');
         $session->save();
 
         // At this point the journal contains 3 events: PROP_ADDED (for setting the node type of the new node)
@@ -120,7 +121,7 @@ class ObservationManagerTest extends \PHPCR\Test\BaseCase
 
         // At this point the journal
         $this->assertTrue($journal->valid());
-        $this->assertEquals('/unstructured', $journal->current()->getPath());
+        $this->assertEquals('/tests_observation/unstructured', $journal->current()->getPath());
         $this->assertEquals(EventInterface::NODE_ADDED, $journal->current()->getType());
 
         $journal->next();
