@@ -33,7 +33,7 @@ class RepositoryTest extends \PHPCR\Test\BaseCase
         $repository = self::$loader->getRepository();
         $session = $repository->login(self::$loader->getCredentials());
         $this->assertInstanceOf('PHPCR\SessionInterface', $session);
-        $this->assertEquals('default', $session->getWorkspace()->getName());
+        $this->assertEquals(self::$loader->getDefaultWorkspaceName(), $session->getWorkspace()->getName());
     }
 
     /**
