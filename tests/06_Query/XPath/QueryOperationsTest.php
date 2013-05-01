@@ -14,7 +14,7 @@ class QueryOperationsTest extends QueryBaseCase
     {
         /** @var $query QueryInterface */
         $query = $this->sharedFixture['qm']->createQuery(
-            '//element(*,nt:unstructured)[@foo = "bar"]/@foo',
+            '/jcr:root/tests_general_base//element(*,nt:unstructured)[@foo = "bar"]/@foo',
             QueryInterface::XPATH
         );
 
@@ -38,7 +38,7 @@ class QueryOperationsTest extends QueryBaseCase
     {
         /** @var $query QueryInterface */
         $query = $this->sharedFixture['qm']->createQuery(
-            '//element(*,nt:unstructured)/@foo',
+            '/jcr:root/tests_general_base//element(*,nt:unstructured)/@foo',
             QueryInterface::XPATH
         );
 
@@ -50,21 +50,21 @@ class QueryOperationsTest extends QueryBaseCase
             $vals[] = ($node->hasProperty('foo') ? $node->getPropertyValue('foo') : null);
         }
         $this->assertContains('bar', $vals);
-        $this->assertEquals(10, count($vals));
+        $this->assertEquals(9, count($vals));
 
         $vals = array();
         foreach ($result->getRows() as $row) {
             $vals[] = $row->getValue('foo');
         }
         $this->assertContains('bar', $vals);
-        $this->assertEquals(10, count($vals));
+        $this->assertEquals(9, count($vals));
     }
 
     public function testQueryOrder()
     {
         /** @var $query QueryInterface */
         $query = $this->sharedFixture['qm']->createQuery(
-            '//element(*, nt:unstructured)/@zeronumber order by @zeronumber',
+            '/jcr:root/tests_general_base//element(*, nt:unstructured)/@zeronumber order by @zeronumber',
             QueryInterface::XPATH
         );
 
@@ -76,7 +76,7 @@ class QueryOperationsTest extends QueryBaseCase
             $vals[] = $row->getValue('zeronumber');
         }
         // rows that do not have that field are null. empty is before fields with values
-        $this->assertEquals(array(null, null, null, null, null, null, null, null, null, 0), $vals);
+        $this->assertEquals(array(null, null, null, null, null, null, null, null, 0), $vals);
     }
 
 }

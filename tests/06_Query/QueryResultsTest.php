@@ -103,6 +103,8 @@ class QueryResultsTest extends QueryBaseCase
     public function testReadPropertyContentFromResults()
     {
         $seekName = '/tests_general_base/multiValueProperty';
+
+        $this->assertTrue(count($this->qr->getNodes()) > 0);
         foreach ($this->qr->getNodes() as $path => $node) {
             if ($seekName == $path) break;
         }
@@ -117,8 +119,12 @@ class QueryResultsTest extends QueryBaseCase
 
     public function testCompareNumberFields()
     {
-        $query = $this->sharedFixture['qm']->createQuery(
-            'SELECT data.longNumberToCompare FROM [nt:unstructured] AS data WHERE data.longNumberToCompare > 2',
+        $query = $this->sharedFixture['qm']->createQuery('
+            SELECT data.longNumberToCompare
+            FROM [nt:unstructured] AS data
+            WHERE data.longNumberToCompare > 2
+              AND ISDESCENDANTNODE([/tests_general_base])
+            ',
             \PHPCR\Query\QueryInterface::JCR_SQL2
         );
         $result = $query->execute();
