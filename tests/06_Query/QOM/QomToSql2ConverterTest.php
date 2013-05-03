@@ -8,6 +8,7 @@ use Jackalope\Query\QOM; // TODO get rid of jackalope dependency
 use PHPCR\Util\QOM\QomToSql2QueryConverter;
 use PHPCR\Util\QOM\Sql2Generator;
 use PHPCR\Query\QOM\QueryObjectModelConstantsInterface as Constants;
+use PHPCR\Util\ValueConverter;
 
 /**
  * Test for PHPCR\Util\QOM\QomToSql2QueryConverter
@@ -34,7 +35,7 @@ class QomToSql2ConverterTest extends \PHPCR\Test\BaseCase
             $this->markTestSkipped('TODO: fix the dependency on jackalope and always use the factory');
         }
 
-        $this->parser = new QomToSql2QueryConverter(new Sql2Generator());
+        $this->parser = new QomToSql2QueryConverter(new Sql2Generator(new ValueConverter()));
         try {
             $this->factory = $this->sharedFixture['session']->getWorkspace()->getQueryManager()->getQOMFactory();
         } catch(\PHPCR\UnsupportedRepositoryException $e) {

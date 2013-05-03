@@ -8,6 +8,7 @@ require_once('QomTestQueries.php');
 use PHPCR\Util\QOM\Sql2Generator;
 use PHPCR\Util\QOM\Sql2ToQomQueryConverter;
 use PHPCR\Util\QOM\QomToSql2QueryConverter;
+use PHPCR\Util\ValueConverter;
 
 class ConvertQueriesBackAndForthTest extends \PHPCR\Test\BaseCase
 {
@@ -38,7 +39,7 @@ class ConvertQueriesBackAndForthTest extends \PHPCR\Test\BaseCase
         $factory = $this->sharedFixture['session']->getWorkspace()->getQueryManager()->getQOMFactory();
         $this->sql2Queries = Sql2TestQueries::getQueries();
         $this->qomQueries = QomTestQueries::getQueries($factory);
-        $this->qomParser = new QomToSql2QueryConverter(new Sql2Generator());
+        $this->qomParser = new QomToSql2QueryConverter(new Sql2Generator(new ValueConverter()));
 
         try {
             $this->sql2Parser = new Sql2ToQomQueryConverter($factory);
