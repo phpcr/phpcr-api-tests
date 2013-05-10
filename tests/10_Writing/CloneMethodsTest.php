@@ -537,23 +537,47 @@ class CloneMethodsTest extends BaseCase
      * Test cloning a referenceable node and its versionable child.
      * The child should not be cloned, because it is versionable.
      */
-    public function testCloneWithVersionableChild()
+    public function testCloneAndUpdateWithVersionableChild()
     {
         $srcNode = '/tests_write_manipulation_clone/testWorkspaceCloneVersionable/referenceable';
         $dstNode = $srcNode;
+        $srcChildNode = $srcNode . '/cloneChild';
+        $dstChildNode = $dstNode . '/cloneChild';
         $destSession = self::$destWs->getSession();
+        $sourceSession = $this->srcWs->getSession();
 
         self::$destWs->cloneFrom($this->srcWsName, $srcNode, $dstNode, false);
-
         $destSession->getObjectManager()->refresh(false);
 
         $clonedNode = $destSession->getNode($dstNode);
-        $this->assertCount(4, $clonedNode->getProperties());
         $this->checkNodeProperty($clonedNode, 'jcr:uuid', 'abad6d55-9e8b-4736-8444-8c4809a88550');
         $this->checkNodeProperty($clonedNode, 'foo', 'bar');
+        $clonedChild = $destSession->getNode($dstChildNode);
+        $this->checkNodeProperty($clonedChild, 'jcr:uuid', '46253fb2-940d-aa7f-bcad-39157cc781de');
+        $this->checkNodeProperty($clonedChild, 'fooChild', 'barChild');
 
-        // The child node should not have been cloned
-        $this->assertFalse($clonedNode->hasNode('cloneChild'));
+        // Update the source node and child node
+        $node = $sourceSession->getNode($srcNode);
+        $this->assertInstanceOf('PHPCR\NodeInterface', $node);
+        $this->checkNodeProperty($node, 'jcr:uuid', 'abad6d55-9e8b-4736-8444-8c4809a88550');
+        $node->setProperty('foo', 'bar-updated');
+        $child = $sourceSession->getNode($srcChildNode);
+        $this->assertInstanceOf('PHPCR\NodeInterface', $node);
+        $this->checkNodeProperty($child, 'jcr:uuid', '46253fb2-940d-aa7f-bcad-39157cc781de');
+        $child->setProperty('fooChild', 'barChild-updated');
+        $sourceSession->save();
+
+        $clonedNode->update($this->srcWsName);
+        $destSession->getObjectManager()->refresh(false);
+
+        // Properties of the node we called 'update' on should be changed...
+        $clonedNode = $destSession->getNode($dstNode);
+        $this->checkNodeProperty($clonedNode, 'jcr:uuid', 'abad6d55-9e8b-4736-8444-8c4809a88550');
+        $this->checkNodeProperty($clonedNode, 'foo', 'bar-updated');
+        // ...but *not* properties of the child node.
+        $clonedChild = $destSession->getNode($dstChildNode);
+        $this->checkNodeProperty($clonedChild, 'jcr:uuid', '46253fb2-940d-aa7f-bcad-39157cc781de');
+        $this->checkNodeProperty($clonedChild, 'fooChild', 'barChild');
     }
 
     private function renewDestinationSession()
