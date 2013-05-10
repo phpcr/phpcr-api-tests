@@ -38,6 +38,7 @@ class CloneMethodsTest extends BaseCase
         $node->addNode('testWorkspaceClone');
         $node->addNode('testWorkspaceCorrespondingNode');
         $node->addNode('testWorkspaceUpdateNode');
+        $node->addNode('testWorkspaceCloneVersionable');
         $destSession->save();
     }
 
@@ -530,6 +531,29 @@ class CloneMethodsTest extends BaseCase
         $this->assertCount(4, $clonedNode->getProperties());
         $this->checkNodeProperty($clonedNode, 'jcr:uuid', '1d392bcb-3e49-4f0e-b0af-7c30ab838122');
         $this->checkNodeProperty($clonedNode, 'foo', 'bar_6');
+    }
+
+    /**
+     * Test cloning a referenceable node and its versionable child.
+     * The child should not be cloned, because it is versionable.
+     */
+    public function testCloneWithVersionableChild()
+    {
+        $srcNode = '/tests_write_manipulation_clone/testWorkspaceCloneVersionable/referenceable';
+        $dstNode = $srcNode;
+        $destSession = self::$destWs->getSession();
+
+        self::$destWs->cloneFrom($this->srcWsName, $srcNode, $dstNode, false);
+
+        $destSession->getObjectManager()->refresh(false);
+
+        $clonedNode = $destSession->getNode($dstNode);
+        $this->assertCount(4, $clonedNode->getProperties());
+        $this->checkNodeProperty($clonedNode, 'jcr:uuid', 'abad6d55-9e8b-4736-8444-8c4809a88550');
+        $this->checkNodeProperty($clonedNode, 'foo', 'bar');
+
+        // The child node should not have been cloned
+        $this->assertFalse($clonedNode->hasNode('cloneChild'));
     }
 
     private function renewDestinationSession()
