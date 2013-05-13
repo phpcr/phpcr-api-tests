@@ -547,7 +547,7 @@ class CloneMethodsTest extends BaseCase
         $sourceSession = $this->srcWs->getSession();
 
         self::$destWs->cloneFrom($this->srcWsName, $srcNode, $dstNode, false);
-        $destSession->getObjectManager()->refresh(false);
+        $this->renewDestinationSession();
 
         $clonedNode = $destSession->getNode($dstNode);
         $this->checkNodeProperty($clonedNode, 'jcr:uuid', 'abad6d55-9e8b-4736-8444-8c4809a88550');
