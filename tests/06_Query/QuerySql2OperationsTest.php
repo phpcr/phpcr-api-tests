@@ -114,6 +114,68 @@ class QuerySql2OperationsTest extends QueryBaseCase
         $this->assertEquals(array(999), $vals);
     }
 
+    public function testQueryLeftJoin()
+    {
+        /** @var $query QueryInterface */
+        $query = $this->sharedFixture['qm']->createQuery(
+            'SELECT file.[jcr:name], target.longNumberToCompare
+             FROM [nt:file] AS file
+               LEFT OUTER JOIN [nt:unstructured] AS target
+               ON ISDESCENDANTNODE(target, file)
+             ',
+            QueryInterface::JCR_SQL2
+        );
+
+        $this->assertInstanceOf('\PHPCR\Query\QueryInterface', $query);
+        $result = $query->execute();
+        $this->assertInstanceOf('\PHPCR\Query\QueryResultInterface', $result);
+        $vals = array();
+        foreach ($result->getRows() as $row) {
+            $vals[$row->getValue('file.jcr:name')] = $row->getValue('target.longNumberToCompare');
+        }
+
+        // We get 9 results (idExample comes back multiple times because of the join)
+        $this->assertCount(9, $result->getRows());
+        $this->assertEquals(array(
+            'index.txt'                     => null,
+            'idExample'                     => null,
+            'numberPropertyNode'            => null,
+            'NumberPropertyNodeToCompare1'  => 2,
+            'NumberPropertyNodeToCompare2'  => 10,
+        ), $vals);
+    }
+
+    public function testQueryRightJoin()
+    {
+        /** @var $query QueryInterface */
+        $query = $this->sharedFixture['qm']->createQuery(
+            'SELECT file.[jcr:name], target.stringToCompare
+             FROM [nt:unstructured] AS target
+               RIGHT OUTER JOIN [nt:file] AS file
+               ON ISDESCENDANTNODE(target, file)
+             ',
+            QueryInterface::JCR_SQL2
+        );
+
+        $this->assertInstanceOf('\PHPCR\Query\QueryInterface', $query);
+        $result = $query->execute();
+        $this->assertInstanceOf('\PHPCR\Query\QueryResultInterface', $result);
+        $vals = array();
+        foreach ($result->getRows() as $row) {
+            $vals[$row->getValue('file.jcr:name')] = $row->getValue('target.stringToCompare');
+        }
+
+        // We get 9 results (idExample comes back multiple times because of the join)
+        $this->assertCount(9, $result->getRows());
+        $this->assertEquals(array(
+            'index.txt'                     => null,
+            'idExample'                     => null,
+            'numberPropertyNode'            => null,
+            'NumberPropertyNodeToCompare1'  => '2',
+            'NumberPropertyNodeToCompare2'  => '10',
+        ), $vals);
+    }
+
     public function testQueryJoinReference()
     {
         /** @var $query QueryInterface */
