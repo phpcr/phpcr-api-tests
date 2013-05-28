@@ -3,6 +3,7 @@ namespace PHPCR\Test;
 
 use PHPCR\SessionInterface;
 use PHPCR\NodeInterface;
+use \DateTime;
 
 // PHPUnit 3.4 compat
 if (method_exists('PHPUnit_Util_Filter', 'addDirectoryToFilter')) {
@@ -117,7 +118,7 @@ abstract class BaseCase extends \PHPUnit_Framework_TestCase
         $case = $parts[$case_n];
         $chapter = '';
 
-        for($i = 2; $i < $case_n; $i++) {
+        for ($i = 2; $i < $case_n; $i++) {
             $chapter .= $parts[$i] . '\\';
         }
 
@@ -240,5 +241,15 @@ abstract class BaseCase extends \PHPUnit_Framework_TestCase
     {
         $this->assertTrue($node->hasProperty($property));
         $this->assertEquals($value, $node->getPropertyValue($property));
+    }
+
+    protected function assertEqualDateString($date1, $date2)
+    {
+        $this->assertEquals(strtotime($date1), strtotime($date2));
+    }
+
+    protected function assertEqualDateTime(DateTime $date1, DateTime $date2)
+    {
+        $this->assertEquals($date1->getTimestamp(), $date2->getTimestamp());
     }
 }

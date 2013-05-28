@@ -54,6 +54,11 @@ class ExportRepositoryContentTest extends \PHPCR\Test\BaseCase
         return "/$ret";
     }
 
+    private function isDate($date)
+    {
+        return preg_match('/^\d{4}-\d{2}-\d{2}/', $date);
+    }
+
     /**
      * compare two system view documents.
      *
@@ -81,7 +86,11 @@ class ExportRepositoryContentTest extends \PHPCR\Test\BaseCase
                     $o = $output->childNodes->item($index);
                     $this->assertInstanceOf('DOMElement', $o, "No child element at $index in ".$this->buildPath($child));
                     $this->assertEquals('sv:value', $o->tagName, 'Unexpected tag name at '.$this->buildPath($expected)."sv:value[$index]");
-                    $this->assertEquals($child->textContent, $o->textContent, 'Not the same text at '.$this->buildPath($output)."sv:value[$index]");
+                    if ($this->isDate($child->textContent) && $this->isDate($o->textContent)) {
+                        $this->assertEqualDateString($child->textContent, $o->textContent, 'Not the same date at '.$this->buildPath($output)."sv:value[$index]");
+                    } else {
+                        $this->assertEquals($child->textContent, $o->textContent, 'Not the same text at '.$this->buildPath($output)."sv:value[$index]");
+                    }
                 }
             }
         } elseif ($expected->tagName == 'sv:node') {
@@ -130,7 +139,11 @@ class ExportRepositoryContentTest extends \PHPCR\Test\BaseCase
                 } else {
                     $oattr = $output->attributes->getNamedItem($attr->name);
                     $this->assertNotNull($oattr, 'missing attribute '.$attr->name.' at '.$this->buildPath($expected));
-                    $this->assertEquals($attr->value, $oattr->value, 'wrong attribute value at '.$this->buildPath($expected).'/'.$attr->name);
+                    if ($this->isDate($attr->value) && $this->isDate($oattr->value)) {
+                        $this->assertEqualDateString($attr->value, $oattr->value, 'wrong attribute value at '.$this->buildPath($expected).'/'.$attr->name);
+                    } else {
+                        $this->assertEquals($attr->value, $oattr->value, 'wrong attribute value at '.$this->buildPath($expected).'/'.$attr->name);
+                    }
                 }
             }
 
