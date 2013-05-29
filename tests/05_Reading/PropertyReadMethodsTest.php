@@ -145,11 +145,11 @@ class PropertyReadMethodsTest extends \PHPCR\Test\BaseCase
      */
     public function testGetString()
     {
-        $expectedStr = '2011-04-21T14:34:20'; //date precision might not be down to milliseconds
+        $expectedStr = '2011-04-21T14:34:20+01:00'; //date precision might not be down to milliseconds
         $str = $this->dateProperty->getString();
         $this->assertInternalType('string', $str);
-        $this->assertStringStartsWith($expectedStr, $str);
 
+        $this->assertEqualDateString($expectedStr, $str);
         $str = $this->valProperty->getString();
         $this->assertInternalType('string', $str);
         $this->assertEquals('bar', $str);
@@ -298,11 +298,13 @@ class PropertyReadMethodsTest extends \PHPCR\Test\BaseCase
             $this->assertInstanceOf('DateTime', $v);
         }
         //check correct values and sort order
-        $expected = array(
+        $expectedArray = array(
                 new \DateTime('2011-04-22T14:34:20+01:00'),
                 new \DateTime('2011-10-23T14:34:20+01:00'),
                 new \DateTime('2010-10-23T14:34:20+01:00'));
-        $this->assertEquals($expected, $arr);
+        foreach ($expectedArray as $key => $expected) {
+            $this->assertEqualDateTime($expected, $arr[$key]);
+        }
     }
     /**
      * arbitrary string can not be converted to date
