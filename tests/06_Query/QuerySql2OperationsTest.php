@@ -131,7 +131,7 @@ class QuerySql2OperationsTest extends QueryBaseCase
         $this->assertInstanceOf('\PHPCR\Query\QueryResultInterface', $result);
         $vals = array();
         foreach ($result->getRows() as $row) {
-            $vals[$row->getValue('file.jcr:name')] = $row->getValue('target.longNumberToCompare');
+            $vals[basename($row->getPath('file'))] = $row->getValue('target.longNumberToCompare');
         }
 
         // We get 9 results (idExample comes back multiple times because of the join)
@@ -162,7 +162,7 @@ class QuerySql2OperationsTest extends QueryBaseCase
         $this->assertInstanceOf('\PHPCR\Query\QueryResultInterface', $result);
         $vals = array();
         foreach ($result->getRows() as $row) {
-            $vals[$row->getValue('file.jcr:name')] = $row->getValue('target.stringToCompare');
+            $vals[basename($row->getPath('file'))] = $row->getValue('target.stringToCompare');
         }
 
         // We get 9 results (idExample comes back multiple times because of the join)
