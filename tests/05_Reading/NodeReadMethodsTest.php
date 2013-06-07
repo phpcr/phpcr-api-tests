@@ -149,9 +149,15 @@ class NodeReadMethodsTest extends \PHPCR\Test\BaseCase
 
     public function testGetNodes()
     {
-        $node1 = $this->rootNode->getNode('tests_general_base');
-        $iterator = $this->rootNode->getNodes();
+        $parent = $this->rootNode->getNode('tests_general_base');
+        $iterator = $parent->getNodes();
         $this->assertInstanceOf('Iterator', $iterator);
+        $this->assertInstanceOf('Countable', $iterator);
+
+        $this->assertCount(8, $iterator);
+        foreach($iterator as $node) {
+            $this->assertInstanceOf('PHPCR\NodeInterface', $node);
+        }
     }
 
     /**
@@ -175,19 +181,44 @@ class NodeReadMethodsTest extends \PHPCR\Test\BaseCase
         $this->assertNotContains('index.txt', $nodes);
     }
 
-    public function testGetNodesPatternAdvanced()
+    public function testGetNodesTypeFilter()
     {
         $this->node = $this->rootNode->getNode('tests_general_base');
-        $iterator = $this->node->getNodes("test:* | idExample");
+        $iterator = $this->node->getNodes(null, 'nt:file');
         $nodes = array();
         foreach ($iterator as $n) {
             $this->assertInstanceOf('PHPCR\NodeInterface', $n);
             /** @var $n \PHPCR\NodeInterface */
             array_push($nodes, $n->getName());
         }
+        $this->assertContains('index.txt', $nodes);
         $this->assertContains('idExample', $nodes);
-        $this->assertContains('test:namespacedNode', $nodes);
+        $this->assertNotContains('test:namespacedNode', $nodes);
+        $this->assertNotContains('emptyExample', $nodes);
+        $this->assertNotContains('multiValueProperty', $nodes);
+        $this->assertContains('numberPropertyNode', $nodes);
+        $this->assertContains('NumberPropertyNodeToCompare1', $nodes);
+        $this->assertContains('NumberPropertyNodeToCompare2', $nodes);
+    }
+
+    public function testGetNodesTypeFilterList()
+    {
+        $this->node = $this->rootNode->getNode('tests_general_base');
+        $iterator = $this->node->getNodes("id*", array('nt:file', 'nt:folder'));
+        $nodes = array();
+        foreach ($iterator as $n) {
+            $this->assertInstanceOf('PHPCR\NodeInterface', $n);
+            /** @var $n \PHPCR\NodeInterface */
+            array_push($nodes, $n->getName());
+        }
         $this->assertNotContains('index.txt', $nodes);
+        $this->assertContains('idExample', $nodes);
+        $this->assertNotContains('test:namespacedNode', $nodes);
+        $this->assertNotContains('emptyExample', $nodes);
+        $this->assertNotContains('multiValueProperty', $nodes);
+        $this->assertNotContains('numberPropertyNode', $nodes);
+        $this->assertNotContains('NumberPropertyNodeToCompare1', $nodes);
+        $this->assertNotContains('NumberPropertyNodeToCompare2', $nodes);
     }
 
     public function testGetNodesNameGlobs()
