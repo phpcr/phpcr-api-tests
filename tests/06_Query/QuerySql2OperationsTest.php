@@ -38,7 +38,7 @@ class QuerySql2OperationsTest extends QueryBaseCase
         $this->assertEquals(array('bar'), $vals);
     }
 
-    public function testQueryFieldSomenull()
+    public function testQueryFieldSomeNull()
     {
         /** @var $query QueryInterface */
         $query = $this->sharedFixture['qm']->createQuery('
@@ -71,6 +71,28 @@ class QuerySql2OperationsTest extends QueryBaseCase
     {
         /** @var $query QueryInterface */
         $query = $this->sharedFixture['qm']->createQuery('
+            SELECT [nt:unstructured].foo
+            FROM [nt:unstructured]
+            WHERE [nt:unstructured].foo = "bar"
+              AND ISDESCENDANTNODE([/tests_general_base])
+            ',
+            QueryInterface::JCR_SQL2
+        );
+
+        $this->assertInstanceOf('\PHPCR\Query\QueryInterface', $query);
+        $result = $query->execute();
+        $this->assertInstanceOf('\PHPCR\Query\QueryResultInterface', $result);
+        $vals = array();
+        foreach ($result->getRows() as $row) {
+            $vals[] = $row->getValue('foo');
+        }
+        $this->assertEquals(array('bar'), $vals);
+    }
+
+    public function testQueryFieldSelectorWithAlias()
+    {
+        /** @var $query QueryInterface */
+        $query = $this->sharedFixture['qm']->createQuery('
             SELECT data.foo
             FROM [nt:unstructured] AS data
             WHERE data.foo = "bar"
@@ -90,6 +112,31 @@ class QuerySql2OperationsTest extends QueryBaseCase
     }
 
     public function testQueryJoin()
+    {
+        /** @var $query QueryInterface */
+        $query = $this->sharedFixture['qm']->createQuery('
+            SELECT [nt:unstructured].longNumber
+            FROM [nt:file]
+              INNER JOIN [nt:unstructured]
+                ON ISDESCENDANTNODE([nt:unstructured], [nt:file])
+            WHERE [nt:unstructured].longNumber = 999
+              AND ISDESCENDANTNODE([nt:file], [/tests_general_base])
+            ',
+            QueryInterface::JCR_SQL2
+        );
+
+        $this->assertInstanceOf('\PHPCR\Query\QueryInterface', $query);
+        $result = $query->execute();
+        $this->assertInstanceOf('\PHPCR\Query\QueryResultInterface', $result);
+        $vals = array();
+
+        foreach($result->getRows() as $row) {
+            $vals[] = $row->getValue('nt:unstructured.longNumber');
+        }
+        $this->assertEquals(array(999), $vals);
+    }
+
+    public function testQueryJoinWithAlias()
     {
         /** @var $query QueryInterface */
         $query = $this->sharedFixture['qm']->createQuery('
