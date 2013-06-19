@@ -115,7 +115,7 @@ class QueryObjectSql2Test extends QueryBaseCase
 
             $p = $query->getStoredQueryPath();
             $this->assertEquals('/tests_general_query/queryNode', $p);
-        } catch(exception $e) {
+        } catch(\Exception $e) {
             //FIXME: finally?
             $this->sharedFixture['ie']->import('general/base');
             throw $e;
