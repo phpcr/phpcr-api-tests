@@ -288,8 +288,15 @@ class QuerySql2OperationsTest extends QueryBaseCase
 
         $rows = $result->getRows();
 
+        $tags = $rows->current()->getValue('tags');
+
         $this->assertCount(1, $rows, 'Expected one row with both tags present');
-        $this->assertSame('foo bar', $rows->current()->getValue('tags'));
+
+        if (is_array($tags)) {
+            $this->assertSame(array('foo', 'bar'), $tags);
+        } else {
+            $this->assertSame('foo bar', $tags);
+        }
     }
 
 }
