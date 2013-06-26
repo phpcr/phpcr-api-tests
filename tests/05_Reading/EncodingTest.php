@@ -41,6 +41,7 @@ class EncodingTest extends \PHPCR\Test\BaseCase
             array("node-ï-x"),
             array("node-%-x"),
             array("node-%2F-x"),
+            array("node-;-x"),
             array("node- -x"),
             array("node-ç-x"),
             array("node-&-x"),

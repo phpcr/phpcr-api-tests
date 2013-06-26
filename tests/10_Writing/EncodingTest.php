@@ -9,7 +9,6 @@ require_once(__DIR__ . '/../../inc/BaseCase.php');
  */
 class EncodingTest extends \PHPCR\Test\BaseCase
 {
-
     static public function setupBeforeClass($fixtures = '10_Writing/encoding')
     {
         parent::setupBeforeClass($fixtures);
@@ -45,6 +44,7 @@ class EncodingTest extends \PHPCR\Test\BaseCase
             array("node-ï-x"),
             array("node-%-x"),
             array("node-%2F-x"),
+            array("node-;-x"),
             array("node- -x"),
             array("node-ç-x"),
             array("node-&-x"),
