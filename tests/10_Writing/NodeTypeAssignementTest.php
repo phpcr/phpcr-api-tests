@@ -32,11 +32,12 @@ class NodeTypeAssignementTest extends \PHPCR\Test\BaseCase
      * the predefined mixin types that do not depend on optional features
      */
     public static $mixins = array(
-            "mix:etag", "mix:language", "mix:lastModified", "mix:mimeType",
-            "mix:referenceable", "mix:shareable", "mix:title"
-            );
+    "mix:etag", "mix:language", "mix:lastModified", "mix:mimeType",
+    "mix:referenceable", "mix:shareable", "mix:title"
+    );
 
-    public static function mixinTypes() {
+    public static function mixinTypes()
+    {
         $ret = array();
         foreach (self::$mixins as $mixin) {
             $ret[] = array($mixin);
