@@ -1,7 +1,6 @@
 <?php
 namespace PHPCR\Tests\Query;
 
-use Jackalope\Query\QueryManager;
 use PHPCR\Query\QueryInterface;
 
 require_once('QueryBaseCase.php');
@@ -291,49 +290,6 @@ class QuerySql2OperationsTest extends QueryBaseCase
 
         $this->assertCount(1, $rows, 'Expected one row with both tags present');
         $this->assertSame('foo bar', $rows->current()->getValue('tags'));
-    }
-
-    /**
-     * Using /tests_general_base/propertyCharacterComparison/jcr:content
-     */
-    public function testPropertyWithBackslash()
-    {
-        /** @var QueryManager $queryManager */
-        $queryManager = $this->sharedFixture['qm'];
-        $query = $queryManager->createQuery('
-            SELECT data.class
-            FROM [nt:unstructured] AS data
-            WHERE data.class = "PHPCR\Query\QueryInterface"',
-            QueryInterface::JCR_SQL2
-        );
-
-        $result = $query->execute();
-
-        $rows = $result->getRows();
-        $this->assertCount(1, $rows);
-        $this->assertEquals('PHPCR\\Query\\QueryInterface', $rows->current()->getValue('class'));
-    }
-
-    /**
-     * Using /tests_general_base/propertyCharacterComparison/jcr:content
-     */
-    public function testPropertyWithQuotes()
-    {
-        /** @var QueryManager $queryManager */
-        $queryManager = $this->sharedFixture['qm'];
-        $query = $queryManager->createQuery('
-            SELECT data.quotes
-            FROM [nt:unstructured] AS data
-            WHERE data.quotes = "\\"\'"
-            ',
-            QueryInterface::JCR_SQL2
-        );
-
-        $result = $query->execute();
-
-        $rows = $result->getRows();
-        $this->assertCount(1, $rows);
-        $this->assertEquals('"\'', $rows->current()->getValue('quotes'));
     }
 
 }
