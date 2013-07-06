@@ -39,6 +39,27 @@ class CharacterTest extends \PHPCR\Test\BaseCase
     /**
      * Using /tests_general_base/propertyCharacterComparison/jcr:content
      */
+    public function testPropertyWithDoubleBackslash()
+    {
+        /** @var QueryManager $queryManager */
+        $queryManager = $this->sharedFixture['qm'];
+        $query = $queryManager->createQuery('
+            SELECT data.doublebackslash
+            FROM [nt:unstructured] AS data
+            WHERE data.doublebackslash = "PHPCR\\\\Query\\\\QueryInterface"',
+            QueryInterface::JCR_SQL2
+        );
+
+        $result = $query->execute();
+
+        $rows = $result->getRows();
+        $this->assertCount(1, $rows);
+        $this->assertEquals('PHPCR\\\\Query\\\\QueryInterface', $rows->current()->getValue('doublebackslash'));
+    }
+
+    /**
+     * Using /tests_general_base/propertyCharacterComparison/jcr:content
+     */
     public function testPropertyWithQuotes()
     {
         /** @var QueryManager $queryManager */
@@ -46,7 +67,7 @@ class CharacterTest extends \PHPCR\Test\BaseCase
         $query = $queryManager->createQuery('
             SELECT data.quotes
             FROM [nt:unstructured] AS data
-            WHERE data.quotes = "\\"\'"
+            WHERE data.quotes = "\"\'"
             ',
             QueryInterface::JCR_SQL2
         );
@@ -56,5 +77,27 @@ class CharacterTest extends \PHPCR\Test\BaseCase
         $rows = $result->getRows();
         $this->assertCount(1, $rows);
         $this->assertEquals('"\'', $rows->current()->getValue('quotes'));
+    }
+
+    /**
+     * Using /tests_general_base/propertyCharacterComparison/jcr:content
+     */
+    public function testPropertyWithQuotesAndBackslash()
+    {
+        /** @var QueryManager $queryManager */
+        $queryManager = $this->sharedFixture['qm'];
+        $query = $queryManager->createQuery('
+            SELECT data.quoteandbackslash
+            FROM [nt:unstructured] AS data
+            WHERE data.quotes = "\\"\\\'"
+            ',
+            QueryInterface::JCR_SQL2
+        );
+
+        $result = $query->execute();
+
+        $rows = $result->getRows();
+        $this->assertCount(1, $rows);
+        $this->assertEquals('"\\\'', $rows->current()->getValue('quoteandbackslash'));
     }
 }

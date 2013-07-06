@@ -47,8 +47,16 @@
                     <sv:value>PHPCR\Query\QueryInterface</sv:value>
                 </sv:property>
 
+                <sv:property sv:name="doublebackslash" sv:type="String">
+                    <sv:value>PHPCR\\Query\\QueryInterface</sv:value>
+                </sv:property>
+
                 <sv:property sv:name="quotes" sv:type="String">
                     <sv:value>"'</sv:value>
+                </sv:property>
+
+                <sv:property sv:name="quoteandbackslash" sv:type="String">
+                    <sv:value>"\'</sv:value>
                 </sv:property>
             </sv:node>
         </sv:node>
