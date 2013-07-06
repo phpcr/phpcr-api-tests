@@ -33,7 +33,7 @@ class CharacterTest extends \PHPCR\Test\BaseCase
 
         $rows = $result->getRows();
         $this->assertCount(1, $rows);
-        $this->assertEquals('PHPCR\\Query\\QueryInterface', $rows->current()->getValue('class'));
+        $this->assertEquals('PHPCR\Query\QueryInterface', $rows->current()->getValue('class'));
     }
 
     /**
