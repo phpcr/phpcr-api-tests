@@ -64,11 +64,11 @@ class CharacterTest extends \PHPCR\Test\BaseCase
     {
         /** @var QueryManager $queryManager */
         $queryManager = $this->sharedFixture['qm'];
-        $query = $queryManager->createQuery('
+        $query = $queryManager->createQuery(sprintf('
             SELECT data.quotes
             FROM [nt:unstructured] AS data
-            WHERE data.quotes = "\"\'"
-            ',
+            WHERE data.quotes = "%s"
+            ', "\\\"'"),
             QueryInterface::JCR_SQL2
         );
 
@@ -86,11 +86,11 @@ class CharacterTest extends \PHPCR\Test\BaseCase
     {
         /** @var QueryManager $queryManager */
         $queryManager = $this->sharedFixture['qm'];
-        $query = $queryManager->createQuery('
+        $query = $queryManager->createQuery(sprintf('
             SELECT data.quoteandbackslash
             FROM [nt:unstructured] AS data
-            WHERE data.quotes = "\\"\\\'"
-            ',
+            WHERE data.quoteandbackslash = "%s"
+            ', "'a\'\'b\'\'c'"),
             QueryInterface::JCR_SQL2
         );
 
@@ -98,6 +98,6 @@ class CharacterTest extends \PHPCR\Test\BaseCase
 
         $rows = $result->getRows();
         $this->assertCount(1, $rows);
-        $this->assertEquals('"\\\'', $rows->current()->getValue('quoteandbackslash'));
+        $this->assertEquals("'a\'\'b\'\'c'", $rows->current()->getValue('quoteandbackslash'));
     }
 }

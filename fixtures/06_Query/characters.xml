@@ -56,7 +56,7 @@
                 </sv:property>
 
                 <sv:property sv:name="quoteandbackslash" sv:type="String">
-                    <sv:value>"\'</sv:value>
+                    <sv:value>'a\'\'b\'\'c'</sv:value>
                 </sv:property>
             </sv:node>
         </sv:node>
