@@ -100,4 +100,17 @@ class CharacterTest extends \PHPCR\Test\BaseCase
         $this->assertCount(1, $rows);
         $this->assertEquals("'a\'\'b\'\'c'", $rows->current()->getValue('quoteandbackslash'));
     }
+
+    public function testQueryWithColon()
+    {
+        /** @var QueryManager $queryManager */
+        $queryManager = $this->sharedFixture['qm'];
+        $query = $queryManager->createQuery('
+            SELECT data.property
+            FROM [nt:unstructured] AS data
+            WHERE data.property = "foo:bar"
+            ',
+            QueryInterface::JCR_SQL2
+        )->execute();
+    }
 }
