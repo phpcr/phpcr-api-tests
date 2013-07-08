@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sv:node
+        xmlns:mix="http://www.jcp.org/jcr/mix/1.0"
+        xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
+        xmlns:jcr="http://www.jcp.org/jcr/1.0"
+        xmlns:sv="http://www.jcp.org/jcr/sv/1.0"
+
+        sv:name="tests_query_characters">
+
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>nt:unstructured</sv:value>
+    </sv:property>
+
+    <sv:node sv:name="testCharacters">
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+            <sv:value>nt:unstructured</sv:value>
+        </sv:property>
+
+        <sv:node sv:name="propertyCharacterComparison">
+
+            <sv:property sv:name="jcr:primaryType" sv:type="Name">
+                <sv:value>nt:file</sv:value>
+            </sv:property>
+
+            <sv:property sv:name="jcr:created" sv:type="Date">
+                <sv:value>2011-03-21T14:34:20.452+01:00</sv:value>
+            </sv:property>
+
+            <sv:property sv:name="jcr:createdBy" sv:type="String">
+                <sv:value>admin</sv:value>
+            </sv:property>
+
+            <sv:node sv:name="jcr:content">
+                <sv:property sv:name="jcr:primaryType" sv:type="Name">
+                    <sv:value>nt:unstructured</sv:value>
+                </sv:property>
+
+                <sv:property sv:name="jcr:lastModified" sv:type="Date">
+                    <sv:value>2009-04-27T13:01:07.472+02:00</sv:value>
+                </sv:property>
+
+                <sv:property sv:name="jcr:mimeType" sv:type="String">
+                    <sv:value>text/plain</sv:value>
+                </sv:property>
+
+                <sv:property sv:name="class" sv:type="String">
+                    <sv:value>PHPCR\Query\QueryInterface</sv:value>
+                </sv:property>
+
+                <sv:property sv:name="doublebackslash" sv:type="String">
+                    <sv:value>PHPCR\\Query\\QueryInterface</sv:value>
+                </sv:property>
+
+                <sv:property sv:name="quotes" sv:type="String">
+                    <sv:value>"'</sv:value>
+                </sv:property>
+
+                <sv:property sv:name="quoteandbackslash" sv:type="String">
+                    <sv:value>'a\'\'b\'\'c'</sv:value>
+                </sv:property>
+            </sv:node>
+        </sv:node>
+    </sv:node>
+</sv:node>
