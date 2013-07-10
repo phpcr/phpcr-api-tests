@@ -82,7 +82,7 @@ class Sql2ToQomConverterTest extends \PHPCR\Test\BaseCase
             array('SELECT * FROM [nt:file] WHERE prop1 = "Foo bar"', 'Foo bar'),
             array('SELECT * FROM [nt:file] WHERE prop1 = "Foo  bar"', 'Foo  bar'),
             array('SELECT * FROM [nt:file] WHERE prop1 = "Foo\tbar"', 'Foo\tbar'),
-            array('SELECT * FROM [nt:file] WHERE prop1 = "Foo\n\tbar"', 'Foo\nbar'),
+            array('SELECT * FROM [nt:file] WHERE prop1 = "Foo\n\tbar"', 'Foo\n\tbar'),
             array('SELECT * FROM [nt:file] WHERE prop1 = "Foo \t bar"', 'Foo \t bar'),
             array('SELECT * FROM [nt:file] WHERE prop1 = "Foo \t \n bar"', 'Foo \t \n bar'),
         );
