@@ -136,6 +136,145 @@ class QomTestQueries {
                 array());
 
         /**
+        * 6.7.12. Constraint (operator precedence)
+        */
+        $queries['6.7.12.Constraint.Precedence.1'] = $factory->createQuery(
+            $factory->selector('nt:file'),
+            $factory->orConstraint(
+                $factory->comparison(
+                    $factory->propertyValue('prop1', 'sel1'),
+                    Constants::JCR_OPERATOR_EQUAL_TO,
+                    $factory->literal('1')
+                ),
+                $factory->andConstraint(
+                    $factory->comparison(
+                        $factory->propertyValue('prop2', 'sel1'),
+                        Constants::JCR_OPERATOR_EQUAL_TO,
+                        $factory->literal('2')
+                    ),
+                    $factory->comparison(
+                        $factory->propertyValue('prop3', 'sel1'),
+                        Constants::JCR_OPERATOR_EQUAL_TO,
+                        $factory->literal('3')
+                    )
+                )
+            ),
+            array(),
+            array()
+        );
+
+        $queries['6.7.12.Constraint.Precedence.2'] = $factory->createQuery(
+            $factory->selector('nt:file'),
+            $factory->orConstraint(
+                $factory->andConstraint(
+                    $factory->comparison(
+                        $factory->propertyValue('prop1', 'sel1'),
+                        Constants::JCR_OPERATOR_EQUAL_TO,
+                        $factory->literal('1')
+                    ),
+                    $factory->comparison(
+                        $factory->propertyValue('prop2', 'sel1'),
+                        Constants::JCR_OPERATOR_EQUAL_TO,
+                        $factory->literal('2')
+                    )
+                ),
+                $factory->comparison(
+                    $factory->propertyValue('prop3', 'sel1'),
+                    Constants::JCR_OPERATOR_EQUAL_TO,
+                    $factory->literal('3')
+                )
+            ),
+            array(),
+            array()
+        );
+
+        $queries['6.7.12.Constraint.Precedence.3'] = $factory->createQuery(
+            $factory->selector('nt:file'),
+            $factory->orConstraint(
+                $factory->notConstraint(
+                    $factory->comparison(
+                        $factory->propertyValue('prop1', 'sel1'),
+                        Constants::JCR_OPERATOR_EQUAL_TO,
+                        $factory->literal('1')
+                    )
+                ),
+                $factory->andConstraint(
+                    $factory->comparison(
+                        $factory->propertyValue('prop2', 'sel1'),
+                        Constants::JCR_OPERATOR_EQUAL_TO,
+                        $factory->literal('2')
+                    ),
+                    $factory->notConstraint(
+                        $factory->comparison(
+                            $factory->propertyValue('prop3', 'sel1'),
+                            Constants::JCR_OPERATOR_EQUAL_TO,
+                            $factory->literal('3')
+                        )
+                    )
+                )
+            ),
+            array(),
+            array()
+        );
+
+        $queries['6.7.12.Constraint.Precedence.4'] = $factory->createQuery(
+            $factory->selector('nt:file'),
+            $factory->orConstraint(
+                $factory->andConstraint(
+                    $factory->andConstraint(
+                        $factory->propertyExistence('prop1', 'sel1'),
+                        $factory->propertyExistence('prop2', 'sel1')
+                    ),
+                    $factory->propertyExistence('prop3', 'sel1')
+                ),
+                $factory->andConstraint(
+                    $factory->andConstraint(
+                        $factory->andConstraint(
+                            $factory->propertyExistence('prop4', 'sel1'),
+                            $factory->propertyExistence('prop5', 'sel1')
+                        ),
+                        $factory->propertyExistence('prop6', 'sel1')
+                    ),
+                    $factory->propertyExistence('prop7', 'sel1')
+                )
+            ),
+            array(),
+            array()
+        );
+
+        $queries['6.7.12.Constraint.Precedence.5'] = $factory->createQuery(
+            $factory->selector('nt:file'),
+            $factory->orConstraint(
+                $factory->andConstraint(
+                    $factory->notConstraint(
+                        $factory->propertyExistence('prop1', 'sel1')
+                    ),
+                    $factory->notConstraint(
+                        $factory->notConstraint(
+                            $factory->propertyExistence('prop2', 'sel1')
+                        )
+                    )
+                ),
+                $factory->andConstraint(
+                    $factory->notConstraint(
+                        $factory->comparison(
+                            $factory->propertyValue('prop3', 'sel1'),
+                            Constants::JCR_OPERATOR_EQUAL_TO,
+                            $factory->literal('hello')
+                        )
+                    ),
+                    $factory->comparison(
+                        $factory->propertyValue('prop4', 'sel1'),
+                        Constants::JCR_OPERATOR_NOT_EQUAL_TO,
+                        $factory->literal('hello')
+                    )
+                )
+            ),
+            array(),
+            array()
+        );
+
+        /**
         * 6.7.13. AndConstraint
         */
 
