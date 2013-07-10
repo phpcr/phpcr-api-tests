@@ -76,10 +76,23 @@ class Sql2ToQomConverterTest extends \PHPCR\Test\BaseCase
         }
     }
 
-    public function testPropertyComparisonWithWhitespace()
+    public function getSQL2WithWhitespace()
     {
-        $sql2 = 'SELECT * FROM [nt:file] WHERE prop1 = "Foo bar"';
+        return array(
+            array('SELECT * FROM [nt:file] WHERE prop1 = "Foo bar"', 'Foo bar'),
+            array('SELECT * FROM [nt:file] WHERE prop1 = "Foo  bar"', 'Foo  bar'),
+            array('SELECT * FROM [nt:file] WHERE prop1 = "Foo\tbar"', 'Foo\tbar'),
+            array('SELECT * FROM [nt:file] WHERE prop1 = "Foo\n\tbar"', 'Foo\nbar'),
+            array('SELECT * FROM [nt:file] WHERE prop1 = "Foo \t bar"', 'Foo \t bar'),
+            array('SELECT * FROM [nt:file] WHERE prop1 = "Foo \t \n bar"', 'Foo \t \n bar'),
+        );
+    }
 
+    /**
+     * @dataProvider getSQL2WithWhitespace
+     */
+    public function testPropertyComparisonWithWhitespace($sql2, $literal)
+    {
         $qom = $this->parser->parse($sql2);
 
         $this->assertInstanceOf('PHPCR\Query\QOM\ComparisonInterface', $qom->getConstraint());
@@ -87,6 +100,6 @@ class Sql2ToQomConverterTest extends \PHPCR\Test\BaseCase
         $this->assertInstanceOf('PHPCR\Query\QOM\LiteralInterface', $qom->getConstraint()->getOperand2());
 
         $this->assertEquals('prop1', $qom->getConstraint()->getOperand1()->getPropertyName());
-        $this->assertEquals('Foo bar', $qom->getConstraint()->getOperand2()->getLiteralValue());
+        $this->assertEquals($literal, $qom->getConstraint()->getOperand2()->getLiteralValue());
     }
 }
