@@ -75,4 +75,18 @@ class Sql2ToQomConverterTest extends \PHPCR\Test\BaseCase
             }
         }
     }
+
+    public function testPropertyComparisonWithWhitespace()
+    {
+        $sql2 = 'SELECT * FROM [nt:file] WHERE prop1 = "Foo bar"';
+
+        $qom = $this->parser->parse($sql2);
+
+        $this->assertInstanceOf('PHPCR\Query\QOM\ComparisonInterface', $qom->getConstraint());
+        $this->assertInstanceOf('PHPCR\Query\QOM\PropertyValueInterface', $qom->getConstraint()->getOperand1());
+        $this->assertInstanceOf('PHPCR\Query\QOM\LiteralInterface', $qom->getConstraint()->getOperand2());
+
+        $this->assertEquals('prop1', $qom->getConstraint()->getOperand1()->getPropertyName());
+        $this->assertEquals('Foo bar', $qom->getConstraint()->getOperand2()->getLiteralValue());
+    }
 }
