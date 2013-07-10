@@ -47,6 +47,41 @@ class Sql2TestQueries {
         $queries['6.7.11.DescendantNodeJoinCondition'] = 'SELECT * FROM [nt:file] INNER JOIN [nt:folder] ON ISDESCENDANTNODE(descendant, ancestor)';
 
         /**
+        * 6.7.12. Constraint (operator precedence)
+        */
+        $queries['6.7.12.Constraint.Precedence.1'] = array(
+            'SELECT * FROM [nt:file] WHERE sel1.prop1 = \'1\' OR sel1.prop2 = \'2\' AND sel1.prop3 = \'3\'',
+            'SELECT * FROM [nt:file] WHERE (sel1.prop1 = \'1\' OR (sel1.prop2 = \'2\' AND sel1.prop3 = \'3\'))',
+        );
+        $queries['6.7.12.Constraint.Precedence.2'] = array(
+            'SELECT * FROM [nt:file] WHERE sel1.prop1 = \'1\' AND sel1.prop2 = \'2\' OR sel1.prop3 = \'3\'',
+            'SELECT * FROM [nt:file] WHERE ((sel1.prop1 = \'1\' AND sel1.prop2 = \'2\') OR sel1.prop3 = \'3\')',
+        );
+
+        $queries['6.7.12.Constraint.Precedence.3'] = array(
+            'SELECT * FROM [nt:file] WHERE NOT sel1.prop1 = \'1\' OR sel1.prop2 = \'2\' AND NOT sel1.prop3 = \'3\'',
+            'SELECT * FROM [nt:file] WHERE (NOT sel1.prop1 = \'1\' OR (sel1.prop2 = \'2\' AND NOT sel1.prop3 = \'3\'))',
+        );
+
+        $queries['6.7.12.Constraint.Precedence.4'] = array(
+            'SELECT * FROM [nt:file] WHERE
+            sel1.prop1 IS NOT NULL AND sel1.prop2 IS NOT NULL
+                AND sel1.prop3 IS NOT NULL
+            OR sel1.prop4 IS NOT NULL AND sel1.prop5 IS NOT NULL
+                AND sel1.prop6 IS NOT NULL AND sel1.prop7 IS NOT NULL',
+
+            'SELECT * FROM [nt:file] WHERE (((sel1.prop1 IS NOT NULL AND sel1.prop2 IS NOT NULL) AND sel1.prop3 IS NOT NULL) OR (((sel1.prop4 IS NOT NULL AND sel1.prop5 IS NOT NULL) AND sel1.prop6 IS NOT NULL) AND sel1.prop7 IS NOT NULL))',
+        );
+
+        $queries['6.7.12.Constraint.Precedence.5'] = array(
+            'SELECT * FROM [nt:file] WHERE
+                NOT sel1.prop1 IS NOT NULL AND NOT NOT sel1.prop2 IS NOT NULL
+                OR NOT sel1.prop3 = \'hello\' AND sel1.prop4 <> \'hello\'',
+
+            'SELECT * FROM [nt:file] WHERE ((NOT sel1.prop1 IS NOT NULL AND NOT NOT sel1.prop2 IS NOT NULL) OR (NOT sel1.prop3 = \'hello\' AND sel1.prop4 <> \'hello\'))',
+        );
+
+        /**
         * 6.7.13. AndConstraint
         */
         $queries['6.7.13.And'] = array(
