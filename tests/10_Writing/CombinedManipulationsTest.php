@@ -611,7 +611,7 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
         try {
             $childprop->getValue();
             $this->fail('Should not be possible to get the value of a deleted property');
-        } catch(\PHPCR\RepositoryException $e) {
+        } catch(\PHPCR\InvalidItemStateException $e) {
             //expected
         }
 
@@ -619,7 +619,7 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
         try {
             $child->getPath();
             $this->fail('getting the path of deleted child should throw exception');
-        } catch(\PHPCR\RepositoryException $e) {
+        } catch(\PHPCR\InvalidItemStateException $e) {
             // expected
         }
         $this->assertFalse($node->hasProperty('prop'));
