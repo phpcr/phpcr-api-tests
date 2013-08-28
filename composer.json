@@ -3,8 +3,11 @@
     "type": "testsuite",
     "description": "PHP Content Repository compliance test suite",
     "keywords": ["phpcr", "contentrepository", "testing"],
-    "homepage": "http://phpcr.github.com",
-    "license": "Apache-2.0",
+    "homepage": "http://phpcr.github.io",
+    "license": [
+        "MIT",
+        "Apache-2.0"
+    ],
     "authors": [
         {
             "name": "David Buchmann",
@@ -26,11 +29,6 @@
     "require": {
         "php": ">=5.3.0",
         "phpcr/phpcr-implementation": "2.1.*"
-    },
-    "autoload": {
-        "psr-0": {
-            "PHPCR": "src"
-        }
     },
     "extra": {
         "branch-alias": {

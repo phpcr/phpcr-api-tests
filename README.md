@@ -11,6 +11,12 @@ Some of the chapters have not yet been implemented. They have a file named ```TO
 in the folder. The tests in all chapters are probably not feature complete, but
 steadily increasing. Help is of course welcome.
 
+## License
+
+This code is dual licensed under the MIT license and the Apache License Version
+2.0. Please see the file LICENSE in this folder.
+
+
 ## Usage
 
 The phpcr-api-tests is a suite to test compliance for implementations of
