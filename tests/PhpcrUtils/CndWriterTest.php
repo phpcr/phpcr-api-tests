@@ -74,7 +74,7 @@ EOT;
             ->method('getUri')
             ->will($this->returnCallback(
                 function($prefix) {
-                    switch($prefix) {
+                    switch ($prefix) {
                         case 'ns':
                             return 'http://namespace.com/ns';
                         case 'ex':

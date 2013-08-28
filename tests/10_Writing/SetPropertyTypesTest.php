@@ -3,7 +3,6 @@ namespace PHPCR\Tests\Writing;
 
 use PHPCR\PropertyInterface;
 use PHPCR\PropertyType;
-use PHPCR\SessionInterface;
 
 require_once(__DIR__ . '/../../inc/BaseCase.php');
 

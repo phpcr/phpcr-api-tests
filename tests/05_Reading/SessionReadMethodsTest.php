@@ -179,7 +179,6 @@ class SessionReadMethodsTest extends \PHPCR\Test\BaseCase
         $this->sharedFixture['session']->getProperties('no iterable thing');
     }
 
-
     /**
      * it is forbidden to call getItem on the session with a relative path
      * @expectedException \PHPCR\PathNotFoundException
@@ -226,7 +225,6 @@ class SessionReadMethodsTest extends \PHPCR\Test\BaseCase
     {
         $this->sharedFixture['session']->itemExists('//');
     }
-
 
     public function testNodeExists()
     {

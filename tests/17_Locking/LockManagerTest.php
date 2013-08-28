@@ -310,10 +310,10 @@ class LockManagerTest extends \PHPCR\Test\BaseCase
      * Helper function to simplify the test of valid Lock objects
      * @param \PHPCR\Lock\LockInterface $lock The lock to check
      * @param NodeInterface the expected node of this lock
-     * @param string $expectedOwner
+     * @param string  $expectedOwner
      * @param boolean $expectedIsDeep
      * @param boolean $expectedIsSessionScoped
-     * @param int $timeout the expected seconds remaining. One second less remaining is accepted too to permit for one second change
+     * @param int     $timeout                 the expected seconds remaining. One second less remaining is accepted too to permit for one second change
      */
     protected function assertLockEquals($lock, $expectedNode, $expectedOwner, $expectedIsDeep, $expectedIsSessionScoped, $timeout)
     {

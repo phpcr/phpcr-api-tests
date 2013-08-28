@@ -9,7 +9,7 @@ require_once(__DIR__ . '/../../inc/BaseCase.php');
 class OrderBeforeTest extends \PHPCR\Test\BaseCase
 {
 
-    static public function setupBeforeClass($fixtures = '23_OrderableChildNodes/orderable')
+    public static function setupBeforeClass($fixtures = '23_OrderableChildNodes/orderable')
     {
         parent::setupBeforeClass($fixtures);
     }
@@ -23,8 +23,8 @@ class OrderBeforeTest extends \PHPCR\Test\BaseCase
     /**
      * Helper method to assert a certain order of the child nodes
      *
-     * @param array $names array values are the names in expected order
-     * @param \PHPCR\NodeInterface $node the node whos children are to be checked
+     * @param array                $names array values are the names in expected order
+     * @param \PHPCR\NodeInterface $node  the node whos children are to be checked
      */
     private function assertChildOrder($names, $node)
     {

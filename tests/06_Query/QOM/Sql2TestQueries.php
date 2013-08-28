@@ -7,10 +7,10 @@ namespace PHPCR\Tests\Query\QOM;
 * The SQL2 queries defined here correspond to the QOM queries defined in QomTestQueries.
 * @see QomTestQueries
 */
-class Sql2TestQueries {
-
-    public static function getQueries() {
-
+class Sql2TestQueries
+{
+    public static function getQueries()
+    {
         $queries = array();
 
         /**
@@ -198,7 +198,6 @@ class Sql2TestQueries {
         * 6.7.35. BindVariable
         */
         $queries['6.7.35.BindValue'] = 'SELECT * FROM [nt:file] WHERE UPPER(NAME()) LIKE $var';
-
 
         /**
         * 6.7.38 Order

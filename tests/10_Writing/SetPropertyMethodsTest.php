@@ -57,7 +57,6 @@ class SetPropertyMethodsTest extends \PHPCR\Test\BaseCase
         $this->assertEquals(1023, $prop->getLong());
     }
 
-
     /**
      * \PHPCR\NodeInterface::setProperty
      */

@@ -16,7 +16,7 @@ class NodeTypeTest extends \PHPCR\Test\BaseCase
     private static $resource;
     private static $created;
 
-    static public function setupBeforeClass($fixtures = false)
+    public static function setupBeforeClass($fixtures = false)
     {
         parent::setupBeforeClass($fixtures);
         $ntm = self::$staticSharedFixture['session']->getWorkspace()->getNodeTypeManager();

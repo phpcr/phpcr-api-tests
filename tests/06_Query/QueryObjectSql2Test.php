@@ -1,7 +1,7 @@
 <?php
 namespace PHPCR\Tests\Query;
 
-require_once('QueryBaseCase.php');
+require_once 'QueryBaseCase.php';
 
 /**
  * test the Query interface. $ 6.9
@@ -115,7 +115,7 @@ class QueryObjectSql2Test extends QueryBaseCase
 
             $p = $query->getStoredQueryPath();
             $this->assertEquals('/tests_general_query/queryNode', $p);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             //FIXME: finally?
             $this->sharedFixture['ie']->import('general/base');
             throw $e;

@@ -13,7 +13,7 @@ class CopyMethodsTest extends \PHPCR\Test\BaseCase
     /** @var WorkspaceInterface */
     protected $ws;
 
-    static public function setupBeforeClass($fixtures = '10_Writing/copy')
+    public static function setupBeforeClass($fixtures = '10_Writing/copy')
     {
         parent::setupBeforeClass($fixtures);
     }
@@ -162,6 +162,3 @@ class CopyMethodsTest extends \PHPCR\Test\BaseCase
     }
 
 }
-
-
-

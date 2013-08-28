@@ -11,7 +11,7 @@ require_once(__DIR__ . '/../../inc/BaseCase.php');
  */
 class DeleteMethodsTest extends \PHPCR\Test\BaseCase
 {
-    static public function setupBeforeClass($fixtures = '22_SameNameSiblings/delete')
+    public static function setupBeforeClass($fixtures = '22_SameNameSiblings/delete')
     {
         parent::setupBeforeClass($fixtures);
     }
@@ -145,6 +145,7 @@ class DeleteMethodsTest extends \PHPCR\Test\BaseCase
     {
         $parent = $session->getNode($parentPath);
         $this->assertInstanceOf('PHPCR\NodeInterface', $parent);
+
         return $parent;
     }
 }

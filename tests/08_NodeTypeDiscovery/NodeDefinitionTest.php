@@ -18,7 +18,7 @@ class NodeDefinitionTest extends \PHPCR\Test\BaseCase
     private $content;
     private $hierarchyNodeDef;
 
-    static public function setupBeforeClass($fixtures = false)
+    public static function setupBeforeClass($fixtures = false)
     {
         parent::setupBeforeClass($fixtures);
         $ntm = self::$staticSharedFixture['session']->getWorkspace()->getNodeTypeManager();

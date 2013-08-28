@@ -10,7 +10,7 @@ require_once(__DIR__ . '/../../inc/BaseCase.php');
 */
 class CreateVersionableNodeTest extends \PHPCR\Test\BaseCase
 {
-    static public function setupBeforeClass($fixtures = '15_Versioning/base')
+    public static function setupBeforeClass($fixtures = '15_Versioning/base')
     {
         parent::setupBeforeClass($fixtures);
     }

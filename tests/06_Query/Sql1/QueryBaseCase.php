@@ -18,5 +18,5 @@ abstract class QueryBaseCase extends \PHPCR\Tests\Query\QueryBaseCase
 
         $this->query = $this->sharedFixture['qm']->createQuery("SELECT * FROM nt:folder", \PHPCR\Query\QueryInterface::JCR_SQL2);
     }
-        
+
 }

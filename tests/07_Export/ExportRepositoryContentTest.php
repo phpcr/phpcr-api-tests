@@ -8,7 +8,7 @@ use DOMDocument, DOMElement, DOMNode, DOMText, DOMXPath;
 //7 Export Repository Content
 class ExportRepositoryContentTest extends \PHPCR\Test\BaseCase
 {
-    static public function setupBeforeClass($fixtures = '07_Export/systemview')
+    public static function setupBeforeClass($fixtures = '07_Export/systemview')
     {
         parent::setupBeforeClass($fixtures);
     }
@@ -37,7 +37,7 @@ class ExportRepositoryContentTest extends \PHPCR\Test\BaseCase
     private function buildPath(DOMNode $n)
     {
         $ret = '';
-        while(! $n instanceof DOMDocument) {
+        while (! $n instanceof DOMDocument) {
             if ($n instanceof DOMElement && in_array($n->tagName, array('sv:node', 'sv:property'))) {
                 $name = $n->attributes->getNamedItem('name');
                 if ($name == null) {
@@ -51,6 +51,7 @@ class ExportRepositoryContentTest extends \PHPCR\Test\BaseCase
             $ret = $elem . '/' . $ret;
             $n = $n->parentNode;
         }
+
         return "/$ret";
     }
 

@@ -3,7 +3,6 @@ namespace PHPCR\Tests\Writing;
 
 require_once(__DIR__ . '/../../inc/BaseCase.php');
 
-use PHPCR\PropertyType;
 use Jackalope\Item;
 
 /**

@@ -23,7 +23,7 @@ class CloneMethodsTest extends BaseCase
     /** @var string */
     protected static $destWsName;
 
-    static public function setupBeforeClass($fixtures = '10_Writing/clone')
+    public static function setupBeforeClass($fixtures = '10_Writing/clone')
     {
         parent::setupBeforeClass($fixtures);
 
@@ -50,7 +50,7 @@ class CloneMethodsTest extends BaseCase
         $this->srcWsName = $this->sharedFixture['session']->getWorkspace()->getName();
     }
 
-    static public function tearDownAfterClass()
+    public static function tearDownAfterClass()
     {
         self::$destWs = null;
         parent::tearDownAfterClass();

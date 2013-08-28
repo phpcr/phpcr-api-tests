@@ -42,6 +42,7 @@ class NodeTypeAssignementTest extends \PHPCR\Test\BaseCase
         foreach (self::$mixins as $mixin) {
             $ret[] = array($mixin);
         }
+
         return $ret;
     }
 

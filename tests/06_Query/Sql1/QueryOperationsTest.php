@@ -3,7 +3,7 @@ namespace PHPCR\Tests\Query\Sql1;
 
 use PHPCR\Query\QueryInterface;
 
-require_once('QueryBaseCase.php');
+require_once 'QueryBaseCase.php';
 
 /**
  * Run non-trivial queries to try out where, the join features and such

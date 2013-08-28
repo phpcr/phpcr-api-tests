@@ -3,7 +3,6 @@ namespace PHPCR\Tests\Transactions;
 
 require_once(__DIR__ . '/../../inc/BaseCase.php');
 
-use \PHPCR\PropertyType as Type;
 use \PHPCR\Transaction;
 
 /**
@@ -12,7 +11,7 @@ use \PHPCR\Transaction;
 class TransactionMethodsTest extends \PHPCR\Test\BaseCase
 {
 
-    static public function setupBeforeClass($fixtures = '21_Transactions/transactions')
+    public static function setupBeforeClass($fixtures = '21_Transactions/transactions')
     {
         parent::setupBeforeClass($fixtures);
     }
@@ -57,13 +56,13 @@ class TransactionMethodsTest extends \PHPCR\Test\BaseCase
     public function testTransactionRollback()
     {
         $session = self::$staticSharedFixture['session'];
-        
+
         $copy = $this->node->addNode('copyTransaction');
         $copiedNodePath = $this->node->getPath()."/copyTransactionCopy";
         $session->save();
 
         $utx = $session->getWorkspace()->getTransactionManager();
-        
+
         $child = $this->node->addNode('insideTransaction');
         $utx->begin();
         //workspace operation
@@ -121,7 +120,6 @@ class TransactionMethodsTest extends \PHPCR\Test\BaseCase
 
         $session = self::$staticSharedFixture['session'];
         $vm = $session->getWorkspace()->getVersionManager();
-
 
         $utx= $session->getWorkspace()->getTransactionManager();
         $vm->checkout($this->node->getPath());

@@ -22,6 +22,7 @@ class SimpleCredentialsTest extends \PHPCR\Test\BaseCase
     {
         $cr = new \PHPCR\SimpleCredentials($user, $password);
         $this->assertInstanceOf('PHPCR\CredentialsInterface', $cr);
+
         return $cr;
     }
 

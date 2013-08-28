@@ -3,14 +3,12 @@ namespace PHPCR\Tests\Writing;
 
 require_once(__DIR__ . '/../../inc/BaseCase.php');
 
-use PHPCR\PropertyType as Type;
-
 /**
  * test sequences of adding / moving / removing stuff inside a transaction
  */
 class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
 {
-    static public function setupBeforeClass($fixtures = '10_Writing/combinedmanipulations')
+    public static function setupBeforeClass($fixtures = '10_Writing/combinedmanipulations')
     {
         parent::setupBeforeClass($fixtures);
     }
@@ -547,7 +545,6 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
         $this->assertTrue($session->nodeExists($node->getPath() . '/child'));
         $this->assertSame($child, $session->getNode($node->getPath() . '/child'));
 
-
     }
 
     public function testRemoveSessionRefreshKeepChanges()
@@ -611,7 +608,7 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
         try {
             $childprop->getValue();
             $this->fail('Should not be possible to get the value of a deleted property');
-        } catch(\PHPCR\InvalidItemStateException $e) {
+        } catch (\PHPCR\InvalidItemStateException $e) {
             //expected
         }
 
@@ -619,7 +616,7 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
         try {
             $child->getPath();
             $this->fail('getting the path of deleted child should throw exception');
-        } catch(\PHPCR\InvalidItemStateException $e) {
+        } catch (\PHPCR\InvalidItemStateException $e) {
             // expected
         }
         $this->assertFalse($node->hasProperty('prop'));

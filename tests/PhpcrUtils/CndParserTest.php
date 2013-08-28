@@ -5,13 +5,11 @@ namespace PHPCR\Tests\PhpcrUtils;
 require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 use PHPCR\NodeType\NodeTypeDefinitionInterface;
-use PHPCR\NodeType\NodeTypeManagerInterface;
 use PHPCR\PropertyType;
 use PHPCR\NodeType\PropertyDefinitionTemplateInterface;
 use PHPCR\Version\OnParentVersionAction;
 
 use PHPCR\Util\CND\Parser\CndParser;
-
 
 class CndParserTest extends \PHPCR\Test\BaseCase
 {

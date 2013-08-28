@@ -28,7 +28,7 @@ class PropertyDefinitionTest extends \PHPCR\Test\BaseCase
     /** property of nt:resource */
     private $data; // (BINARY) mandatory
 
-    static public function setupBeforeClass($fixtures = false)
+    public static function setupBeforeClass($fixtures = false)
     {
         parent::setupBeforeClass(); // load default fixtures
         $ntm = self::$staticSharedFixture['session']->getWorkspace()->getNodeTypeManager();
@@ -47,7 +47,7 @@ class PropertyDefinitionTest extends \PHPCR\Test\BaseCase
             $this->assertInternalType('array', $defs);
             foreach ($defs as $def) {
                 $this->assertInstanceOf('\PHPCR\NodeType\PropertyDefinitionInterface', $def);
-                switch($def->getName()) {
+                switch ($def->getName()) {
                     case 'jcr:primaryType':
                         $this->primaryType = $def;
                         break;
@@ -63,7 +63,7 @@ class PropertyDefinitionTest extends \PHPCR\Test\BaseCase
             $this->assertInternalType('array', $defs);
             foreach ($defs as $def) {
                 $this->assertInstanceOf('\PHPCR\NodeType\PropertyDefinitionInterface', $def);
-                switch($def->getName()) {
+                switch ($def->getName()) {
                     case 'jcr:workspace':
                         $this->workspace = $def;
                         break;

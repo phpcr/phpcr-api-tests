@@ -3,7 +3,7 @@ namespace PHPCR\Tests\Query;
 
 use PHPCR\Query\QueryInterface;
 
-require_once('QueryBaseCase.php');
+require_once 'QueryBaseCase.php';
 
 /**
  * Run non-trivial queries to try out where, the join features and such
@@ -130,7 +130,7 @@ class QuerySql2OperationsTest extends QueryBaseCase
         $this->assertInstanceOf('\PHPCR\Query\QueryResultInterface', $result);
         $vals = array();
 
-        foreach($result->getRows() as $row) {
+        foreach ($result->getRows() as $row) {
             $vals[] = $row->getValue('nt:unstructured.longNumber');
         }
         $this->assertEquals(array(999), $vals);
@@ -155,7 +155,7 @@ class QuerySql2OperationsTest extends QueryBaseCase
         $this->assertInstanceOf('\PHPCR\Query\QueryResultInterface', $result);
         $vals = array();
 
-        foreach($result->getRows() as $row) {
+        foreach ($result->getRows() as $row) {
             $vals[] = $row->getValue('content.longNumber');
         }
         $this->assertEquals(array(999), $vals);

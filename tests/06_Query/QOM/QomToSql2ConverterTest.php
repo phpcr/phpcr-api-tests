@@ -2,7 +2,7 @@
 namespace PHPCR\Tests\Query\QOM;
 
 require_once(__DIR__ . '/../../../inc/BaseCase.php');
-require_once('Sql2TestQueries.php');
+require_once 'Sql2TestQueries.php';
 
 use Jackalope\Query\QOM; // TODO get rid of jackalope dependency
 use PHPCR\Util\QOM\QomToSql2QueryConverter;
@@ -38,7 +38,7 @@ class QomToSql2ConverterTest extends \PHPCR\Test\BaseCase
         $this->parser = new QomToSql2QueryConverter(new Sql2Generator(new ValueConverter()));
         try {
             $this->factory = $this->sharedFixture['session']->getWorkspace()->getQueryManager()->getQOMFactory();
-        } catch(\PHPCR\UnsupportedRepositoryException $e) {
+        } catch (\PHPCR\UnsupportedRepositoryException $e) {
             $this->markTestSkipped('Repository does not support the QOM factory');
         }
         $this->queries = Sql2TestQueries::getQueries();
@@ -364,7 +364,6 @@ class QomToSql2ConverterTest extends \PHPCR\Test\BaseCase
         $this->assertQuery($this->queries['6.7.35.BindValue'], $selector, array(), $constraint, array());
     }
 
-
     /**
      * 6.7.38 Order
      */
@@ -395,18 +394,17 @@ class QomToSql2ConverterTest extends \PHPCR\Test\BaseCase
         $this->assertQuery($this->queries['6.7.39.Colum.Mixed'], $selector, array($col1, $col2, $col3));
     }
 
-
     // -------------------------------------------------------------------------
 
     /**
      * Assert that a QOM query specified by its source, columns, constraint and orderings
      * will be converted in the expected SQL2 query.
      *
-     * @param string $expectedSql2 The expected SQL2 query
-     * @param \PHPCR\Query\QOM\SourceInterface $source The source of the QOM query
-     * @param array $columns The columns of the QOM query
-     * @param \PHPCR\Query\QOM\ContraintInterface $constraint The contraint of the QOM query
-     * @param array $ordering The orderings of the QOM query
+     * @param string                              $expectedSql2 The expected SQL2 query
+     * @param \PHPCR\Query\QOM\SourceInterface    $source       The source of the QOM query
+     * @param array                               $columns      The columns of the QOM query
+     * @param \PHPCR\Query\QOM\ContraintInterface $constraint   The contraint of the QOM query
+     * @param array                               $ordering     The orderings of the QOM query
      */
     protected function assertQuery($expectedSql2, $source, $columns = array(), $constraint = null, $ordering = array())
     {

@@ -155,7 +155,7 @@ class NodeReadMethodsTest extends \PHPCR\Test\BaseCase
         $this->assertInstanceOf('Countable', $iterator);
 
         $this->assertCount(8, $iterator);
-        foreach($iterator as $node) {
+        foreach ($iterator as $node) {
             $this->assertInstanceOf('PHPCR\NodeInterface', $node);
         }
     }
@@ -245,7 +245,7 @@ class NodeReadMethodsTest extends \PHPCR\Test\BaseCase
         $this->assertInstanceOf('Iterator', $iterator);
 
         $names = array();
-        foreach($iterator as $name) {
+        foreach ($iterator as $name) {
             $names[] = $name;
         }
 

@@ -11,7 +11,7 @@ use PHPCR\PropertyType as Type;
 class AddMethodsTest extends \PHPCR\Test\BaseCase
 {
 
-    static public function setupBeforeClass($fixtures = '10_Writing/add')
+    public static function setupBeforeClass($fixtures = '10_Writing/add')
     {
         parent::setupBeforeClass($fixtures);
     }
@@ -263,8 +263,6 @@ class AddMethodsTest extends \PHPCR\Test\BaseCase
         $session1->save();
         $session2->save();
     }
-
-
 
     /**
      * try to add a node below a not existing node.

@@ -312,7 +312,6 @@ class ImportRepositoryContentTest extends \PHPCR\Test\BaseCase
         $this->assertTrue($session->nodeExists('/testChild'));
     }
 
-
     /**
      * Provoke an io error
      *

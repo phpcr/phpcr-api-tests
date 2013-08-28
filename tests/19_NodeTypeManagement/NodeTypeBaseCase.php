@@ -24,7 +24,6 @@ abstract class NodeTypeBaseCase extends BaseCase
      */
     protected $session;
 
-
     protected function setUp()
     {
         $this->renewSession(); // reset session
@@ -42,7 +41,7 @@ abstract class NodeTypeBaseCase extends BaseCase
      * @return NodeTypeInterface[] registered node types, like
      *      NodeTypeManagerInterface returns them.
      */
-    protected abstract function registerNodeTypes($allowUpdate);
+    abstract protected function registerNodeTypes($allowUpdate);
 
     /**
      * Register the node type cnd/class that defines a primary item
@@ -52,7 +51,7 @@ abstract class NodeTypeBaseCase extends BaseCase
      * @return NodeTypeInterface[] registered node types, like
      *      NodeTypeManagerInterface returns them.
      */
-    protected abstract function registerNodeTypePrimaryItem();
+    abstract protected function registerNodeTypePrimaryItem();
 
     public function testRegisterNodeTypes()
     {

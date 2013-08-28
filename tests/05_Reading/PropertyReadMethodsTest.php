@@ -55,7 +55,7 @@ class PropertyReadMethodsTest extends \PHPCR\Test\BaseCase
     }
 
     /*** item base methods for property ***/
-    function testGetAncestor()
+    public function testGetAncestor()
     {
         $ancestor = $this->dateProperty->getAncestor(0);
         $this->assertNotNull($ancestor);
@@ -73,7 +73,7 @@ class PropertyReadMethodsTest extends \PHPCR\Test\BaseCase
         $this->assertInstanceOf('PHPCR\PropertyInterface', $ancestor);
         $this->assertTrue($this->dateProperty->isSame($ancestor));
     }
-    function testGetDepthProperty()
+    public function testGetDepthProperty()
     {
         $this->assertEquals(2, $this->createdProperty->getDepth());
         $this->assertEquals(4, $this->dateProperty->getDepth());
@@ -115,7 +115,7 @@ class PropertyReadMethodsTest extends \PHPCR\Test\BaseCase
         $this->createdProperty->accept($mock);
     }
 
-    function testGetPropertyName()
+    public function testGetPropertyName()
     {
         $name = $this->createdProperty->getName();
         $this->assertEquals('jcr:created', $name);
@@ -451,7 +451,6 @@ class PropertyReadMethodsTest extends \PHPCR\Test\BaseCase
     {
         $this->assertEquals(29, $this->dateProperty->getLength());
     }
-
 
     //binary length is tested in BinaryReadMethodsTest
 

@@ -10,7 +10,7 @@ require_once(__DIR__ . '/../../inc/BaseCase.php');
  */
 class VersionManagerTest extends \PHPCR\Test\BaseCase
 {
-    static public function setupBeforeClass($fixtures = '15_Versioning/base')
+    public static function setupBeforeClass($fixtures = '15_Versioning/base')
     {
         parent::setupBeforeClass($fixtures);
     }
@@ -22,7 +22,6 @@ class VersionManagerTest extends \PHPCR\Test\BaseCase
         $this->node = $this->sharedFixture['session']->getNode('/tests_version_base/versionable');
         $this->vm = $this->sharedFixture['session']->getWorkspace()->getVersionManager();
     }
-
 
     public function testCheckinCheckoutVersion()
     {
@@ -102,8 +101,6 @@ class VersionManagerTest extends \PHPCR\Test\BaseCase
         $this->assertSame($version, $version2, 'must be the same version instance');
     }
 
-
-
     public function testGetBaseVersion()
     {
         $version = $this->vm->getBaseVersion('/tests_version_base/versioned');
@@ -125,7 +122,6 @@ class VersionManagerTest extends \PHPCR\Test\BaseCase
     {
         $version = $this->vm->getBaseVersion('/tests_version_base/not_existing');
     }
-
 
     public function testGetVersionHistory()
     {
@@ -177,7 +173,6 @@ class VersionManagerTest extends \PHPCR\Test\BaseCase
     {
         $this->vm->isCheckedOut('/tests_version_base/not_existing');
     }
-
 
     public function testRestoreByPathAndName()
     {
@@ -328,7 +323,6 @@ class VersionManagerTest extends \PHPCR\Test\BaseCase
         $rootVersion = $this->vm->getVersionHistory('/tests_version_base/versioned')->getRootVersion();
         $this->vm->restore(true, $rootVersion);
     }
-
 
     // TODO: cancelMerge, merge, doneMerge, createConfiguration, createActivity, setActivity, getActivity, removeActivity, restoreByLabel
 

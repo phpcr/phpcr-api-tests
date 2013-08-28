@@ -14,7 +14,7 @@ class NodeNodeTypeReadMethodsTest extends \PHPCR\Test\BaseCase
     protected $versioned;
     protected $simpleVersioned;
 
-    static public function setupBeforeClass($fixtures = '15_Versioning/base')
+    public static function setupBeforeClass($fixtures = '15_Versioning/base')
     {
         parent::setupBeforeClass($fixtures);
     }

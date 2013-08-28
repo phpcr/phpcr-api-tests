@@ -10,7 +10,7 @@ require_once(__DIR__ . '/../../inc/BaseCase.php');
 class EncodingTest extends \PHPCR\Test\BaseCase
 {
 
-    static public function setupBeforeClass($fixtures = '05_Reading/encoding')
+    public static function setupBeforeClass($fixtures = '05_Reading/encoding')
     {
         parent::setupBeforeClass($fixtures);
     }

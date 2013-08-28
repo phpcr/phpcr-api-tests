@@ -6,7 +6,6 @@ use PHPCR\Query\QueryInterface;
 
 require_once(__DIR__ . '/../../inc/BaseCase.php');
 
-
 class CharacterTest extends \PHPCR\Test\BaseCase
 {
     public static function setupBeforeClass($fixtures = '06_Query/characters')

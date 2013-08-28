@@ -23,7 +23,7 @@ class SetPropertyDynamicRebindingTest extends \PHPCR\Test\BaseCase
 
     protected static $created_nodes = array();
 
-    static public function setupBeforeClass($fixtures = '10_Writing/nodetype')
+    public static function setupBeforeClass($fixtures = '10_Writing/nodetype')
     {
         parent::setupBeforeClass($fixtures);
     }
@@ -37,12 +37,12 @@ class SetPropertyDynamicRebindingTest extends \PHPCR\Test\BaseCase
     /**
      * @dataProvider dynamicRebindingProvider
      *
-     * @param string $propName The name of the new property to create
-     * @param int $sourcePropType The initial type of the property
-     * @param mixed $sourcePropValue The initial value of the property
-     * @param int $destPropType The new type of the property
-     * @param mixed $destPropValue The new value of the property
-     * @param string $getterFunc The getter function to use to read the new value
+     * @param string $propName        The name of the new property to create
+     * @param int    $sourcePropType  The initial type of the property
+     * @param mixed  $sourcePropValue The initial value of the property
+     * @param int    $destPropType    The new type of the property
+     * @param mixed  $destPropValue   The new value of the property
+     * @param string $getterFunc      The getter function to use to read the new value
      */
     public function testDynamicRebinding($propName, $sourcePropType, $sourcePropValue, $destPropType, $destPropValue, $getterFunc)
     {
@@ -96,6 +96,7 @@ class SetPropertyDynamicRebindingTest extends \PHPCR\Test\BaseCase
             // UnsupportedRepositoryException is thrown if the type parameter is
             // present and different from the current type.
             $this->assertNotEquals($sourcePropType, $destPropType, 'explicit type parameters that do not change the type may not provoke the unsupported exception');
+
             return;
         }
 

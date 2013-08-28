@@ -8,7 +8,7 @@ require_once(__DIR__ . '/../../inc/BaseCase.php');
  */
 class DeleteMethodsTest extends \PHPCR\Test\BaseCase
 {
-    static public function setupBeforeClass($fixtures = '10_Writing/delete')
+    public static function setupBeforeClass($fixtures = '10_Writing/delete')
     {
         parent::setupBeforeClass($fixtures);
     }
@@ -374,7 +374,7 @@ class DeleteMethodsTest extends \PHPCR\Test\BaseCase
         foreach ($items as $item) {
             try {
                 $this->fail('Should not be able to get path of deleted item '.$item->getPath()); // this should explode
-            } catch(\PHPCR\InvalidItemStateException $e) {
+            } catch (\PHPCR\InvalidItemStateException $e) {
                 // the exception is expected
             }
         }
@@ -392,12 +392,11 @@ class DeleteMethodsTest extends \PHPCR\Test\BaseCase
         foreach ($items as $item) {
             try {
                 $this->fail('Should not be able to get path of deleted item '.$item->getPath()); // this should explode
-            } catch(\PHPCR\InvalidItemStateException $e) {
+            } catch (\PHPCR\InvalidItemStateException $e) {
                 // the exception is expected
             }
         }
     }
-
 
     /**
      * It is not allowed to delete a referenced node
@@ -507,8 +506,6 @@ class DeleteMethodsTest extends \PHPCR\Test\BaseCase
         $session = $this->saveAndRenewSession();
         $this->assertFalse($session->propertyExists("$path/prop"));
     }
-
-
 
     /**
      * @expectedException \PHPCR\PathNotFoundException

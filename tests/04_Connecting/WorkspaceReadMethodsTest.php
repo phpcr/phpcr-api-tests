@@ -17,7 +17,7 @@ class WorkspaceReadMethodsTest extends \PHPCR\Test\BaseCase
 
     //4.5 Workspace Read Methods
 
-    function setUp()
+    public function setUp()
     {
         parent::setUp();
         $this->workspace = $this->sharedFixture['session']->getWorkspace();

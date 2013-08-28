@@ -9,10 +9,10 @@ use PHPCR\Query\QOM\QueryObjectModelConstantsInterface as Constants;
 * The QOM queries defined here correspond to the SQL2 queries defined in Sql2TestQueries.
 * @see Sql2TestQueries
 */
-class QomTestQueries {
-
-    public static function getQueries(\PHPCR\Query\QOM\QueryObjectModelFactoryInterface $factory) {
-
+class QomTestQueries
+{
+    public static function getQueries(\PHPCR\Query\QOM\QueryObjectModelFactoryInterface $factory)
+    {
         $queries = array();
 
         /**

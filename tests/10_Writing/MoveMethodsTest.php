@@ -9,7 +9,7 @@ require_once(__DIR__ . '/../../inc/BaseCase.php');
 class MoveMethodsTest extends \PHPCR\Test\BaseCase
 {
 
-    static public function setupBeforeClass($fixtures = '10_Writing/move')
+    public static function setupBeforeClass($fixtures = '10_Writing/move')
     {
         parent::setupBeforeClass($fixtures);
     }
@@ -164,7 +164,6 @@ class MoveMethodsTest extends \PHPCR\Test\BaseCase
         $this->assertFalse($session->nodeExists($probDst), 'Sibling nodes should\'nt be moved');
     }
 
-
     public function testSessionMoveWhitespace()
     {
         $session = $this->sharedFixture['session'];
@@ -249,7 +248,6 @@ class MoveMethodsTest extends \PHPCR\Test\BaseCase
         // load nodes
         $parent = $session->getNode($src);
         $child = $session->getNode($src.'/srcChild');
-
 
         $session->move($src, $dst);
 
@@ -546,5 +544,3 @@ class MoveMethodsTest extends \PHPCR\Test\BaseCase
         $this->assertTrue($session->nodeExists($dst), 'Destination node not found [B]');
     }
 }
-
-

@@ -15,7 +15,7 @@ class VersionTest extends \PHPCR\Test\BaseCase
     /** a versioned node */
     private $version;
 
-    static public function setupBeforeClass($fixtures = '15_Versioning/base')
+    public static function setupBeforeClass($fixtures = '15_Versioning/base')
     {
         parent::setupBeforeClass($fixtures);
 

@@ -3,7 +3,7 @@ namespace PHPCR\Tests\Query;
 
 use PHPCR\Query\QueryResultInterface;
 
-require_once('QueryBaseCase.php');
+require_once 'QueryBaseCase.php';
 
 /**
  * $ 6.11 QueryResult - Test the query result object

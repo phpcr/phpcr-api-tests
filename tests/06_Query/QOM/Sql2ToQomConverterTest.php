@@ -2,10 +2,9 @@
 namespace PHPCR\Tests\Query\QOM;
 
 require_once(__DIR__ . '/../../../inc/BaseCase.php');
-require_once('Sql2TestQueries.php');
-require_once('QomTestQueries.php');
+require_once 'Sql2TestQueries.php';
+require_once 'QomTestQueries.php';
 
-use PHPCR\Util\QOM\Sql2Scanner;
 use PHPCR\Util\QOM\Sql2ToQomQueryConverter;
 
 class Sql2ToQomConverterTest extends \PHPCR\Test\BaseCase
@@ -27,7 +26,7 @@ class Sql2ToQomConverterTest extends \PHPCR\Test\BaseCase
 
         try {
             $this->parser = new Sql2ToQomQueryConverter($factory);
-        } catch(\PHPCR\UnsupportedRepositoryException $e) {
+        } catch (\PHPCR\UnsupportedRepositoryException $e) {
             $this->markTestSkipped('Repository does not support the QOM factory');
         }
     }

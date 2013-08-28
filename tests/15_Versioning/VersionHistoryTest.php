@@ -1,6 +1,8 @@
 <?php
 namespace PHPCR\Tests\Versioning;
 
+use PHPCR\Version\VersionHistoryInterface;
+
 require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 /**
@@ -10,7 +12,7 @@ require_once(__DIR__ . '/../../inc/BaseCase.php');
  */
 class VersionHistoryTest extends \PHPCR\Test\BaseCase
 {
-    static public function setupBeforeClass($fixtures = '15_Versioning/base')
+    public static function setupBeforeClass($fixtures = '15_Versioning/base')
     {
         parent::setupBeforeClass($fixtures);
 
@@ -264,7 +266,7 @@ class VersionHistoryTest extends \PHPCR\Test\BaseCase
     /**
      * Check the last version cannot be removed
      *
-     * @expectedException PHPCR\ReferentialIntegrityException
+     * @expectedException \PHPCR\ReferentialIntegrityException
      */
     public function testDeleteLatestVersion()
     {
@@ -276,7 +278,7 @@ class VersionHistoryTest extends \PHPCR\Test\BaseCase
     /**
      * Try removing an unexisting version
      *
-     * @expectedException PHPCR\Version\VersionException
+     * @expectedException \PHPCR\Version\VersionException
      */
     public function testDeleteUnexistingVersion()
     {
@@ -287,9 +289,11 @@ class VersionHistoryTest extends \PHPCR\Test\BaseCase
 
     /**
      * Check if a version node with the given name exists in the version history
-     * @param $history The version history node
-     * @param $versionName The name of the version to search for
-     * @return bool
+     *
+     * @param VersionHistoryInterface $history     The version history node
+     * @param string                  $versionName The name of the version to search for
+     *
+     * @return boolean
      */
     protected function versionExists($history, $versionName)
     {

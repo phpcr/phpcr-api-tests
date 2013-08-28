@@ -14,7 +14,7 @@ class NamespaceRegistryTest extends \PHPCR\Test\BaseCase
                                  'xml' => 'http://www.w3.org/XML/1998/namespace',
                                  ''    => '');
 
-    function setUp()
+    public function setUp()
     {
         parent::setUp();
         $this->workspace = $this->sharedFixture['session']->getWorkspace();

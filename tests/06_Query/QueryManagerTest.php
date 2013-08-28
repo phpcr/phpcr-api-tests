@@ -1,7 +1,7 @@
 <?php
 namespace PHPCR\Tests\Query;
 
-require_once('QueryBaseCase.php');
+require_once 'QueryBaseCase.php';
 
 /**
  * tests for the query manager, $ 6.8
