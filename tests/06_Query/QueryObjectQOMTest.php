@@ -1,6 +1,9 @@
 <?php
 namespace PHPCR\Tests\Query;
 
+use PHPCR\Query\QOM\QueryObjectModelFactoryInterface;
+use PHPCR\Query\QueryInterface;
+
 require_once 'QueryBaseCase.php';
 
 /**
@@ -14,10 +17,13 @@ class QueryObjectQOMTest extends QueryBaseCase
 {
 
     /**
-     * @var \PHPCR\Query\QOM\QueryObjectModelFactoryInterface
+     * @var QueryObjectModelFactoryInterface
      */
     protected $factory;
-    /** @var \PHPCR\Query\QueryInterface */
+
+    /**
+     * @var QueryInterface
+     */
     protected $query;
 
     public function setUp()
@@ -30,10 +36,10 @@ class QueryObjectQOMTest extends QueryBaseCase
             $this->markTestSkipped('Can not get the QOM factory, skipping tests about QOM query. '.$e->getMessage());
         }
 
-        $source = $this->factory->selector('nt:folder','data');
+        $source = $this->factory->selector('data', 'nt:folder');
         $constraint = $this->factory->orConstraint(
-            $this->factory->descendantNode('/tests_general_base'),
-            $this->factory->sameNode('/tests_general_base')
+            $this->factory->descendantNode('data', '/tests_general_base'),
+            $this->factory->sameNode('data', '/tests_general_base')
         );
         $orderings = array();
         $columns = array();
@@ -57,7 +63,7 @@ class QueryObjectQOMTest extends QueryBaseCase
      */
     public function testExecuteInvalid()
     {
-        $source = $this->factory->selector('nonodetype','data');
+        $source = $this->factory->selector('data', 'nonodetype');
         $constraint = null;
         $orderings = array();
         $columns = array();
@@ -69,7 +75,7 @@ class QueryObjectQOMTest extends QueryBaseCase
     public function testGetStatement()
     {
         $this->assertEquals('SELECT * FROM [nt:folder] AS data '.
-            'WHERE (ISDESCENDANTNODE([/tests_general_base]) OR ISSAMENODE([/tests_general_base]))', $this->query->getStatement());
+            'WHERE (ISDESCENDANTNODE(data, [/tests_general_base]) OR ISSAMENODE(data, [/tests_general_base]))', $this->query->getStatement());
     }
 
     /**

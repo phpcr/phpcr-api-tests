@@ -49,17 +49,7 @@ class QomToSql2ConverterTest extends \PHPCR\Test\BaseCase
      */
     public function testSelector()
     {
-        $this->assertQuery($this->queries['6.7.3.Selector.Simple'], $this->factory->selector('nt:unstructured'));
-        $this->assertQuery($this->queries['6.7.3.Selector.Named'], $this->factory->selector('nt:unstructured', 'test'));
-    }
-
-    /**
-     * 6.7.4. Name
-     */
-    public function testName()
-    {
-        $this->assertQuery($this->queries['6.7.3.Selector.Simple'], $this->factory->selector('nt:unstructured'));
-        $this->assertQuery($this->queries['6.7.3.Selector.Simple'], $this->factory->selector('[nt:unstructured]'));
+        $this->assertQuery($this->queries['6.7.3.Selector.Named'], $this->factory->selector('test', 'nt:unstructured'));
     }
 
     /**
@@ -67,9 +57,9 @@ class QomToSql2ConverterTest extends \PHPCR\Test\BaseCase
      */
     public function testEquiJoin()
     {
-        $left = $this->factory->selector('nt:file');
-        $right = $this->factory->selector('nt:folder');
-        $condition = new QOM\EquiJoinCondition('sel1', 'prop1', 'sel2', 'prop2');
+        $left = $this->factory->selector('file', 'nt:file');
+        $right = $this->factory->selector('folder', 'nt:folder');
+        $condition = new QOM\EquiJoinCondition('file', 'prop1', 'folder', 'prop2');
 
         $this->assertQuery($this->queries['6.7.8.EquiJoin.Inner'], $this->factory->join($left, $right, Constants::JCR_JOIN_TYPE_INNER, $condition));
         $this->assertQuery($this->queries['6.7.8.EquiJoin.Left'], $this->factory->join($left, $right, Constants::JCR_JOIN_TYPE_LEFT_OUTER, $condition));
@@ -81,13 +71,13 @@ class QomToSql2ConverterTest extends \PHPCR\Test\BaseCase
      */
     public function testSameNodeJoin()
     {
-        $left = $this->factory->selector('nt:file');
-        $right = $this->factory->selector('nt:folder');
+        $left = $this->factory->selector('file', 'nt:file');
+        $right = $this->factory->selector('folder', 'nt:folder');
 
-        $condition = new QOM\SameNodeJoinCondition('sel1', 'sel2');
+        $condition = $this->factory->sameNodeJoinCondition('file', 'folder');
         $this->assertQuery($this->queries['6.7.9.SameNodeJoinCondition.Simple'], $this->factory->join($left, $right, Constants::JCR_JOIN_TYPE_INNER, $condition));
 
-        $condition = new QOM\SameNodeJoinCondition('sel1', 'sel2', '/home');
+        $condition = $this->factory->sameNodeJoinCondition('file', 'folder', '/home');
         $this->assertQuery($this->queries['6.7.9.SameNodeJoinCondition.Path'], $this->factory->join($left, $right, Constants::JCR_JOIN_TYPE_INNER, $condition));
     }
 
@@ -96,10 +86,10 @@ class QomToSql2ConverterTest extends \PHPCR\Test\BaseCase
      */
     public function testSameNodeJoinSpace()
     {
-        $left = $this->factory->selector('nt:file');
-        $right = $this->factory->selector('nt:folder');
+        $left = $this->factory->selector('file', 'nt:file');
+        $right = $this->factory->selector('folder', 'nt:folder');
 
-        $condition = new QOM\SameNodeJoinCondition('sel1', 'sel2', '/home node');
+        $condition = $this->factory->sameNodeJoinCondition('file', 'folder', '/home node');
         $this->assertQuery($this->queries['6.7.9.SameNodeJoinCondition.Path_Space'], $this->factory->join($left, $right, Constants::JCR_JOIN_TYPE_INNER, $condition));
     }
 
@@ -108,10 +98,10 @@ class QomToSql2ConverterTest extends \PHPCR\Test\BaseCase
      */
     public function testChildNodeJoin()
     {
-        $left = $this->factory->selector('nt:file');
-        $right = $this->factory->selector('nt:folder');
+        $left = $this->factory->selector('child', 'nt:file');
+        $right = $this->factory->selector('parent', 'nt:folder');
 
-        $condition = new QOM\ChildNodeJoinCondition('child', 'parent');
+        $condition = $this->factory->childNodeJoinCondition('child', 'parent');
         $this->assertQuery($this->queries['6.7.10.ChildNodeCondition'], $this->factory->join($left, $right, Constants::JCR_JOIN_TYPE_INNER, $condition));
     }
 
@@ -120,10 +110,10 @@ class QomToSql2ConverterTest extends \PHPCR\Test\BaseCase
      */
     public function testDescendantNodeJoin()
     {
-        $left = $this->factory->selector('nt:file');
-        $right = $this->factory->selector('nt:folder');
+        $left = $this->factory->selector('descendant', 'nt:file');
+        $right = $this->factory->selector('ancestor', 'nt:folder');
 
-        $condition = new QOM\DescendantNodeJoinCondition('descendant', 'ancestor');
+        $condition = $this->factory->descendantNodeJoinCondition('descendant', 'ancestor');
         $this->assertQuery($this->queries['6.7.11.DescendantNodeJoinCondition'], $this->factory->join($left, $right, Constants::JCR_JOIN_TYPE_INNER, $condition));
     }
 
@@ -132,9 +122,9 @@ class QomToSql2ConverterTest extends \PHPCR\Test\BaseCase
      */
     public function testAndConstraint()
     {
-        $selector = $this->factory->selector('nt:file');
-        $constraint1 = $this->factory->propertyExistence('prop1', 'sel1');
-        $constraint2 = $this->factory->propertyExistence('prop2', 'sel2');
+        $selector = $this->factory->selector('file', 'nt:file');
+        $constraint1 = $this->factory->propertyExistence('file', 'prop1');
+        $constraint2 = $this->factory->propertyExistence('file', 'prop2');
         $this->assertQuery($this->queries['6.7.13.And'], $selector, array(), $this->factory->andConstraint($constraint1, $constraint2), array());
     }
 
@@ -143,9 +133,9 @@ class QomToSql2ConverterTest extends \PHPCR\Test\BaseCase
      */
     public function testOrConstraint()
     {
-        $selector = $this->factory->selector('nt:file');
-        $constraint1 = $this->factory->propertyExistence('prop1', 'sel1');
-        $constraint2 = $this->factory->propertyExistence('prop2', 'sel2');
+        $selector = $this->factory->selector('file', 'nt:file');
+        $constraint1 = $this->factory->propertyExistence('file', 'prop1');
+        $constraint2 = $this->factory->propertyExistence('file', 'prop2');
         $this->assertQuery($this->queries['6.7.14.Or'], $selector, array(), $this->factory->orConstraint($constraint1, $constraint2), array());
     }
 
@@ -154,8 +144,8 @@ class QomToSql2ConverterTest extends \PHPCR\Test\BaseCase
      */
     public function testNotConstraint()
     {
-        $selector = $this->factory->selector('nt:file');
-        $constraint = $this->factory->propertyExistence('prop1', 'sel1');
+        $selector = $this->factory->selector('file', 'nt:file');
+        $constraint = $this->factory->propertyExistence('file', 'prop1');
         $this->assertQuery($this->queries['6.7.15.Not'], $selector, array(), $this->factory->notConstraint($constraint), array());
     }
 
@@ -164,8 +154,8 @@ class QomToSql2ConverterTest extends \PHPCR\Test\BaseCase
      */
     public function testComparison()
     {
-        $selector = $this->factory->selector('nt:file');
-        $operand1 = $this->factory->nodeName('test');
+        $selector = $this->factory->selector('file', 'nt:file');
+        $operand1 = $this->factory->nodeName('file');
         $operator = Constants::JCR_OPERATOR_LIKE;
         $operand2 = $this->factory->literal('literal2');
         $this->assertQuery($this->queries['6.7.16.Comparison'], $selector, array(), $this->factory->comparison($operand1, $operator, $operand2), array());
@@ -176,8 +166,8 @@ class QomToSql2ConverterTest extends \PHPCR\Test\BaseCase
      */
     public function testPropertyExistence()
     {
-        $selector = $this->factory->selector('nt:file');
-        $this->assertQuery($this->queries['6.7.18.PropertyExistence'], $selector, array(), $this->factory->propertyExistence('prop1', 'sel1'), array());
+        $selector = $this->factory->selector('file', 'nt:file');
+        $this->assertQuery($this->queries['6.7.18.PropertyExistence'], $selector, array(), $this->factory->propertyExistence('file', 'prop1'), array());
     }
 
     /**
@@ -185,8 +175,8 @@ class QomToSql2ConverterTest extends \PHPCR\Test\BaseCase
      */
     public function testFullTextSearch()
     {
-        $selector = $this->factory->selector('nt:file');
-        $this->assertQuery($this->queries['6.7.19.FullTextSearch'], $selector, array(), $this->factory->fullTextSearch('prop', 'expr', 'sel'), array());
+        $selector = $this->factory->selector('file', 'nt:file');
+        $this->assertQuery($this->queries['6.7.19.FullTextSearch'], $selector, array(), $this->factory->fullTextSearch('file', 'prop', 'expr'), array());
     }
 
     /**
@@ -194,9 +184,8 @@ class QomToSql2ConverterTest extends \PHPCR\Test\BaseCase
      */
     public function testSameNode()
     {
-        $selector = $this->factory->selector('nt:file');
-        $this->assertQuery($this->queries['6.7.20.SameNode.Simple'], $selector, array(), $this->factory->sameNode('/home'), array());
-        $this->assertQuery($this->queries['6.7.20.SameNode.Selector'], $selector, array(), $this->factory->sameNode('/home', 'sel1'), array());
+        $selector = $this->factory->selector('file', 'nt:file');
+        $this->assertQuery($this->queries['6.7.20.SameNode.Selector'], $selector, array(), $this->factory->sameNode('file', '/home'), array());
     }
 
     /**
@@ -204,9 +193,8 @@ class QomToSql2ConverterTest extends \PHPCR\Test\BaseCase
      */
     public function testSameNodeSpace()
     {
-        $selector = $this->factory->selector('nt:file');
-        $this->assertQuery($this->queries['6.7.20.SameNode.Simple_Space'], $selector, array(), $this->factory->sameNode('/home node'), array());
-        $this->assertQuery($this->queries['6.7.20.SameNode.Selector_Space'], $selector, array(), $this->factory->sameNode('/home node', 'sel1'), array());
+        $selector = $this->factory->selector('file', 'nt:file');
+        $this->assertQuery($this->queries['6.7.20.SameNode.Selector_Space'], $selector, array(), $this->factory->sameNode('file', '/home node'), array());
     }
 
     /**
@@ -214,9 +202,8 @@ class QomToSql2ConverterTest extends \PHPCR\Test\BaseCase
      */
     public function testChildNode()
     {
-        $selector = $this->factory->selector('nt:file');
-        $this->assertQuery($this->queries['6.7.21.ChildNode.Simple'], $selector, array(), $this->factory->childNode('/home'), array());
-        $this->assertQuery($this->queries['6.7.21.ChildNode.Selector'], $selector, array(), $this->factory->childNode('/home', 'sel1'), array());
+        $selector = $this->factory->selector('file', 'nt:file');
+        $this->assertQuery($this->queries['6.7.21.ChildNode.Selector'], $selector, array(), $this->factory->childNode('file', '/home'), array());
     }
 
     /**
@@ -224,9 +211,8 @@ class QomToSql2ConverterTest extends \PHPCR\Test\BaseCase
      */
     public function testChildNodeSpace()
     {
-        $selector = $this->factory->selector('nt:file');
-        $this->assertQuery($this->queries['6.7.21.ChildNode.Simple_Space'], $selector, array(), $this->factory->childNode('/home node'), array());
-        $this->assertQuery($this->queries['6.7.21.ChildNode.Selector_Space'], $selector, array(), $this->factory->childNode('/home node', 'sel1'), array());
+        $selector = $this->factory->selector('file', 'nt:file');
+        $this->assertQuery($this->queries['6.7.21.ChildNode.Selector_Space'], $selector, array(), $this->factory->childNode('file', '/home node'), array());
     }
 
     /**
@@ -234,9 +220,8 @@ class QomToSql2ConverterTest extends \PHPCR\Test\BaseCase
      */
     public function testDescendantNode()
     {
-        $selector = $this->factory->selector('nt:file');
-        $this->assertQuery($this->queries['6.7.22.DescendantNode.Simple'], $selector, array(), $this->factory->descendantNode('/home'), array());
-        $this->assertQuery($this->queries['6.7.22.DescendantNode.Selector'], $selector, array(), $this->factory->descendantNode('/home', 'sel1'), array());
+        $selector = $this->factory->selector('file', 'nt:file');
+        $this->assertQuery($this->queries['6.7.22.DescendantNode.Selector'], $selector, array(), $this->factory->descendantNode('file', '/home'), array());
     }
 
     /**
@@ -244,9 +229,8 @@ class QomToSql2ConverterTest extends \PHPCR\Test\BaseCase
      */
     public function testDescendantNodeSpace()
     {
-        $selector = $this->factory->selector('nt:file');
-        $this->assertQuery($this->queries['6.7.22.DescendantNode.Simple_Space'], $selector, array(), $this->factory->descendantNode('/home node'), array());
-        $this->assertQuery($this->queries['6.7.22.DescendantNode.Selector_Space'], $selector, array(), $this->factory->descendantNode('/home node', 'sel1'), array());
+        $selector = $this->factory->selector('file', 'nt:file');
+        $this->assertQuery($this->queries['6.7.22.DescendantNode.Selector_Space'], $selector, array(), $this->factory->descendantNode('file', '/home node'), array());
     }
 
     /**
@@ -254,9 +238,9 @@ class QomToSql2ConverterTest extends \PHPCR\Test\BaseCase
      */
     public function testPath()
     {
-        $selector = $this->factory->selector('nt:file');
-        $this->assertQuery($this->queries['6.7.20.SameNode.Simple'], $selector, array(), $this->factory->sameNode('/home'), array());
-        $this->assertQuery($this->queries['6.7.20.SameNode.Simple'], $selector, array(), $this->factory->sameNode('[/home]'), array());
+        $selector = $this->factory->selector('file', 'nt:file');
+        $this->assertQuery($this->queries['6.7.20.SameNode.Selector'], $selector, array(), $this->factory->sameNode('file', '/home'), array());
+        $this->assertQuery($this->queries['6.7.20.SameNode.Selector'], $selector, array(), $this->factory->sameNode('file', '[/home]'), array());
 
     }
 
@@ -265,8 +249,8 @@ class QomToSql2ConverterTest extends \PHPCR\Test\BaseCase
      */
     public function testPropertyValue()
     {
-        $selector = $this->factory->selector('nt:file');
-        $operand1 = $this->factory->propertyValue('prop', 'sel');
+        $selector = $this->factory->selector('file', 'nt:file');
+        $operand1 = $this->factory->propertyValue('file', 'prop');
         $operand2 = $this->factory->literal('literal');
         $operator = Constants::JCR_OPERATOR_LIKE;
         $constraint = $this->factory->comparison($operand1, $operator, $operand2);
@@ -278,8 +262,8 @@ class QomToSql2ConverterTest extends \PHPCR\Test\BaseCase
      */
     public function testLength()
     {
-        $selector = $this->factory->selector('nt:file');
-        $operand1 = $this->factory->length($this->factory->propertyValue('prop'));
+        $selector = $this->factory->selector('file', 'nt:file');
+        $operand1 = $this->factory->length($this->factory->propertyValue('file', 'prop'));
         $operand2 = $this->factory->literal('literal');
         $operator = Constants::JCR_OPERATOR_LIKE;
         $constraint = $this->factory->comparison($operand1, $operator, $operand2);
@@ -291,8 +275,8 @@ class QomToSql2ConverterTest extends \PHPCR\Test\BaseCase
      */
     public function testNodeName()
     {
-        $selector = $this->factory->selector('nt:file');
-        $operand1 = $this->factory->nodeName('sel');
+        $selector = $this->factory->selector('file', 'nt:file');
+        $operand1 = $this->factory->nodeName('file');
         $operand2 = $this->factory->literal('literal');
         $operator = Constants::JCR_OPERATOR_LIKE;
         $constraint = $this->factory->comparison($operand1, $operator, $operand2);
@@ -304,8 +288,8 @@ class QomToSql2ConverterTest extends \PHPCR\Test\BaseCase
      */
     public function testNodeLocalName()
     {
-        $selector = $this->factory->selector('nt:file');
-        $operand1 = $this->factory->nodeLocalName('sel');
+        $selector = $this->factory->selector('file', 'nt:file');
+        $operand1 = $this->factory->nodeLocalName('file');
         $operand2 = $this->factory->literal('literal');
         $operator = Constants::JCR_OPERATOR_LIKE;
         $constraint = $this->factory->comparison($operand1, $operator, $operand2);
@@ -317,8 +301,8 @@ class QomToSql2ConverterTest extends \PHPCR\Test\BaseCase
      */
     public function testFullTextSearchScore()
     {
-        $selector = $this->factory->selector('nt:file');
-        $operand1 = $this->factory->fullTextSearchScore('sel');
+        $selector = $this->factory->selector('file', 'nt:file');
+        $operand1 = $this->factory->fullTextSearchScore('file');
         $operand2 = $this->factory->literal('literal');
         $operator = Constants::JCR_OPERATOR_LIKE;
         $constraint = $this->factory->comparison($operand1, $operator, $operand2);
@@ -330,8 +314,8 @@ class QomToSql2ConverterTest extends \PHPCR\Test\BaseCase
      */
     public function testLowerCase()
     {
-        $selector = $this->factory->selector('nt:file');
-        $operand1 = $this->factory->lowerCase($this->factory->nodeName());
+        $selector = $this->factory->selector('file', 'nt:file');
+        $operand1 = $this->factory->lowerCase($this->factory->nodeName('file'));
         $operand2 = $this->factory->literal('literal');
         $operator = Constants::JCR_OPERATOR_LIKE;
         $constraint = $this->factory->comparison($operand1, $operator, $operand2);
@@ -343,8 +327,8 @@ class QomToSql2ConverterTest extends \PHPCR\Test\BaseCase
      */
     public function testUpperCase()
     {
-        $selector = $this->factory->selector('nt:file');
-        $operand1 = $this->factory->upperCase($this->factory->nodeName());
+        $selector = $this->factory->selector('file', 'nt:file');
+        $operand1 = $this->factory->upperCase($this->factory->nodeName('file'));
         $operand2 = $this->factory->literal('literal');
         $operator = Constants::JCR_OPERATOR_LIKE;
         $constraint = $this->factory->comparison($operand1, $operator, $operand2);
@@ -356,8 +340,8 @@ class QomToSql2ConverterTest extends \PHPCR\Test\BaseCase
      */
     public function testBindVariable()
     {
-        $selector = $this->factory->selector('nt:file');
-        $operand1 = $this->factory->upperCase($this->factory->nodeName());
+        $selector = $this->factory->selector('file', 'nt:file');
+        $operand1 = $this->factory->upperCase($this->factory->nodeName('file'));
         $operand2 = $this->factory->bindVariable('var');
         $operator = Constants::JCR_OPERATOR_LIKE;
         $constraint = $this->factory->comparison($operand1, $operator, $operand2);
@@ -369,9 +353,9 @@ class QomToSql2ConverterTest extends \PHPCR\Test\BaseCase
      */
     public function testOrdering()
     {
-        $selector = $this->factory->selector('nt:unstructured');
-        $order1 = $this->factory->ascending($this->factory->propertyValue('prop1'));
-        $order2 = $this->factory->descending($this->factory->propertyValue('prop2'));
+        $selector = $this->factory->selector('u', 'nt:unstructured');
+        $order1 = $this->factory->ascending($this->factory->propertyValue('u', 'prop1'));
+        $order2 = $this->factory->descending($this->factory->propertyValue('u', 'prop2'));
 
         $this->assertQuery($this->queries['6.7.38.Order.None'], $selector, array(), null, array());
         $this->assertQuery($this->queries['6.7.38.Order.Asc'], $selector, array(), null, array($order1));
@@ -383,15 +367,13 @@ class QomToSql2ConverterTest extends \PHPCR\Test\BaseCase
      */
     public function testColumns()
     {
-        $selector = $this->factory->selector('nt:unstructured');
-        $col1 = $this->factory->column('prop1');
-        $col2 = $this->factory->column('prop2', 'col2');
-        $col3 = $this->factory->column('prop3', 'col3', 'sel3');
+        $selector = $this->factory->selector('u', 'nt:unstructured');
+        $col1 = $this->factory->column('u', 'prop1', 'col1');
+        $col2 = $this->factory->column('u', 'prop2', 'prop2');
 
         $this->assertQuery($this->queries['6.7.39.Colum.Wildcard'], $selector, array());
-        $this->assertQuery($this->queries['6.7.39.Colum.Simple'], $selector, array($col1));
-        $this->assertQuery('SELECT prop1, prop2 AS col2 FROM [nt:unstructured]', $selector, array($col1, $col2));
-        $this->assertQuery($this->queries['6.7.39.Colum.Mixed'], $selector, array($col1, $col2, $col3));
+        $this->assertQuery($this->queries['6.7.39.Colum.Selector'], $selector, array($col1));
+        $this->assertQuery($this->queries['6.7.39.Colum.Mixed'], $selector, array($col1, $col2));
     }
 
     // -------------------------------------------------------------------------
