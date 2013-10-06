@@ -48,6 +48,31 @@ class QueryResultsTest extends QueryBaseCase
        $this->assertEquals($columnNamesExpected, $columnNames);
     }
 
+    public function testGetAliasColumnNames()
+    {
+        $query = $this->sharedFixture['qm']->createQuery("
+            SELECT [jcr:mimeType] AS bar, stringToCompare as foo, [nt:unstructured].longNumberToCompare, ding
+            FROM [nt:unstructured]
+            WHERE stringToCompare IS NOT NULL
+            ",
+            \PHPCR\Query\QueryInterface::JCR_SQL2
+        );
+        $qr = $query->execute();
+
+        $columnNames = $qr->getColumnNames();
+        sort($columnNames); //order is not determined
+        $columnNamesExpected = array('bar', 'ding', 'foo', 'nt:unstructured.longNumberToCompare');
+        $this->assertEquals($columnNamesExpected, $columnNames);
+
+        foreach ($qr->getRows() as $row) {
+            $this->assertNotNull($row->getValue('bar'));
+            $this->assertNotNull($row->getValue('foo'));
+            $this->assertNotNull($row->getValue('longNumberToCompare'));
+            $this->assertEquals('', $row->getValue('ding'));
+        }
+
+    }
+
     public function testGetNodes()
     {
         $nodes = $this->qr->getNodes();
