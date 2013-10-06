@@ -100,6 +100,10 @@
                 <sv:value>2009-04-27T13:01:07.472+02:00</sv:value>
             </sv:property>
 
+            <sv:property sv:name="foo" sv:type="String">
+                <sv:value>bar2</sv:value>
+            </sv:property>
+
             <sv:property sv:name="jcr:mimeType" sv:type="String">
                 <sv:value>text/plain</sv:value>
             </sv:property>
