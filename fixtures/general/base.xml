@@ -192,6 +192,14 @@
             <sv:value>14e18ef3-be20-4985-bee9-7bb4763b31de</sv:value>
         </sv:property>
 
+        <sv:property sv:name="jcr:created" sv:type="Date">
+            <sv:value>2011-03-21T14:34:20.452+01:00</sv:value>
+        </sv:property>
+
+        <sv:property sv:name="jcr:createdBy" sv:type="String">
+            <sv:value>admin</sv:value>
+        </sv:property>
+
         <sv:node sv:name="deepnode">
 
             <sv:property sv:name="jcr:primaryType" sv:type="Name">
