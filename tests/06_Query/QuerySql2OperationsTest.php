@@ -250,6 +250,30 @@ class QuerySql2OperationsTest extends QueryBaseCase
     {
         /** @var $query QueryInterface */
         $query = $this->sharedFixture['qm']->createQuery('
+            SELECT data.foo
+            FROM [nt:unstructured] AS data
+            WHERE ISDESCENDANTNODE([/tests_general_base]) AND data.foo IS NOT NULL
+            ORDER BY data.foo
+            ',
+            QueryInterface::JCR_SQL2
+        );
+
+        $this->assertInstanceOf('\PHPCR\Query\QueryInterface', $query);
+        $result = $query->execute();
+        $this->assertInstanceOf('\PHPCR\Query\QueryResultInterface', $result);
+        $vals = array();
+        foreach ($result->getRows() as $row) {
+            $vals[] = $row->getValue('data.foo');
+        }
+
+        // rows that do not have that field are empty string. empty is before fields with values
+        $this->assertEquals(array('bar', 'bar2'), $vals);
+    }
+
+    public function testQueryOrderWithMissingProperty()
+    {
+        /** @var $query QueryInterface */
+        $query = $this->sharedFixture['qm']->createQuery('
             SELECT data.zeronumber
             FROM [nt:unstructured] AS data
             WHERE ISDESCENDANTNODE([/tests_general_base])
@@ -265,8 +289,8 @@ class QuerySql2OperationsTest extends QueryBaseCase
         foreach ($result->getRows() as $row) {
             $vals[] = $row->getValue('data.zeronumber');
         }
-        // rows that do not have that field are null. empty is before fields with values
-        $this->assertEquals(array(null, null, null, null, null, null, null, null, 0), $vals);
+        // rows that do not have that field are empty string. empty is before fields with values
+        $this->assertEquals(array('', '', '', '', '', '', '', '', 0), $vals);
     }
 
     public function testQueryMultiValuedProperty()
