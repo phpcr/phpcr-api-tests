@@ -3,6 +3,7 @@
 namespace PHPCR\Tests\Query;
 
 use PHPCR\Query\QueryInterface;
+use PHPCR\Query\QueryManagerInterface;
 
 require_once(__DIR__ . '/../../inc/BaseCase.php');
 
@@ -19,7 +20,7 @@ class CharacterTest extends \PHPCR\Test\BaseCase
      */
     public function testPropertyWithBackslash()
     {
-        /** @var QueryManager $queryManager */
+        /** @var QueryManagerInterface $queryManager */
         $queryManager = $this->sharedFixture['qm'];
         $query = $queryManager->createQuery('
             SELECT data.class
@@ -40,7 +41,7 @@ class CharacterTest extends \PHPCR\Test\BaseCase
      */
     public function testPropertyWithDoubleBackslash()
     {
-        /** @var QueryManager $queryManager */
+        /** @var QueryManagerInterface $queryManager */
         $queryManager = $this->sharedFixture['qm'];
         $query = $queryManager->createQuery('
             SELECT data.doublebackslash
@@ -61,7 +62,7 @@ class CharacterTest extends \PHPCR\Test\BaseCase
      */
     public function testPropertyWithQuotes()
     {
-        /** @var QueryManager $queryManager */
+        /** @var QueryManagerInterface $queryManager */
         $queryManager = $this->sharedFixture['qm'];
         $query = $queryManager->createQuery(sprintf('
             SELECT data.quotes
@@ -83,7 +84,7 @@ class CharacterTest extends \PHPCR\Test\BaseCase
      */
     public function testPropertyWithQuotesAndBackslash()
     {
-        /** @var QueryManager $queryManager */
+        /** @var QueryManagerInterface $queryManager */
         $queryManager = $this->sharedFixture['qm'];
         $query = $queryManager->createQuery(sprintf('
             SELECT data.quoteandbackslash
@@ -102,7 +103,7 @@ class CharacterTest extends \PHPCR\Test\BaseCase
 
     public function testQueryWithColon()
     {
-        /** @var QueryManager $queryManager */
+        /** @var QueryManagerInterface $queryManager */
         $queryManager = $this->sharedFixture['qm'];
         $query = $queryManager->createQuery('
             SELECT data.property
@@ -111,5 +112,23 @@ class CharacterTest extends \PHPCR\Test\BaseCase
             ',
             QueryInterface::JCR_SQL2
         )->execute();
+    }
+
+    public function testQueryWithAmpersand()
+    {
+        /** @var QueryManagerInterface $queryManager */
+        $queryManager = $this->sharedFixture['qm'];
+        $query = $queryManager->createQuery('
+            SELECT data.ampersand
+            FROM [nt:unstructured] AS data
+            WHERE data.ampersand = "foo & bar&baz"
+            ',
+            QueryInterface::JCR_SQL2
+        );
+
+        $result = $query->execute();
+        $rows = $result->getRows();
+        $this->assertCount(1, $rows);
+        $this->assertEquals('foo & bar&baz', $rows->current()->getValue('ampersand'));
     }
 }

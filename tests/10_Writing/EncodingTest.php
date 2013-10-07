@@ -50,4 +50,25 @@ class EncodingTest extends \PHPCR\Test\BaseCase
             array("node-&-x"),
         );
     }
+
+    /**
+     * @dataProvider getPropertyValues
+     */
+    public function testEncodingPropertyValues($value, $type)
+    {
+        $this->node->setProperty($type, $value);
+        $session = $this->saveAndRenewSession();
+        $this->assertEquals($value, $session->getRootNode()->getNode('tests_write_encoding')->getNode('testEncoding')->getPropertyValue($type));
+    }
+
+    public static function getPropertyValues()
+    {
+        return array(
+            array('PHPCR\Query\QueryInterface', 'backslash'),
+            array('PHPCR\\\\Query\\\\QueryInterface', 'doublebackslash'),
+            array('"\'', 'quotes'),
+            array('a\\\'\\\'b\\\'\\\'c', 'quotesandbackslash'),
+            array('foo & bar&baz', 'ampersand'),
+        );
+    }
 }
