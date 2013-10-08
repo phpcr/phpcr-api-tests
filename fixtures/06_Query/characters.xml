@@ -58,6 +58,10 @@
                 <sv:property sv:name="quoteandbackslash" sv:type="String">
                     <sv:value>'a\'\'b\'\'c'</sv:value>
                 </sv:property>
+
+                <sv:property sv:name="ampersand" sv:type="String">
+                    <sv:value>foo &amp; bar&amp;baz</sv:value>
+                </sv:property>
             </sv:node>
         </sv:node>
     </sv:node>
