@@ -405,11 +405,11 @@ class QomTestQueries
         // SELECT * FROM nt:unstructured WHERE sel.prop > '2013-04-15' 
         $queries['6.7.27.1.PropertyValue'] = 
             $factory->createQuery(
-                $factory->selector('nt:unstructured'),
+                $factory->selector('sel', 'nt:unstructured'),
                 $factory->comparison(
-                    $factory->propertyValue('prop', 'sel'),
+                    $factory->propertyValue('sel', 'prop'),
                     Constants::JCR_OPERATOR_GREATER_THAN,
-                    $factory->literal(new \DateTime('2013-04-15'))),
+                    $factory->literal(new \DateTime('2013-04-15 +02:00'))),
                 array(),
                 array());
 

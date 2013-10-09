@@ -144,9 +144,10 @@ class Sql2TestQueries
         );
 
         /**
-        * 6.7.27. ProperyValue
+        * 6.7.27. PropertyValue
         */
         $queries['6.7.27.PropertyValue'] = 'SELECT * FROM [nt:file] AS file WHERE file.prop LIKE \'literal\'';
+        $queries['6.7.27.1.PropertyValue'] = 'SELECT * FROM [nt:unstructured] AS sel WHERE sel.prop > CAST(\'2013-04-15T00:00:00.000+02:00\' AS DATE)';
 
         /**
         * 6.7.28. Length
