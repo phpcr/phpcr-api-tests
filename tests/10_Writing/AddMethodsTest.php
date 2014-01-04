@@ -30,26 +30,26 @@ class AddMethodsTest extends \PHPCR\Test\BaseCase
         // should take the primaryType
 
         $new = $this->node->addNode('newNode');
-        $this->assertNotNull($this->sharedFixture['session']->getNode($this->node->getPath() . '/newNode'), 'Node newNode was not created');
-        $this->sharedFixture['session']->save();
+        $this->assertNotNull($this->session->getNode($this->node->getPath() . '/newNode'), 'Node newNode was not created');
+        $this->session->save();
         $this->assertFalse($new->isNew(), 'Node was not saved');
 
         $this->renewSession();
 
-        $this->assertNotNull($this->sharedFixture['session']->getNode($this->node->getPath() . '/newNode'), 'Node newNode was not properly saved');
+        $this->assertNotNull($this->session->getNode($this->node->getPath() . '/newNode'), 'Node newNode was not properly saved');
 
     }
 
     public function testAddNodeWithPath()
     {
         $new = $this->node->addNode('test:namespacedNode/newNode', 'nt:unstructured');
-        $this->assertNotNull($this->sharedFixture['session']->getNode($this->node->getPath() . '/test:namespacedNode/newNode'), 'Node newNode was not created');
-        $this->sharedFixture['session']->save();
+        $this->assertNotNull($this->session->getNode($this->node->getPath() . '/test:namespacedNode/newNode'), 'Node newNode was not created');
+        $this->session->save();
         $this->assertFalse($new->isNew(), 'Node was not saved');
 
         $this->renewSession();
 
-        $this->assertNotNull($this->sharedFixture['session']->getNode($this->node->getPath() . '/test:namespacedNode/newNode'), 'Node newNode was not properly saved');
+        $this->assertNotNull($this->session->getNode($this->node->getPath() . '/test:namespacedNode/newNode'), 'Node newNode was not properly saved');
     }
 
     public function testAddNodeFileType()
@@ -59,30 +59,33 @@ class AddMethodsTest extends \PHPCR\Test\BaseCase
         $contentNode = $newNode->addNode('jcr:content', 'nt:resource');
         $contentNode->setProperty('jcr:mimeType', 'text/plain', Type::STRING);
         $contentNode->setProperty('jcr:data', 'Hello', Type::BINARY);
-        $contentNode->setProperty('jcr:lastModified', new \DateTime(), Type::DATE);
+        $contentNode->setProperty('jcr:lastModified', new \DateTime('2010-12-12'), Type::DATE);
 
         $this->assertNotNull($newNode, 'Node newFileNode was not created');
         $this->assertTrue($newNode->isNew(), 'Node newFileNode is not marked dirty');
-        $this->sharedFixture['session']->save();
+        $this->session->save();
         $this->assertFalse($newNode->isNew(), 'Node newFileNode was not saved');
 
         $this->renewSession();
 
-        $newNode = $this->sharedFixture['session']->getNode($path . '/newFileNode');
+        $newNode = $this->session->getNode($path . '/newFileNode');
         $this->assertNotNull($newNode, 'Node newFileNode was not created');
         $this->assertEquals('nt:file', $newNode->getPrimaryNodeType()->getName(), 'Node newFileNode was not created');
+        $lastModified = $newNode->getNode('jcr:content')->getPropertyValue('jcr:lastModified');
+        $this->assertInstanceOf('\DateTime', $lastModified);
+        $this->assertEquals('2010-12-12', $lastModified->format('Y-m-d'));
     }
 
     public function testAddNodeUnstructuredType()
     {
         $new = $this->node->addNode('newUnstructuredNode', 'nt:unstructured');
-        $this->assertNotNull($this->sharedFixture['session']->getNode($this->node->getPath() . '/newUnstructuredNode'), 'Node newUnstructuredNode was not created');
-        $this->sharedFixture['session']->save();
+        $this->assertNotNull($this->session->getNode($this->node->getPath() . '/newUnstructuredNode'), 'Node newUnstructuredNode was not created');
+        $this->session->save();
         $this->assertFalse($new->isNew(), 'Node was not saved');
 
         $this->renewSession();
 
-        $this->assertNotNull($this->sharedFixture['session']->getNode($this->node->getPath() . '/newUnstructuredNode'), 'Node newUnstructuredNode was not created');
+        $this->assertNotNull($this->session->getNode($this->node->getPath() . '/newUnstructuredNode'), 'Node newUnstructuredNode was not created');
 
     }
 
@@ -105,12 +108,12 @@ class AddMethodsTest extends \PHPCR\Test\BaseCase
         $name = $newnode->getName();
         $this->assertEquals(0, substr_count(':', $name));
 
-        $this->sharedFixture['session']->save();
+        $this->session->save();
         $this->assertFalse($new->isNew(), 'Node was not saved');
 
         $this->renewSession();
 
-        $this->assertNotNull($this->sharedFixture['session']->getNode($this->node->getPath() . '/jcr:content/' . $name), 'Node newNode was not properly saved');
+        $this->assertNotNull($this->session->getNode($this->node->getPath() . '/jcr:content/' . $name), 'Node newNode was not properly saved');
     }
 
     public function testAddNodeAutoNamedNullNamehint()
@@ -123,12 +126,12 @@ class AddMethodsTest extends \PHPCR\Test\BaseCase
         $newnode = current($nodes);
         $name = $newnode->getName();
 
-        $this->sharedFixture['session']->save();
+        $this->session->save();
         $this->assertFalse($new->isNew(), 'Node was not saved');
 
         $this->renewSession();
 
-        $this->assertNotNull($this->sharedFixture['session']->getNode($this->node->getPath() . '/jcr:content/' . $name), 'Node newNode was not properly saved');
+        $this->assertNotNull($this->session->getNode($this->node->getPath() . '/jcr:content/' . $name), 'Node newNode was not properly saved');
     }
 
     public function testAddNodeAutoNamedValidNamespaceNamehint()
@@ -142,12 +145,12 @@ class AddMethodsTest extends \PHPCR\Test\BaseCase
         $name = $newnode->getName();
         $this->assertEquals('jcr:', substr($name, 0, 4));
 
-        $this->sharedFixture['session']->save();
+        $this->session->save();
         $this->assertFalse($new->isNew(), 'Node was not saved');
 
         $this->renewSession();
 
-        $this->assertNotNull($this->sharedFixture['session']->getNode($this->node->getPath() . '/jcr:content/' . $name), 'Node newNode was not properly saved');
+        $this->assertNotNull($this->session->getNode($this->node->getPath() . '/jcr:content/' . $name), 'Node newNode was not properly saved');
     }
 
     public function testAddPropertyOnUnstructured()
@@ -157,22 +160,22 @@ class AddMethodsTest extends \PHPCR\Test\BaseCase
         $node->setProperty('testprop', 'val');
         $node->setProperty('refprop', $this->node->getNode('ref'));
 
-        $this->sharedFixture['session']->save();
+        $this->session->save();
         $this->assertFalse($node->isNew(), 'Node was not saved');
 
         $this->renewSession();
-        $node = $this->sharedFixture['session']->getNode($path . '/unstructuredNode');
+        $node = $this->session->getNode($path . '/unstructuredNode');
 
         $this->assertNotNull($node, 'Node was not created');
         $this->assertEquals('val', $node->getPropertyValue('testprop'), 'Property was not saved correctly');
 
         $node->setProperty('test2', 'val2');
 
-        $this->sharedFixture['session']->save();
+        $this->session->save();
         $this->assertFalse($node->isNew(), 'Node was not saved');
         $this->assertFalse($node->getProperty('test2')->isNew(), 'Property was not saved');
         $this->renewSession();
-        $node = $this->sharedFixture['session']->getNode($path . '/unstructuredNode');
+        $node = $this->session->getNode($path . '/unstructuredNode');
 
         $this->assertEquals('val2', $node->getPropertyValue('test2'), 'Property was not added correctly');
     }
@@ -184,22 +187,22 @@ class AddMethodsTest extends \PHPCR\Test\BaseCase
         $node = $this->node->addNode('unstructuredNode2', 'nt:unstructured');
         $node->setProperty('test', array('val', 'val2'));
 
-        $this->sharedFixture['session']->save();
+        $this->session->save();
         $this->assertFalse($node->isNew(), 'Node was not saved');
 
         $this->renewSession();
-        $node = $this->sharedFixture['session']->getNode($path . '/unstructuredNode2');
+        $node = $this->session->getNode($path . '/unstructuredNode2');
 
         $this->assertNotNull($node, 'Node was not created');
         $this->assertEquals(array('val', 'val2'), $node->getPropertyValue('test'), 'Property was not saved correctly');
 
         $node->setProperty('test2', array('val3', 'val4'));
 
-        $this->sharedFixture['session']->save();
+        $this->session->save();
         $this->assertFalse($node->isNew(), 'Node was not saved');
         $this->assertFalse($node->getProperty('test2')->isNew(), 'Property was not saved');
         $this->renewSession();
-        $node = $this->sharedFixture['session']->getNode($path . '/unstructuredNode2');
+        $node = $this->session->getNode($path . '/unstructuredNode2');
 
         $this->assertEquals(array('val3', 'val4'), $node->getPropertyValue('test2'), 'Property was not added correctly');
     }
@@ -250,7 +253,7 @@ class AddMethodsTest extends \PHPCR\Test\BaseCase
     {
         $path = $this->node->getPath();
 
-        $session1 = $this->sharedFixture['session'];
+        $session1 = $this->session;
         $session2 = self::$loader->getSession();
 
         $node1 = $session1->getNode($path);
@@ -321,9 +324,9 @@ class AddMethodsTest extends \PHPCR\Test\BaseCase
         $newChild = $newNode->addNode('child', 'nt:unstructured');
         $path = $newChild->getPath();
 
-        $this->assertTrue($this->sharedFixture['session']->nodeExists('/tests_write_manipulation_add/testAddNodeChild/parent/child'), 'Child node not found [Session]');
+        $this->assertTrue($this->session->nodeExists('/tests_write_manipulation_add/testAddNodeChild/parent/child'), 'Child node not found [Session]');
 
-        $this->sharedFixture['session']->save();
+        $this->session->save();
         $this->assertFalse($newChild->isNew(), 'Node was not saved');
 
         // dispatch to backend
@@ -345,7 +348,7 @@ class AddMethodsTest extends \PHPCR\Test\BaseCase
 
         $this->saveAndRenewSession();
 
-        $child = $this->sharedFixture['session']->getNode($path);
+        $child = $this->session->getNode($path);
         $this->assertInstanceOf('PHPCR\NodeInterface', $child);
     }
 
