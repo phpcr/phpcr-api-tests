@@ -13,7 +13,6 @@
          xmlns:jcr="http://www.jcp.org/jcr/1.0"
          xmlns:sv="http://www.jcp.org/jcr/sv/1.0"
          xmlns:rep="internal"
-         xmlns:phpcr="http://phpcr.github.io/jcr/phpcr/1.0"
 
          sv:name="tests_general_base">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
