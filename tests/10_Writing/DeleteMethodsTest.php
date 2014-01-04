@@ -450,6 +450,43 @@ class DeleteMethodsTest extends \PHPCR\Test\BaseCase
         $this->assertFalse($this->node->hasNode('idExample'));
     }
 
+    /**
+     * test if deleting a node and creating a node at the same path with a new UUID
+     * won't cause trouble with internally cached UUID's
+     */
+    public function testDeleteNodeAndReusePathWithReference()
+    {
+        //relies on the base class setup trick to have the node populated from the fixtures
+        $this->assertInstanceOf('PHPCR\NodeInterface', $this->node);
+
+        // 1. remove the idExample node with UUID cbc172b2-c317-44ac-a73b-1df61c35fb1a
+        $referencedNode = $this->node->getNode('idExample');
+        $referencedNode->remove();
+
+        // 2. Save the session (without reloading)
+        $this->session->save();
+
+        // 3. Recreate the node with a specific UUID
+        $referencedNode = $this->node->addNode('idExample');
+        // Add mixin to make it referenceable
+        $referencedNode->addMixin('mix:referenceable');
+        // Change Identifier from the one in the fixtures
+        $referencedNode->setProperty('jcr:uuid', '54378257-ca4d-4b9f-9383-f30dfb280977');
+
+        // Node should be persisted before using it as a reference
+        $this->session->save();
+
+        // 4. Give the testNode a reference to the new idExample node
+        $this->node->setProperty('reference', '54378257-ca4d-4b9f-9383-f30dfb280977', \PHPCR\PropertyType::REFERENCE);
+
+        // 5. Throws an PHPCR\ReferentialIntegrityException when above UUID is not a valid reference
+        $this->saveAndRenewSession();
+
+        $this->assertInstanceOf('PHPCR\NodeInterface', $this->node);
+        $this->assertEquals('54378257-ca4d-4b9f-9383-f30dfb280977', $this->node->getProperty('reference')->getString(), 'Reference property should contain "54378257-ca4d-4b9f-9383-f30dfb280977" as string value');
+        $this->assertEquals('54378257-ca4d-4b9f-9383-f30dfb280977', $this->node->getNode('idExample')->getIdentifier(), 'idExample node should have "54378257-ca4d-4b9f-9383-f30dfb280977" as UUID');
+    }
+
     public function testWorkspaceDelete()
     {
         //relies on the base class setup trick to have the node populated from the fixtures
