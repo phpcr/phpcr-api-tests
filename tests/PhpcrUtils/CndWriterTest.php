@@ -34,7 +34,7 @@ mandatory autocreated protected VERSION
 EOT;
 
         /** @var $workspace WorkspaceInterface */
-        $workspace = $this->sharedFixture['session']->getWorkspace();
+        $workspace = $this->session->getWorkspace();
         $ntm = $workspace->getNodeTypeManager();
 
         $tpl = $ntm->createNodeTypeTemplate();

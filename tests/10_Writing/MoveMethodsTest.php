@@ -36,25 +36,23 @@ class MoveMethodsTest extends \PHPCR\Test\BaseCase
 
     public function testSessionMove()
     {
-        $session = $this->sharedFixture['session'];
-
         $src = '/tests_write_manipulation_move/testSessionMove/srcNode';
         $dst = '/tests_write_manipulation_move/testSessionMove/dstNode/srcNode';
 
-        $session->move($src, $dst);
+        $this->session->move($src, $dst);
 
         // Session
-        $this->assertTrue($session->nodeExists($dst), 'Destination node not found [S]');
-        $this->assertFalse($session->nodeExists($src), 'Source node still exists [S]');
-        $this->assertTrue($session->nodeExists($dst.'/srcFile/jcr:content'), 'Destination child node not found [S]');
+        $this->assertTrue($this->session->nodeExists($dst), 'Destination node not found [S]');
+        $this->assertFalse($this->session->nodeExists($src), 'Source node still exists [S]');
+        $this->assertTrue($this->session->nodeExists($dst.'/srcFile/jcr:content'), 'Destination child node not found [S]');
 
-        $dstNode = $session->getNode($dst);
+        $dstNode = $this->session->getNode($dst);
         $this->assertInstanceOf('PHPCR\NodeInterface', $dstNode);
 
-        $session->save();
-        $this->assertTrue($session->nodeExists($dst), 'Destination node not found [B]');
-        $this->assertFalse($session->nodeExists($src), 'Source node still exists [B]');
-        $this->assertTrue($session->nodeExists($dst.'/srcFile/jcr:content'), 'Destination child node not found [B]');
+        $this->session->save();
+        $this->assertTrue($this->session->nodeExists($dst), 'Destination node not found [B]');
+        $this->assertFalse($this->session->nodeExists($src), 'Source node still exists [B]');
+        $this->assertTrue($this->session->nodeExists($dst.'/srcFile/jcr:content'), 'Destination child node not found [B]');
 
         // Backend
         $session = $this->renewSession();
@@ -76,31 +74,29 @@ class MoveMethodsTest extends \PHPCR\Test\BaseCase
      */
     public function testSessionMoveSimilarSiblings()
     {
-        $session = $this->sharedFixture['session'];
-
         $src = '/tests_write_manipulation_move/testSessionMoveSimilarSiblings/srcNode';
         $dst = '/tests_write_manipulation_move/testSessionMoveSimilarSiblings/dstNode/srcNode';
 
         $probSrc = '/tests_write_manipulation_move/testSessionMoveSimilarSiblings/srcNodeSibling';
         $probDst = '/tests_write_manipulation_move/testSessionMoveSimilarSiblings/dstNode/srcNodeSibling';
 
-        $session->move($src, $dst);
+        $this->session->move($src, $dst);
 
         // Session
-        $this->assertTrue($session->nodeExists($dst), 'Destination node not found [S]');
-        $this->assertFalse($session->nodeExists($src), 'Source node still exists [S]');
-        $this->assertTrue($session->nodeExists($dst . '/another'), 'Destination child node not found [S]');
-        $this->assertFalse($session->nodeExists($src . '/another'), 'Source child node still exists [S]');
-        $this->assertTrue($session->nodeExists($probSrc), 'Sibling nodes should\'nt be moved');
-        $this->assertFalse($session->nodeExists($probDst), 'Sibling nodes should\'nt be moved');
+        $this->assertTrue($this->session->nodeExists($dst), 'Destination node not found [S]');
+        $this->assertFalse($this->session->nodeExists($src), 'Source node still exists [S]');
+        $this->assertTrue($this->session->nodeExists($dst . '/another'), 'Destination child node not found [S]');
+        $this->assertFalse($this->session->nodeExists($src . '/another'), 'Source child node still exists [S]');
+        $this->assertTrue($this->session->nodeExists($probSrc), 'Sibling nodes should\'nt be moved');
+        $this->assertFalse($this->session->nodeExists($probDst), 'Sibling nodes should\'nt be moved');
 
-        $session->save();
-        $this->assertTrue($session->nodeExists($dst), 'Destination node not found [B]');
-        $this->assertFalse($session->nodeExists($src), 'Source node still exists [B]');
-        $this->assertTrue($session->nodeExists($dst . '/another'), 'Destination child node not found [B]');
-        $this->assertFalse($session->nodeExists($src . '/another'), 'Source child node still exists [B]');
-        $this->assertTrue($session->nodeExists($probSrc), 'Sibling nodes should\'nt be moved');
-        $this->assertFalse($session->nodeExists($probDst), 'Sibling nodes should\'nt be moved');
+        $this->session->save();
+        $this->assertTrue($this->session->nodeExists($dst), 'Destination node not found [B]');
+        $this->assertFalse($this->session->nodeExists($src), 'Source node still exists [B]');
+        $this->assertTrue($this->session->nodeExists($dst . '/another'), 'Destination child node not found [B]');
+        $this->assertFalse($this->session->nodeExists($src . '/another'), 'Source child node still exists [B]');
+        $this->assertTrue($this->session->nodeExists($probSrc), 'Sibling nodes should\'nt be moved');
+        $this->assertFalse($this->session->nodeExists($probDst), 'Sibling nodes should\'nt be moved');
 
         // Backend
         $session = $this->renewSession();
@@ -125,34 +121,32 @@ class MoveMethodsTest extends \PHPCR\Test\BaseCase
      */
     public function testSessionMoveSimilarSiblingsInMemory()
     {
-        $session = $this->sharedFixture['session'];
-
         $src = '/tests_write_manipulation_move/testSessionMoveSimilarSiblingsInMemory/srcNode';
         $dst = '/tests_write_manipulation_move/testSessionMoveSimilarSiblingsInMemory/dstNode/srcNode';
 
         $probSrc = '/tests_write_manipulation_move/testSessionMoveSimilarSiblingsInMemory/srcNodeSibling';
         $probDst = '/tests_write_manipulation_move/testSessionMoveSimilarSiblingsInMemory/dstNode/srcNodeSibling';
 
-        $session->getNode($src);
-        $session->getNode($probSrc);
+        $this->session->getNode($src);
+        $this->session->getNode($probSrc);
 
-        $session->move($src, $dst);
+        $this->session->move($src, $dst);
 
         // Session
-        $this->assertTrue($session->nodeExists($dst), 'Destination node not found [S]');
-        $this->assertFalse($session->nodeExists($src), 'Source node still exists [S]');
-        $this->assertTrue($session->nodeExists($dst . '/another'), 'Destination child node not found [S]');
-        $this->assertFalse($session->nodeExists($src . '/another'), 'Source child node still exists [S]');
-        $this->assertTrue($session->nodeExists($probSrc), 'Sibling nodes should\'nt be moved');
-        $this->assertFalse($session->nodeExists($probDst), 'Sibling nodes should\'nt be moved');
+        $this->assertTrue($this->session->nodeExists($dst), 'Destination node not found [S]');
+        $this->assertFalse($this->session->nodeExists($src), 'Source node still exists [S]');
+        $this->assertTrue($this->session->nodeExists($dst . '/another'), 'Destination child node not found [S]');
+        $this->assertFalse($this->session->nodeExists($src . '/another'), 'Source child node still exists [S]');
+        $this->assertTrue($this->session->nodeExists($probSrc), 'Sibling nodes should\'nt be moved');
+        $this->assertFalse($this->session->nodeExists($probDst), 'Sibling nodes should\'nt be moved');
 
-        $session->save();
-        $this->assertTrue($session->nodeExists($dst), 'Destination node not found [B]');
-        $this->assertFalse($session->nodeExists($src), 'Source node still exists [B]');
-        $this->assertTrue($session->nodeExists($dst . '/another'), 'Destination child node not found [B]');
-        $this->assertFalse($session->nodeExists($src . '/another'), 'Source child node still exists [B]');
-        $this->assertTrue($session->nodeExists($probSrc), 'Sibling nodes should\'nt be moved');
-        $this->assertFalse($session->nodeExists($probDst), 'Sibling nodes should\'nt be moved');
+        $this->session->save();
+        $this->assertTrue($this->session->nodeExists($dst), 'Destination node not found [B]');
+        $this->assertFalse($this->session->nodeExists($src), 'Source node still exists [B]');
+        $this->assertTrue($this->session->nodeExists($dst . '/another'), 'Destination child node not found [B]');
+        $this->assertFalse($this->session->nodeExists($src . '/another'), 'Source child node still exists [B]');
+        $this->assertTrue($this->session->nodeExists($probSrc), 'Sibling nodes should\'nt be moved');
+        $this->assertFalse($this->session->nodeExists($probDst), 'Sibling nodes should\'nt be moved');
 
         // Backend
         $session = $this->renewSession();
@@ -166,25 +160,23 @@ class MoveMethodsTest extends \PHPCR\Test\BaseCase
 
     public function testSessionMoveWhitespace()
     {
-        $session = $this->sharedFixture['session'];
-
         $src = '/tests_write_manipulation_move/testSessionMoveWhitespace/jcr:src Node';
         $dst = '/tests_write_manipulation_move/testSessionMoveWhitespace/dst Node/srcNode';
 
-        $session->move($src, $dst);
+        $this->session->move($src, $dst);
 
         // Session
-        $this->assertTrue($session->nodeExists($dst), 'Destination node not found [S]');
-        $this->assertFalse($session->nodeExists($src), 'Source node still exists [S]');
-        $this->assertTrue($session->nodeExists($dst.'/srcFile/jcr:content'), 'Destination child node not found [S]');
+        $this->assertTrue($this->session->nodeExists($dst), 'Destination node not found [S]');
+        $this->assertFalse($this->session->nodeExists($src), 'Source node still exists [S]');
+        $this->assertTrue($this->session->nodeExists($dst.'/srcFile/jcr:content'), 'Destination child node not found [S]');
 
-        $dstNode = $session->getNode($dst);
+        $dstNode = $this->session->getNode($dst);
         $this->assertInstanceOf('PHPCR\NodeInterface', $dstNode);
 
-        $session->save();
-        $this->assertTrue($session->nodeExists($dst), 'Destination node not found [B]');
-        $this->assertFalse($session->nodeExists($src), 'Source node still exists [B]');
-        $this->assertTrue($session->nodeExists($dst.'/srcFile/jcr:content'), 'Destination child node not found [B]');
+        $this->session->save();
+        $this->assertTrue($this->session->nodeExists($dst), 'Destination node not found [B]');
+        $this->assertFalse($this->session->nodeExists($src), 'Source node still exists [B]');
+        $this->assertTrue($this->session->nodeExists($dst.'/srcFile/jcr:content'), 'Destination child node not found [B]');
 
         // Backend
         $session = $this->renewSession();
@@ -198,17 +190,16 @@ class MoveMethodsTest extends \PHPCR\Test\BaseCase
      */
     public function testSessionMoveReferenceable()
     {
-        $session = $this->sharedFixture['session'];
         // has mix:referenceable
         $src = '/tests_write_manipulation_move/testSessionMoveReferenceable/srcNode';
         $dst = '/tests_write_manipulation_move/testSessionMoveReferenceable/dstNode/srcNode';
 
-        $srcUuid = $session->getNode($src)->getIdentifier();
-        $session->move($src, $dst);
+        $srcUuid = $this->session->getNode($src)->getIdentifier();
+        $this->session->move($src, $dst);
 
         // Session
-        $this->assertFalse($session->nodeExists($src), 'Source node still exists [S]');
-        $this->assertTrue($session->nodeExists($dst), 'Destination node not found [S]');
+        $this->assertFalse($this->session->nodeExists($src), 'Source node still exists [S]');
+        $this->assertTrue($this->session->nodeExists($dst), 'Destination node not found [S]');
 
         // Backend
         $session = $this->saveAndRenewSession();
@@ -223,53 +214,47 @@ class MoveMethodsTest extends \PHPCR\Test\BaseCase
      */
     public function testSessionMovePathUpdated()
     {
-        $session = $this->sharedFixture['session'];
-
         $src = '/tests_write_manipulation_move/testSessionMovePathUpdated/srcNode';
         $dst = '/tests_write_manipulation_move/testSessionMovePathUpdated/dstNode/srcNode';
 
         // load node into cache
-        $node = $session->getNode($src);
+        $node = $this->session->getNode($src);
 
-        $session->move($src, $dst);
+        $this->session->move($src, $dst);
 
         $this->assertEquals($dst, $node->getPath(), 'Path of locally cached node was not updated');
-        $this->assertEquals($dst, $session->getNode($dst)->getPath(), 'Path of locally cached node was not updated');
+        $this->assertEquals($dst, $this->session->getNode($dst)->getPath(), 'Path of locally cached node was not updated');
     }
 
     /** Verifies the path in a child of a moved node is updated */
     public function testSessionMovePathUpdatedChild()
     {
-        $session = $this->sharedFixture['session'];
-
         $src = '/tests_write_manipulation_move/testSessionMovePathUpdatedChild/srcNode';
         $dst = '/tests_write_manipulation_move/testSessionMovePathUpdatedChild/dstNode/srcNode';
 
         // load nodes
-        $parent = $session->getNode($src);
-        $child = $session->getNode($src.'/srcChild');
+        $parent = $this->session->getNode($src);
+        $child = $this->session->getNode($src.'/srcChild');
 
-        $session->move($src, $dst);
+        $this->session->move($src, $dst);
 
         $this->assertEquals("$dst/srcChild", $child->getPath());
         $this->assertEquals($dst, $parent->getPath());
-        $this->assertSame($parent, $session->getNode($dst));
-        $this->assertSame($child, $session->getNode($dst.'/srcChild'));
+        $this->assertSame($parent, $this->session->getNode($dst));
+        $this->assertSame($child, $this->session->getNode($dst.'/srcChild'));
     }
 
     /** Verifies a moved node still has the child node */
     public function testSessionMoveHasNode()
     {
-        $session = $this->sharedFixture['session'];
-
         $src = '/tests_write_manipulation_move/testSessionMoveHasNode/srcNode';
         $dst = '/tests_write_manipulation_move/testSessionMoveHasNode/dstNode/srcNode';
 
         // load node and child into cache
-        $srcNode = $session->getNode($src);
+        $srcNode = $this->session->getNode($src);
         $srcNode->getNodes();
 
-        $session->move($src, $dst);
+        $this->session->move($src, $dst);
 
         $this->assertTrue($srcNode->hasNode('srcChild'));
     }
@@ -278,34 +263,31 @@ class MoveMethodsTest extends \PHPCR\Test\BaseCase
     public function testSessionMoveHasNodeParent()
     {
         $this->assertInstanceOf('PHPCR\NodeInterface', $this->node);
-        $session = $this->sharedFixture['session'];
 
         $src = '/tests_write_manipulation_move/testSessionMoveHasNodeParent/srcNode';
         $dst = '/tests_write_manipulation_move/testSessionMoveHasNodeParent/dstNode/srcNode';
 
         // load node into cache
-        $session->getNode($src);
+        $this->session->getNode($src);
 
-        $session->move($src, $dst);
+        $this->session->move($src, $dst);
 
         $this->assertFalse($this->node->hasNode('srcNode'), 'Parent of node still has a reference to the moved node');
     }
 
     public function testSessionMoveMoved()
     {
-        $session = $this->sharedFixture['session'];
-
         $src = '/tests_write_manipulation_move/testSessionMoveMoved/srcNode';
         $dst = '/tests_write_manipulation_move/testSessionMoveMoved/dstNode/srcNode';
         $dst2 = '/tests_write_manipulation_move/testSessionMoveMoved/dstNode2/srcNode';
 
-        $session->move($src, $dst);
-        $session->move($dst, $dst2);
+        $this->session->move($src, $dst);
+        $this->session->move($dst, $dst2);
 
         // Session
-        $this->assertFalse($session->nodeExists($src), 'Source node still exists [S]');
-        $this->assertFalse($session->nodeExists($dst), 'Intermediate source node still exists [S]');
-        $this->assertTrue($session->nodeExists($dst2), 'Destination source not found [S]');
+        $this->assertFalse($this->session->nodeExists($src), 'Source node still exists [S]');
+        $this->assertFalse($this->session->nodeExists($dst), 'Intermediate source node still exists [S]');
+        $this->assertTrue($this->session->nodeExists($dst2), 'Destination source not found [S]');
 
         // Backend
         $session = $this->saveAndRenewSession();
@@ -316,8 +298,6 @@ class MoveMethodsTest extends \PHPCR\Test\BaseCase
 
     public function testSessionMoveReplace()
     {
-        $session = $this->sharedFixture['session'];
-
         $src = $this->node->getPath().'/node';
         $dst = $this->node->getPath().'/moved';
         $src2 = $this->node->getPath().'/replacement';
@@ -325,14 +305,14 @@ class MoveMethodsTest extends \PHPCR\Test\BaseCase
         $move = $this->node->getNode('node');
         $replacement = $this->node->getNode('replacement');
 
-        $session->move($src, $dst);
-        $session->move($src2, $src);
+        $this->session->move($src, $dst);
+        $this->session->move($src2, $src);
 
         // Session
-        $this->assertTrue($session->nodeExists($dst));
-        $this->assertTrue($session->nodeExists("$dst/child"));
-        $this->assertTrue($session->nodeExists($src));
-        $this->assertTrue($session->nodeExists("$src/child"));
+        $this->assertTrue($this->session->nodeExists($dst));
+        $this->assertTrue($this->session->nodeExists("$dst/child"));
+        $this->assertTrue($this->session->nodeExists($src));
+        $this->assertTrue($this->session->nodeExists("$src/child"));
 
         // Backend
         $session = $this->saveAndRenewSession();
@@ -344,17 +324,15 @@ class MoveMethodsTest extends \PHPCR\Test\BaseCase
 
     public function testSessionDeleteMoved()
     {
-        $session = $this->sharedFixture['session'];
-
         $src = '/tests_write_manipulation_move/testSessionDeleteMoved/srcNode';
         $dst = '/tests_write_manipulation_move/testSessionDeleteMoved/dstNode/srcNode';
 
-        $session->move($src, $dst);
-        $this->assertFalse($session->nodeExists($src));
-        $this->assertTrue($session->nodeExists($dst));
-        $session->removeItem($dst);
-        $this->assertFalse($session->nodeExists($src));
-        $this->assertFalse($session->nodeExists($dst));
+        $this->session->move($src, $dst);
+        $this->assertFalse($this->session->nodeExists($src));
+        $this->assertTrue($this->session->nodeExists($dst));
+        $this->session->removeItem($dst);
+        $this->assertFalse($this->session->nodeExists($src));
+        $this->assertFalse($this->session->nodeExists($dst));
 
         $session = $this->saveAndRenewSession();
 
@@ -367,22 +345,20 @@ class MoveMethodsTest extends \PHPCR\Test\BaseCase
         //relies on the base class setup trick to have the node populated from the fixtures
         $this->assertInstanceOf('PHPCR\NodeInterface', $this->node);
 
-        $session = $this->sharedFixture['session'];
-
         $this->node->addNode('newNode', 'nt:unstructured');
         $src = '/tests_write_manipulation_move/testSessionMoveAdded/newNode';
         $dst = '/tests_write_manipulation_move/testSessionMoveAdded/dstNode/newNode';
 
-        $session->move($src, $dst);
+        $this->session->move($src, $dst);
 
         // Session
-        $this->assertFalse($session->nodeExists($src), 'Source node still exists [S]');
-        $this->assertTrue($session->nodeExists($dst), 'Destination node not found [S]');
+        $this->assertFalse($this->session->nodeExists($src), 'Source node still exists [S]');
+        $this->assertTrue($this->session->nodeExists($dst), 'Destination node not found [S]');
 
         // Backend
-        $session = $this->saveAndRenewSession();
-        $this->assertFalse($session->nodeExists($src), 'Source node still exists [B]');
-        $this->assertTrue($session->nodeExists($dst), 'Destination node not found [B]');
+        $this->session = $this->saveAndRenewSession();
+        $this->assertFalse($this->session->nodeExists($src), 'Source node still exists [B]');
+        $this->assertTrue($this->session->nodeExists($dst), 'Destination node not found [B]');
 
         $session = $this->saveAndRenewSession();
         $this->assertFalse($session->nodeExists($src), 'Source child node still exists [B]');
@@ -397,19 +373,17 @@ class MoveMethodsTest extends \PHPCR\Test\BaseCase
         //relies on the base class setup trick to have the node populated from the fixtures
         $this->assertInstanceOf('PHPCR\NodeInterface', $this->node);
 
-        $session = $this->sharedFixture['session'];
-
         $newNode = $this->node->addNode('newNode', 'nt:unstructured');
         $newNode->addNode('newChild', 'nt:unstructured');
 
         $src = '/tests_write_manipulation_move/testSessionMoveChildAdded/newNode/newChild';
         $dst = '/tests_write_manipulation_move/testSessionMoveChildAdded/dstNode/newChild';
 
-        $session->move($src, $dst);
+        $this->session->move($src, $dst);
 
         // Session
-        $this->assertFalse($session->nodeExists($src), 'Source child node still exists [S]');
-        $this->assertTrue($session->nodeExists($dst), 'Destination child node not found [S]');
+        $this->assertFalse($this->session->nodeExists($src), 'Source child node still exists [S]');
+        $this->assertTrue($this->session->nodeExists($dst), 'Destination child node not found [S]');
 
         // Backend
         $session = $this->saveAndRenewSession();
@@ -422,19 +396,17 @@ class MoveMethodsTest extends \PHPCR\Test\BaseCase
      */
     public function testSessionMoveChildMoved()
     {
-        $session = $this->sharedFixture['session'];
-
         $src = '/tests_write_manipulation_move/testSessionMoveChildMoved/srcNode';
         $dst = '/tests_write_manipulation_move/testSessionMoveChildMoved/dstNode/srcNode';
         $dst2 = '/tests_write_manipulation_move/testSessionMoveChildMoved/srcFile';
 
-        $session->move($src, $dst);
-        $session->move($dst.'/srcFile', $dst2);
+        $this->session->move($src, $dst);
+        $this->session->move($dst.'/srcFile', $dst2);
 
         // Session
-        $this->assertFalse($session->nodeExists($src), 'Source node still exists [S]');
-        $this->assertTrue($session->nodeExists($dst), 'Destination node not found [S]');
-        $this->assertTrue($session->nodeExists($dst2), 'Destination child node not found [S]');
+        $this->assertFalse($this->session->nodeExists($src), 'Source node still exists [S]');
+        $this->assertTrue($this->session->nodeExists($dst), 'Destination node not found [S]');
+        $this->assertTrue($this->session->nodeExists($dst2), 'Destination child node not found [S]');
 
         // Backend
         $session = $this->saveAndRenewSession();
@@ -448,12 +420,10 @@ class MoveMethodsTest extends \PHPCR\Test\BaseCase
      */
     public function testSessionMoveProperty()
     {
-        $session = $this->sharedFixture['session'];
-
         $src = '/tests_write_manipulation_move/testSessionMoveProperty/srcNode/prop';
         $dst = '/tests_write_manipulation_move/testSessionMoveProperty/dstNode/prop';
-        $session->move($src, $dst);
-        $session->save();
+        $this->session->move($src, $dst);
+        $this->session->save();
     }
 
     /**
@@ -461,12 +431,10 @@ class MoveMethodsTest extends \PHPCR\Test\BaseCase
      */
     public function testSessionMoveToProperty()
     {
-        $session = $this->sharedFixture['session'];
-
         $src = '/tests_write_manipulation_move/testSessionMoveToProperty/srcNode';
         $dst = '/tests_write_manipulation_move/testSessionMoveToProperty/dstNode/prop/fail';
-        $session->move($src, $dst);
-        $session->save();
+        $this->session->move($src, $dst);
+        $this->session->save();
     }
 
     /**
@@ -474,12 +442,10 @@ class MoveMethodsTest extends \PHPCR\Test\BaseCase
      */
     public function testSessionMoveInvalidDstPath()
     {
-        $session = $this->sharedFixture['session'];
-
         $src = '/tests_write_manipulation_move/testSessionMoveInvalidDstPath/srcNode';
         $dst = '/tests_write_manipulation_move/testSessionMoveInvalidDstPath/dstNode/srcNode[3]';
-        $session->move($src, $dst);
-        $session->save();
+        $this->session->move($src, $dst);
+        $this->session->save();
     }
 
     /**
@@ -487,12 +453,10 @@ class MoveMethodsTest extends \PHPCR\Test\BaseCase
      */
     public function testSessionMoveSrcNotFound()
     {
-        $session = $this->sharedFixture['session'];
-
         $src = '/tests_write_manipulation_move/testSessionMoveSrcNotFound/notFound';
         $dst = '/tests_write_manipulation_move/testSessionMoveSrcNotFound/dstNode/notFound';
-        $session->move($src, $dst);
-        $session->save();
+        $this->session->move($src, $dst);
+        $this->session->save();
     }
 
     /**
@@ -500,12 +464,10 @@ class MoveMethodsTest extends \PHPCR\Test\BaseCase
      */
     public function testSessionMoveDstNotFound()
     {
-        $session = $this->sharedFixture['session'];
-
         $src = '/tests_write_manipulation_move/testSessionMoveDstNotFound/srcNode';
         $dst = '/tests_write_manipulation_move/testSessionMoveDstNotFound/notFound/srcNode';
-        $session->move($src, $dst);
-        $session->save();
+        $this->session->move($src, $dst);
+        $this->session->save();
     }
 
     /**
@@ -513,34 +475,31 @@ class MoveMethodsTest extends \PHPCR\Test\BaseCase
      */
     public function testSessionMoveDstExists()
     {
-        $session = $this->sharedFixture['session'];
-
         $src = '/tests_write_manipulation_move/testSessionMoveDstExists/srcNode/srcChild';
         $dst = '/tests_write_manipulation_move/testSessionMoveDstExists/dstNode/srcChild';
 
         // srcChild already exists at $dst
-        $session->move($src, $dst);
-        $session->save();
+        $this->session->move($src, $dst);
+        $this->session->save();
     }
 
     public function testWorkspaceMove()
     {
-        $session = $this->sharedFixture['session'];
-
-        $workspace = $session->getWorkspace();
+        $workspace = $this->session->getWorkspace();
         $src = '/tests_write_manipulation_move/testWorkspaceMove/srcNode';
         $dst = '/tests_write_manipulation_move/testWorkspaceMove/dstNode/srcNode';
 
-        $srcUuid = $session->getNode($src)->getIdentifier();
+        $srcUuid = $this->session->getNode($src)->getIdentifier();
         $workspace->move($src, $dst);
 
         // Session
-        $this->assertFalse($this->sharedFixture['session']->nodeExists($src), 'Source node still exists [S]');
-        $this->assertTrue($this->sharedFixture['session']->nodeExists($dst), 'Destination node not found [S]');
+        $this->assertFalse($this->session->nodeExists($src), 'Source node still exists [S]');
+        $this->assertTrue($this->session->nodeExists($dst), 'Destination node not found [S]');
 
         // Backend
         $session = $this->saveAndRenewSession();
         $this->assertFalse($session->nodeExists($src), 'Source node still exists [B]');
         $this->assertTrue($session->nodeExists($dst), 'Destination node not found [B]');
+        $this->assertEquals($srcUuid, $session->getNode($dst)->getIdentifier());
     }
 }

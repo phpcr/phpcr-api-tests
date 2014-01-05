@@ -93,7 +93,7 @@ class NodeTypeAssignementTest extends \PHPCR\Test\BaseCase
 
         $this->node->addMixin('mix:mimeType');
         $this->assertTrue($this->node->isModified());
-        $this->sharedFixture['session']->save();
+        $this->session->save();
         $this->assertFalse($this->node->isModified());
         $this->node->addMixin('mix:mimeType');
         $this->assertFalse($this->node->isModified());
@@ -105,7 +105,7 @@ class NodeTypeAssignementTest extends \PHPCR\Test\BaseCase
      */
     public function testAddMixinExtending()
     {
-        if (!self::$staticSharedFixture['session']->getRepository()->getDescriptor('option.versioning.supported')) {
+        if (!$this->session->getRepository()->getDescriptor('option.versioning.supported')) {
             $this->markTestSkipped('PHPCR repository doesn\'t support versioning');
         }
 

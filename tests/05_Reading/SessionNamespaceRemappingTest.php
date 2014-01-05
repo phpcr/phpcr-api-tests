@@ -36,12 +36,12 @@ class SessionNamespaceRemappingTest extends \PHPCR\Test\BaseCase
      */
     public function testSetNamespacePrefixXml()
     {
-        $this->sharedFixture['session']->setNamespacePrefix('xmlwhatever', 'http://www.jcp.org/jcr/mix/1.0');
+        $this->session->setNamespacePrefix('xmlwhatever', 'http://www.jcp.org/jcr/mix/1.0');
     }
 
     public function testGetNamespacePrefixes()
     {
-        $ret = $this->sharedFixture['session']->getNamespacePrefixes();
+        $ret = $this->session->getNamespacePrefixes();
         $this->assertInternalType('array', $ret);
         foreach ($this->nsBuiltIn as $prefix => $uri) {
             $this->assertContains($prefix, $ret);
@@ -50,7 +50,7 @@ class SessionNamespaceRemappingTest extends \PHPCR\Test\BaseCase
 
     public function testGetNamespaceURI()
     {
-        $ret = $this->sharedFixture['session']->getNamespaceURI('jcr');
+        $ret = $this->session->getNamespaceURI('jcr');
         $this->assertEquals($this->nsBuiltIn['jcr'], $ret);
     }
 
@@ -59,12 +59,12 @@ class SessionNamespaceRemappingTest extends \PHPCR\Test\BaseCase
      */
     public function testGetNamespaceURINonExistent()
     {
-        $this->sharedFixture['session']->getNamespaceURI('http://nonexistent/2.0');
+        $this->session->getNamespaceURI('http://nonexistent/2.0');
     }
 
     public function testGetNamespacePrefix()
     {
-        $ret = $this->sharedFixture['session']->getNamespacePrefix($this->nsBuiltIn['jcr']);
+        $ret = $this->session->getNamespacePrefix($this->nsBuiltIn['jcr']);
         $this->assertEquals('jcr', $ret);
     }
 
@@ -73,6 +73,6 @@ class SessionNamespaceRemappingTest extends \PHPCR\Test\BaseCase
      */
     public function testGetNamespacePrefixNonExistent()
     {
-        $this->sharedFixture['session']->getNamespacePrefix('nonexistent');
+        $this->session->getNamespacePrefix('nonexistent');
     }
 }

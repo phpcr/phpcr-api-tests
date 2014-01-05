@@ -14,11 +14,11 @@ class ItemStateTest extends \PHPCR\Test\BaseCase
     {
         parent::setUp();
 
-        if (! $this->sharedFixture['session'] instanceof \Jackalope\Session) {
+        if (! $this->session instanceof \Jackalope\Session) {
             $this->markTestSkipped('This test is only meant for Jackalope'); //TODO: this is a unit test that belongs into jackalope
         }
 
-        $root = $this->sharedFixture['session']->getRootNode();
+        $root = $this->session->getRootNode();
 
         if ($root->hasNode('testNode')) {
             $node = $root->getNode('testNode');
@@ -35,8 +35,7 @@ class ItemStateTest extends \PHPCR\Test\BaseCase
 
     public function testNodeWorkflow()
     {
-        $session = $this->sharedFixture['session'];
-        $root = $session->getRootNode();
+        $root = $this->session->getRootNode();
 
         // New node --> state = NEW
         $node = $root->addNode('testNode');
@@ -48,7 +47,7 @@ class ItemStateTest extends \PHPCR\Test\BaseCase
         $this->assertEquals(Item::STATE_NEW, $node->getState());
 
         // Node saved --> state = DIRTY
-        $session->save();
+        $this->session->save();
         $this->assertEquals(Item::STATE_DIRTY, $node->getState());
 
         // Node accessed for reading --> reloaded --> state = CLEAN
@@ -60,7 +59,7 @@ class ItemStateTest extends \PHPCR\Test\BaseCase
         $this->assertEquals(Item::STATE_MODIFIED, $node->getState());
 
         // Node saved --> state = DIRTY
-        $session->save();
+        $this->session->save();
         $this->assertEquals(Item::STATE_DIRTY, $node->getState());
 
         // Node deleted --> state = DELETED
@@ -76,8 +75,7 @@ class ItemStateTest extends \PHPCR\Test\BaseCase
 
     public function testPropertyWorkflow()
     {
-        $session = $this->sharedFixture['session'];
-        $root = $session->getRootNode();
+        $root = $this->session->getRootNode();
 
         // New propery --> state = NEW
         $prop = $root->setProperty('testProp', 'some value');
@@ -88,7 +86,7 @@ class ItemStateTest extends \PHPCR\Test\BaseCase
         $this->assertEquals(Item::STATE_NEW, $prop->getState());
 
         // Prop saved --> state = DIRTY
-        $session->save();
+        $this->session->save();
         $this->assertEquals(Item::STATE_DIRTY, $prop->getState());
 
         // Prop read --> reload --> state = CLEAN
@@ -100,7 +98,7 @@ class ItemStateTest extends \PHPCR\Test\BaseCase
         $this->assertEquals(Item::STATE_MODIFIED, $prop->getState());
 
         // Prop saved --> state = DIRTY
-        $session->save();
+        $this->session->save();
         $this->assertEquals(Item::STATE_DIRTY, $prop->getState());
 
         // Prop read --> reload --> state = CLEAN

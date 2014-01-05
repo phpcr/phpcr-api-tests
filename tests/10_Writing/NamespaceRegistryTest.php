@@ -1,13 +1,18 @@
 <?php
 namespace PHPCR\Tests\Writing;
 
+use PHPCR\NamespaceRegistryInterface;
+
 require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 //6.3.1 Namespace Registry
 class NamespaceRegistryTest extends \PHPCR\Test\BaseCase
 {
     protected $workspace;
-    protected $nr; //the NamespaceRegistry
+    /**
+     * @var NamespaceRegistryInterface
+     */
+    protected $nr;
     protected $nsBuiltIn = array('jcr' => 'http://www.jcp.org/jcr/1.0',
                                  'nt'  => 'http://www.jcp.org/jcr/nt/1.0',
                                  'mix' => 'http://www.jcp.org/jcr/mix/1.0',
@@ -17,7 +22,7 @@ class NamespaceRegistryTest extends \PHPCR\Test\BaseCase
     public function setUp()
     {
         parent::setUp();
-        $this->workspace = $this->sharedFixture['session']->getWorkspace();
+        $this->workspace = $this->session->getWorkspace();
         $this->nr = $this->workspace->getNamespaceRegistry(); //this function is tested in ReadTest/WorkspaceReadMethods.php::testGetNamespaceRegistry
     }
 

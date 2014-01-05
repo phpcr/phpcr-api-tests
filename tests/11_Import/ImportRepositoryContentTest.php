@@ -64,16 +64,14 @@ class ImportRepositoryContentTest extends \PHPCR\Test\BaseCase
      */
     public function testImportXMLSystemPathNotFoundSession()
     {
-        $session = $this->sharedFixture['session'];
-        $session->importXML('/inexistent-path', __DIR__.'/../../fixtures/general/base.xml', ImportUUIDBehaviorInterface::IMPORT_UUID_COLLISION_THROW);
+        $this->session->importXML('/inexistent-path', __DIR__.'/../../fixtures/general/base.xml', ImportUUIDBehaviorInterface::IMPORT_UUID_COLLISION_THROW);
     }
     /**
      * @expectedException \PHPCR\PathNotFoundException
      */
     public function testImportXMLSystemPathNotFoundWorkspace()
     {
-        $session = $this->sharedFixture['session'];
-        $session->getWorkspace()->importXML('/inexistent-path', __DIR__.'/../../fixtures/general/base.xml', ImportUUIDBehaviorInterface::IMPORT_UUID_COLLISION_THROW);
+        $this->session->getWorkspace()->importXML('/inexistent-path', __DIR__.'/../../fixtures/general/base.xml', ImportUUIDBehaviorInterface::IMPORT_UUID_COLLISION_THROW);
     }
 
     /**
@@ -319,16 +317,14 @@ class ImportRepositoryContentTest extends \PHPCR\Test\BaseCase
      */
     public function testImportXMLNoFile()
     {
-        $session = $this->sharedFixture['session'];
-        $session->importXML('/', 'nonexisting.xml', ImportUUIDBehaviorInterface::IMPORT_UUID_COLLISION_THROW);
+        $this->session->importXML('/', 'nonexisting.xml', ImportUUIDBehaviorInterface::IMPORT_UUID_COLLISION_THROW);
     }
 
-    /*
+/*
     TODO: can we make XMLReader throw exception instead of whatever it does now?
     public function testImportXMLNoXml()
     {
-    $session = $this->sharedFixture['session'];
-    $session->importXML('/', __FILE__, ImportUUIDBehaviorInterface::IMPORT_UUID_COLLISION_THROW);
+        $this->session->importXML('/', __FILE__, ImportUUIDBehaviorInterface::IMPORT_UUID_COLLISION_THROW);
     }
 */
 

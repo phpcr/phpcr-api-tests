@@ -18,8 +18,8 @@ class CreateVersionableNodeTest extends \PHPCR\Test\BaseCase
     public function setUp()
     {
         parent::setUp();
-        $this->node = $this->sharedFixture['session']->getNode('/tests_version_base/versionable');
-        $this->vm = $this->sharedFixture['session']->getWorkspace()->getVersionManager();
+        $this->node = $this->session->getNode('/tests_version_base/versionable');
+        $this->vm = $this->session->getWorkspace()->getVersionManager();
     }
 
     public function testAddVersionableMixin()
@@ -35,7 +35,7 @@ class CreateVersionableNodeTest extends \PHPCR\Test\BaseCase
         // the jcr:isCheckedOut property. This is not the expected behaviour.
         $this->saveAndRenewSession();
         //get the node again from the server
-        $this->node = $this->sharedFixture['session']->getNode('/tests_version_base/versionable');
+        $this->node = $this->session->getNode('/tests_version_base/versionable');
         $this->assertContains('mix:versionable', $mixins, 'Node does not have mix:versionable mixin');
         $this->assertTrue( $this->node->getProperty('jcr:isCheckedOut')->getBoolean(),'jcr:isCheckout is not true');
     }
@@ -44,15 +44,15 @@ class CreateVersionableNodeTest extends \PHPCR\Test\BaseCase
     {
         $this->renewSession(); // need a clean session after exception
 
-        $node = $this->sharedFixture['session']->getNode('/tests_version_base');
+        $node = $this->session->getNode('/tests_version_base');
         $node = $node->addNode('myversioned');
         $node->setProperty('foo', 'bar');
         $node->addMixin('mix:versionable');
 
         $this->saveAndRenewSession();
-        $this->vm = $this->sharedFixture['session']->getWorkspace()->getVersionmanager();
+        $this->vm = $this->session->getWorkspace()->getVersionmanager();
 
-        $node = $this->sharedFixture['session']->getNode('/tests_version_base/myversioned');
+        $node = $this->session->getNode('/tests_version_base/myversioned');
         $this->assertTrue($node->hasProperty('foo'));
 
         $this->vm->checkin($node->getPath());
@@ -60,9 +60,9 @@ class CreateVersionableNodeTest extends \PHPCR\Test\BaseCase
 
         $node->setProperty('foo', 'XXX');
 
-        $this->sharedFixture['session']->save();
+        $this->session->save();
 
-        $node = $this->sharedFixture['session']->getNode('/tests_version_base/myversioned');
+        $node = $this->session->getNode('/tests_version_base/myversioned');
         $this->assertTrue($node->hasProperty('foo'));
         $this->assertEquals('XXX', $node->getPropertyValue('foo'));
     }

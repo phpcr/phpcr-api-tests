@@ -40,7 +40,7 @@ class VersionTest extends \PHPCR\Test\BaseCase
     {
         parent::setUp();
 
-        $this->vm = $this->sharedFixture['session']->getWorkspace()->getVersionManager();
+        $this->vm = $this->session->getWorkspace()->getVersionManager();
 
         $this->version = $this->vm->getBaseVersion('/tests_version_base/versioned');
 

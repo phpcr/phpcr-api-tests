@@ -1,6 +1,8 @@
 <?php
 namespace PHPCR\Tests\NodeTypeDiscovery;
 
+use PHPCR\NodeType\NodeTypeManagerInterface;
+
 require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 /**
@@ -8,6 +10,9 @@ require_once(__DIR__ . '/../../inc/BaseCase.php');
  */
 class NodeTypeDiscoveryTest extends \PHPCR\Test\BaseCase
 {
+    /**
+     * @var NodeTypeManagerInterface
+     */
     private $nodeTypeManager;
 
     /**
@@ -27,7 +32,7 @@ class NodeTypeDiscoveryTest extends \PHPCR\Test\BaseCase
     public function setUp()
     {
         parent::setUp(false);
-        $this->nodeTypeManager = $this->sharedFixture['session']->getWorkspace()->getNodeTypeManager();
+        $this->nodeTypeManager = $this->session->getWorkspace()->getNodeTypeManager();
     }
 
     public function testGetNodeType()

@@ -35,7 +35,7 @@ class VersionHistoryTest extends \PHPCR\Test\BaseCase
     public function setUp()
     {
         parent::setUp();
-        $this->vm = $this->sharedFixture['session']->getWorkspace()->getVersionManager();
+        $this->vm = $this->session->getWorkspace()->getVersionManager();
         $this->history = $this->vm->getVersionHistory('/tests_version_base/versioned');
         $this->assertInstanceOf('PHPCR\\Version\\VersionHistoryInterface', $this->history);
     }
@@ -133,13 +133,13 @@ class VersionHistoryTest extends \PHPCR\Test\BaseCase
      */
     public function testMixingCreateAndGetAllVersions()
     {
-        $vm = $this->sharedFixture['session']->getWorkspace()->getVersionManager();
-        $baseNode = $this->sharedFixture['session']->getNode('/tests_version_base');
+        $vm = $this->session->getWorkspace()->getVersionManager();
+        $baseNode = $this->session->getNode('/tests_version_base');
 
         $node = $baseNode->addNode('versioned_all', 'nt:unstructured');
         $node->addMixin('mix:versionable');
         $node->setProperty('foo', 'bar');
-        $this->sharedFixture['session']->save();
+        $this->session->save();
 
         $history = $vm->getVersionHistory('/tests_version_base/versioned_all');
         $this->assertCount(1, $history->getAllVersions());
@@ -150,7 +150,7 @@ class VersionHistoryTest extends \PHPCR\Test\BaseCase
 
         $vm->checkpoint('/tests_version_base/versioned_all');
         $node->setProperty('foo', 'bar2');
-        $this->sharedFixture['session']->save();
+        $this->session->save();
         $this->assertCount(2, $history->getAllVersions());
 
         $vm->checkin('/tests_version_base/versioned_all');
@@ -178,20 +178,20 @@ class VersionHistoryTest extends \PHPCR\Test\BaseCase
      */
     public function testMixingCreateAndGetAllLinearVersions()
     {
-        $vm = $this->sharedFixture['session']->getWorkspace()->getVersionManager();
-        $baseNode = $this->sharedFixture['session']->getNode('/tests_version_base');
+        $vm = $this->session->getWorkspace()->getVersionManager();
+        $baseNode = $this->session->getNode('/tests_version_base');
 
         $node = $baseNode->addNode('versioned_all_linear', 'nt:unstructured');
         $node->addMixin('mix:versionable');
         $node->setProperty('foo', 'bar');
-        $this->sharedFixture['session']->save();
+        $this->session->save();
 
         $history = $vm->getVersionHistory('/tests_version_base/versioned_all_linear');
         $this->assertCount(1, $history->getAllLinearVersions());
 
         $vm->checkpoint('/tests_version_base/versioned_all_linear');
         $node->setProperty('foo', 'bar2');
-        $this->sharedFixture['session']->save();
+        $this->session->save();
         $this->assertCount(2, $history->getAllLinearVersions());
 
         $vm->checkin('/tests_version_base/versioned_all_linear');
@@ -236,7 +236,7 @@ class VersionHistoryTest extends \PHPCR\Test\BaseCase
     public function testDeleteVersion()
     {
         $nodePath = '/tests_version_base/versioned';
-        $this->sharedFixture['session']->getNode($nodePath); // just to make sure this does not confuse anything
+        $this->session->getNode($nodePath); // just to make sure this does not confuse anything
 
         $version = $this->vm->checkpoint($nodePath);
         $this->vm->checkpoint($nodePath); // create another version, the last version can not be removed
@@ -250,15 +250,15 @@ class VersionHistoryTest extends \PHPCR\Test\BaseCase
         $frozen = $history->getVersion($versionName)->getFrozenNode(); // also have the frozen node in cache
         $frozenPath = $frozen->getPath();
 
-        $this->assertTrue($this->sharedFixture['session']->itemExists($versionPath));
+        $this->assertTrue($this->session->itemExists($versionPath));
         $this->assertTrue($this->versionExists($history, $versionName));
 
         // Remove the version
         $history->removeVersion($versionName);
 
         // The version is gone after removal
-        $this->assertFalse($this->sharedFixture['session']->itemExists($versionPath));
-        $this->assertFalse($this->sharedFixture['session']->itemExists($frozenPath));
+        $this->assertFalse($this->session->itemExists($versionPath));
+        $this->assertFalse($this->session->itemExists($frozenPath));
 
         $this->assertFalse($this->versionExists($history, $versionName));
     }

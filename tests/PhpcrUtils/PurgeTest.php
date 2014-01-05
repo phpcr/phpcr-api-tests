@@ -26,28 +26,26 @@ class PurgeTest extends BaseCase
 
     public function testPurge()
     {
-        /** @var $session \PHPCR\SessionInterface */
-        $session = $this->sharedFixture['session'];
-        $systemNodeCount = count($session->getRootNode()->getNodes());
+        $systemNodeCount = count($this->session->getRootNode()->getNodes());
 
-        $a = $session->getRootNode()->addNode('a', 'nt:unstructured');
+        $a = $this->session->getRootNode()->addNode('a', 'nt:unstructured');
         $a->addMixin('mix:referenceable');
-        $b = $session->getRootNode()->addNode('b', 'nt:unstructured');
+        $b = $this->session->getRootNode()->addNode('b', 'nt:unstructured');
         $b->addMixin('mix:referenceable');
-        $session->save();
+        $this->session->save();
 
         $a->setProperty('ref', $b, PropertyType::REFERENCE);
         $b->setProperty('ref', $a, PropertyType::REFERENCE);
-        $session->save();
+        $this->session->save();
 
-        NodeHelper::purgeWorkspace($session);
-        if ($session->getWorkspace()->getName() == 'crx.default') {
+        NodeHelper::purgeWorkspace($this->session);
+        if ($this->session->getWorkspace()->getName() == 'crx.default') {
             // if we would continue, we would delete all content from the only real workspace
             $this->markTestIncomplete('TODO: how to test this with crx where we have no workspaces?');
         }
-        $session->save();
+        $this->session->save();
 
         // if there where system nodes, they should still be here
-        $this->assertCount($systemNodeCount, $session->getRootNode()->getNodes());
+        $this->assertCount($systemNodeCount, $this->session->getRootNode()->getNodes());
     }
 }

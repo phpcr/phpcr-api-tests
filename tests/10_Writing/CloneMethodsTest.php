@@ -46,8 +46,8 @@ class CloneMethodsTest extends BaseCase
         $this->renewSession(); // get rid of cache from previous tests
         parent::setUp();
 
-        $this->srcWs = $this->sharedFixture['session']->getWorkspace();
-        $this->srcWsName = $this->sharedFixture['session']->getWorkspace()->getName();
+        $this->srcWs = $this->session->getWorkspace();
+        $this->srcWsName = $this->session->getWorkspace()->getName();
     }
 
     public static function tearDownAfterClass()
@@ -523,7 +523,7 @@ class CloneMethodsTest extends BaseCase
             $this->fail("'update' method should not raise an error when source not found, got error: " . $exception->getMessage());
         }
 
-        $destSession->getObjectManager()->refresh(false);
+        $destSession->refresh(false);
 
         // Cloned node should not get any updates that were made to the source node before it was removed
         $clonedNode = $destSession->getNode($dstNode);
@@ -540,7 +540,7 @@ class CloneMethodsTest extends BaseCase
 
     private function skipIfSameNameSiblingsSupported()
     {
-        if (self::$staticSharedFixture['session']->getRepository()->getDescriptor('node.type.management.same.name.siblings.supported')) {
+        if ($this->session->getRepository()->getDescriptor('node.type.management.same.name.siblings.supported')) {
             $this->markTestSkipped('Test does not yet cover repositories that support same name siblings.');
         }
     }

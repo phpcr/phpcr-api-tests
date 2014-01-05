@@ -46,7 +46,7 @@ class SetPropertyDynamicRebindingTest extends \PHPCR\Test\BaseCase
      */
     public function testDynamicRebinding($propName, $sourcePropType, $sourcePropValue, $destPropType, $destPropValue, $getterFunc)
     {
-        $node = $this->sharedFixture['session']->getRootNode();
+        $node = $this->session->getRootNode();
 
         // Create the property with the source type and value and save it
         $prop = $node->setProperty($propName, $sourcePropValue, $sourcePropType);
@@ -70,7 +70,7 @@ class SetPropertyDynamicRebindingTest extends \PHPCR\Test\BaseCase
 
         // Read it from backend check it's still valid
         $this->saveAndRenewSession();
-        $prop = $this->sharedFixture['session']->getProperty('/' . $propName);
+        $prop = $this->session->getProperty('/' . $propName);
         $this->assertInstanceOf('\PHPCR\PropertyInterface', $prop);
         $this->assertEquals($sourcePropType, $prop->getType(), 'Initial property type does not match after saving');
 
@@ -113,7 +113,7 @@ class SetPropertyDynamicRebindingTest extends \PHPCR\Test\BaseCase
 
         // Finally re-read it from backend and check it's still ok
         $this->saveAndRenewSession();
-        $prop = $this->sharedFixture['session']->getProperty('/' . $propName);
+        $prop = $this->session->getProperty('/' . $propName);
         $this->assertInstanceOf('\PHPCR\PropertyInterface', $prop);
         $this->assertEquals($destPropType, $prop->getType(), 'Property type does not match after re-binding and save');
 

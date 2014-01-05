@@ -27,7 +27,6 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
      */
     public function testRemoveAndAdd()
     {
-        $session = $this->sharedFixture['session'];
         $node = $this->node->getNode('child');
         $path = $node->getPath();
         $parentpath = $this->node->getPath();
@@ -35,14 +34,14 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
         $this->assertSame('nt:unstructured', $node->getPrimaryNodeType()->getName());
 
         $node->remove();
-        $this->assertFalse($session->nodeExists($path));
+        $this->assertFalse($this->session->nodeExists($path));
         $this->assertFalse($this->node->hasNode('child'));
         $this->node->addNode('child', 'nt:folder');
 
-        $this->assertTrue($session->nodeExists($path), "No node at $path");
+        $this->assertTrue($this->session->nodeExists($path), "No node at $path");
         $this->assertTrue($this->node->hasNode('child'), "No child 'child' at $path");
-        $session->save();
-        $this->assertTrue($session->nodeExists($path));
+        $this->session->save();
+        $this->assertTrue($this->session->nodeExists($path));
         $this->assertTrue($this->node->hasNode('child'));
 
         $session = $this->saveAndRenewSession();
@@ -63,7 +62,6 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
      */
     public function testRemoveSaveAndAdd()
     {
-        $session = $this->sharedFixture['session'];
         $node = $this->node->getNode('child');
         $path = $node->getPath();
         $this->assertInstanceOf('PHPCR\NodeType\NodeTypeInterface', $node->getPrimaryNodeType());
@@ -72,17 +70,17 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
         $node->remove();
         $this->node->setProperty('test', 'toast');
 
-        $session->save();
+        $this->session->save();
         $newnode = $this->node->addNode('child', 'nt:folder');
         $this->assertNotSame($node, $newnode); // adding the node has to create a new object
 
         $this->node->getPropertyValue('test');
         $this->assertSame($newnode, $this->node->getNode($newnode->getName()));
-        $this->assertSame($newnode, $session->getNode($path));
+        $this->assertSame($newnode, $this->session->getNode($path));
 
-        $session->save();
+        $this->session->save();
 
-        $this->assertTrue($session->nodeExists($path));
+        $this->assertTrue($this->session->nodeExists($path));
         $this->assertTrue($this->node->hasNode('child'));
 
     }
@@ -94,24 +92,22 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
      */
     public function testAddAndRemove()
     {
-        $session = $this->sharedFixture['session'];
-
         $parentpath = $this->node->getPath();
         $path = "$parentpath/child";
 
         $node = $this->node->addNode('child', 'nt:folder');
 
-        $this->assertTrue($session->nodeExists($path));
+        $this->assertTrue($this->session->nodeExists($path));
         $this->assertTrue($this->node->hasNode('child'));
 
         $node->remove();
 
-        $this->assertFalse($session->nodeExists($path));
+        $this->assertFalse($this->session->nodeExists($path));
         $this->assertFalse($this->node->hasNode('child'));
 
-        $session->save();
+        $this->session->save();
 
-        $this->assertFalse($session->nodeExists($path));
+        $this->assertFalse($this->session->nodeExists($path));
         $this->assertFalse($this->node->hasNode('child'));
 
         $session = $this->renewSession();
@@ -127,23 +123,20 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
      */
     public function testAddAndRemoveProperty()
     {
-        /** @var $session \PHPCR\SessionInterface */
-        $session = $this->sharedFixture['session'];
-
         $property = $this->node->setProperty('prop', 'test');
         $path = $property->getPath();
 
-        $this->assertTrue($session->propertyExists($path));
+        $this->assertTrue($this->session->propertyExists($path));
         $this->assertTrue($this->node->hasProperty('prop'));
 
         $property->remove();
 
-        $this->assertFalse($session->propertyExists($path));
+        $this->assertFalse($this->session->propertyExists($path));
         $this->assertFalse($this->node->hasProperty('prop'));
 
-        $session->save();
+        $this->session->save();
 
-        $this->assertFalse($session->propertyExists($path));
+        $this->assertFalse($this->session->propertyExists($path));
         $this->assertFalse($this->node->hasProperty('prop'));
 
         $session = $this->renewSession();
@@ -156,9 +149,6 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
      */
     public function testRemovePropertyAndNode()
     {
-        /** @var $session \PHPCR\SessionInterface */
-        $session = $this->sharedFixture['session'];
-
         $property = $this->node->setProperty('prop', 'test');
         $nodepath = $this->node->getPath();
         $proppath = $property->getPath();
@@ -166,13 +156,13 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
         $property->remove();
         $this->node->remove();
 
-        $this->assertFalse($session->nodeExists($nodepath));
-        $this->assertFalse($session->propertyExists($proppath));
+        $this->assertFalse($this->session->nodeExists($nodepath));
+        $this->assertFalse($this->session->propertyExists($proppath));
 
-        $session->save();
+        $this->session->save();
 
-        $this->assertFalse($session->nodeExists($nodepath));
-        $this->assertFalse($session->propertyExists($proppath));
+        $this->assertFalse($this->session->nodeExists($nodepath));
+        $this->assertFalse($this->session->propertyExists($proppath));
 
         $session = $this->renewSession();
 
@@ -187,24 +177,23 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
      */
     public function testRemoveAndAddAndRemove()
     {
-        $session = $this->sharedFixture['session'];
         $node = $this->node->getNode('child');
         $path = $node->getPath();
         $parentpath = $this->node->getPath();
 
         $node->remove();
 
-        $this->assertFalse($session->nodeExists($path));
+        $this->assertFalse($this->session->nodeExists($path));
         $this->assertFalse($this->node->hasNode('child'));
 
         $node = $this->node->addNode('child', 'nt:folder');
 
-        $this->assertTrue($session->nodeExists($path));
+        $this->assertTrue($this->session->nodeExists($path));
         $this->assertTrue($this->node->hasNode('child'));
 
         $node->remove();
 
-        $this->assertFalse($session->nodeExists($path));
+        $this->assertFalse($this->session->nodeExists($path));
         $this->assertFalse($this->node->hasNode('child'));
 
         $session = $this->saveAndRenewSession();
@@ -220,30 +209,28 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
      */
     public function testAddAndRemoveAndAdd()
     {
-        $session = $this->sharedFixture['session'];
-
         $parentpath = $this->node->getPath();
         $path = "$parentpath/child";
 
         $node = $this->node->addNode('child', 'nt:folder');
 
-        $this->assertTrue($session->nodeExists($path));
+        $this->assertTrue($this->session->nodeExists($path));
         $this->assertTrue($this->node->hasNode('child'));
 
         $node->remove();
 
-        $this->assertFalse($session->nodeExists($path));
+        $this->assertFalse($this->session->nodeExists($path));
         $this->assertFalse($this->node->hasNode('child'));
 
         $newnode = $this->node->addNode('child', 'nt:unstructured');
 
         $this->assertNotSame($node, $newnode);
-        $this->assertTrue($session->nodeExists($path));
+        $this->assertTrue($this->session->nodeExists($path));
         $this->assertTrue($this->node->hasNode('child'));
 
-        $session->save();
+        $this->session->save();
 
-        $this->assertTrue($session->nodeExists($path));
+        $this->assertTrue($this->session->nodeExists($path));
         $this->assertTrue($this->node->hasNode('child'));
 
         $session = $this->renewSession();
@@ -273,7 +260,7 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
 
         $this->renewSession();
 
-        $this->assertTrue($this->sharedFixture['session']->nodeExists("/$nodename"));
+        $this->assertTrue($this->session->nodeExists("/$nodename"));
     }
 
     public function testRemoveAndAddAndRemoveToplevelNode()
@@ -295,7 +282,7 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
         $this->renewSession();
 
         $this->setExpectedException('\PHPCR\PathNotFoundException');
-        $this->sharedFixture['session']->getNode("/$nodename");
+        $this->session->getNode("/$nodename");
     }
 
     /**
@@ -303,16 +290,15 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
      */
     public function testRemoveAndMove()
     {
-        $session = $this->sharedFixture['session'];
-        $node = $session->getNode($this->node->getPath().'/parent/child');
+        $node = $this->session->getNode($this->node->getPath().'/parent/child');
         $path = $node->getPath();
         $this->assertInstanceOf('PHPCR\NodeType\NodeTypeInterface', $node->getPrimaryNodeType());
         $this->assertSame('nt:unstructured', $node->getPrimaryNodeType()->getName());
 
         $node->remove();
-        $this->assertFalse($session->nodeExists($path));
-        $session->move($this->node->getPath().'/other', $path);
-        $this->assertTrue($session->nodeExists($path));
+        $this->assertFalse($this->session->nodeExists($path));
+        $this->session->move($this->node->getPath().'/other', $path);
+        $this->assertTrue($this->session->nodeExists($path));
         $parent = $this->node->getNode('parent');
         $this->assertTrue($parent->hasNode('child'));
 
@@ -331,7 +317,6 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
      */
     public function testAddAndChildAddAndMove()
     {
-        $session = $this->sharedFixture['session'];
         $path = $this->node->getPath();
 
         $node = $this->node->getNode('node');
@@ -341,18 +326,18 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
         $existingchild = $existing->addNode('child');
 
         // move an existing node into a tree of new nodes
-        $session->move("$path/existing", "$path/node/child/existing");
+        $this->session->move("$path/existing", "$path/node/child/existing");
         $this->assertEquals("$path/node/child/existing/child", $existingchild->getPath());
-        $session->getNode("$path/node/child/existing")->addNode('otherchild');
+        $this->session->getNode("$path/node/child/existing")->addNode('otherchild');
 
-        $session->save();
+        $this->session->save();
 
-        $this->assertTrue($session->nodeExists("$path/node/child/existing"));
-        $this->assertTrue($session->nodeExists("$path/node/child/existing/child"));
-        $this->assertTrue($session->nodeExists("$path/node/child/existing/otherchild"));
+        $this->assertTrue($this->session->nodeExists("$path/node/child/existing"));
+        $this->assertTrue($this->session->nodeExists("$path/node/child/existing/child"));
+        $this->assertTrue($this->session->nodeExists("$path/node/child/existing/otherchild"));
 
-        $session->move("$path/node", "$path/target");
-        $session->save();
+        $this->session->move("$path/node", "$path/target");
+        $this->session->save();
 
         $this->assertEquals("$path/target/child", $child->getPath());
 
@@ -371,24 +356,23 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
      */
     public function testRemoveMoveRemove()
     {
-        $session = $this->sharedFixture['session'];
         $path = $this->node->getPath();
 
-        $child = $session->getNode("$path/src/parent/child");
+        $child = $this->session->getNode("$path/src/parent/child");
         $child->remove();
-        $session->move("$path/src/parent", "$path/target");
+        $this->session->move("$path/src/parent", "$path/target");
         $src = $this->node->getNode('src');
         $src->remove();
 
-        $this->assertTrue($session->nodeExists("$path/target"));
-        $this->assertFalse($session->nodeExists("$path/target/child"));
-        $this->assertFalse($session->nodeExists("$path/src"));
+        $this->assertTrue($this->session->nodeExists("$path/target"));
+        $this->assertFalse($this->session->nodeExists("$path/target/child"));
+        $this->assertFalse($this->session->nodeExists("$path/src"));
 
-        $session->save();
+        $this->session->save();
 
-        $this->assertTrue($session->nodeExists("$path/target"));
-        $this->assertFalse($session->nodeExists("$path/target/child"));
-        $this->assertFalse($session->nodeExists("$path/src"));
+        $this->assertTrue($this->session->nodeExists("$path/target"));
+        $this->assertFalse($this->session->nodeExists("$path/target/child"));
+        $this->assertFalse($this->session->nodeExists("$path/src"));
 
         $session = $this->renewSession();
 
@@ -402,26 +386,24 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
      */
     public function testMoveRemovepropertyMove()
     {
-        /** @var $session \PHPCR\SessionInterface */
-        $session = $this->sharedFixture['session'];
         $path = $this->node->getPath();
 
-        $session->move("$path/src/parent/child", "$path/src/temp");
-        $this->assertFalse($session->propertyExists("$path/src/parent/child/test"));
-        $node = $session->getNode("$path/src/temp");
+        $this->session->move("$path/src/parent/child", "$path/src/temp");
+        $this->assertFalse($this->session->propertyExists("$path/src/parent/child/test"));
+        $node = $this->session->getNode("$path/src/temp");
         $node->getProperty('test')->remove();
-        $this->assertFalse($session->propertyExists("$path/src/temp/test"));
-        $session->move("$path/src/temp", "$path/target");
+        $this->assertFalse($this->session->propertyExists("$path/src/temp/test"));
+        $this->session->move("$path/src/temp", "$path/target");
 
-        $this->assertTrue($session->nodeExists("$path/target"));
-        $this->assertFalse($session->propertyExists("$path/target/test"));
+        $this->assertTrue($this->session->nodeExists("$path/target"));
+        $this->assertFalse($this->session->propertyExists("$path/target/test"));
 
-        $session->save();
+        $this->session->save();
 
-        $this->assertTrue($session->nodeExists("$path/target"));
-        $this->assertFalse($session->propertyExists("$path/src/parent/child/test"));
-        $this->assertFalse($session->propertyExists("$path/src/temp/test"));
-        $this->assertFalse($session->propertyExists("$path/target/test"));
+        $this->assertTrue($this->session->nodeExists("$path/target"));
+        $this->assertFalse($this->session->propertyExists("$path/src/parent/child/test"));
+        $this->assertFalse($this->session->propertyExists("$path/src/temp/test"));
+        $this->assertFalse($this->session->propertyExists("$path/target/test"));
 
         $session = $this->renewSession();
 
@@ -436,17 +418,16 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
      */
     public function testLoadchildMovedNode()
     {
-        $session = $this->sharedFixture['session'];
         $path = $this->node->getPath();
 
-        $session->move("$path/src/parent", "$path/target");
-        $this->assertTrue($session->nodeExists("$path/target/child"));
-        $node = $session->getNode("$path/target/child");
+        $this->session->move("$path/src/parent", "$path/target");
+        $this->assertTrue($this->session->nodeExists("$path/target/child"));
+        $node = $this->session->getNode("$path/target/child");
         $this->assertInstanceOf('\PHPCR\NodeInterface', $node);
 
-        $session->save();
+        $this->session->save();
 
-        $this->assertTrue($session->nodeExists("$path/target/child"));
+        $this->assertTrue($this->session->nodeExists("$path/target/child"));
 
         $session = $this->renewSession();
 
@@ -457,15 +438,13 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
 
     public function testSessionHasPendingChanges()
     {
-        $session = $this->sharedFixture['session'];
-        $this->assertFalse($session->hasPendingChanges());
+        $this->assertFalse($this->session->hasPendingChanges());
         $this->node->setProperty('prop', "New");
-        $this->assertTrue($session->hasPendingChanges());
+        $this->assertTrue($this->session->hasPendingChanges());
     }
 
     public function testSimpleSessionRefresh()
     {
-        $session = $this->sharedFixture['session'];
         $node = $this->node;
 
         $node->setProperty('prop', 'New');
@@ -477,8 +456,8 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
         $othernode->setProperty('newprop', 'Test');
         $othersession->save();
 
-        $session->refresh(false);
-        $this->assertFalse($session->hasPendingChanges());
+        $this->session->refresh(false);
+        $this->assertFalse($this->session->hasPendingChanges());
         $this->assertEquals('Other', $node->getPropertyValue('prop'));
         $this->assertTrue($node->hasProperty('newprop'));
         $this->assertEquals('Test', $node->getPropertyValue('newprop'));
@@ -486,7 +465,6 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
 
     public function testSimpleSessionRefreshKeepChanges()
     {
-        $session = $this->sharedFixture['session'];
         $node = $this->node;
         $path = $node->getPath();
 
@@ -501,15 +479,15 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
         $othernode->setProperty('mod', 'Changed');
         $othersession->save();
 
-        $session->refresh(true);
-        $this->assertTrue($session->hasPendingChanges());
+        $this->session->refresh(true);
+        $this->assertTrue($this->session->hasPendingChanges());
         $this->assertTrue($node->isModified());
         $this->assertEquals('New', $node->getPropertyValue('prop'));
         $this->assertTrue($node->hasProperty('newprop'));
         $this->assertEquals('Test', $node->getPropertyValue('newprop'));
         $this->assertEquals('Changed', $node->getPropertyValue('mod'));
 
-        $session->save();
+        $this->session->save();
         $this->assertFalse($node->isModified());
         $this->assertEquals('New', $node->getPropertyValue('prop'));
         $this->assertTrue($node->hasProperty('newprop'));
@@ -528,7 +506,6 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
 
     public function testRemoveSessionRefresh()
     {
-        $session = $this->sharedFixture['session'];
         $node = $this->node;
 
         $node->setProperty('prop', null);
@@ -536,43 +513,42 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
         $child = $node->getNode('child');
         $child->remove();
         $this->assertFalse($node->hasNode('child'));
-        $this->assertFalse($session->nodeExists($node->getPath() . '/child'));
+        $this->assertFalse($this->session->nodeExists($node->getPath() . '/child'));
 
-        $session->refresh(false);
-        $this->assertFalse($session->hasPendingChanges());
+        $this->session->refresh(false);
+        $this->assertFalse($this->session->hasPendingChanges());
         $this->assertEquals('Old', $node->getPropertyValue('prop'));
         $this->assertTrue($node->hasNode('child'));
-        $this->assertTrue($session->nodeExists($node->getPath() . '/child'));
-        $this->assertSame($child, $session->getNode($node->getPath() . '/child'));
+        $this->assertTrue($this->session->nodeExists($node->getPath() . '/child'));
+        $this->assertSame($child, $this->session->getNode($node->getPath() . '/child'));
 
     }
 
     public function testRemoveSessionRefreshKeepChanges()
     {
-        $session = $this->sharedFixture['session'];
         $node = $this->node;
         $path = $node->getPath();
 
         $node->setProperty('prop', null);
         $this->assertFalse($node->hasProperty('prop'));
-        $this->assertFalse($session->propertyExists($node->getPath() . '/prop'));
+        $this->assertFalse($this->session->propertyExists($node->getPath() . '/prop'));
         $child = $node->getNode('child');
         $child->remove();
         $this->assertFalse($node->hasNode('child'));
-        $this->assertFalse($session->nodeExists($node->getPath() . '/child'));
+        $this->assertFalse($this->session->nodeExists($node->getPath() . '/child'));
 
-        $session->refresh(true);
-        $this->assertTrue($session->hasPendingChanges());
+        $this->session->refresh(true);
+        $this->assertTrue($this->session->hasPendingChanges());
         $this->assertFalse($node->hasProperty('prop'));
-        $this->assertFalse($session->propertyExists($node->getPath() . '/prop'));
+        $this->assertFalse($this->session->propertyExists($node->getPath() . '/prop'));
         $this->assertFalse($node->hasNode('child'));
-        $this->assertFalse($session->nodeExists($node->getPath() . '/child'));
+        $this->assertFalse($this->session->nodeExists($node->getPath() . '/child'));
 
-        $session->save();
+        $this->session->save();
         $this->assertFalse($node->hasProperty('prop'));
-        $this->assertFalse($session->propertyExists($node->getPath() . '/prop'));
+        $this->assertFalse($this->session->propertyExists($node->getPath() . '/prop'));
         $this->assertFalse($node->hasNode('child'));
-        $this->assertFalse($session->nodeExists($node->getPath() . '/child'));
+        $this->assertFalse($this->session->nodeExists($node->getPath() . '/child'));
 
         $session = $this->renewSession();
         $node = $session->getNode($path);
@@ -588,12 +564,10 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
      */
     public function testRemoveOtherSessionRefreshKeepChanges()
     {
-        /** @var $session \PHPCR\SessionInterface */
-        $session = $this->sharedFixture['session'];
         $node = $this->node;
         $path = $node->getPath();
         $child = $node->getNode('childnode');
-        $childprop = $session->getProperty($node->getPath().'/child/childprop');
+        $childprop = $this->session->getProperty($node->getPath().'/child/childprop');
 
         $node->setProperty('newprop', 'Value');
 
@@ -604,7 +578,7 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
         $othernode->getNode('childnode')->remove();
         $othersession->save();
 
-        $session->refresh(true);
+        $this->session->refresh(true);
         try {
             $childprop->getValue();
             $this->fail('Should not be possible to get the value of a deleted property');
@@ -612,7 +586,7 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
             //expected
         }
 
-        $this->assertTrue($session->hasPendingChanges());
+        $this->assertTrue($this->session->hasPendingChanges());
         try {
             $child->getPath();
             $this->fail('getting the path of deleted child should throw exception');
@@ -624,7 +598,7 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
         $this->assertTrue($node->hasProperty('newprop'));
         $this->assertEquals('Value', $node->getPropertyValue('newprop'));
 
-        $session->save();
+        $this->session->save();
         $this->assertFalse($node->hasProperty('prop'));
         $this->assertFalse($node->hasNode('child'));
         $this->assertTrue($node->hasProperty('newprop'));
@@ -640,21 +614,20 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
 
     public function testMoveSessionRefresh()
     {
-        $session = $this->sharedFixture['session'];
         $node = $this->node;
         $child = $node->getNode('src/child');
 
-        $session->move($node->getPath() . '/src/child', $node->getPath() . '/target/childnew');
+        $this->session->move($node->getPath() . '/src/child', $node->getPath() . '/target/childnew');
 
-        $this->assertFalse($session->nodeExists($node->getPath() . '/src/child'));
-        $this->assertTrue($session->nodeExists($node->getPath() . '/target/childnew'));
+        $this->assertFalse($this->session->nodeExists($node->getPath() . '/src/child'));
+        $this->assertTrue($this->session->nodeExists($node->getPath() . '/target/childnew'));
 
-        $this->assertTrue($session->hasPendingChanges());
-        $session->refresh(false);
-        $this->assertFalse($session->hasPendingChanges());
+        $this->assertTrue($this->session->hasPendingChanges());
+        $this->session->refresh(false);
+        $this->assertFalse($this->session->hasPendingChanges());
 
-        $this->assertTrue($session->nodeExists($node->getPath() . '/src/child'));
-        $this->assertFalse($session->nodeExists($node->getPath() . '/target/childnew'));
+        $this->assertTrue($this->session->nodeExists($node->getPath() . '/src/child'));
+        $this->assertFalse($this->session->nodeExists($node->getPath() . '/target/childnew'));
         $this->assertEquals($node->getPath() . '/src/child', $child->getPath());
         $src = $node->getNode('src');
         $this->assertTrue($src->hasNode('child'));
@@ -665,21 +638,20 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
 
     public function testMoveSessionRefreshKeepChanges()
     {
-        $session = $this->sharedFixture['session'];
         $node = $this->node;
         $path = $node->getPath();
         $child = $node->getNode('src/child');
 
-        $session->move($node->getPath() . '/src/child', $node->getPath() . '/target/childnew');
+        $this->session->move($node->getPath() . '/src/child', $node->getPath() . '/target/childnew');
 
-        $this->assertFalse($session->nodeExists($node->getPath() . '/src/child'));
-        $this->assertTrue($session->nodeExists($node->getPath() . '/target/childnew'));
+        $this->assertFalse($this->session->nodeExists($node->getPath() . '/src/child'));
+        $this->assertTrue($this->session->nodeExists($node->getPath() . '/target/childnew'));
 
-        $session->refresh(true);
-        $this->assertTrue($session->hasPendingChanges());
+        $this->session->refresh(true);
+        $this->assertTrue($this->session->hasPendingChanges());
 
-        $this->assertFalse($session->nodeExists($node->getPath() . '/src/child'));
-        $this->assertTrue($session->nodeExists($node->getPath() . '/target/childnew'));
+        $this->assertFalse($this->session->nodeExists($node->getPath() . '/src/child'));
+        $this->assertTrue($this->session->nodeExists($node->getPath() . '/target/childnew'));
         $this->assertEquals($node->getPath() . '/target/childnew', $child->getPath());
         $src = $node->getNode('src');
         $this->assertFalse($src->hasNode('child'));
@@ -687,9 +659,9 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
         $this->assertTrue($target->hasNode('childnew'));
         $this->assertSame($child, $target->getNode('childnew'));
 
-        $session->save();
-        $this->assertFalse($session->nodeExists($node->getPath() . '/src/child'));
-        $this->assertTrue($session->nodeExists($node->getPath() . '/target/childnew'));
+        $this->session->save();
+        $this->assertFalse($this->session->nodeExists($node->getPath() . '/src/child'));
+        $this->assertTrue($this->session->nodeExists($node->getPath() . '/target/childnew'));
         $this->assertEquals($node->getPath() . '/target/childnew', $child->getPath());
         $src = $node->getNode('src');
         $this->assertFalse($src->hasNode('child'));
@@ -710,19 +682,18 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
 
     public function testAddSessionRefresh()
     {
-        $session = $this->sharedFixture['session'];
         $node = $this->node;
         $node->addNode('child');
         $node->setProperty('prop', 'Test');
 
-        $session->refresh(false);
-        $this->assertFalse($session->hasPendingChanges());
+        $this->session->refresh(false);
+        $this->assertFalse($this->session->hasPendingChanges());
 
         $this->assertFalse($node->hasNode('child'));
         $this->assertFalse($node->hasProperty('prop'));
 
-        $this->assertFalse($session->nodeExists($node->getPath().'/child'));
-        $this->assertFalse($session->propertyExists($node->getPath().'/prop'));
+        $this->assertFalse($this->session->nodeExists($node->getPath().'/child'));
+        $this->assertFalse($this->session->propertyExists($node->getPath().'/prop'));
 
         $this->setExpectedException('\PHPCR\PathNotFoundException');
         $node->getNode('child');
@@ -730,31 +701,30 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
 
     public function testAddSessionRefreshKeepChanges()
     {
-        $session = $this->sharedFixture['session'];
         $node = $this->node;
         $path = $node->getPath();
         $child = $node->addNode('child');
         $property = $node->setProperty('prop', 'Test');
 
-        $session->refresh(true);
-        $this->assertTrue($session->hasPendingChanges());
+        $this->session->refresh(true);
+        $this->assertTrue($this->session->hasPendingChanges());
 
         $this->assertTrue($node->hasNode('child'));
         $this->assertSame($child, $node->getNode('child'));
         $this->assertTrue($node->hasProperty('prop'));
         $this->assertSame($property, $node->getProperty('prop'));
 
-        $this->assertTrue($session->nodeExists($node->getPath().'/child'));
-        $this->assertTrue($session->propertyExists($node->getPath().'/prop'));
+        $this->assertTrue($this->session->nodeExists($node->getPath().'/child'));
+        $this->assertTrue($this->session->propertyExists($node->getPath().'/prop'));
 
-        $session->save();
+        $this->session->save();
         $this->assertTrue($node->hasNode('child'));
         $this->assertSame($child, $node->getNode('child'));
         $this->assertTrue($node->hasProperty('prop'));
         $this->assertSame($property, $node->getProperty('prop'));
 
-        $this->assertTrue($session->nodeExists($node->getPath().'/child'));
-        $this->assertTrue($session->propertyExists($node->getPath().'/prop'));
+        $this->assertTrue($this->session->nodeExists($node->getPath().'/child'));
+        $this->assertTrue($this->session->propertyExists($node->getPath().'/prop'));
 
         $session = $this->renewSession();
         $node = $session->getNode($path);
@@ -770,7 +740,6 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
 
     public function testNodeRevert()
     {
-        $session = $this->sharedFixture['session'];
         $node = $this->node;
 
         $node->addNode('child');
@@ -783,8 +752,8 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
         $this->assertSame('Old', $existingProperty->getValue());
         $this->assertFalse($node->hasNode('child'));
         $this->assertFalse($node->hasProperty('other'));
-        $this->assertFalse($session->nodeExists($node->getPath().'/child'));
-        $this->assertFalse($session->propertyExists($node->getPath().'/other'));
+        $this->assertFalse($this->session->nodeExists($node->getPath().'/child'));
+        $this->assertFalse($this->session->propertyExists($node->getPath().'/other'));
 
         $this->setExpectedException('\PHPCR\PathNotFoundException');
         $node->getPropertyValue('other');

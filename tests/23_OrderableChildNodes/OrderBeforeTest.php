@@ -40,13 +40,13 @@ class OrderBeforeTest extends \PHPCR\Test\BaseCase
      */
     public function testNodeOrderBeforeUp()
     {
-        $session = $this->sharedFixture['session'];
+        $this->session = $this->session;
         $this->assertInstanceOf('\PHPCR\NodeInterface', $this->node);
         $path = $this->node->getPath();
 
         $this->node->orderBefore('three', 'two');
         $this->assertChildOrder(array('one', 'three', 'two', 'four'), $this->node);
-        $session->save();
+        $this->session->save();
         $this->assertChildOrder(array('one', 'three', 'two', 'four'), $this->node);
 
         $session = $this->renewSession();
@@ -60,7 +60,6 @@ class OrderBeforeTest extends \PHPCR\Test\BaseCase
      */
     public function testNodeOrderBeforeFirst()
     {
-        $session = $this->sharedFixture['session'];
         $this->assertInstanceOf('\PHPCR\NodeInterface', $this->node);
         $path = $this->node->getPath();
 
@@ -68,7 +67,7 @@ class OrderBeforeTest extends \PHPCR\Test\BaseCase
         $this->node->addNode('new');
         $this->node->orderBefore('new', 'three');
         $this->assertChildOrder(array('new', 'three', 'one', 'two', 'four'), $this->node);
-        $session->save();
+        $this->session->save();
         $this->assertChildOrder(array('new', 'three', 'one', 'two', 'four'), $this->node);
 
         $session = $this->renewSession();
@@ -82,14 +81,13 @@ class OrderBeforeTest extends \PHPCR\Test\BaseCase
      */
     public function testNodeOrderBeforeDown()
     {
-        $session = $this->sharedFixture['session'];
         $this->assertInstanceOf('\PHPCR\NodeInterface', $this->node);
         $path = $this->node->getPath();
 
         $this->node->orderBefore('two', 'four');
         $this->assertChildOrder(array('one', 'three', 'two', 'four'), $this->node);
 
-        $session->save();
+        $this->session->save();
         $this->assertChildOrder(array('one', 'three', 'two', 'four'), $this->node);
 
         $session = $this->renewSession();
@@ -103,14 +101,13 @@ class OrderBeforeTest extends \PHPCR\Test\BaseCase
      */
     public function testNodeOrderBeforeEnd()
     {
-        $session = $this->sharedFixture['session'];
         $this->assertInstanceOf('\PHPCR\NodeInterface', $this->node);
         $path = $this->node->getPath();
 
         $this->node->orderBefore('two', null);
         $this->assertChildOrder(array('one', 'three', 'four', 'two'), $this->node);
 
-        $session->save();
+        $this->session->save();
         $this->assertChildOrder(array('one', 'three', 'four', 'two'), $this->node);
 
         $session = $this->renewSession();
@@ -161,7 +158,6 @@ class OrderBeforeTest extends \PHPCR\Test\BaseCase
      */
     public function testNodeOrderBeforeSwap()
     {
-        $session = $this->sharedFixture['session'];
         $this->assertInstanceOf('\PHPCR\NodeInterface', $this->node);
         $path = $this->node->getPath();
 
@@ -170,7 +166,7 @@ class OrderBeforeTest extends \PHPCR\Test\BaseCase
         $this->node->orderBefore('two', 'one');
         $this->assertChildOrder(array('two', 'one', 'four', 'three', 'five'), $this->node);
 
-        $session->save();
+        $this->session->save();
         $this->assertChildOrder(array('two', 'one', 'four', 'three', 'five'), $this->node);
 
         $session = $this->renewSession();
@@ -185,7 +181,6 @@ class OrderBeforeTest extends \PHPCR\Test\BaseCase
      */
     public function testNodeOrderBeforeUpAndDelete()
     {
-        $session = $this->sharedFixture['session'];
         $this->assertInstanceOf('\PHPCR\NodeInterface', $this->node);
         $path = $this->node->getPath();
 
@@ -198,7 +193,7 @@ class OrderBeforeTest extends \PHPCR\Test\BaseCase
         $this->node->getNode('one')->remove();
         $this->assertChildOrder(array('four', 'new1', 'new2', 'two'), $this->node);
 
-        $session->save();
+        $this->session->save();
         $this->assertChildOrder(array('four', 'new1', 'new2', 'two'), $this->node);
 
         $session = $this->renewSession();
@@ -212,18 +207,15 @@ class OrderBeforeTest extends \PHPCR\Test\BaseCase
      */
     public function testNodeOrderBeforeUpAndRefresh()
     {
-        /** @var $session \PHPCR\SessionInterface */
-        $session = $this->sharedFixture['session'];
         $this->assertInstanceOf('\PHPCR\NodeInterface', $this->node);
-        $path = $this->node->getPath();
 
         $this->node->orderBefore('three', 'two');
         $this->assertChildOrder(array('one', 'three', 'two'), $this->node);
 
-        $this->assertTrue($session->hasPendingChanges());
-        $session->refresh(false);
+        $this->assertTrue($this->session->hasPendingChanges());
+        $this->session->refresh(false);
         $this->assertFalse($this->node->isModified());
-        $this->assertFalse($session->hasPendingChanges());
+        $this->assertFalse($this->session->hasPendingChanges());
 
         $this->assertChildOrder(array('one', 'two', 'three'), $this->node);
     }
@@ -233,7 +225,6 @@ class OrderBeforeTest extends \PHPCR\Test\BaseCase
      */
     public function testNodeOrderBeforeUpAndRefreshKeepChanges()
     {
-        $session = $this->sharedFixture['session'];
         $this->assertInstanceOf('\PHPCR\NodeInterface', $this->node);
         $path = $this->node->getPath();
 
@@ -254,10 +245,10 @@ class OrderBeforeTest extends \PHPCR\Test\BaseCase
         $this->node->orderBefore('new', 'three');
         $this->assertChildOrder(array('one', 'new', 'three', 'two'), $this->node);
 
-        $session->refresh(true);
+        $this->session->refresh(true);
 
         $this->assertChildOrder(array('other1', 'other2', 'one', 'new', 'three', 'other-last', 'two'), $this->node);
-        $session->save();
+        $this->session->save();
         $this->assertChildOrder(array('other1', 'other2', 'one', 'new', 'three', 'other-last', 'two'), $this->node);
 
         $session = $this->renewSession();
@@ -271,7 +262,6 @@ class OrderBeforeTest extends \PHPCR\Test\BaseCase
      */
     public function testNodeOrderBeforeAndDeleteAndRefreshKeepChanges()
     {
-        $session = $this->sharedFixture['session'];
         $this->assertInstanceOf('\PHPCR\NodeInterface', $this->node);
         $path = $this->node->getPath();
 
@@ -283,9 +273,9 @@ class OrderBeforeTest extends \PHPCR\Test\BaseCase
         $this->node->getNode('one')->remove();
         $this->assertChildOrder(array('newfirst', 'four', 'two', 'new'), $this->node);
 
-        $session->refresh(true);
+        $this->session->refresh(true);
         $this->assertChildOrder(array('newfirst', 'four', 'two', 'new'), $this->node);
-        $session->save();
+        $this->session->save();
         $this->assertChildOrder(array('newfirst', 'four', 'two', 'new'), $this->node);
 
         $session = $this->renewSession();
@@ -299,14 +289,13 @@ class OrderBeforeTest extends \PHPCR\Test\BaseCase
      */
     public function testNodeOrderOnAdd()
     {
-        $session = $this->sharedFixture['session'];
         $this->assertInstanceOf('\PHPCR\NodeInterface', $this->node);
         $path = $this->node->getPath();
 
         $this->node->addNode('new');
         $this->assertChildOrder(array('one', 'two', 'three', 'new'), $this->node);
 
-        $session->save();
+        $this->session->save();
         $this->assertChildOrder(array('one', 'two', 'three', 'new'), $this->node);
 
         $session = $this->renewSession();
@@ -320,7 +309,6 @@ class OrderBeforeTest extends \PHPCR\Test\BaseCase
      */
     public function testNodeOrderOnMultipleAdds()
     {
-        $session = $this->sharedFixture['session'];
         $this->assertInstanceOf('\PHPCR\NodeInterface', $this->node);
         $path = $this->node->getPath();
 
@@ -328,7 +316,7 @@ class OrderBeforeTest extends \PHPCR\Test\BaseCase
         $this->node->addNode('new2');
         $this->assertChildOrder(array('one', 'two', 'three', 'new1', 'new2'), $this->node);
 
-        $session->save();
+        $this->session->save();
         $this->assertChildOrder(array('one', 'two', 'three', 'new1', 'new2'), $this->node);
 
         $session = $this->renewSession();
@@ -342,7 +330,6 @@ class OrderBeforeTest extends \PHPCR\Test\BaseCase
      */
     public function testNodeOrderOnMultipleAddsAndDelete()
     {
-        $session = $this->sharedFixture['session'];
         $this->assertInstanceOf('\PHPCR\NodeInterface', $this->node);
         $path = $this->node->getPath();
 
@@ -352,12 +339,12 @@ class OrderBeforeTest extends \PHPCR\Test\BaseCase
 
         $this->assertChildOrder(array('one', 'three', 'new1', 'new2'), $this->node);
 
-        $session->save();
+        $this->session->save();
         $this->assertChildOrder(array('one', 'three', 'new1', 'new2'), $this->node);
 
-        $session = $this->renewSession();
+        $this->session = $this->renewSession();
 
-        $node = $session->getNode($path);
+        $node = $this->session->getNode($path);
         $this->assertChildOrder(array('one', 'three', 'new1', 'new2'), $node);
     }
 
@@ -366,7 +353,6 @@ class OrderBeforeTest extends \PHPCR\Test\BaseCase
      */
     public function testNodeOrderNamespaces()
     {
-        $session = $this->sharedFixture['session'];
         $this->assertInstanceOf('\PHPCR\NodeInterface', $this->node);
         $path = $this->node->getPath();
 
@@ -376,7 +362,7 @@ class OrderBeforeTest extends \PHPCR\Test\BaseCase
 
         $this->assertChildOrder(array('jcr:one', 'sv:one', 'one'), $this->node);
 
-        $session->save();
+        $this->session->save();
         $this->assertChildOrder(array('jcr:one', 'sv:one', 'one'), $this->node);
 
         $session = $this->renewSession();
@@ -390,30 +376,28 @@ class OrderBeforeTest extends \PHPCR\Test\BaseCase
      */
     public function testNodeOrderAfterOrderAndMove()
     {
-        /** @var $session \PHPCR\SessionInterface */
-        $session = $this->sharedFixture['session'];
         $this->assertInstanceOf('\PHPCR\NodeInterface', $this->node);
 
         $src = '/tests_write_manipulation_move/testNodeOrderAfterOrderAndMove/src';
         $dst = '/tests_write_manipulation_move/testNodeOrderAfterOrderAndMove/dst';
 
-        $srcParentNode = $session->getNode($src);
-        $dstParentNode = $session->getNode($dst);
+        $srcParentNode = $this->session->getNode($src);
+        $dstParentNode = $this->session->getNode($dst);
 
         $srcParentNode->orderBefore('three', 'two');
         $dstParentNode->orderBefore('three', 'two');
 
-        $session->move($src . '/three', $dst . '/moved-three');
-        $dstNode = $session->getNode($dst . '/moved-three');
+        $this->session->move($src . '/three', $dst . '/moved-three');
+        $dstNode = $this->session->getNode($dst . '/moved-three');
         $this->assertInstanceOf('PHPCR\NodeInterface', $dstNode);
 
-        $dstParentNode = $session->getNode($dst);
+        $dstParentNode = $this->session->getNode($dst);
         $this->assertChildOrder(array('one', 'three', 'two', 'four', 'moved-three'), $dstParentNode);
 
-        $srcParentNode = $session->getNode($src);
+        $srcParentNode = $this->session->getNode($src);
         $this->assertChildOrder(array('one', 'two', 'four'), $srcParentNode);
 
-        $session->save();
+        $this->session->save();
 
         $session = $this->renewSession();
 

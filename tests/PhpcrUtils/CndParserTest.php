@@ -19,7 +19,7 @@ class CndParserTest extends \PHPCR\Test\BaseCase
     public function setUp()
     {
         parent::setUp();
-        $this->cndParser = new CndParser($this->sharedFixture['session']->getWorkspace()->getNodeTypeManager());
+        $this->cndParser = new CndParser($this->session->getWorkspace()->getNodeTypeManager());
     }
 
     public function testParseNormal()
@@ -148,7 +148,7 @@ EOT;
 
     public function testBigFile()
     {
-        //var_dump($this->sharedFixture['session']->getWorkspace()->getNodeTypeManager()->getNodeType('nt:file')->hasOrderableChildNodes());die;
+        //var_dump($this->session->getWorkspace()->getNodeTypeManager()->getNodeType('nt:file')->hasOrderableChildNodes());die;
         $res = $this->cndParser->parseFile(__DIR__ . '/resources/cnd/jackrabbit_nodetypes.cnd');
 
         // some random sanity checks

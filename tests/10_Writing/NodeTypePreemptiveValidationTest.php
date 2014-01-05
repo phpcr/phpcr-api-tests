@@ -1,6 +1,9 @@
 <?php
 namespace PHPCR\Tests\Writing;
 
+use PHPCR\NodeType\NodeTypeInterface;
+use PHPCR\NodeType\NodeTypeManagerInterface;
+
 require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 /**
@@ -10,15 +13,27 @@ class NodeTypePreemptiveValidationTest extends \PHPCR\Test\BaseCase
 {
     // we can use general/base, as we do not actually write, just check if we could
 
+    /**
+     * @var NodeTypeInterface
+     */
     private $file;
+    /**
+     * @var NodeTypeInterface
+     */
     private $folder;
+    /**
+     * @var NodeTypeInterface
+     */
     private $resource;
+    /**
+     * @var NodeTypeManagerInterface
+     */
     private $ntm;
 
     public function setUp()
     {
         parent::setUp();
-        $this->ntm = self::$staticSharedFixture['session']->getWorkspace()->getNodeTypeManager();
+        $this->ntm = $this->session->getWorkspace()->getNodeTypeManager();
         $this->file = $this->ntm->getNodeType('nt:file');
         $this->folder = $this->ntm->getNodeType('nt:folder');
         $this->resource = $this->ntm->getNodeType('nt:resource');

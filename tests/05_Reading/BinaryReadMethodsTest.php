@@ -1,6 +1,8 @@
 <?php
 namespace PHPCR\Tests\Reading;
 
+use PHPCR\PropertyInterface;
+
 require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 // According to PHPCR\BinaryInterface
@@ -10,7 +12,8 @@ require_once(__DIR__ . '/../../inc/BaseCase.php');
  */
 class BinaryReadMethodsTest extends \PHPCR\Test\BaseCase
 {
-    protected $node;
+    /** @var PropertyInterface */
+    private $binaryProperty;
     private $decodedstring = 'h1. Chapter 1 Title
 
 * foo
@@ -32,7 +35,7 @@ hello world
     public function setUp()
     {
         parent::setUp();
-        $this->node = $this->sharedFixture['session']->getRootNode()->getNode('tests_general_base/numberPropertyNode/jcr:content');
+        $this->node = $this->session->getRootNode()->getNode('tests_general_base/numberPropertyNode/jcr:content');
         $this->binaryProperty = $this->node->getProperty('jcr:data');
         $this->assertEquals(\PHPCR\PropertyType::BINARY, $this->binaryProperty->getType());
     }
@@ -77,7 +80,7 @@ hello world
 
     public function testReadBinaryValues()
     {
-        $node = $this->sharedFixture['session']->getRootNode()->getNode('tests_general_base/index.txt/jcr:content');
+        $node = $this->session->getRootNode()->getNode('tests_general_base/index.txt/jcr:content');
         $binaryMulti = $node->getProperty('multidata');
         $this->assertTrue($binaryMulti->isMultiple());
         $this->assertEquals(\PHPCR\PropertyType::BINARY, $binaryMulti->getType());
@@ -91,7 +94,7 @@ hello world
 
     public function testReadBinaryValuesAsString()
     {
-        $node = $this->sharedFixture['session']->getRootNode()->getNode('tests_general_base/index.txt/jcr:content');
+        $node = $this->session->getRootNode()->getNode('tests_general_base/index.txt/jcr:content');
         $binaryMulti = $node->getProperty('multidata');
         $this->assertTrue($binaryMulti->isMultiple());
         $this->assertEquals(\PHPCR\PropertyType::BINARY, $binaryMulti->getType());
@@ -105,7 +108,7 @@ hello world
 
     public function testGetLengthMultivalue()
     {
-        $node = $this->sharedFixture['session']->getRootNode()->getNode('tests_general_base/index.txt/jcr:content');
+        $node = $this->session->getRootNode()->getNode('tests_general_base/index.txt/jcr:content');
         $binaryMulti = $node->getProperty('multidata');
         $sizes = $binaryMulti->getLength();
         $this->assertInternalType('array', $sizes);

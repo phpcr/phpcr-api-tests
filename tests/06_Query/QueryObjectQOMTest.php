@@ -69,7 +69,7 @@ class QueryObjectQOMTest extends QueryBaseCase
         $columns = array();
 
         $query = $this->factory->createQuery($source,$constraint,$orderings,$columns);
-        $qr = $query->execute();
+        $query->execute();
     }
 
     public function testGetStatement()
@@ -102,7 +102,7 @@ class QueryObjectQOMTest extends QueryBaseCase
         $qstr = '//idExample[jcr:mimeType="text/plain"]';
         $query = $this->sharedFixture['qm']->createQuery($qstr, 'xpath');
         $query->storeAsNode('/test_query/queryNode');
-        $this->sharedFixture['session']->save();
+        $this->session->save();
     }
     */
     /*

@@ -20,13 +20,13 @@ class Sql2ToQomConverterTest extends \PHPCR\Test\BaseCase
     {
         parent::setUp();
 
-        $factory = $this->sharedFixture['session']->getWorkspace()->getQueryManager()->getQOMFactory();
+        $factory = $this->session->getWorkspace()->getQueryManager()->getQOMFactory();
         $this->sql2Queries = Sql2TestQueries::getQueries();
         $this->qomQueries = QomTestQueries::getQueries($factory);
 
         try {
             $this->parser = new Sql2ToQomQueryConverter($factory);
-        } catch (\PHPCR\UnsupportedRepositoryException $e) {
+        } catch (\PHPCR\UnsupportedRepositoryOperationException $e) {
             $this->markTestSkipped('Repository does not support the QOM factory');
         }
     }

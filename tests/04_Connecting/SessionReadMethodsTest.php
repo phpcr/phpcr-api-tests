@@ -19,14 +19,14 @@ class SessionReadMethodsTest extends \PHPCR\Test\BaseCase
     //4.4.3
     public function testGetRepository()
     {
-        $rep = $this->sharedFixture['session']->getRepository();
+        $rep = $this->session->getRepository();
         $this->assertInstanceOf('PHPCR\RepositoryInterface', $rep);
     }
 
     //4.4.1
     public function testGetUserId()
     {
-        $user = $this->sharedFixture['session']->getUserId();
+        $user = $this->session->getUserId();
         $this->assertEquals(self::$loader->getUserId(), $user);
     }
 
@@ -59,7 +59,7 @@ class SessionReadMethodsTest extends \PHPCR\Test\BaseCase
     //4.5.1
     public function testGetWorkspace()
     {
-        $workspace = $this->sharedFixture['session']->getWorkspace();
+        $workspace = $this->session->getWorkspace();
         $this->assertInstanceOf('PHPCR\WorkspaceInterface', $workspace);
     }
 }

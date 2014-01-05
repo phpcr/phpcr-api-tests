@@ -28,21 +28,20 @@ class DeleteMethodsTest extends \PHPCR\Test\BaseCase
     public function testRemoveItemMultiple()
     {
         $parentPath = '/tests_write_manipulation_delete_sns/testRemoveSnsBySession';
-        $session = $this->sharedFixture['session'];
         $childNames = array('child', 'child[2]', 'child[3]');
 
-        $parent = $this->getParentNode($session, $parentPath);
+        $parent = $this->getParentNode($this->session, $parentPath);
 
         foreach ($childNames as $childName) {
             $this->assertTrue($parent->hasNode($childName));
-            $session->removeItem($parentPath . '/' . $childName);
+            $this->session->removeItem($parentPath . '/' . $childName);
             $this->assertFalse($parent->hasNode($childName), 'Node was not removed');
         }
 
         $this->saveAndRenewSession();
 
         foreach ($childNames as $childName) {
-            $this->assertFalse($this->sharedFixture['session']->nodeExists($parentPath . '/' . $childName));
+            $this->assertFalse($this->session->nodeExists($parentPath . '/' . $childName));
         }
     }
 
@@ -54,10 +53,9 @@ class DeleteMethodsTest extends \PHPCR\Test\BaseCase
     public function testRemoveNode()
     {
         $parentPath = '/tests_write_manipulation_delete_sns/testRemoveSnsByNode';
-        $session = $this->sharedFixture['session'];
         $childNames = array('child', 'child[2]', 'child[3]');
 
-        $parent = $this->getParentNode($session, $parentPath);
+        $parent = $this->getParentNode($this->session, $parentPath);
 
         foreach ($childNames as $childName) {
             $this->assertTrue($parent->hasNode($childName));
@@ -70,7 +68,7 @@ class DeleteMethodsTest extends \PHPCR\Test\BaseCase
         $this->saveAndRenewSession();
 
         foreach ($childNames as $childName) {
-            $this->assertFalse($this->sharedFixture['session']->nodeExists($parentPath . '/' . $childName));
+            $this->assertFalse($this->session->nodeExists($parentPath . '/' . $childName));
         }
     }
 
@@ -81,7 +79,6 @@ class DeleteMethodsTest extends \PHPCR\Test\BaseCase
     public function testDeleteManyNodes()
     {
         $parentPath = '/tests_write_manipulation_delete_sns/testRemoveManyNodes';
-        $session = $this->sharedFixture['session'];
         $childrenAtStart = array(
             'child'     => '1',
             'child[2]'  => '2',
@@ -113,20 +110,20 @@ class DeleteMethodsTest extends \PHPCR\Test\BaseCase
             'child[6]'  => '12',
         );
 
-        $parent = $this->getParentNode($session, $parentPath);
+        $parent = $this->getParentNode($this->session, $parentPath);
 
         foreach ($childrenAtStart as $childName => $childNumber) {
             $this->assertTrue($parent->hasNode($childName), "Child $childNumber not found.");
         }
 
         foreach ($childrenToDelete as $childName) {
-            $session->removeItem($parentPath . '/' . $childName);
+            $this->session->removeItem($parentPath . '/' . $childName);
             $this->assertFalse($parent->hasNode($childName), 'Node was not removed');
         }
 
         $this->saveAndRenewSession();
 
-        $parent = $this->sharedFixture['session']->getNode($parentPath);
+        $parent = $this->session->getNode($parentPath);
         $this->assertEquals(count($childrenAtEnd), count($parent->getNodes()));
 
         foreach ($parent->getNodes() as $node) {

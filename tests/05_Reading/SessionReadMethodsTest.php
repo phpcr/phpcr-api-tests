@@ -20,7 +20,7 @@ class SessionReadMethodsTest extends \PHPCR\Test\BaseCase
     //5.1.1
     public function testGetRootNode()
     {
-        $node = $this->sharedFixture['session']->getRootNode();
+        $node = $this->session->getRootNode();
         $this->assertInstanceOf('PHPCR\NodeInterface', $node);
         $this->assertEquals( '/', $node->getPath());
     }
@@ -36,19 +36,19 @@ class SessionReadMethodsTest extends \PHPCR\Test\BaseCase
     //5.1.3, 5.1.6
     public function testGetItem()
     {
-        $node = $this->sharedFixture['session']->getItem('/tests_general_base');
+        $node = $this->session->getItem('/tests_general_base');
         $this->assertInstanceOf('PHPCR\NodeInterface', $node);
         $this->assertEquals('tests_general_base', $node->getName());
 
-        $node = $this->sharedFixture['session']->getItem('/tests_general_base/index.txt');
+        $node = $this->session->getItem('/tests_general_base/index.txt');
         $this->assertInstanceOf('PHPCR\NodeInterface', $node);
         $this->assertEquals('index.txt', $node->getName());
 
-        $prop = $this->sharedFixture['session']->getItem('/tests_general_base/numberPropertyNode/jcr:content/foo');
+        $prop = $this->session->getItem('/tests_general_base/numberPropertyNode/jcr:content/foo');
         $this->assertInstanceOf('PHPCR\PropertyInterface', $prop);
         $this->assertEquals('foo', $prop->getName());
         $this->assertEquals('bar', $prop->getString());
-        $prop = $this->sharedFixture['session']->getItem('/tests_general_base/numberPropertyNode/jcr:content/specialChars');
+        $prop = $this->session->getItem('/tests_general_base/numberPropertyNode/jcr:content/specialChars');
         $this->assertInstanceOf('PHPCR\PropertyInterface', $prop);
         $this->assertEquals('specialChars', $prop->getName());
         $this->assertEquals('üöäøéáñâêèàçæëìíîïþ', $prop->getString());
@@ -57,18 +57,18 @@ class SessionReadMethodsTest extends \PHPCR\Test\BaseCase
     //5.1.3, 5.1.6
     public function testGetNode()
     {
-        $node = $this->sharedFixture['session']->getNode('/tests_general_base/numberPropertyNode');
+        $node = $this->session->getNode('/tests_general_base/numberPropertyNode');
         $this->assertInstanceOf('PHPCR\NodeInterface', $node);
         $this->assertEquals('numberPropertyNode', $node->getName());
 
-        $node = $this->sharedFixture['session']->getNode('/tests_general_base/index.txt');
+        $node = $this->session->getNode('/tests_general_base/index.txt');
         $this->assertInstanceOf('PHPCR\NodeInterface', $node);
         $this->assertEquals('index.txt', $node->getName());
     }
 
     public function testGetNodes()
     {
-        $nodes = $this->sharedFixture['session']->getNodes(array(
+        $nodes = $this->session->getNodes(array(
             '/tests_general_base',
             '/tests_general_base/numberPropertyNode',
             '/not_existing',
@@ -88,7 +88,7 @@ class SessionReadMethodsTest extends \PHPCR\Test\BaseCase
      */
     public function testGetNodesTraversable()
     {
-        $nodes = $this->sharedFixture['session']->getNodes(new \ArrayIterator(array(
+        $nodes = $this->session->getNodes(new \ArrayIterator(array(
             '/tests_general_base',
             '/tests_general_base/numberPropertyNode',
             '/not_existing',
@@ -108,7 +108,7 @@ class SessionReadMethodsTest extends \PHPCR\Test\BaseCase
      */
     public function testGetNodesInvalidArgument()
     {
-        $this->sharedFixture['session']->getNodes('no iterable thing');
+        $this->session->getNodes('no iterable thing');
     }
 
     /**
@@ -117,7 +117,7 @@ class SessionReadMethodsTest extends \PHPCR\Test\BaseCase
      */
     public function testGetNodeInvalid()
     {
-        $this->sharedFixture['session']-> getNode('/tests_general_base/idExample/jcr:primaryType');
+        $this->session->getNode('/tests_general_base/idExample/jcr:primaryType');
     }
     /**
      * Get something that is a node and not a property
@@ -125,13 +125,13 @@ class SessionReadMethodsTest extends \PHPCR\Test\BaseCase
      */
     public function testGetPropertyInvalid()
     {
-        $this->sharedFixture['session']-> getProperty('/tests_general_base/idExample');
+        $this->session->getProperty('/tests_general_base/idExample');
     }
 
     //5.1.3, 5.1.6
     public function testGetProperty()
     {
-        $prop = $this->sharedFixture['session']->getProperty('/tests_general_base/idExample/jcr:primaryType');
+        $prop = $this->session->getProperty('/tests_general_base/idExample/jcr:primaryType');
         $this->assertInstanceOf('PHPCR\PropertyInterface', $prop);
         $this->assertEquals('jcr:primaryType', $prop->getName());
         $this->assertEquals('nt:file', $prop->getString());
@@ -139,7 +139,7 @@ class SessionReadMethodsTest extends \PHPCR\Test\BaseCase
 
     public function testGetProperties()
     {
-        $properties = $this->sharedFixture['session']->getProperties(array(
+        $properties = $this->session->getProperties(array(
             '/tests_general_base/jcr:primaryType',
             '/tests_general_base/numberPropertyNode/jcr:primaryType',
             '/not_existing/jcr:primaryType',
@@ -156,7 +156,7 @@ class SessionReadMethodsTest extends \PHPCR\Test\BaseCase
 
     public function testGetPropertiesTraversable()
     {
-        $properties = $this->sharedFixture['session']->getProperties(new \ArrayIterator(array(
+        $properties = $this->session->getProperties(new \ArrayIterator(array(
             '/tests_general_base/jcr:primaryType',
             '/tests_general_base/numberPropertyNode/jcr:primaryType',
             '/not_existing/jcr:primaryType',
@@ -176,7 +176,7 @@ class SessionReadMethodsTest extends \PHPCR\Test\BaseCase
      */
     public function testGetPropertiesInvalidArgument()
     {
-        $this->sharedFixture['session']->getProperties('no iterable thing');
+        $this->session->getProperties('no iterable thing');
     }
 
     /**
@@ -185,7 +185,7 @@ class SessionReadMethodsTest extends \PHPCR\Test\BaseCase
      */
     public function testGetItemRelativePathException()
     {
-        $node = $this->sharedFixture['session']->getItem('tests_general_base');
+        $node = $this->session->getItem('tests_general_base');
     }
 
     /**
@@ -193,7 +193,7 @@ class SessionReadMethodsTest extends \PHPCR\Test\BaseCase
      */
     public function testGetItemPathNotFound()
     {
-        $this->sharedFixture['session']->getItem('/foobarmooh');
+        $this->session->getItem('/foobarmooh');
     }
 
     /**
@@ -201,85 +201,85 @@ class SessionReadMethodsTest extends \PHPCR\Test\BaseCase
      */
      public function testGetItemRepositoryException()
      {
-         $this->sharedFixture['session']->getItem('//');
+         $this->session->getItem('//');
      }
 
      //5.1.2
     public function testItemExists()
     {
-        $this->assertTrue($this->sharedFixture['session']->itemExists('/'));
-        $this->assertTrue($this->sharedFixture['session']->itemExists('/tests_general_base'));
-        $this->assertFalse($this->sharedFixture['session']->itemExists('/foobar'));
+        $this->assertTrue($this->session->itemExists('/'));
+        $this->assertTrue($this->session->itemExists('/tests_general_base'));
+        $this->assertFalse($this->session->itemExists('/foobar'));
     }
     /**
      * @expectedException \PHPCR\RepositoryException
      */
     public function testItemExistsRelativePath()
     {
-        $this->sharedFixture['session']->itemExists('tests_general_base');
+        $this->session->itemExists('tests_general_base');
     }
     /**
      * @expectedException \PHPCR\RepositoryException
      */
     public function testItemExistsInvalidPath()
     {
-        $this->sharedFixture['session']->itemExists('//');
+        $this->session->itemExists('//');
     }
 
     public function testNodeExists()
     {
-        $this->assertTrue($this->sharedFixture['session']->nodeExists('/'));
-        $this->assertTrue($this->sharedFixture['session']->nodeExists('/tests_general_base'));
-        $this->assertFalse($this->sharedFixture['session']->nodeExists('/foobar'));
+        $this->assertTrue($this->session->nodeExists('/'));
+        $this->assertTrue($this->session->nodeExists('/tests_general_base'));
+        $this->assertFalse($this->session->nodeExists('/foobar'));
         //a property is not a node
-        $this->assertFalse($this->sharedFixture['session']->nodeExists('/tests_general_base/numberPropertyNode/jcr:content/foo'));
+        $this->assertFalse($this->session->nodeExists('/tests_general_base/numberPropertyNode/jcr:content/foo'));
     }
     /**
      * @expectedException \PHPCR\RepositoryException
      */
     public function testNodeExistsRelativePath()
     {
-        $this->sharedFixture['session']->nodeExists('tests_general_base');
+        $this->session->nodeExists('tests_general_base');
     }
     /**
      * @expectedException \PHPCR\RepositoryException
      */
     public function testNodeExistsInvalidPath()
     {
-        $this->sharedFixture['session']->nodeExists('//');
+        $this->session->nodeExists('//');
     }
 
     public function testPropertyExists()
     {
-        $this->assertTrue($this->sharedFixture['session']->propertyExists('/tests_general_base/numberPropertyNode/jcr:content/foo'));
+        $this->assertTrue($this->session->propertyExists('/tests_general_base/numberPropertyNode/jcr:content/foo'));
         //a node is not a property
-        $this->assertFalse($this->sharedFixture['session']->propertyExists('/tests_general_base'));
+        $this->assertFalse($this->session->propertyExists('/tests_general_base'));
     }
     /**
      * @expectedException \PHPCR\RepositoryException
      */
     public function testPropertyExistsRelativePath()
     {
-        $this->sharedFixture['session']->propertyExists('tests_general_base/numberPropertyNode/jcr:content/foo');
+        $this->session->propertyExists('tests_general_base/numberPropertyNode/jcr:content/foo');
     }
     /**
      * @expectedException \PHPCR\RepositoryException
      */
     public function testPropertyExistsInvalidPath()
     {
-        $this->sharedFixture['session']->propertyExists('//');
+        $this->session->propertyExists('//');
     }
 
     public function testGetNodeByIdentifier()
     {
-        $node = $this->sharedFixture['session']->getNodeByIdentifier('842e61c0-09ab-42a9-87c0-308ccc90e6f4');
+        $node = $this->session->getNodeByIdentifier('842e61c0-09ab-42a9-87c0-308ccc90e6f4');
         $this->assertInstanceOf('PHPCR\NodeInterface', $node);
         $this->assertEquals('/tests_general_base/idExample', $node->getPath());
     }
 
     public function testGetNodesByIdentifier()
     {
-        $nodes = $this->sharedFixture['session']->getNodesByIdentifier(array(
+        $nodes = $this->session->getNodesByIdentifier(array(
             '842e61c0-09ab-42a9-87c0-308ccc90e6f4',
             '00000000-0000-0000-0000-000000000000',
             '13543fc6-1abf-4708-bfcc-e49511754b40',
@@ -295,7 +295,7 @@ class SessionReadMethodsTest extends \PHPCR\Test\BaseCase
 
     public function testGetNodesByIdentifierTraversable()
     {
-        $nodes = $this->sharedFixture['session']->getNodesByIdentifier(new \ArrayIterator(array(
+        $nodes = $this->session->getNodesByIdentifier(new \ArrayIterator(array(
             '842e61c0-09ab-42a9-87c0-308ccc90e6f4',
             '00000000-0000-0000-0000-000000000000',
             '13543fc6-1abf-4708-bfcc-e49511754b40',
@@ -314,7 +314,7 @@ class SessionReadMethodsTest extends \PHPCR\Test\BaseCase
      */
     public function testGetNodesByIdentifierInvalidArgument()
     {
-        $this->sharedFixture['session']->getNodesByIdentifier('not a traversable');
+        $this->session->getNodesByIdentifier('not a traversable');
     }
 
     /**
@@ -322,7 +322,7 @@ class SessionReadMethodsTest extends \PHPCR\Test\BaseCase
      */
     public function testGetNodeByIdentifierRepositoryException()
     {
-        $this->sharedFixture['session']->getNodeByIdentifier('foo');
+        $this->session->getNodeByIdentifier('foo');
     }
 
     /**
@@ -330,7 +330,7 @@ class SessionReadMethodsTest extends \PHPCR\Test\BaseCase
      */
     public function testGetNodeByIdentifierItemNotFoundException()
     {
-        $this->sharedFixture['session']->getNodeByIdentifier('00000000-0000-0000-0000-000000000000'); //FIXME: is the identifier format defined by the repository? how to generically get a valid but inexistent id?
+        $this->session->getNodeByIdentifier('00000000-0000-0000-0000-000000000000'); //FIXME: is the identifier format defined by the repository? how to generically get a valid but inexistent id?
     }
 
     /**
@@ -340,7 +340,7 @@ class SessionReadMethodsTest extends \PHPCR\Test\BaseCase
     public function testImpersonate()
     {
         $cr = self::$loader->getRestrictedCredentials();
-        $session = $this->sharedFixture['session']->impersonate($cr);
+        $session = $this->session->impersonate($cr);
         $this->markTestIncomplete('TODO: do some tests with the impersonated session');
     }
 

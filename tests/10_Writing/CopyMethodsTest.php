@@ -23,7 +23,7 @@ class CopyMethodsTest extends \PHPCR\Test\BaseCase
         $this->renewSession(); // get rid of cache from previous tests
         parent::setUp();
 
-        $this->ws = $this->sharedFixture['session']->getWorkspace();
+        $this->ws = $this->session->getWorkspace();
     }
 
     public function testWorkspaceCopy()
@@ -33,41 +33,41 @@ class CopyMethodsTest extends \PHPCR\Test\BaseCase
 
         $this->ws->copy($src, $dst);
 
-        $snode = $this->sharedFixture['session']->getNode($src);
-        $dnode = $this->sharedFixture['session']->getNode($dst);
+        $snode = $this->session->getNode($src);
+        $dnode = $this->session->getNode($dst);
         $this->assertNotEquals($snode->getIdentifier(), $dnode->getIdentifier());
 
-        $schild = $this->sharedFixture['session']->getNode("$src/srcFile");
-        $dchild = $this->sharedFixture['session']->getNode("$dst/srcFile");
+        $schild = $this->session->getNode("$src/srcFile");
+        $dchild = $this->session->getNode("$dst/srcFile");
         $this->assertNotEquals($schild->getIdentifier(), $dchild->getIdentifier());
 
         // do not save, workspace should do directly
         $this->renewSession();
 
-        $this->assertTrue($this->sharedFixture['session']->nodeExists($dst));
+        $this->assertTrue($this->session->nodeExists($dst));
 
-        $snode = $this->sharedFixture['session']->getNode($src);
-        $dnode = $this->sharedFixture['session']->getNode($dst);
+        $snode = $this->session->getNode($src);
+        $dnode = $this->session->getNode($dst);
         $this->assertNotEquals($snode->getIdentifier(), $dnode->getIdentifier(), 'UUID was not changed');
 
-        $schild = $this->sharedFixture['session']->getNode("$src/srcFile");
-        $dchild = $this->sharedFixture['session']->getNode("$dst/srcFile");
+        $schild = $this->session->getNode("$src/srcFile");
+        $dchild = $this->session->getNode("$dst/srcFile");
         $this->assertNotEquals($schild->getIdentifier(), $dchild->getIdentifier());
 
-        $this->assertTrue($this->sharedFixture['session']->nodeExists($dst.'/srcFile/jcr:content'), 'Did not copy the whole subgraph');
+        $this->assertTrue($this->session->nodeExists($dst.'/srcFile/jcr:content'), 'Did not copy the whole subgraph');
 
-        $sfile = $this->sharedFixture['session']->getNode("$src/srcFile/jcr:content");
-        $dfile = $this->sharedFixture['session']->getNode("$dst/srcFile/jcr:content");
+        $sfile = $this->session->getNode("$src/srcFile/jcr:content");
+        $dfile = $this->session->getNode("$dst/srcFile/jcr:content");
         $this->assertEquals($sfile->getPropertyValue('jcr:data'), $dfile->getPropertyValue('jcr:data'));
 
         $dfile->setProperty('jcr:data', 'changed content');
         $this->assertNotEquals($sfile->getPropertyValue('jcr:data'), $dfile->getPropertyValue('jcr:data'));
-        $this->sharedFixture['session']->save();
+        $this->session->save();
 
         $this->saveAndRenewSession();
 
-        $sfile = $this->sharedFixture['session']->getNode("$src/srcFile/jcr:content");
-        $dfile = $this->sharedFixture['session']->getNode("$dst/srcFile/jcr:content");
+        $sfile = $this->session->getNode("$src/srcFile/jcr:content");
+        $dfile = $this->session->getNode("$dst/srcFile/jcr:content");
         $this->assertNotEquals($sfile->getPropertyValue('jcr:data'), $dfile->getPropertyValue('jcr:data'));
     }
 
@@ -149,16 +149,14 @@ class CopyMethodsTest extends \PHPCR\Test\BaseCase
 
     public function testCopyUpdateOnCopy()
     {
-        $sess = $this->sharedFixture['session'];
-
         $src = '/tests_write_manipulation_copy/testCopyUpdateOnCopy/srcNode';
         $dst = '/tests_write_manipulation_copy/testCopyUpdateOnCopy/dstNode/srcNode';
         $this->ws->copy($src, $dst);
 
         // make sure child node was copied
-        $this->assertTrue($sess->nodeExists($dst.'/srcFile'));
+        $this->assertTrue($this->session->nodeExists($dst.'/srcFile'));
         // make sure things were updated
-        $this->assertEquals('123', $sess->getProperty($dst.'/updateFile/jcr:data')->getValue());
+        $this->assertEquals('123', $this->session->getProperty($dst.'/updateFile/jcr:data')->getValue());
     }
 
 }

@@ -1,6 +1,8 @@
 <?php
 namespace PHPCR\Tests\Connecting;
 
+use PHPCR\WorkspaceInterface;
+
 require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 /** test javax.jcr.Workspace read methods (read)
@@ -13,6 +15,9 @@ require_once(__DIR__ . '/../../inc/BaseCase.php');
 class WorkspaceReadMethodsTest extends \PHPCR\Test\BaseCase
 {
     protected $path = 'read/read';
+    /**
+     * @var WorkspaceInterface
+     */
     protected $workspace;
 
     //4.5 Workspace Read Methods
@@ -20,13 +25,13 @@ class WorkspaceReadMethodsTest extends \PHPCR\Test\BaseCase
     public function setUp()
     {
         parent::setUp();
-        $this->workspace = $this->sharedFixture['session']->getWorkspace();
+        $this->workspace = $this->session->getWorkspace();
     }
 
     //4.5.2
     public function testGetSession()
     {
-        $this->assertEquals($this->sharedFixture['session'], $this->workspace->getSession());
+        $this->assertEquals($this->session, $this->workspace->getSession());
     }
 
     //4.5.3
@@ -42,7 +47,7 @@ class WorkspaceReadMethodsTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * @expectedException PHPCR\RepositoryException
+     * @expectedException \PHPCR\RepositoryException
      */
     public function testGetQueryManagerRepositoryException()
     {
@@ -56,7 +61,7 @@ class WorkspaceReadMethodsTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * @expectedException PHPCR\RepositoryException
+     * @expectedException \PHPCR\RepositoryException
      */
     public function testGetNamespaceRegistryRepositoryException()
     {
@@ -70,7 +75,7 @@ class WorkspaceReadMethodsTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * @expectedException PHPCR\RepositoryException
+     * @expectedException \PHPCR\RepositoryException
      */
     public function testGetNodeTypeManagerRepositoryException()
     {
@@ -86,7 +91,7 @@ class WorkspaceReadMethodsTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * @expectedException PHPCR\RepositoryException
+     * @expectedException \PHPCR\RepositoryException
      */
     public function testGetAccessibleWorkspaceNamesRepositoryException()
     {

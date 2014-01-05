@@ -16,7 +16,7 @@ class ExportRepositoryContentTest extends \PHPCR\Test\BaseCase
     public function testExportSystemView()
     {
         $stream = fopen('php://memory', 'rwb+');
-        $this->sharedFixture['session']->exportSystemView('/tests_export', $stream, false, false);
+        $this->session->exportSystemView('/tests_export', $stream, false, false);
         rewind($stream);
         $output = new DOMDocument();
         $output->preserveWhiteSpace = false;
@@ -109,7 +109,7 @@ class ExportRepositoryContentTest extends \PHPCR\Test\BaseCase
     public function testExportDocumentView()
     {
         $stream = fopen('php://memory', 'rwb+');
-        $this->sharedFixture['session']->exportDocumentView('/tests_export', $stream, false, false);
+        $this->session->exportDocumentView('/tests_export', $stream, false, false);
         rewind($stream);
         $output = new DOMDocument();
         $output->preserveWhiteSpace = false;

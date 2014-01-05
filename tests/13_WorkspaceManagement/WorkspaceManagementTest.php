@@ -9,7 +9,7 @@ class WorkspaceManagementTest extends \PHPCR\Test\BaseCase
     public function testCreateWorkspace()
     {
         $workspacename = 'test' . time();
-        $workspace = $this->sharedFixture['session']->getWorkspace();
+        $workspace = $this->session->getWorkspace();
         $workspace->createWorkspace($workspacename);
 
         $session = self::$loader->getRepository()->login(self::$loader->getCredentials(), $workspacename);
@@ -24,14 +24,14 @@ class WorkspaceManagementTest extends \PHPCR\Test\BaseCase
      */
     public function testCreateWorkspaceExisting($workspacename)
     {
-        $workspace = $this->sharedFixture['session']->getWorkspace();
+        $workspace = $this->session->getWorkspace();
         $workspace->createWorkspace($workspacename);
     }
 
     public function testCreateWorkspaceWithSource()
     {
         $workspacename = 'testWithSource' . time();
-        $workspace = $this->sharedFixture['session']->getWorkspace();
+        $workspace = $this->session->getWorkspace();
         $workspace->createWorkspace($workspacename, $workspace->getName());
 
         $session = self::$loader->getRepository()->login(self::$loader->getCredentials(), $workspacename);
@@ -45,7 +45,7 @@ class WorkspaceManagementTest extends \PHPCR\Test\BaseCase
     public function testCreateWorkspaceWithInvalidSource()
     {
         $workspacename = 'testWithSource' . time();
-        $workspace = $this->sharedFixture['session']->getWorkspace();
+        $workspace = $this->session->getWorkspace();
         $workspace->createWorkspace($workspacename, 'thisworkspaceisnotexisting');
     }
 
@@ -54,7 +54,7 @@ class WorkspaceManagementTest extends \PHPCR\Test\BaseCase
      */
     public function testDeleteWorkspace($workspacename)
     {
-        $workspace = $this->sharedFixture['session']->getWorkspace();
+        $workspace = $this->session->getWorkspace();
         $this->assertContains($workspacename, $workspace->getAccessibleWorkspaceNames());
         $workspace->deleteWorkspace($workspacename);
 

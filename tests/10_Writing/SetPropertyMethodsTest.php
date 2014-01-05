@@ -1,6 +1,8 @@
 <?php
 namespace PHPCR\Tests\Writing;
 
+use PHPCR\PropertyInterface;
+
 require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 /**
@@ -17,11 +19,16 @@ class SetPropertyMethodsTest extends \PHPCR\Test\BaseCase
     protected $nodePath = '/tests_general_base/numberPropertyNode/jcr:content';
     protected $propPath = '/tests_general_base/numberPropertyNode/jcr:content/longNumber';
 
+    /**
+     * @var PropertyInterface
+     */
+    private $property;
+
     public function setUp()
     {
         parent::setUp();
-        $this->node = $this->sharedFixture['session']->getNode($this->nodePath);
-        $this->property = $this->sharedFixture['session']->getProperty($this->propPath);
+        $this->node = $this->session->getNode($this->nodePath);
+        $this->property = $this->session->getProperty($this->propPath);
     }
 
     /**
@@ -33,7 +40,7 @@ class SetPropertyMethodsTest extends \PHPCR\Test\BaseCase
         $this->assertEquals(1024, $this->property->getLong());
 
         $this->saveAndRenewSession();
-        $prop = $this->sharedFixture['session']->getProperty($this->propPath);
+        $prop = $this->session->getProperty($this->propPath);
         $this->assertEquals(1024, $prop->getLong());
     }
 
@@ -48,11 +55,11 @@ class SetPropertyMethodsTest extends \PHPCR\Test\BaseCase
         $this->assertInstanceOf('PHPCR\PropertyInterface', $property);
         $this->assertEquals(1023, $property->getLong());
         $this->assertTrue($property->isModified());
-        $this->sharedFixture['session']->save();
+        $this->session->save();
         $this->assertFalse($property->isModified());
 
         $this->renewSession();
-        $prop = $this->sharedFixture['session']->getNode($this->nodePath)->getProperty('longNumber');
+        $prop = $this->session->getNode($this->nodePath)->getProperty('longNumber');
         $this->assertInstanceOf('PHPCR\PropertyInterface', $prop);
         $this->assertEquals(1023, $prop->getLong());
     }
@@ -66,12 +73,12 @@ class SetPropertyMethodsTest extends \PHPCR\Test\BaseCase
         $this->assertInstanceOf('PHPCR\PropertyInterface', $property);
         $this->assertEquals(1024, $property->getLong());
         $this->assertTrue($property->isNew());
-        $this->sharedFixture['session']->save();
+        $this->session->save();
         $this->assertFalse($property->isNew());
         $this->assertFalse($property->isModified());
 
         $this->renewSession();
-        $prop = $this->sharedFixture['session']->getNode($this->nodePath)->getProperty('newLongNumber');
+        $prop = $this->session->getNode($this->nodePath)->getProperty('newLongNumber');
         $this->assertInstanceOf('PHPCR\PropertyInterface', $prop);
         $this->assertEquals(1024, $prop->getLong());
     }
@@ -86,19 +93,19 @@ class SetPropertyMethodsTest extends \PHPCR\Test\BaseCase
      */
     public function testSetPropertyNewExistingNode()
     {
-        $node = $this->sharedFixture['session']->getNode('/tests_general_base/idExample/jcr:content');
+        $node = $this->session->getNode('/tests_general_base/idExample/jcr:content');
         //$node->getNode('weakreference_source1')->remove();
-        $this->sharedFixture['session']->save();
+        $this->session->save();
 
         $property = $node->setProperty('weakreference_source1', 123);
         $this->assertEquals(123, $property->getLong());
         $this->assertTrue($property->isNew());
-        $this->sharedFixture['session']->save();
+        $this->session->save();
         $this->assertFalse($property->isNew());
         $this->assertFalse($property->isModified());
 
         $this->renewSession();
-        $prop = $this->sharedFixture['session']->getNode('/tests_general_base/idExample/jcr:content')->getProperty('weakreference_source1');
+        $prop = $this->session->getNode('/tests_general_base/idExample/jcr:content')->getProperty('weakreference_source1');
         $this->assertInstanceOf('PHPCR\PropertyInterface', $prop);
         $this->assertEquals(123, $prop->getLong());
     }
@@ -114,7 +121,7 @@ class SetPropertyMethodsTest extends \PHPCR\Test\BaseCase
         $this->assertEquals(\PHPCR\PropertyType::LONG, $prop->getType());
 
         $this->saveAndRenewSession();
-        $prop = $this->sharedFixture['session']->getNode($this->nodePath)->getProperty('longNumber');
+        $prop = $this->session->getNode($this->nodePath)->getProperty('longNumber');
         $this->assertEquals(1024, $prop->getLong());
         $this->assertEquals(\PHPCR\PropertyType::LONG, $prop->getType());
     }
@@ -131,7 +138,7 @@ class SetPropertyMethodsTest extends \PHPCR\Test\BaseCase
         $this->assertFalse($prop->isMultiple());
 
         $this->saveAndRenewSession();
-        $prop = $this->sharedFixture['session']->getNode($this->nodePath)->getProperty('newLongNumber');
+        $prop = $this->session->getNode($this->nodePath)->getProperty('newLongNumber');
         $this->assertEquals(102, $prop->getLong());
         $this->assertEquals(\PHPCR\PropertyType::LONG, $prop->getType());
         $this->assertFalse($prop->isMultiple());
@@ -145,7 +152,7 @@ class SetPropertyMethodsTest extends \PHPCR\Test\BaseCase
         $this->assertTrue($prop->isMultiple());
 
         $this->saveAndRenewSession();
-        $node = $this->sharedFixture['session']->getNode($this->nodePath);
+        $node = $this->session->getNode($this->nodePath);
         $prop = $node->getProperty('multivalue');
         $this->assertEquals(\PHPCR\PropertyType::LONG, $prop->getType());
         $this->assertTrue($prop->isMultiple());
@@ -160,7 +167,7 @@ class SetPropertyMethodsTest extends \PHPCR\Test\BaseCase
         $this->assertTrue($prop->isMultiple());
 
         $this->saveAndRenewSession();
-        $node = $this->sharedFixture['session']->getNode($this->nodePath);
+        $node = $this->session->getNode($this->nodePath);
         $prop = $node->getProperty('multivalue2');
         $this->assertEquals(\PHPCR\PropertyType::LONG, $prop->getType());
         $this->assertTrue($prop->isMultiple());
@@ -176,7 +183,7 @@ class SetPropertyMethodsTest extends \PHPCR\Test\BaseCase
         $this->assertTrue($prop->isMultiple());
 
         $this->saveAndRenewSession();
-        $node = $this->sharedFixture['session']->getNode($this->nodePath);
+        $node = $this->session->getNode($this->nodePath);
         $prop = $node->getProperty('multiref');
         $this->assertEquals(\PHPCR\PropertyType::WEAKREFERENCE, $prop->getType());
         $this->assertTrue($prop->isMultiple());
@@ -196,7 +203,7 @@ class SetPropertyMethodsTest extends \PHPCR\Test\BaseCase
         $this->assertEquals(array(false,true,true), $prop->getValue());
 
         $this->saveAndRenewSession();
-        $node = $this->sharedFixture['session']->getNode($this->nodePath);
+        $node = $this->session->getNode($this->nodePath);
         $prop = $node->getProperty('multiBoolean');
         $this->assertEquals(\PHPCR\PropertyType::BOOLEAN, $prop->getType());
         $this->assertTrue($prop->isMultiple());
@@ -223,17 +230,16 @@ class SetPropertyMethodsTest extends \PHPCR\Test\BaseCase
 
     public function testNewNodeSetProperty()
     {
-        $session = $this->sharedFixture['session'];
         $node = $this->node->addNode('child');
         $prop = $node->setProperty('p', 'abc');
-        $this->assertTrue($session->nodeExists($this->nodePath . '/child'));
-        $this->assertTrue($session->propertyExists($this->nodePath . '/child/p'));
+        $this->assertTrue($this->session->nodeExists($this->nodePath . '/child'));
+        $this->assertTrue($this->session->propertyExists($this->nodePath . '/child/p'));
         $this->assertInstanceOf('\PHPCR\PropertyInterface', $prop);
         $this->assertEquals(\PHPCR\PropertyType::STRING, $prop->getType());
         $this->assertEquals('abc', $prop->getString());
 
-        $this->saveAndRenewSession();
-        $session = $this->sharedFixture['session'];
+        $session = $this->saveAndRenewSession();
+
         $this->assertTrue($session->nodeExists($this->nodePath . '/child'));
         $this->assertTrue($session->propertyExists($this->nodePath . '/child/p'));
 
@@ -250,19 +256,19 @@ class SetPropertyMethodsTest extends \PHPCR\Test\BaseCase
      */
     public function testInvalidPropertyName()
     {
-        $prop = $this->node->setProperty('invalid/name', 123);
+        $this->node->setProperty('invalid/name', 123);
     }
 
     public function testRemoveProperty()
     {
         $nodePath = '/tests_general_base/index.txt/jcr:content';
 
-        $this->assertTrue($this->sharedFixture['session']->propertyExists($nodePath . '/jcr:data'));
+        $this->assertTrue($this->session->propertyExists($nodePath . '/jcr:data'));
 
-        $node = $this->sharedFixture['session']->getNode($nodePath);
+        $node = $this->session->getNode($nodePath);
         $node->setProperty('jcr:data', null);
 
         $this->saveAndRenewSession();
-        $this->assertFalse($this->sharedFixture['session']->propertyExists($nodePath . '/jcr:data'));
+        $this->assertFalse($this->session->propertyExists($nodePath . '/jcr:data'));
     }
 }

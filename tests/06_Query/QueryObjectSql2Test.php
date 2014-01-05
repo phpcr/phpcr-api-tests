@@ -16,11 +16,6 @@ class QueryObjectSql2Test extends QueryBaseCase
             WHERE data.[jcr:mimeType] = "text/plain"
             ';
 
-    public function setUp()
-    {
-        parent::setUp();
-    }
-
     public function testExecute()
     {
         $query = $this->sharedFixture['qm']->createQuery($this->simpleQuery, \PHPCR\Query\QueryInterface::JCR_SQL2);
@@ -55,7 +50,7 @@ class QueryObjectSql2Test extends QueryBaseCase
     }
 
     /**
-     * @expectedException PHPCR\Query\InvalidQueryException
+     * @expectedException \PHPCR\Query\InvalidQueryException
      *
      * the doc claims there would just be a PHPCR\RepositoryException
      * it makes sense that there is a InvalidQueryException
@@ -63,7 +58,7 @@ class QueryObjectSql2Test extends QueryBaseCase
     public function testExecuteInvalid()
     {
         $query = $this->sharedFixture['qm']->createQuery('this is no sql2 statement', \PHPCR\Query\QueryInterface::JCR_SQL2);
-        $qr = $query->execute();
+        $query->execute();
     }
 
     public function testGetStatement()
@@ -80,7 +75,7 @@ class QueryObjectSql2Test extends QueryBaseCase
 
     /**
      * a transient query has no stored query path
-     * @expectedException PHPCR\ItemNotFoundException
+     * @expectedException \PHPCR\ItemNotFoundException
      */
     public function testGetStoredQueryPathItemNotFound()
     {
@@ -94,7 +89,7 @@ class QueryObjectSql2Test extends QueryBaseCase
         $qstr = '//idExample[jcr:mimeType="text/plain"]';
         $query = $this->sharedFixture['qm']->createQuery($qstr, 'xpath');
         $query->storeAsNode('/queryNode');
-        $this->sharedFixture['session']->save();
+        $this->session->save();
     }
     */
     /*
@@ -106,7 +101,7 @@ class QueryObjectSql2Test extends QueryBaseCase
     {
         $this->sharedFixture['ie']->import('general/query');
         try {
-            $qnode = $this->sharedFixture['session']->getRootNode()->getNode('queryNode');
+            $qnode = $this->session->getRootNode()->getNode('queryNode');
             $this->assertInstanceOf('PHPCR\NodeInterface', $qnode);
 
             $query = $this->sharedFixture['qm']->getQuery($qnode);

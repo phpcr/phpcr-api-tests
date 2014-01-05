@@ -68,9 +68,9 @@ class SetPropertyTypesTest extends \PHPCR\Test\BaseCase
         $this->assertInstanceOf('PHPCR\PropertyInterface', $bin);
         $this->assertEquals(\PHPCR\PropertyType::BINARY, $bin->getType());
 
-        $session = $this->session;
+        $oldSession = $this->session;
         $this->saveAndRenewSession(); // either this
-        $session->logout(); // or this should close the stream
+        $oldSession->logout(); // or this should close the stream
         $this->assertFalse(is_resource($stream), 'The responsibility for the stream goes into phpcr who must close it');
 
         $bin = $this->session->getProperty('/tests_general_base/numberPropertyNode/jcr:content/newBinaryStream');
@@ -88,9 +88,9 @@ class SetPropertyTypesTest extends \PHPCR\Test\BaseCase
         $this->assertEquals(\PHPCR\PropertyType::BINARY, $bin->getType());
         $this->assertEquals('foo bar', stream_get_contents($bin->getBinary()));
 
-        $session = $this->session;
+        $oldSession = $this->session;
         $this->saveAndRenewSession(); // either this
-        $session->logout(); // or this should close the stream
+        $oldSession->logout(); // or this should close the stream
         $this->assertFalse(is_resource($stream), 'The responsibility for the stream goes into phpcr who must close it');
 
         $bin = $this->session->getProperty('/tests_general_base/numberPropertyNode/jcr:content/newBinaryStream');

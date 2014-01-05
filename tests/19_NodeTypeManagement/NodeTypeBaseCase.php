@@ -29,7 +29,7 @@ abstract class NodeTypeBaseCase extends BaseCase
         $this->renewSession(); // reset session
         parent::setUp();
 
-        $this->session = $this->sharedFixture['session'];
+        $this->session = $this->session;
         $this->workspace = $this->session->getWorkspace();
     }
 

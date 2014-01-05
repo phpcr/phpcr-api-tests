@@ -19,7 +19,7 @@ class LockManagerTest extends \PHPCR\Test\BaseCase
     public function setUp()
     {
         parent::setUp();
-        $this->lm = $this->sharedFixture['session']->getWorkspace()->getLockManager();
+        $this->lm = $this->session->getWorkspace()->getLockManager();
     }
 
     // ----- LOCK TESTS -------------------------------------------------------
@@ -341,7 +341,7 @@ class LockManagerTest extends \PHPCR\Test\BaseCase
     protected function recreateTestNode($relPath, $lockable = true, $session = null)
     {
         if (null == $session) {
-            $session = $this->sharedFixture['session'];
+            $session = $this->session;
         }
 
         $root = $session->getRootNode();

@@ -23,8 +23,8 @@ class NodeNodeTypeReadMethodsTest extends \PHPCR\Test\BaseCase
     {
         parent::setUp();
 
-        $this->versioned = $this->sharedFixture['session']->getNode('/tests_version_base/versioned');
-        $this->simpleVersioned = $this->sharedFixture['session']->getNode('/tests_version_base/simpleVersioned');
+        $this->versioned = $this->session->getNode('/tests_version_base/versioned');
+        $this->simpleVersioned = $this->session->getNode('/tests_version_base/simpleVersioned');
     }
 
     public function testIsMixin()

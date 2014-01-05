@@ -22,13 +22,13 @@ class MixinCreatedTest extends \PHPCR\Test\BaseCase
     {
         $path = '/tests_general_base/idExample/jcr:content';
         /** @var $node \PHPCR\NodeInterface */
-        $node = $this->sharedFixture['session']->getNode($path);
+        $node = $this->session->getNode($path);
         $child = $node->addNode('test');
         $path .= '/test';
         $this->assertEquals($path, $child->getPath());
         $child->addMixin('mix:created');
 
-        $this->sharedFixture['session']->save();
+        $this->session->save();
 
         $this->assertTrue($child->isNodeType('mix:created'));
         $this->assertTrue($child->hasProperty('jcr:created'));
@@ -40,7 +40,7 @@ class MixinCreatedTest extends \PHPCR\Test\BaseCase
 
         // Re-read the node to be sure things got properly saved
         $this->renewSession();
-        $child = $this->sharedFixture['session']->getNode($path);
+        $child = $this->session->getNode($path);
 
         $this->assertTrue($child->isNodeType('mix:created'));
         $this->assertTrue($child->hasProperty('jcr:created'));

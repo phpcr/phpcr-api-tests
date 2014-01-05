@@ -31,14 +31,14 @@ class QomToSql2ConverterTest extends \PHPCR\Test\BaseCase
     {
         parent::setUp();
 
-        if (! $this->sharedFixture['session']->getWorkspace() instanceof \Jackalope\Workspace) {
+        if (! $this->session->getWorkspace() instanceof \Jackalope\Workspace) {
             $this->markTestSkipped('TODO: fix the dependency on jackalope and always use the factory');
         }
 
         $this->parser = new QomToSql2QueryConverter(new Sql2Generator(new ValueConverter()));
         try {
-            $this->factory = $this->sharedFixture['session']->getWorkspace()->getQueryManager()->getQOMFactory();
-        } catch (\PHPCR\UnsupportedRepositoryException $e) {
+            $this->factory = $this->session->getWorkspace()->getQueryManager()->getQOMFactory();
+        } catch (\PHPCR\UnsupportedRepositoryOperationException $e) {
             $this->markTestSkipped('Repository does not support the QOM factory');
         }
         $this->queries = Sql2TestQueries::getQueries();

@@ -19,8 +19,8 @@ class VersionManagerTest extends \PHPCR\Test\BaseCase
     {
         parent::setUp();
         $this->renewSession();
-        $this->node = $this->sharedFixture['session']->getNode('/tests_version_base/versionable');
-        $this->vm = $this->sharedFixture['session']->getWorkspace()->getVersionManager();
+        $this->node = $this->session->getNode('/tests_version_base/versionable');
+        $this->vm = $this->session->getWorkspace()->getVersionManager();
     }
 
     public function testCheckinCheckoutVersion()
@@ -30,15 +30,15 @@ class VersionManagerTest extends \PHPCR\Test\BaseCase
         $this->assertEquals(1, count($history->getAllVersions()));
 
         $this->vm->checkout('/tests_version_base/versioned');
-        $node = $this->sharedFixture['session']->getNode('/tests_version_base/versioned');
+        $node = $this->session->getNode('/tests_version_base/versioned');
         $node->setProperty('foo', 'bar');
-        $this->sharedFixture['session']->save();
+        $this->session->save();
 
         $this->vm->checkin('/tests_version_base/versioned');
         $this->assertEquals(2, count($history->getAllVersions()));
 
         $this->renewSession();
-        $node = $this->sharedFixture['session']->getNode('/tests_version_base/versioned');
+        $node = $this->session->getNode('/tests_version_base/versioned');
         $this->assertTrue($node->hasProperty('foo'));
         $this->assertEquals('bar', $node->getPropertyValue('foo'));
     }
@@ -46,16 +46,16 @@ class VersionManagerTest extends \PHPCR\Test\BaseCase
     public function testWriteNotCheckedOutVersion()
     {
         $this->vm->checkout('/tests_version_base/versioned');
-        $node = $this->sharedFixture['session']->getNode('/tests_version_base/versioned');
+        $node = $this->session->getNode('/tests_version_base/versioned');
 
         $node->setProperty('foo', 'bar');
-        $this->sharedFixture['session']->save();
+        $this->session->save();
         $this->vm->checkin('/tests_version_base/versioned');
 
         // all this should have worked, now we try something that should fail
         $this->setExpectedException('PHPCR\Version\VersionException');
         $node->setProperty('foo', 'bar2');
-        $this->sharedFixture['session']->save();
+        $this->session->save();
 
     }
 
@@ -65,7 +65,7 @@ class VersionManagerTest extends \PHPCR\Test\BaseCase
     public function testCheckinModifiedNode()
     {
         $this->vm->checkout('/tests_version_base/versioned');
-        $node = $this->sharedFixture['session']->getNode('/tests_version_base/versioned');
+        $node = $this->session->getNode('/tests_version_base/versioned');
         $node->setProperty('foo', 'modified');
         $this->vm->checkin('/tests_version_base/versioned');
     }
@@ -75,10 +75,10 @@ class VersionManagerTest extends \PHPCR\Test\BaseCase
         $this->vm->checkout('/tests_version_base/versioned');
         $this->vm->checkpoint('/tests_version_base/versioned');
 
-        $node = $this->sharedFixture['session']->getNode('/tests_version_base/versioned');
+        $node = $this->session->getNode('/tests_version_base/versioned');
 
         $node->setProperty('foo', 'babar');
-        $this->sharedFixture['session']->save();
+        $this->session->save();
         $newNode = $this->vm->checkin('/tests_version_base/versioned');
 
         $this->assertInstanceOf('\PHPCR\Version\VersionInterface', $newNode);
@@ -178,26 +178,26 @@ class VersionManagerTest extends \PHPCR\Test\BaseCase
     {
         $nodePath = '/tests_version_base/versioned';
         $this->vm->checkout($nodePath);
-        $node = $this->sharedFixture['session']->getNode($nodePath);
+        $node = $this->session->getNode($nodePath);
 
         $node->setProperty('foo', 'bar');
-        $this->sharedFixture['session']->save();
+        $this->session->save();
         $version = $this->vm->checkin($nodePath);
 
         $this->vm->checkout($nodePath);
 
         $node->setProperty('foo', 'bar2');
-        $this->sharedFixture['session']->save();
+        $this->session->save();
         $this->vm->checkin($nodePath);
 
         $this->vm->checkout($nodePath);
-        $node = $this->sharedFixture['session']->getNode($nodePath);
+        $node = $this->session->getNode($nodePath);
 
         $node->setProperty('foo', 'bar3');
-        $this->sharedFixture['session']->save();
+        $this->session->save();
         $this->vm->checkin($nodePath);
 
-        $node = $this->sharedFixture['session']->getNode($nodePath);
+        $node = $this->session->getNode($nodePath);
         // Read the OLD value out of the var and fill the cache
         $this->assertEquals('bar3', $node->getProperty('foo')->getValue());
 
@@ -211,35 +211,35 @@ class VersionManagerTest extends \PHPCR\Test\BaseCase
 
         // Read the NEW value out of the var after the session is renewed and the cache clear
         $this->renewSession();
-        $this->vm = $this->sharedFixture['session']->getWorkspace()->getVersionManager();
+        $this->vm = $this->session->getWorkspace()->getVersionManager();
 
-        $node = $this->sharedFixture['session']->getNode($nodePath);
+        $node = $this->session->getNode($nodePath);
         $this->assertEquals('bar', $node->getProperty('foo')->getValue());
     }
     public function testRestoreByVersionObject()
     {
         $nodePath = '/tests_version_base/versioned';
         $this->vm->checkout($nodePath);
-        $node = $this->sharedFixture['session']->getNode($nodePath);
+        $node = $this->session->getNode($nodePath);
 
         $node->setProperty('foo', 'bar');
-        $this->sharedFixture['session']->save();
+        $this->session->save();
         $version = $this->vm->checkin($nodePath);
 
         $this->vm->checkout($nodePath);
 
         $node->setProperty('foo', 'bar2');
-        $this->sharedFixture['session']->save();
+        $this->session->save();
         $this->vm->checkin($nodePath);
 
         $this->vm->checkout($nodePath);
-        $node = $this->sharedFixture['session']->getNode($nodePath);
+        $node = $this->session->getNode($nodePath);
 
         $node->setProperty('foo', 'bar3');
-        $this->sharedFixture['session']->save();
+        $this->session->save();
         $this->vm->checkin($nodePath);
 
-        $node = $this->sharedFixture['session']->getNode($nodePath);
+        $node = $this->session->getNode($nodePath);
         // Read the OLD value out of the var and fill the cache
         $this->assertEquals('bar3', $node->getProperty('foo')->getValue());
 
@@ -251,7 +251,7 @@ class VersionManagerTest extends \PHPCR\Test\BaseCase
 
         // Read the NEW value out of the var after the session is renewed and the cache clear
         $this->renewSession();
-        $node = $this->sharedFixture['session']->getNode($nodePath);
+        $node = $this->session->getNode($nodePath);
         $this->assertEquals('bar', $node->getProperty('foo')->getValue());
     }
 
@@ -262,10 +262,10 @@ class VersionManagerTest extends \PHPCR\Test\BaseCase
     {
         $nodePath = '/tests_version_base/versioned';
         $this->vm->checkout($nodePath);
-        $node = $this->sharedFixture['session']->getNode($nodePath);
+        $node = $this->session->getNode($nodePath);
 
         $node->setProperty('foo', 'bar');
-        $this->sharedFixture['session']->save();
+        $this->session->save();
         $version = $this->vm->checkin($nodePath);
         $this->vm->checkout($nodePath);
         $this->vm->checkin($nodePath);

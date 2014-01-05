@@ -36,7 +36,7 @@ class ConvertQueriesBackAndForthTest extends \PHPCR\Test\BaseCase
     {
         parent::setUp();
 
-        $factory = $this->sharedFixture['session']->getWorkspace()->getQueryManager()->getQOMFactory();
+        $factory = $this->session->getWorkspace()->getQueryManager()->getQOMFactory();
         $this->sql2Queries = Sql2TestQueries::getQueries();
         $this->qomQueries = QomTestQueries::getQueries($factory);
         $this->qomParser = new QomToSql2QueryConverter(new Sql2Generator(new ValueConverter()));

@@ -359,7 +359,7 @@ class NodeReadMethodsTest extends \PHPCR\Test\BaseCase
 
     public function testGetPropertiesValuesAll()
     {
-        $node = $this->sharedFixture['session']->getNode('/tests_general_base/idExample/jcr:content/weakreference_source1');
+        $node = $this->session->getNode('/tests_general_base/idExample/jcr:content/weakreference_source1');
         $props = $node->getPropertiesValues();
         $this->assertInternalType('array', $props);
         $this->assertArrayHasKey('ref1', $props);
@@ -368,7 +368,7 @@ class NodeReadMethodsTest extends \PHPCR\Test\BaseCase
 
     public function testGetPropertiesValuesAllNoDereference()
     {
-        $node = $this->sharedFixture['session']->getNode('/tests_general_base/idExample/jcr:content/weakreference_source1');
+        $node = $this->session->getNode('/tests_general_base/idExample/jcr:content/weakreference_source1');
         $props = $node->getPropertiesValues(null,false);
         $this->assertInternalType('array', $props);
         $this->assertArrayHasKey('ref1', $props);
@@ -377,7 +377,7 @@ class NodeReadMethodsTest extends \PHPCR\Test\BaseCase
 
     public function testGetPropertiesValuesGlob()
     {
-        $node = $this->sharedFixture['session']->getNode('/tests_general_base/idExample/jcr:content/weakreference_source1');
+        $node = $this->session->getNode('/tests_general_base/idExample/jcr:content/weakreference_source1');
         $props = $node->getPropertiesValues("jcr:*");
         $this->assertInternalType('array', $props);
         /*

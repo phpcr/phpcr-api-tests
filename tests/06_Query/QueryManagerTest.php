@@ -31,7 +31,7 @@ class QueryManagerTest extends QueryBaseCase
 
     public function testGetQuery()
     {
-        $qnode = $this->sharedFixture['session']->getNode('/tests_general_query/queryNode');
+        $qnode = $this->session->getNode('/tests_general_query/queryNode');
         $this->assertInstanceOf('PHPCR\NodeInterface', $qnode);
 
         $query = $this->sharedFixture['qm']->getQuery($qnode);
