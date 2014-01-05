@@ -177,6 +177,39 @@ abstract class AbstractLoader
     }
 
     /**
+     * If the implementation can automatically update mix:lastModified nodes,
+     * this should return a session configured to do that.
+     *
+     * Otherwise, the test regarding this feature is skipped.
+     *
+     * @return \PHPCR\SessionInterface
+     *
+     * @throws \PHPUnit_Framework_SkippedTestSuiteError to make whole test
+     *      suite skip if implementation does not support updating the
+     *      properties automatically.
+     */
+    public function getSessionWithLastModified()
+    {
+        if ($this->doesSessionLastModified()) {
+            return $this->getSession();
+        }
+
+        throw new \PHPUnit_Framework_SkippedTestSuiteError('Not supported');
+    }
+
+    /**
+     * The implementation loader should provide a session that does not update
+     * mix:lastModified. If that is not possible, this method should return
+     * true, which will skip the test about this feature.
+     *
+     * @return boolean
+     */
+    public function doesSessionLastModified()
+    {
+        return false;
+    }
+
+    /**
      * Decide whether this test can be executed.
      *
      * The default implementation uses the unsupported... arrays to decide.
