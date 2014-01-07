@@ -190,12 +190,13 @@ class MoveMethodsTest extends \PHPCR\Test\BaseCase
      */
     public function testSessionMoveReferenceable()
     {
-        // has mix:referenceable
-        $src = '/tests_write_manipulation_move/testSessionMoveReferenceable/srcNode';
-        $dst = '/tests_write_manipulation_move/testSessionMoveReferenceable/dstNode/srcNode';
-
-        $srcUuid = $this->session->getNode($src)->getIdentifier();
+        $dst = $this->node->getPath() . '/dstNode/srcNode';
+        $node = $this->node->getNode('srcNode');
+        $srcUuid = $node->getIdentifier();
+        $src = $node->getPath();
         $this->session->move($src, $dst);
+
+        $this->assertSame($node, $this->session->getNodeByIdentifier($srcUuid));
 
         // Session
         $this->assertFalse($this->session->nodeExists($src), 'Source node still exists [S]');
@@ -302,8 +303,8 @@ class MoveMethodsTest extends \PHPCR\Test\BaseCase
         $dst = $this->node->getPath().'/moved';
         $src2 = $this->node->getPath().'/replacement';
 
-        $move = $this->node->getNode('node');
-        $replacement = $this->node->getNode('replacement');
+        $this->node->getNode('node');
+        $this->node->getNode('replacement');
 
         $this->session->move($src, $dst);
         $this->session->move($src2, $src);
@@ -356,9 +357,9 @@ class MoveMethodsTest extends \PHPCR\Test\BaseCase
         $this->assertTrue($this->session->nodeExists($dst), 'Destination node not found [S]');
 
         // Backend
-        $this->session = $this->saveAndRenewSession();
-        $this->assertFalse($this->session->nodeExists($src), 'Source node still exists [B]');
-        $this->assertTrue($this->session->nodeExists($dst), 'Destination node not found [B]');
+        $session = $this->saveAndRenewSession();
+        $this->assertFalse($session->nodeExists($src), 'Source node still exists [B]');
+        $this->assertTrue($session->nodeExists($dst), 'Destination node not found [B]');
 
         $session = $this->saveAndRenewSession();
         $this->assertFalse($session->nodeExists($src), 'Source child node still exists [B]');
