@@ -252,4 +252,21 @@ abstract class BaseCase extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals($date1->getTimestamp(), $date2->getTimestamp());
     }
+
+    /**
+     * Assert that both arguments are datetime and are within 3 seconds of each
+     * other. Use this rather than plain "Equal" when checking application
+     * generated dates.
+     *
+     * @param \DateTime $expected
+     * @param \DateTime $data
+     */
+    protected function assertSimilarDateTime($expected, $data)
+    {
+        $this->assertInstanceOf('\DateTime', $expected);
+        $this->assertInstanceOf('\DateTime', $data);
+        $this->assertTrue(abs($expected->getTimestamp() - $data->getTimestamp()) <= 3,
+            $data->format('c') . ' is not close to the expected ' . $expected->format('c')
+        );
+    }
 }
