@@ -23,6 +23,13 @@ class CndTest extends NodeTypeBaseCase
         return $ntm->registerNodeTypesCnd($this->primary_item_cnd, true);
     }
 
+    protected function registerBuiltinNodeType()
+    {
+        $ntm = $this->workspace->getNodeTypeManager();
+
+        return $ntm->registerNodeTypesCnd($this->system_cnd, true);
+    }
+
     private $cnd = "
         <'phpcr'='http://www.doctrine-project.org/projects/phpcr_odm'>
          [phpcr:apitest]
@@ -39,4 +46,10 @@ class CndTest extends NodeTypeBaseCase
         - phpcr:content (string)
         primary
         ";
+
+    private $system_cnd = "
+        <'nt'='http://www.jcp.org/jcr/nt/1.0'>
+        [nt:file]
+        - x (string)
+    ";
 }
