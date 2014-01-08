@@ -316,7 +316,133 @@ class QuerySql2OperationsTest extends QueryBaseCase
         $this->assertSame('foo bar', $rows->current()->getValue('tags'));
     }
 
-    public function testQueryWithLengthOperand()
+    public function testLengthOperandOnStringProperty()
+    {
+        /** @var $query QueryInterface */
+        $query = $this->sharedFixture['qm']->createQuery('
+            SELECT data.*
+            FROM [nt:unstructured] AS data
+            WHERE
+              data.foo IS NOT NULL
+              AND LENGTH(data.foo) = 3
+              AND ISDESCENDANTNODE([/tests_general_base])
+            ',
+            QueryInterface::JCR_SQL2
+        );
+
+        $this->assertInstanceOf('\PHPCR\Query\QueryInterface', $query);
+        $result = $query->execute();
+        $this->assertInstanceOf('\PHPCR\Query\QueryResultInterface', $result);
+
+        $rows = $result->getRows();
+
+        $this->assertCount(1, $rows, 'Expected 1 node with property "foo" with a value with 3 characters (bar)');
+
+        /** @var $query QueryInterface */
+        $query = $this->sharedFixture['qm']->createQuery('
+            SELECT data.*
+            FROM [nt:unstructured] AS data
+            WHERE
+              data.foo IS NOT NULL
+              AND LENGTH(data.foo) = 4
+              AND ISDESCENDANTNODE([/tests_general_base])
+            ',
+            QueryInterface::JCR_SQL2
+        );
+
+        $this->assertInstanceOf('\PHPCR\Query\QueryInterface', $query);
+        $result = $query->execute();
+        $this->assertInstanceOf('\PHPCR\Query\QueryResultInterface', $result);
+
+        $rows = $result->getRows();
+
+        $this->assertCount(1, $rows, 'Expected 1 node with property "foo" with a value with 4 characters (bar2)');
+
+        /** @var $query QueryInterface */
+        $query = $this->sharedFixture['qm']->createQuery('
+            SELECT data.*
+            FROM [nt:unstructured] AS data
+            WHERE
+              data.foo IS NOT NULL
+              AND LENGTH(data.foo) > 2
+              AND ISDESCENDANTNODE([/tests_general_base])
+            ',
+            QueryInterface::JCR_SQL2
+        );
+
+        $this->assertInstanceOf('\PHPCR\Query\QueryInterface', $query);
+        $result = $query->execute();
+        $this->assertInstanceOf('\PHPCR\Query\QueryResultInterface', $result);
+
+        $rows = $result->getRows();
+
+        $this->assertCount(2, $rows, 'Expected 2 nodes with property "foo" with a value with more then 2 characters (bar and bar2)');
+    }
+
+    public function testLengthOperandOnEmptyProperty()
+    {
+        /** @var $query QueryInterface */
+        $query = $this->sharedFixture['qm']->createQuery('
+            SELECT data.*
+            FROM [nt:unstructured] AS data
+            WHERE
+              data.empty-value IS NOT NULL
+              AND LENGTH(data.empty-value) < 1
+              AND ISDESCENDANTNODE([/tests_general_base])
+            ',
+            QueryInterface::JCR_SQL2
+        );
+
+        $this->assertInstanceOf('\PHPCR\Query\QueryInterface', $query);
+        $result = $query->execute();
+        $this->assertInstanceOf('\PHPCR\Query\QueryResultInterface', $result);
+
+        $rows = $result->getRows();
+
+        $this->assertCount(1, $rows, 'Expected 1 node with property "empty-value" with a length smaller then 1');
+
+        /** @var $query QueryInterface */
+        $query = $this->sharedFixture['qm']->createQuery('
+            SELECT data.*
+            FROM [nt:unstructured] AS data
+            WHERE
+              data.empty-value IS NOT NULL
+              AND LENGTH(data.empty-value) = 0
+              AND ISDESCENDANTNODE([/tests_general_base])
+            ',
+            QueryInterface::JCR_SQL2
+        );
+
+        $this->assertInstanceOf('\PHPCR\Query\QueryInterface', $query);
+        $result = $query->execute();
+        $this->assertInstanceOf('\PHPCR\Query\QueryResultInterface', $result);
+
+        $rows = $result->getRows();
+
+        $this->assertCount(1, $rows, 'Expected 1 node with property "empty-value" with a length equal to 0');
+
+        /** @var $query QueryInterface */
+        $query = $this->sharedFixture['qm']->createQuery('
+            SELECT data.*
+            FROM [nt:unstructured] AS data
+            WHERE
+              data.empty-value IS NOT NULL
+              AND LENGTH(data.empty-value) > -1
+              AND ISDESCENDANTNODE([/tests_general_base])
+            ',
+            QueryInterface::JCR_SQL2
+        );
+
+        $this->assertInstanceOf('\PHPCR\Query\QueryInterface', $query);
+        $result = $query->execute();
+        $this->assertInstanceOf('\PHPCR\Query\QueryResultInterface', $result);
+
+        $rows = $result->getRows();
+
+        $this->assertCount(1, $rows, 'Expected 1 node with property "empty-value" with a length greater then -1');
+    }
+
+    public function testLengthOperandOnBinaryProperty()
     {
         /** @var $query QueryInterface */
         $query = $this->sharedFixture['qm']->createQuery('
@@ -334,28 +460,7 @@ class QuerySql2OperationsTest extends QueryBaseCase
 
         $rows = $result->getRows();
 
-        $this->assertCount(3, $rows, 'Expected 3 nodes with a jcr:data property with length 121');
-
-        /** @var $query QueryInterface */
-        $query = $this->sharedFixture['qm']->createQuery('
-            SELECT data.*
-            FROM [nt:unstructured] AS data
-            WHERE
-              data.empty-value IS NOT NULL
-              AND LENGTH(data.empty-value) < 1
-              AND LENGTH(data.empty-value) > -1
-              AND ISDESCENDANTNODE([/tests_general_base])
-            ',
-            QueryInterface::JCR_SQL2
-        );
-
-        $this->assertInstanceOf('\PHPCR\Query\QueryInterface', $query);
-        $result = $query->execute();
-        $this->assertInstanceOf('\PHPCR\Query\QueryResultInterface', $result);
-
-        $rows = $result->getRows();
-
-        $this->assertCount(1, $rows, 'Expected 1 node with property "empty-value" with a length smaller then 1 and greater then -1');
+        $this->assertCount(3, $rows, 'Expected 3 nodes with a (binary) jcr:data property with length 121');
     }
 
 }
