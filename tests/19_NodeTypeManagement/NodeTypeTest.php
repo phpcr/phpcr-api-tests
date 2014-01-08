@@ -60,4 +60,21 @@ class NodeTypeTest extends NodeTypeBaseCase
 
         return $ntm->registerNodeTypes($nodeTypes, true);
     }
+
+    protected function registerBuiltinNodeType()
+    {
+        $ntm = $this->workspace->getNodeTypeManager();
+
+        $test = $ntm->createNodeTypeTemplate();
+        $test->setName('nt:file');
+
+        $prop = $ntm->createPropertyDefinitionTemplate();
+        $prop->setName('x');
+        $prop->setRequiredType(PropertyType::STRING);
+        $test->getPropertyDefinitionTemplates()->append($prop);
+
+        $nodeTypes[] = $test;
+
+        return $ntm->registerNodeTypes($nodeTypes, true);
+    }
 }

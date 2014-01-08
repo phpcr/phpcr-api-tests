@@ -29,7 +29,6 @@ abstract class NodeTypeBaseCase extends BaseCase
         $this->renewSession(); // reset session
         parent::setUp();
 
-        $this->session = $this->session;
         $this->workspace = $this->session->getWorkspace();
     }
 
@@ -52,6 +51,14 @@ abstract class NodeTypeBaseCase extends BaseCase
      *      NodeTypeManagerInterface returns them.
      */
     abstract protected function registerNodeTypePrimaryItem();
+
+    /**
+     * Try to register a node type with an object or cnd that would overwrite
+     * a build-in node type, e.g. nt:file
+     *
+     * Have allowUpdate true, should still fail.
+     */
+    abstract protected function registerBuiltinNodeType();
 
     public function testRegisterNodeTypes()
     {
@@ -158,5 +165,13 @@ abstract class NodeTypeBaseCase extends BaseCase
         $primary = $node->getPrimaryItem();
         $this->assertInstanceOf('PHPCR\ItemInterface', $node);
         $this->assertEquals('phpcr:content', $primary->getName());
+    }
+
+    /**
+     * @expectedException \PHPCR\RepositoryException
+     */
+    public function testOverwriteBuiltinNodeType()
+    {
+        $this->registerBuiltinNodeType();
     }
 }
