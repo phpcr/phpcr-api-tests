@@ -386,8 +386,8 @@ class QuerySql2OperationsTest extends QueryBaseCase
             SELECT data.*
             FROM [nt:unstructured] AS data
             WHERE
-              data.empty-value IS NOT NULL
-              AND LENGTH(data.empty-value) < 1
+              data.[empty-value] IS NOT NULL
+              AND LENGTH(data.[empty-value]) < 1
               AND ISDESCENDANTNODE([/tests_general_base])
             ',
             QueryInterface::JCR_SQL2
@@ -406,8 +406,8 @@ class QuerySql2OperationsTest extends QueryBaseCase
             SELECT data.*
             FROM [nt:unstructured] AS data
             WHERE
-              data.empty-value IS NOT NULL
-              AND LENGTH(data.empty-value) = 0
+              data.[empty-value] IS NOT NULL
+              AND LENGTH(data.[empty-value]) = 0
               AND ISDESCENDANTNODE([/tests_general_base])
             ',
             QueryInterface::JCR_SQL2
@@ -426,8 +426,8 @@ class QuerySql2OperationsTest extends QueryBaseCase
             SELECT data.*
             FROM [nt:unstructured] AS data
             WHERE
-              data.empty-value IS NOT NULL
-              AND LENGTH(data.empty-value) > -1
+              data.[empty-value] IS NOT NULL
+              AND LENGTH(data.[empty-value]) > -1
               AND ISDESCENDANTNODE([/tests_general_base])
             ',
             QueryInterface::JCR_SQL2
@@ -448,7 +448,7 @@ class QuerySql2OperationsTest extends QueryBaseCase
         $query = $this->sharedFixture['qm']->createQuery('
             SELECT data.*
             FROM [nt:unstructured] AS data
-            WHERE LENGTH(data.jcr:data) = 121
+            WHERE LENGTH(data.[jcr:data]) = 121
               AND ISDESCENDANTNODE([/tests_general_base])
             ',
             QueryInterface::JCR_SQL2
