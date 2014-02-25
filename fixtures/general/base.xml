@@ -239,6 +239,9 @@
             <sv:property sv:name="jcr:primaryType" sv:type="Name">
                 <sv:value>nt:unstructured</sv:value>
             </sv:property>
+            <sv:property sv:name="jcr:mixinType" sv:type="Name" sv:multiple="true">
+                <sv:value>mix:referenceable</sv:value>
+            </sv:property>
 
             <sv:property sv:name="foo" sv:type="String">
                 <sv:value>bar</sv:value>
