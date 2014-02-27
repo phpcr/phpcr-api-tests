@@ -246,6 +246,31 @@ class QuerySql2OperationsTest extends QueryBaseCase
         $this->assertEquals(array('13543fc6-1abf-4708-bfcc-e49511754b40' => '13543fc6-1abf-4708-bfcc-e49511754b40'), $vals);
     }
 
+    public function testQueryJoinChildnode()
+    {
+        /** @var $query QueryInterface */
+        $query = $this->sharedFixture['qm']->createQuery('
+            SELECT [nt:unstructured].longNumber
+            FROM [nt:file]
+              INNER JOIN [nt:unstructured]
+                ON ISCHILDNODE([nt:unstructured], [nt:file])
+            WHERE [nt:unstructured].longNumber = 999
+              AND ISDESCENDANTNODE([nt:file], [/tests_general_base])
+            ',
+            QueryInterface::JCR_SQL2
+        );
+
+        $this->assertInstanceOf('\PHPCR\Query\QueryInterface', $query);
+        $result = $query->execute();
+        $this->assertInstanceOf('\PHPCR\Query\QueryResultInterface', $result);
+        $vals = array();
+
+        foreach ($result->getRows() as $row) {
+            $vals[] = $row->getValue('nt:unstructured.longNumber');
+        }
+        $this->assertEquals(array(999), $vals);
+    }
+
     public function testQueryOrder()
     {
         /** @var $query QueryInterface */
