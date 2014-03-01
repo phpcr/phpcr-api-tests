@@ -191,8 +191,8 @@ abstract class BaseCase extends \PHPUnit_Framework_TestCase
         $this->rootNode = $this->session->getRootNode();
 
         $children = $this->rootNode->getNodes("tests_*");
-        $child = current($children);
-        if (false !== $child && $child->hasNode($this->getName())) {
+        $child = $children->current();
+        if ($child && $child->hasNode($this->getName())) {
             $this->node = $child->getNode($this->getName());
         }
     }

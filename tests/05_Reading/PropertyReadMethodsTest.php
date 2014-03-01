@@ -438,7 +438,7 @@ class PropertyReadMethodsTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * @expectedException PHPCR\ValueFormatException
+     * @expectedException \PHPCR\ValueFormatException
      */
     public function testGetPropertyNoPath()
     {

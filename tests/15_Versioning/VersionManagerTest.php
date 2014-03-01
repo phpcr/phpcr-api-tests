@@ -60,7 +60,7 @@ class VersionManagerTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * @expectedException PHPCR\InvalidItemStateException
+     * @expectedException \PHPCR\InvalidItemStateException
      */
     public function testCheckinModifiedNode()
     {
@@ -108,7 +108,7 @@ class VersionManagerTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * @expectedException PHPCR\UnsupportedRepositoryOperationException
+     * @expectedException \PHPCR\UnsupportedRepositoryOperationException
      */
     public function testGetBaseVersionNonversionable()
     {
@@ -116,7 +116,7 @@ class VersionManagerTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * @expectedException PHPCR\RepositoryException
+     * @expectedException \PHPCR\RepositoryException
      */
     public function testGetBaseVersionNotfound()
     {
@@ -132,7 +132,7 @@ class VersionManagerTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * @expectedException PHPCR\UnsupportedRepositoryOperationException
+     * @expectedException \PHPCR\UnsupportedRepositoryOperationException
      */
     public function testGetVersionHistoryNonversionable()
     {
@@ -140,7 +140,7 @@ class VersionManagerTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * @expectedException PHPCR\RepositoryException
+     * @expectedException \PHPCR\RepositoryException
      */
     public function testGetVersionHistoryNotfound()
     {
@@ -160,14 +160,14 @@ class VersionManagerTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * @expectedException PHPCR\UnsupportedRepositoryOperationException
+     * @expectedException \PHPCR\UnsupportedRepositoryOperationException
      */
     public function testIsCheckedOutNonversionable()
     {
         $this->vm->isCheckedOut('/tests_version_base/unversionable');
     }
     /**
-     * @expectedException PHPCR\RepositoryException
+     * @expectedException \PHPCR\RepositoryException
      */
     public function testIsCheckedOutNotExisting()
     {
@@ -256,7 +256,7 @@ class VersionManagerTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * @expectedException PHPCR\InvalidItemStateException
+     * @expectedException \PHPCR\InvalidItemStateException
      */
     public function testRestorePendingChanges()
     {
@@ -280,21 +280,21 @@ class VersionManagerTest extends \PHPCR\Test\BaseCase
     // TODO: testRestoreByVersionArray, testRestoreVersionToPath, testRestoreVersionToExistingPath (expect exception)
 
     /**
-     * @expectedException PHPCR\UnsupportedRepositoryOperationException
+     * @expectedException \PHPCR\UnsupportedRepositoryOperationException
      */
     public function testRestoreNonversionablePath()
     {
         $this->vm->restore(true, 'something', '/tests_version_base/unversionable');
     }
     /**
-     * @expectedException PHPCR\RepositoryException
+     * @expectedException \PHPCR\RepositoryException
      */
     public function testRestoreNonexistingPath()
     {
         $this->vm->restore(true, 'something', '/tests_version_base/not_existing');
     }
     /**
-     * @expectedException PHPCR\Version\VersionException
+     * @expectedException \PHPCR\Version\VersionException
      */
     public function testRestoreNonexistingName()
     {
@@ -316,7 +316,7 @@ class VersionManagerTest extends \PHPCR\Test\BaseCase
         }
     }
     /**
-     * @expectedException PHPCR\Version\VersionException
+     * @expectedException \PHPCR\Version\VersionException
      */
     public function testRestoreRootVersion()
     {

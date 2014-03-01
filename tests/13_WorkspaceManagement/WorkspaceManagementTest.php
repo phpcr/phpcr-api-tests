@@ -20,7 +20,7 @@ class WorkspaceManagementTest extends \PHPCR\Test\BaseCase
 
     /**
      * @depends testCreateWorkspace
-     * @expectedException PHPCR\RepositoryException
+     * @expectedException \PHPCR\RepositoryException
      */
     public function testCreateWorkspaceExisting($workspacename)
     {
@@ -40,7 +40,7 @@ class WorkspaceManagementTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * @expectedException PHPCR\NoSuchWorkspaceException
+     * @expectedException \PHPCR\NoSuchWorkspaceException
      */
     public function testCreateWorkspaceWithInvalidSource()
     {

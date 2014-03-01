@@ -1,7 +1,9 @@
 <?php
 namespace PHPCR\Tests\Versioning;
 
+use PHPCR\Util\PathHelper;
 use PHPCR\Version\VersionHistoryInterface;
+use PHPCR\Version\VersionManagerInterface;
 
 require_once(__DIR__ . '/../../inc/BaseCase.php');
 
@@ -12,6 +14,16 @@ require_once(__DIR__ . '/../../inc/BaseCase.php');
  */
 class VersionHistoryTest extends \PHPCR\Test\BaseCase
 {
+    /**
+     * @var VersionManagerInterface
+     */
+    private $vm;
+
+    /**
+     * @var VersionHistoryInterface
+     */
+    private $history;
+
     public static function setupBeforeClass($fixtures = '15_Versioning/base')
     {
         parent::setupBeforeClass($fixtures);
@@ -45,15 +57,15 @@ class VersionHistoryTest extends \PHPCR\Test\BaseCase
         $frozenNodes = $this->history->getAllLinearFrozenNodes();
         $this->assertTraversableImplemented($frozenNodes);
 
-        $this->assertEquals(5, count($frozenNodes));
+        $this->assertCount(5, $frozenNodes);
 
+        $lastNode = null;
         foreach ($frozenNodes as $name => $node) {
             $this->assertInstanceOf('PHPCR\NodeInterface', $node);
             $this->assertInternalType('string', $name);
+            $lastNode = $node;
         }
 
-        $firstNode = reset($frozenNodes);
-        $lastNode = end($frozenNodes);
         $currentNode = $this->vm->getBaseVersion('/tests_version_base/versioned')->getFrozenNode();
 
         $this->assertSame($currentNode, $lastNode);
@@ -65,15 +77,15 @@ class VersionHistoryTest extends \PHPCR\Test\BaseCase
         $frozenNodes = $this->history->getAllFrozenNodes();
         $this->assertTraversableImplemented($frozenNodes);
 
-        $this->assertEquals(5, count($frozenNodes));
+        $this->assertCount(5, $frozenNodes);
 
+        $lastNode = null;
         foreach ($frozenNodes as $name => $node) {
             $this->assertInstanceOf('PHPCR\NodeInterface', $node);
             $this->assertInternalType('string', $name);
+            $lastNode = $node;
         }
 
-        $firstNode = reset($frozenNodes);
-        $lastNode = end($frozenNodes);
         $currentNode = $this->vm->getBaseVersion('/tests_version_base/versioned')->getFrozenNode();
 
         $this->assertSame($currentNode, $lastNode);
@@ -86,22 +98,23 @@ class VersionHistoryTest extends \PHPCR\Test\BaseCase
         $versions = $this->history->getAllLinearVersions();
         $this->assertTraversableImplemented($versions);
 
-        $this->assertEquals(5, count($versions));
+        $this->assertCount(5, $versions);
 
+        $firstVersion = $versions->current();
+        $lastVersion = null;
         foreach ($versions as $name => $version) {
             $this->assertInstanceOf('PHPCR\Version\VersionInterface', $version);
             $this->assertEquals($version->getName(), $name);
+            $lastVersion = $version;
         }
 
-        $firstVersion = reset($versions);
-        $lastVersion = end($versions);
         $currentVersion = $this->vm->getBaseVersion('/tests_version_base/versioned');
 
         $this->assertSame($currentVersion, $lastVersion);
-        $this->assertEquals(0, count($firstVersion->getPredecessors()));
-        $this->assertEquals(1, count($firstVersion->getSuccessors()));
-        $this->assertEquals(1, count($lastVersion->getPredecessors()));
-        $this->assertEquals(0, count($lastVersion->getSuccessors()));
+        $this->assertCount(0, $firstVersion->getPredecessors());
+        $this->assertCount(1, $firstVersion->getSuccessors());
+        $this->assertCount(1, $lastVersion->getPredecessors());
+        $this->assertCount(0, $lastVersion->getSuccessors());
     }
 
     public function testGetAllVersions()
@@ -110,22 +123,23 @@ class VersionHistoryTest extends \PHPCR\Test\BaseCase
         $versions = $this->history->getAllVersions();
         $this->assertTraversableImplemented($versions);
 
-        $this->assertEquals(5, count($versions));
+        $this->assertCount(5, $versions);
 
+        $firstVersion = $versions->current();
+        $lastVersion = null;
         foreach ($versions as $name => $version) {
             $this->assertInstanceOf('PHPCR\Version\VersionInterface', $version);
             $this->assertEquals($version->getName(), $name);
+            $lastVersion = $version;
         }
 
-        $firstVersion = reset($versions);
-        $lastVersion = end($versions);
         $currentVersion = $this->vm->getBaseVersion('/tests_version_base/versioned');
 
         $this->assertSame($currentVersion, $lastVersion);
-        $this->assertEquals(0, count($firstVersion->getPredecessors()));
-        $this->assertEquals(1, count($firstVersion->getSuccessors()));
-        $this->assertEquals(1, count($lastVersion->getPredecessors()));
-        $this->assertEquals(0, count($lastVersion->getSuccessors()));
+        $this->assertCount(0, $firstVersion->getPredecessors());
+        $this->assertCount(1, $firstVersion->getSuccessors());
+        $this->assertCount(1, $lastVersion->getPredecessors());
+        $this->assertCount(0, $lastVersion->getSuccessors());
     }
 
     /**
@@ -156,21 +170,22 @@ class VersionHistoryTest extends \PHPCR\Test\BaseCase
         $vm->checkin('/tests_version_base/versioned_all');
         $this->assertCount(3, $history->getAllVersions());
 
-        foreach ($history->getAllVersions() as $name => $version) {
+        $finalVersions = $history->getAllVersions();
+        $firstVersion = $finalVersions->current();
+        $lastVersion = null;
+        foreach ($finalVersions as $name => $version) {
             $this->assertInstanceOf('PHPCR\Version\VersionInterface', $version);
             $this->assertEquals($version->getName(), $name);
+            $lastVersion = $version;
         }
 
-        $finalVersions = $history->getAllVersions();
-        $firstVersion = reset($finalVersions);
-        $lastVersion = end($finalVersions);
         $currentVersion = $this->vm->getBaseVersion('/tests_version_base/versioned_all');
 
         $this->assertSame($currentVersion, $lastVersion);
-        $this->assertEquals(0, count($firstVersion->getPredecessors()));
-        $this->assertEquals(1, count($firstVersion->getSuccessors()));
-        $this->assertEquals(1, count($lastVersion->getPredecessors()));
-        $this->assertEquals(0, count($lastVersion->getSuccessors()));
+        $this->assertCount(0, $firstVersion->getPredecessors());
+        $this->assertCount(1, $firstVersion->getSuccessors());
+        $this->assertCount(1, $lastVersion->getPredecessors());
+        $this->assertCount(0, $lastVersion->getSuccessors());
     }
 
     /**
@@ -197,28 +212,29 @@ class VersionHistoryTest extends \PHPCR\Test\BaseCase
         $vm->checkin('/tests_version_base/versioned_all_linear');
         $this->assertCount(3, $history->getAllLinearVersions());
 
-        foreach ($history->getAllLinearVersions() as $name => $version) {
+        $finalVersions = $history->getAllLinearVersions();
+        $firstVersion = $finalVersions->current();
+        $lastVersion = null;
+        foreach ($finalVersions as $name => $version) {
             $this->assertInstanceOf('PHPCR\Version\VersionInterface', $version);
             $this->assertEquals($version->getName(), $name);
+            $lastVersion = $version;
         }
 
-        $finalVersions = $history->getAllLinearVersions();
-        $firstVersion = reset($finalVersions);
-        $lastVersion = end($finalVersions);
         $currentVersion = $this->vm->getBaseVersion('/tests_version_base/versioned_all_linear');
 
         $this->assertSame($currentVersion, $lastVersion);
-        $this->assertEquals(0, count($firstVersion->getPredecessors()));
-        $this->assertEquals(1, count($firstVersion->getSuccessors()));
-        $this->assertEquals(1, count($lastVersion->getPredecessors()));
-        $this->assertEquals(0, count($lastVersion->getSuccessors()));
+        $this->assertCount(0, $firstVersion->getPredecessors());
+        $this->assertCount(1, $firstVersion->getSuccessors());
+        $this->assertCount(1, $lastVersion->getPredecessors());
+        $this->assertCount(0, $lastVersion->getSuccessors());
     }
 
     public function testGetRootVersion()
     {
         $rootVersion = $this->history->getRootVersion();
         $this->assertInstanceOf('PHPCR\\Version\\VersionInterface', $rootVersion);
-        $this->assertEquals($this->history->getPath(), dirname($rootVersion->getPath()));
+        $this->assertEquals($this->history->getPath(), PathHelper::getParentPath($rootVersion->getPath()));
     }
 
     public function testGetVersionableIdentifier()
@@ -282,7 +298,7 @@ class VersionHistoryTest extends \PHPCR\Test\BaseCase
      */
     public function testDeleteUnexistingVersion()
     {
-        $version = $this->vm->checkpoint('/tests_version_base/versioned');
+        $this->vm->checkpoint('/tests_version_base/versioned');
         $history = $this->vm->getVersionHistory('/tests_version_base/versioned');
         $history->removeVersion('unexisting');
     }

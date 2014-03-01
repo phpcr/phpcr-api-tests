@@ -104,7 +104,7 @@ class AddMethodsTest extends \PHPCR\Test\BaseCase
         $this->assertInstanceOf('PHPCR\\NodeInterface', $new);
         $nodes = $node->getNodes();
         $this->assertCount(1, $nodes);
-        $newnode = current($nodes);
+        $newnode = $nodes->current();
         $name = $newnode->getName();
         $this->assertEquals(0, substr_count(':', $name));
 
@@ -123,7 +123,7 @@ class AddMethodsTest extends \PHPCR\Test\BaseCase
         $this->assertInstanceOf('PHPCR\\NodeInterface', $new);
         $nodes = $node->getNodes();
         $this->assertCount(1, $nodes);
-        $newnode = current($nodes);
+        $newnode = $nodes->current();
         $name = $newnode->getName();
 
         $this->session->save();
@@ -141,7 +141,7 @@ class AddMethodsTest extends \PHPCR\Test\BaseCase
         $this->assertInstanceOf('PHPCR\\NodeInterface', $new);
         $nodes = $node->getNodes();
         $this->assertCount(1, $nodes);
-        $newnode = current($nodes);
+        $newnode = $nodes->current();
         $name = $newnode->getName();
         $this->assertEquals('jcr:', substr($name, 0, 4));
 

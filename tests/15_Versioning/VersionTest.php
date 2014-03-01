@@ -1,6 +1,10 @@
 <?php
 namespace PHPCR\Tests\Versioning;
 
+use PHPCR\NodeInterface;
+use PHPCR\Version\VersionInterface;
+use PHPCR\Version\VersionManagerInterface;
+
 require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 /**
@@ -10,9 +14,14 @@ require_once(__DIR__ . '/../../inc/BaseCase.php');
  */
 class VersionTest extends \PHPCR\Test\BaseCase
 {
-    /** the versionmanager instance */
+    /**
+     * @var VersionManagerInterface
+     */
     private $vm;
-    /** a versioned node */
+
+    /**
+     * @var VersionInterface
+     */
     private $version;
 
     public static function setupBeforeClass($fixtures = '15_Versioning/base')
@@ -66,13 +75,18 @@ class VersionTest extends \PHPCR\Test\BaseCase
         $this->assertEquals('bar3', $frozen->getPropertyValue('foo'));
 
         $predecessors = $this->version->getPredecessors();
-        $frozen2 = reset($predecessors)->getFrozenNode();
+        $this->assertInternalType('array', $predecessors);
+        $firstVersion = reset($predecessors);
+        $this->assertInstanceOf('PHPCR\Version\VersionInterface', $firstVersion);
+        $frozen2 = $firstVersion->getFrozenNode();
+        $this->assertInstanceOf('PHPCR\NodeInterface', $firstVersion);
+        /** @var $frozen2 NodeInterface */
         $this->assertTrue($frozen2->hasProperty('foo'));
         $this->assertEquals('bar2', $frozen2->getPropertyValue('foo'));
     }
 
     /**
-     * @expectedException PHPCR\NodeType\ConstraintViolationException
+     * @expectedException \PHPCR\NodeType\ConstraintViolationException
      * @depends testGetFrozenNode
      */
     public function testFrozenNode()
@@ -123,7 +137,7 @@ class VersionTest extends \PHPCR\Test\BaseCase
     /**
      * Check $version->remove() is not possible. This must go through VersionHistory::remove
      *
-     * @expectedException PHPCR\RepositoryException
+     * @expectedException \PHPCR\RepositoryException
      */
     public function testNodeRemoveOnVersion()
     {

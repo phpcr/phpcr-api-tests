@@ -110,7 +110,7 @@ class TransactionMethodsTest extends \PHPCR\Test\BaseCase
     /**
      * Testing interaction of transactions and versioning
      *
-     * @expectedException PHPCR\InvalidItemStateException
+     * @expectedException \PHPCR\InvalidItemStateException
      */
     public function testIllegalCheckin()
     {
