@@ -127,7 +127,7 @@ class PropertyDefinitionTest extends \PHPCR\Test\BaseCase
     {
         $def = $this->primaryType->getDefaultValues();
         $this->assertInternalType('array', $def);
-        $this->assertEquals(0, count($def));
+        $this->assertCount(0, $def);
         // no built-in types with default value
     }
 
@@ -151,7 +151,7 @@ class PropertyDefinitionTest extends \PHPCR\Test\BaseCase
     {
         $constraint = $this->primaryType->getValueConstraints();
         $this->assertInternalType('array', $constraint);
-        $this->assertEquals(0, count($constraint));
+        $this->assertCount(0, $constraint);
         // no built-in type with constraints
     }
 

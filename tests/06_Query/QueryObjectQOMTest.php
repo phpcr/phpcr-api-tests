@@ -51,7 +51,7 @@ class QueryObjectQOMTest extends QueryBaseCase
     {
         $qr = $this->query->execute();
         $this->assertInstanceOf('PHPCR\Query\QueryResultInterface', $qr);
-        $this->assertEquals(5, count($qr->getRows()));
+        $this->assertCount(5, $qr->getRows());
         // we assume content is the same as for sql2
     }
 

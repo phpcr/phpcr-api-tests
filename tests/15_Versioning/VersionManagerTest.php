@@ -27,7 +27,7 @@ class VersionManagerTest extends \PHPCR\Test\BaseCase
     {
         $history = $this->vm->getVersionHistory('/tests_version_base/versioned');
         $this->assertInstanceOf('PHPCR\Version\VersionHistoryInterface', $history);
-        $this->assertEquals(1, count($history->getAllVersions()));
+        $this->assertCount(1, $history->getAllVersions());
 
         $this->vm->checkout('/tests_version_base/versioned');
         $node = $this->session->getNode('/tests_version_base/versioned');
@@ -35,7 +35,7 @@ class VersionManagerTest extends \PHPCR\Test\BaseCase
         $this->session->save();
 
         $this->vm->checkin('/tests_version_base/versioned');
-        $this->assertEquals(2, count($history->getAllVersions()));
+        $this->assertCount(2, $history->getAllVersions());
 
         $this->renewSession();
         $node = $this->session->getNode('/tests_version_base/versioned');
@@ -93,10 +93,10 @@ class VersionManagerTest extends \PHPCR\Test\BaseCase
 
         $version2 = $this->vm->checkin('/tests_version_base/versioned'); // this should not create a new version
 
-        $this->assertEquals($count, count($history->getAllVersions()));
+        $this->assertCount($count, $history->getAllVersions());
         $session = $this->saveAndRenewSession();
         $history = $session->getWorkspace()->getVersionManager()->getVersionHistory('/tests_version_base/versioned');
-        $this->assertEquals($count, count($history->getAllVersions()));
+        $this->assertCount($count, $history->getAllVersions());
 
         $this->assertSame($version, $version2, 'must be the same version instance');
     }

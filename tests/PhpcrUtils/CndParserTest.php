@@ -190,7 +190,7 @@ EOT;
         $this->assertTrue($def->isMixin());
         // queryable default is implementation specific
         $this->assertFalse($def->isAbstract());
-        $this->assertEquals(1, count($def->getPropertyDefinitionTemplates()));
+        $this->assertCount(1, $def->getPropertyDefinitionTemplates());
 
         /** @var $prop PropertyDefinitionTemplateInterface */
         $prop = $def->getPropertyDefinitionTemplates()->getIterator()->current();

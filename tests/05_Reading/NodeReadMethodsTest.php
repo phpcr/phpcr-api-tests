@@ -231,7 +231,7 @@ class NodeReadMethodsTest extends \PHPCR\Test\BaseCase
             /** @var $n \PHPCR\NodeInterface */
             array_push($nodes, $n->getName());
         }
-        $this->assertEquals(2, count($nodes));
+        $this->assertCount(2, $nodes);
         $this->assertContains('idExample', $nodes);
         $this->assertContains('test:namespacedNode', $nodes);
         $this->assertNotContains('jcr:content', $nodes); //jrc:content is not immediate child
@@ -390,7 +390,7 @@ class NodeReadMethodsTest extends \PHPCR\Test\BaseCase
         } elseif (count($props) == 2) {
             $this->assertArrayHasKey('jcr:primaryType', $props);
             $this->assertArrayHasKey('jcr:mixinTypes', $props);
-            $this->assertEquals(0, count($props['jcr:mixinTypes']));
+            $this->assertCount(0, $props['jcr:mixinTypes']);
         } else {
             $this->fail('wrong number of properties starting with jcr:');
         }
@@ -462,7 +462,7 @@ class NodeReadMethodsTest extends \PHPCR\Test\BaseCase
         $this->assertInstanceOf('Iterator', $iterator);
 
         //there are two nodes with reference to idExample.
-        $this->assertEquals(2, count($iterator), "Wrong number of references to idExample");
+        $this->assertCount(2, $iterator, "Wrong number of references to idExample");
         foreach ($iterator as $prop) {
             $this->assertInstanceOf('\PHPCR\PropertyInterface', $prop);
             $this->assertTrue(in_array($prop, $source));
@@ -481,7 +481,7 @@ class NodeReadMethodsTest extends \PHPCR\Test\BaseCase
         $this->assertInstanceOf('Iterator', $iterator);
 
         //there is no node with reference to numberPropertyNode.
-        $this->assertEquals(0, count($iterator), "Wrong number of references to numberPropertyNode");
+        $this->assertCount(0, $iterator, "Wrong number of references to numberPropertyNode");
     }
 
     /**
@@ -496,7 +496,7 @@ class NodeReadMethodsTest extends \PHPCR\Test\BaseCase
         $this->assertInstanceOf('Iterator', $iterator);
 
         //there is exactly one node with reference to idExample.
-        $this->assertEquals(1, count($iterator), "Wrong number of references with name ref to idExample");
+        $this->assertCount(1, $iterator, "Wrong number of references with name ref to idExample");
         foreach ($iterator as $prop) {
             $this->assertInstanceOf('\PHPCR\PropertyInterface', $prop);
             $this->assertEquals($source, $prop);
@@ -515,7 +515,7 @@ class NodeReadMethodsTest extends \PHPCR\Test\BaseCase
         $target = $this->rootNode->getNode('tests_general_base/idExample');
         $iterator = $target->getReferences('notexisting');
         $this->assertInstanceOf('Iterator', $iterator);
-        $this->assertEquals(0, count($iterator), "Wrong number of references with name notexisting to idExample");
+        $this->assertCount(0, $iterator, "Wrong number of references with name notexisting to idExample");
     }
 
     /**
@@ -530,7 +530,7 @@ class NodeReadMethodsTest extends \PHPCR\Test\BaseCase
         $iterator = $target->getWeakReferences();
         $this->assertInstanceOf('Iterator', $iterator);
 
-        $this->assertEquals(2, count($iterator), "Wrong number of weak references to weakreference_target");
+        $this->assertCount(2, $iterator, "Wrong number of weak references to weakreference_target");
         foreach ($iterator as $prop) {
             $this->assertInstanceOf('\PHPCR\PropertyInterface', $prop);
             $this->assertTrue(in_array($prop, $source, true));
@@ -548,7 +548,7 @@ class NodeReadMethodsTest extends \PHPCR\Test\BaseCase
         $iterator = $target->getWeakReferences('ref1');
         $this->assertInstanceOf('Iterator', $iterator);
 
-        $this->assertEquals(1, count($iterator), "Wrong number of weak references to weakreference_target");
+        $this->assertCount(1, $iterator, "Wrong number of weak references to weakreference_target");
         foreach ($iterator as $prop) {
             $this->assertInstanceOf('\PHPCR\PropertyInterface', $prop);
             $this->assertEquals($prop, $source);
@@ -565,7 +565,7 @@ class NodeReadMethodsTest extends \PHPCR\Test\BaseCase
         $iterator = $target->getWeakReferences('unexisting_name');
         $this->assertInstanceOf('Iterator', $iterator);
 
-        $this->assertEquals(0, count($iterator), "Wrong number of weak references to weakreference_target");
+        $this->assertCount(0, $iterator, "Wrong number of weak references to weakreference_target");
     }
 
     /**
@@ -579,7 +579,7 @@ class NodeReadMethodsTest extends \PHPCR\Test\BaseCase
         $this->assertInstanceOf('Iterator', $iterator);
 
         //there is no node with reference to numberPropertyNode.
-        $this->assertEquals(0, count($iterator), "Wrong number of references to numberPropertyNode");
+        $this->assertCount(0, $iterator, "Wrong number of references to numberPropertyNode");
     }
 
     public function testGetSharedSetUnreferenced()

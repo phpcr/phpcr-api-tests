@@ -44,7 +44,7 @@ class Sql2ToQomConverterTest extends \PHPCR\Test\BaseCase
 
         $cols = $query->getColumns();
         $this->assertTrue(is_array($cols));
-        $this->assertEquals(2, count($cols));
+        $this->assertCount(2, $cols);
 
         $this->assertEquals('u', $cols[0]->getselectorName());
         $this->assertEquals('prop1', $cols[0]->getPropertyName());

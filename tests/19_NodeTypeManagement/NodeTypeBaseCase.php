@@ -82,7 +82,7 @@ abstract class NodeTypeBaseCase extends BaseCase
 
     protected function assertTypes($types)
     {
-        $this->assertEquals(2, count($types), 'Wrong number of nodes registered');
+        $this->assertCount(2, $types, 'Wrong number of nodes registered');
 
         // apitest
         list($name, $type) = each($types);
@@ -90,7 +90,7 @@ abstract class NodeTypeBaseCase extends BaseCase
         $this->assertInstanceOf('PHPCR\NodeType\NodeTypeDefinitionInterface', $type);
         /** @var $type NodeTypeDefinitionInterface */
         $props = $type->getDeclaredPropertyDefinitions();
-        $this->assertEquals(1, count($props), 'Wrong number of properties in phpcr:apitest');
+        $this->assertCount(1, $props, 'Wrong number of properties in phpcr:apitest');
         $this->assertEquals('phpcr:class', $props[0]->getName());
         $this->assertTrue($props[0]->isMultiple());
 
@@ -100,7 +100,7 @@ abstract class NodeTypeBaseCase extends BaseCase
         $this->assertInstanceOf('PHPCR\NodeType\NodeTypeDefinitionInterface', $type);
         /** @var $type NodeTypeDefinitionInterface */
         $props = $type->getDeclaredPropertyDefinitions();
-        $this->assertEquals(1, count($props), 'Wrong number of properties in phpcr:test');
+        $this->assertCount(1, $props, 'Wrong number of properties in phpcr:test');
         $this->assertEquals('phpcr:prop', $props[0]->getName());
         $this->assertFalse($props[0]->isMultiple());
     }

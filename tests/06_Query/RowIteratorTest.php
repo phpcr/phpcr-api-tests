@@ -15,7 +15,7 @@ class RowIteratorTest extends QueryBaseCase
         parent::setUp();
 
         $this->rowIterator = $this->query->execute()->getRows();
-        $this->assertEquals(5, count($this->rowIterator));
+        $this->assertCount(5, $this->rowIterator);
     }
 
     public function testIterator()
@@ -25,7 +25,7 @@ class RowIteratorTest extends QueryBaseCase
         foreach ($this->rowIterator as $key => $row) {
             $this->assertInstanceOf('PHPCR\Query\RowInterface', $row); // Test if the return element is an istance of row
             $this->assertInstanceOf('PHPCR\NodeInterface', $row->getNode()); //Test if we can get the node of a certain row
-            $this->assertEquals(3, count($row->getValues())); // test if we can get all the values of a row
+            $this->assertCount(3, $row->getValues()); // test if we can get all the values of a row
 
             foreach ($row as $key => $value) { // Test if we can iterate over the columns inside a row
                 $count++;

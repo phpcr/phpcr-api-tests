@@ -32,14 +32,14 @@ class NodeDefinitionTest extends \PHPCR\Test\BaseCase
         try {
             $defs = self::$file->getChildNodeDefinitions();
             $this->assertInternalType('array', $defs);
-            $this->assertEquals(1, count($defs));
+            $this->assertCount(1, $defs);
             list($key, $this->content) = each($defs);
             $this->assertInstanceOf('\PHPCR\NodeType\NodeDefinitionInterface', $this->content);
             $this->assertEquals('jcr:content', $this->content->getName());
 
             $defs = self::$folder->getChildNodeDefinitions();
             $this->assertInternalType('array', $defs);
-            $this->assertEquals(1, count($defs));
+            $this->assertCount(1, $defs);
             list($key, $this->hierarchyNodeDef) = each($defs);
             $this->assertInstanceOf('\PHPCR\NodeType\NodeDefinitionInterface', $this->hierarchyNodeDef);
             $this->assertEquals('*', $this->hierarchyNodeDef->getName());

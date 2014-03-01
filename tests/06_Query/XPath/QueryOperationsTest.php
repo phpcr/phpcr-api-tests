@@ -50,14 +50,14 @@ class QueryOperationsTest extends QueryBaseCase
             $vals[] = ($node->hasProperty('foo') ? $node->getPropertyValue('foo') : null);
         }
         $this->assertContains('bar', $vals);
-        $this->assertEquals(9, count($vals));
+        $this->assertCount(9, $vals);
 
         $vals = array();
         foreach ($result->getRows() as $row) {
             $vals[] = $row->getValue('foo');
         }
         $this->assertContains('bar', $vals);
-        $this->assertEquals(9, count($vals));
+        $this->assertCount(9, $vals);
     }
 
     public function testQueryOrder()

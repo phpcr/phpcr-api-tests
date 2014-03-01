@@ -337,7 +337,7 @@ class PropertyReadMethodsTest extends \PHPCR\Test\BaseCase
         foreach ($arr as $v) {
             $this->assertInternalType('boolean', $v);
         }
-        $this->assertEquals(2, count($arr));
+        $this->assertCount(2, $arr);
         $this->assertFalse($arr[0]);
         $this->assertTrue($arr[1]);
     }
@@ -426,7 +426,7 @@ class PropertyReadMethodsTest extends \PHPCR\Test\BaseCase
     {
         $propertyPath = $this->node->getNode('numberPropertyNode/jcr:content')->getProperty('multiPropertyPath');
         $properties = $propertyPath->getProperty();
-        $this->assertEquals(2, count($properties));
+        $this->assertCount(2, $properties);
         foreach ($properties as $prop) {
             $this->assertInstanceOf('PHPCR\PropertyInterface', $prop);
         }

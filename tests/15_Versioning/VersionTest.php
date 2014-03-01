@@ -120,18 +120,18 @@ class VersionTest extends \PHPCR\Test\BaseCase
     public function testGetPredecessors()
     {
         $versions = $this->version->getPredecessors();
-        $this->assertEquals(1, count($versions));
+        $this->assertCount(1, $versions);
         $pred = $versions[0];
         $this->assertInstanceOf('PHPCR\Version\VersionInterface', $pred);
         $versions = $pred->getSuccessors();
-        $this->assertEquals(1, count($versions), 'expected a successor of our predecessor');
+        $this->assertCount(1, $versions, 'expected a successor of our predecessor');
         $this->assertSame($this->version, $versions[0]);
     }
 
     public function testGetSuccessors()
     {
         $versions = $this->version->getSuccessors();
-        $this->assertEquals(0, count($versions));
+        $this->assertCount(0, $versions);
     }
 
     /**

@@ -98,7 +98,7 @@ class QueryResultsTest extends QueryBaseCase
 
             $keys[] = $path;
         }
-        $this->assertEquals(8, count($keys));
+        $this->assertCount(8, $keys);
 
         $this->assertContains('/tests_general_base/idExample/jcr:content/Test escaping_x0020bla <>\'" node', $keys);
     }
@@ -159,7 +159,7 @@ class QueryResultsTest extends QueryBaseCase
             $rows[] = $row;
         }
 
-        $this->assertEquals(1, count($rows));
+        $this->assertCount(1, $rows);
         $this->assertEquals(10, $rows[0]->getValue('data.longNumberToCompare'));
     }
 
@@ -176,7 +176,7 @@ class QueryResultsTest extends QueryBaseCase
             $rows[] = $row;
         }
 
-        $this->assertEquals(1, count($rows));
+        $this->assertCount(1, $rows);
         $this->assertEquals(2, $rows[0]->getValue('data.stringToCompare'));
     }
 
@@ -193,7 +193,7 @@ class QueryResultsTest extends QueryBaseCase
             $rows[] = $row;
         }
 
-        $this->assertEquals(1, count($rows));
+        $this->assertCount(1, $rows);
         $this->assertEquals(false, $rows[0]->getValue('data.thisIsNo'));
 
          $query = $this->sharedFixture['qm']->createQuery(
@@ -207,7 +207,7 @@ class QueryResultsTest extends QueryBaseCase
             $rows[] = $row;
         }
 
-        $this->assertEquals(1, count($rows));
+        $this->assertCount(1, $rows);
         $this->assertEquals(true, $rows[0]->getValue('data.thisIsYes'));
     }
 }

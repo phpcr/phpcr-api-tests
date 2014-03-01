@@ -42,7 +42,7 @@ class NodeTypeTest extends \PHPCR\Test\BaseCase
     {
         $types = self::$base->getSupertypes();
         $this->assertInternalType('array', $types);
-        $this->assertEquals(0, count($types));
+        $this->assertCount(0, $types);
     }
 
     public function testGetDeclaredSupertypes()
@@ -72,7 +72,7 @@ class NodeTypeTest extends \PHPCR\Test\BaseCase
     {
         $types = self::$base->getDeclaredSupertypes();
         $this->assertInternalType('array', $types);
-        $this->assertEquals(0, count($types));
+        $this->assertCount(0, $types);
     }
 
     public function testGetSubtypes()
@@ -113,7 +113,7 @@ class NodeTypeTest extends \PHPCR\Test\BaseCase
     {
         $children = self::$file->getChildNodeDefinitions();
         $this->assertInternalType('array', $children);
-        $this->assertEquals(1, count($children));
+        $this->assertCount(1, $children);
         list($key, $child) = each($children);
         $this->assertInstanceOf('\PHPCR\NodeType\NodeDefinitionInterface', $child);
         $this->assertEquals('jcr:content', $child->getName());
@@ -124,7 +124,7 @@ class NodeTypeTest extends \PHPCR\Test\BaseCase
     {
         $properties = self::$file->getPropertyDefinitions();
         $this->assertInternalType('array', $properties);
-        $this->assertEquals(4, count($properties));
+        $this->assertCount(4, $properties);
         $names=array();
         foreach ($properties as $prop) {
             $this->assertInstanceOf('\PHPCR\NodeType\PropertyDefinitionInterface', $prop);

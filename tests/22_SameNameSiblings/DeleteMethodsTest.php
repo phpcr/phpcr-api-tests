@@ -124,7 +124,7 @@ class DeleteMethodsTest extends \PHPCR\Test\BaseCase
         $this->saveAndRenewSession();
 
         $parent = $this->session->getNode($parentPath);
-        $this->assertEquals(count($childrenAtEnd), count($parent->getNodes()));
+        $this->assertCount(count($childrenAtEnd), $parent->getNodes());
 
         foreach ($parent->getNodes() as $node) {
             $child = each($childrenAtEnd);
