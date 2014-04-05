@@ -1,0 +1,8 @@
+<test = "http://liip.to/jackalope">
+
+[test:testautocreate]
++ autocreatedwithchild (test:testAutoCreateChild) = test:testAutoCreateChild autocreated
++ autocreated (nt:unstructured) = nt:unstructured autocreated
+
+[test:testAutoCreateChild]
++ foo (nt:unstructured) = nt:unstructured autocreated

@@ -383,4 +383,31 @@ class AddMethodsTest extends \PHPCR\Test\BaseCase
         //save the changes
         $this->saveAndRenewSession();
     }
+
+    public function testAddNodeWithAutoCreatedNode()
+    {
+        $workspace = $this->session->getWorkspace();
+        $cnd = file_get_contents(__DIR__.'/../../fixtures/10_Writing/add_auto_create.cnd');
+        $workspace->getNodeTypeManager()->registerNodeTypesCnd($cnd, true);
+        $this->node->addNode('foo', 'test:testautocreate');
+        $this->session->save();
+
+        $childNode = $this->session->getNode($this->node->getPath() . '/foo');
+        $this->assertNotNull($childNode);
+
+        $childNode = $this->session->getNode($this->node->getPath() . '/foo/autocreated');
+        $this->assertNotNull($childNode);
+        $primaryType = $childNode->getPrimaryNodeType();
+        $this->assertEquals('nt:unstructured', $primaryType->getName());
+
+        $childNode = $this->session->getNode($this->node->getPath() . '/foo/autocreatedwithchild');
+        $this->assertNotNull($childNode);
+        $primaryType = $childNode->getPrimaryNodeType();
+        $this->assertEquals('test:testAutoCreateChild', $primaryType->getName());
+
+        $childNode = $this->session->getNode($this->node->getPath() . '/foo/autocreatedwithchild/foo');
+        $this->assertNotNull($childNode);
+        $primaryType = $childNode->getPrimaryNodeType();
+        $this->assertEquals('nt:unstructured', $primaryType->getName());
+    }
 }
