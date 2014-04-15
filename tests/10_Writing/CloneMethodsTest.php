@@ -131,7 +131,7 @@ class CloneMethodsTest extends BaseCase
      * Clone a referenceable node, then clone again with removeExisting = false
      * This should cause an exception, even with a corresponding node (same UUID)
      *
-     * @expectedException   \PHPCR\ItemExistsException
+     * @expectedException \PHPCR\ItemExistsException
      */
     public function testCloneReferenceableNoRemoveExisting()
     {
@@ -157,7 +157,7 @@ class CloneMethodsTest extends BaseCase
      * Even though the second clone is to a new location, because a corresponding node (same UUID)
      * already exists in the destination workspace, an exception should still be thrown.
      *
-     * @expectedException   \PHPCR\ItemExistsException
+     * @expectedException \PHPCR\ItemExistsException
      */
     public function testCloneNoRemoveExistingNewLocation()
     {
@@ -180,11 +180,34 @@ class CloneMethodsTest extends BaseCase
     }
 
     /**
+     * When removing the existing corresponding target, this must work even
+     * when the target is at the same path.
+     */
+    public function testExistingCorrespondingNodeRemoveExisting()
+    {
+        $this->skipIfSameNameSiblingsSupported();
+
+        $srcNode = '/tests_write_manipulation_clone/testExistingCorrespondingNodeRemoveExisting/sourceRemoveExistingCorresponding';
+        $dstNode = '/tests_additional_workspace/testWorkspaceCloneNonCorresponding/destRemoveExisting';
+
+        self::$destWs->cloneFrom($this->srcWsName, $srcNode, $dstNode, true);
+
+        $this->renewDestinationSession();
+
+        $clonedReplacedNode = self::$destWs->getSession()->getNode($dstNode);
+        $this->assertInstanceOf('PHPCR\NodeInterface', $clonedReplacedNode);
+        $this->assertCount(3, $clonedReplacedNode->getProperties());
+        $this->checkNodeProperty($clonedReplacedNode, 'jcr:uuid', 'f8019868-3533-4519-a077-9c8601950627');
+        $this->checkNodeProperty($clonedReplacedNode, 'jcr:primaryType', 'nt:unstructured');
+        $this->checkNodeProperty($clonedReplacedNode, 'jcr:mixinTypes', array('mix:referenceable'));
+    }
+
+    /**
      * Check that we don't inadvertently create same name siblings (SNS) with removeExisting = true.
      * This can happen when cloning from one workspace to another, when a node already exists at the
      * destination but is not a corresponding node (the nodes have different UUIDs)
      *
-     * @expectedException   \PHPCR\ItemExistsException
+     * @expectedException \PHPCR\ItemExistsException
      */
     public function testExistingNonCorrespondingNodeRemoveExisting()
     {
@@ -201,7 +224,7 @@ class CloneMethodsTest extends BaseCase
      * This can happen when cloning from one workspace to another, when a node already exists at the
      * destination but is not a corresponding node (the nodes have different UUIDs)
      *
-     * @expectedException   \PHPCR\ItemExistsException
+     * @expectedException \PHPCR\ItemExistsException
      */
     public function testExistingNonCorrespondingNodeNoRemoveExisting()
     {
@@ -216,7 +239,7 @@ class CloneMethodsTest extends BaseCase
     /**
      * Test when source node is non-referenceable but a referenceable node exists at destination path
      *
-     * @expectedException   \PHPCR\ItemExistsException
+     * @expectedException \PHPCR\ItemExistsException
      */
     public function testReferenceableDestNodeWithNonReferenceableSourceNode()
     {
@@ -229,7 +252,7 @@ class CloneMethodsTest extends BaseCase
     }
 
     /**
-     * @expectedException   \PHPCR\NoSuchWorkspaceException
+     * @expectedException \PHPCR\NoSuchWorkspaceException
      */
     public function testCloneNoSuchWorkspace()
     {
@@ -240,7 +263,7 @@ class CloneMethodsTest extends BaseCase
     }
 
     /**
-     * @expectedException   \PHPCR\RepositoryException
+     * @expectedException \PHPCR\RepositoryException
      */
     public function testCloneRelativePaths()
     {
@@ -251,7 +274,7 @@ class CloneMethodsTest extends BaseCase
     }
 
     /**
-     * @expectedException   \PHPCR\RepositoryException
+     * @expectedException \PHPCR\RepositoryException
      */
     public function testCloneInvalidDstPath()
     {
@@ -262,7 +285,7 @@ class CloneMethodsTest extends BaseCase
     }
 
     /**
-     * @expectedException   \PHPCR\PathNotFoundException
+     * @expectedException \PHPCR\PathNotFoundException
      */
     public function testCloneProperty()
     {
@@ -273,7 +296,7 @@ class CloneMethodsTest extends BaseCase
     }
 
     /**
-     * @expectedException   \PHPCR\PathNotFoundException
+     * @expectedException \PHPCR\PathNotFoundException
      */
     public function testCloneSrcNotFound()
     {
@@ -284,7 +307,7 @@ class CloneMethodsTest extends BaseCase
     }
 
     /**
-     * @expectedException   \PHPCR\PathNotFoundException
+     * @expectedException \PHPCR\PathNotFoundException
      */
     public function testCloneDstParentNotFound()
     {
@@ -315,7 +338,7 @@ class CloneMethodsTest extends BaseCase
     /**
      * Clone a non-referenceable node, then clone again with removeExisting = true
      *
-     * @expectedException   \PHPCR\ItemExistsException
+     * @expectedException \PHPCR\ItemExistsException
      */
     public function testCloneRemoveExistingNonReferenceable()
     {
@@ -338,7 +361,7 @@ class CloneMethodsTest extends BaseCase
     }
 
     /**
-     * @expectedException   \PHPCR\ItemExistsException
+     * @expectedException \PHPCR\ItemExistsException
      */
     public function testCloneNonReferenceableNoRemoveExisting()
     {
@@ -383,7 +406,7 @@ class CloneMethodsTest extends BaseCase
     }
 
     /**
-     * @expectedException   \PHPCR\NoSuchWorkspaceException
+     * @expectedException \PHPCR\NoSuchWorkspaceException
      */
     public function testGetCorrespondingNodeNoSuchWorkspace()
     {
@@ -397,7 +420,7 @@ class CloneMethodsTest extends BaseCase
     }
 
     /**
-     * @expectedException   \PHPCR\ItemNotFoundException
+     * @expectedException \PHPCR\ItemNotFoundException
      */
     public function testGetCorrespondingNodeItemNotFound()
     {
@@ -477,7 +500,7 @@ class CloneMethodsTest extends BaseCase
     }
 
     /**
-     * @expectedException   \PHPCR\NoSuchWorkspaceException
+     * @expectedException \PHPCR\NoSuchWorkspaceException
      */
     public function testUpdateNoSuchWorkspace()
     {
