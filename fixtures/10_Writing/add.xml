@@ -201,4 +201,9 @@
       <sv:value>nt:unstructured</sv:value>
     </sv:property>
   </sv:node>
+  <sv:node sv:name="testAddNodeWithAutoCreatedNode">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>nt:unstructured</sv:value>
+    </sv:property>
+  </sv:node>
 </sv:node>
