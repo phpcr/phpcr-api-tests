@@ -203,9 +203,12 @@ class CloneMethodsTest extends BaseCase
     }
 
     /**
-     * Check that we don't inadvertently create same name siblings (SNS) with removeExisting = true.
-     * This can happen when cloning from one workspace to another, when a node already exists at the
-     * destination but is not a corresponding node (the nodes have different UUIDs)
+     * Check that we don't inadvertently create same name siblings (SNS) with
+     * removeExisting = true.
+     *
+     * This can happen when cloning from one workspace to another, when a node
+     * already exists at the destination but is not a corresponding node (the
+     * nodes have different UUIDs).
      *
      * @expectedException \PHPCR\ItemExistsException
      */
@@ -220,9 +223,12 @@ class CloneMethodsTest extends BaseCase
     }
 
     /**
-     * Check that we don't inadvertently create same name siblings (SNS) with removeExisting = false.
-     * This can happen when cloning from one workspace to another, when a node already exists at the
-     * destination but is not a corresponding node (the nodes have different UUIDs)
+     * Check that we don't inadvertently create same name siblings (SNS) with
+     * removeExisting = false.
+     *
+     * This can happen when cloning from one workspace to another, when a node
+     * already exists at the destination but is not a corresponding node (the
+     * nodes have different UUIDs).
      *
      * @expectedException \PHPCR\ItemExistsException
      */
