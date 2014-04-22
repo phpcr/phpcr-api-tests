@@ -71,6 +71,16 @@ class CopyMethodsTest extends \PHPCR\Test\BaseCase
         $this->assertNotEquals($sfile->getPropertyValue('jcr:data'), $dfile->getPropertyValue('jcr:data'));
     }
 
+    public function testCopyFromAnotherWorkspace()
+    {
+        self::$staticSharedFixture['ie']->import('general/additionalWorkspace', 'additionalWorkspace');
+        $src = '/tests_additional_workspace/testCopyNoSuchWorkspace/node';
+        $dst = '/tests_write_manipulation_copy/testCopyFromAnotherWorkspace/foobar';
+
+        $this->ws->copy($src, $dst, 'testsAdditional');
+        $node = $this->session->getNode($dest);
+    }
+
     /**
      * @expectedException   \PHPCR\NoSuchWorkspaceException
      */
