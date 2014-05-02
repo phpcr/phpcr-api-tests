@@ -73,7 +73,7 @@ class CopyMethodsTest extends \PHPCR\Test\BaseCase
 
     public function testWorkspaceCopyOther()
     {
-        self::$staticSharedFixture['ie']->import('general/additionalWorkspace', 'testsAdditional');
+        self::$staticSharedFixture['ie']->import('general/additionalWorkspace', 'additionalWorkspace');
         $src = '/tests_additional_workspace/testWorkspaceCopyOther/node';
         $dst = '/tests_write_manipulation_copy/testWorkspaceCopyOther/foobar';
 
