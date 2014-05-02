@@ -71,18 +71,20 @@ class CopyMethodsTest extends \PHPCR\Test\BaseCase
         $this->assertNotEquals($sfile->getPropertyValue('jcr:data'), $dfile->getPropertyValue('jcr:data'));
     }
 
-    public function testCopyFromAnotherWorkspace()
+    public function testWorkspaceCopyOther()
     {
-        self::$staticSharedFixture['ie']->import('general/additionalWorkspace', 'additionalWorkspace');
-        $src = '/tests_additional_workspace/testCopyNoSuchWorkspace/node';
-        $dst = '/tests_write_manipulation_copy/testCopyFromAnotherWorkspace/foobar';
+        self::$staticSharedFixture['ie']->import('general/additionalWorkspace', 'testsAdditional');
+        $src = '/tests_additional_workspace/testWorkspaceCopyOther/node';
+        $dst = '/tests_write_manipulation_copy/testWorkspaceCopyOther/foobar';
 
-        $this->ws->copy($src, $dst, 'testsAdditional');
-        $node = $this->session->getNode($dest);
+        $this->ws->copy($src, $dst, self::$loader->getOtherWorkspaceName());
+        $node = $this->session->getNode($dst);
+        $this->assertTrue($node->hasProperty('x'));
+        $this->assertEquals('y', $node->getPropertyValue('x'));
     }
 
     /**
-     * @expectedException   \PHPCR\NoSuchWorkspaceException
+     * @expectedException \PHPCR\NoSuchWorkspaceException
      */
     public function testCopyNoSuchWorkspace()
     {
@@ -91,13 +93,8 @@ class CopyMethodsTest extends \PHPCR\Test\BaseCase
         $this->ws->copy($src, $dst, 'inexistentworkspace');
     }
 
-    public function testWorkspaceCopyBackend()
-    {
-        $this->markTestIncomplete('TODO: just do');
-    }
-
     /**
-     * @expectedException   \PHPCR\RepositoryException
+     * @expectedException \PHPCR\RepositoryException
      */
     public function testCopyRelativePaths()
     {
@@ -105,7 +102,7 @@ class CopyMethodsTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * @expectedException   \PHPCR\RepositoryException
+     * @expectedException \PHPCR\RepositoryException
      */
     public function testCopyInvalidDstPath()
     {
@@ -115,7 +112,7 @@ class CopyMethodsTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * @expectedException   \PHPCR\RepositoryException
+     * @expectedException \PHPCR\RepositoryException
      */
     public function testCopyProperty()
     {
@@ -125,7 +122,7 @@ class CopyMethodsTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * @expectedException   \PHPCR\PathNotFoundException
+     * @expectedException \PHPCR\PathNotFoundException
      */
     public function testCopySrcNotFound()
     {
@@ -135,7 +132,7 @@ class CopyMethodsTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * @expectedException   \PHPCR\PathNotFoundException
+     * @expectedException \PHPCR\PathNotFoundException
      */
     public function testCopyDstParentNotFound()
     {
@@ -147,7 +144,7 @@ class CopyMethodsTest extends \PHPCR\Test\BaseCase
     /**
      * Verifies that there is no update-on-copy if the target node already exists
      *
-     * @expectedException   \PHPCR\ItemExistsException
+     * @expectedException \PHPCR\ItemExistsException
      */
     public function testCopyNoUpdateOnCopy()
     {
