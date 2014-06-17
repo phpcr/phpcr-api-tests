@@ -338,13 +338,18 @@ class QomTestQueries
         */
 
         // SELECT * FROM nt:file WHERE CONTAINS(sel.prop, expr)
-        // TODO: NOT YET IMPLEMENTED
-//        $queries['6.7.19.FullTextSearch'] =
-//            $factory->createQuery(
-//                $factory->selector('nt:file'),
-//                $factory->fullTextSearch('prop', 'expr', 'sel'),
-//                array(),
-//                array());
+        $queries['6.7.19.FullTextSearch'] =
+            $factory->createQuery(
+                $factory->selector('file', 'nt:file'),
+                $factory->fullTextSearch('file', 'prop', 'expr'),
+                array(),
+                array());
+        $queries['6.7.19.FullTextSearch_With_Single_Quote'] =
+            $factory->createQuery(
+                $factory->selector('file', 'nt:file'),
+                $factory->fullTextSearch('file', 'prop', "expr'"),
+                array(),
+                array());
 
         /**
         * 6.7.20. SameNode
