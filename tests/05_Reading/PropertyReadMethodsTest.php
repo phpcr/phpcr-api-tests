@@ -328,7 +328,12 @@ class PropertyReadMethodsTest extends \PHPCR\Test\BaseCase
         // php interprets everything as true except null, 0, '' and boolean false. thus even the string "false" is true.
         // we require getString to return something that evaluates to false (the empty string makes sense)
         $this->assertTrue(! $prop->getString(), 'boolean false returned as string should evaluate to php <false>');
+
+        $prop = $this->node->getNode('numberPropertyNode/jcr:content')->getProperty('thisIsYes');
+        $this->assertTrue($prop->getBoolean());
+        $this->assertFalse(!$prop->getString());
     }
+
     public function testGetBooleanMulti()
     {
         $prop = $this->node->getNode('numberPropertyNode/jcr:content')->getProperty('multiBoolean');
