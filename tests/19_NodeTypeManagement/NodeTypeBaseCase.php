@@ -62,7 +62,7 @@ abstract class NodeTypeBaseCase extends BaseCase
 
     public function testRegisterNodeTypes()
     {
-        $types = $this->registerNodeTypes(true);
+        $types = (array) $this->registerNodeTypes(true);
 
         $this->assertTypes($types);
 
