@@ -279,7 +279,7 @@ class SessionReadMethodsTest extends \PHPCR\Test\BaseCase
 
     public function testGetNodesByIdentifier()
     {
-        $nodes = $this->session->getNodesByIdentifier(array(
+        $nodes = (array) $this->session->getNodesByIdentifier(array(
             '842e61c0-09ab-42a9-87c0-308ccc90e6f4',
             '00000000-0000-0000-0000-000000000000',
             '13543fc6-1abf-4708-bfcc-e49511754b40',
@@ -295,7 +295,7 @@ class SessionReadMethodsTest extends \PHPCR\Test\BaseCase
 
     public function testGetNodesByIdentifierTraversable()
     {
-        $nodes = $this->session->getNodesByIdentifier(new \ArrayIterator(array(
+        $nodes = (array) $this->session->getNodesByIdentifier(new \ArrayIterator(array(
             '842e61c0-09ab-42a9-87c0-308ccc90e6f4',
             '00000000-0000-0000-0000-000000000000',
             '13543fc6-1abf-4708-bfcc-e49511754b40',
