@@ -269,4 +269,21 @@ abstract class BaseCase extends \PHPUnit_Framework_TestCase
             $data->format('c') . ' is not close to the expected ' . $expected->format('c')
         );
     }
+
+    /**
+     * Check to see if the given descriptor evaluates to false, if it does
+     * mark the test as skipped and return False, else return True.
+     *
+     * @param sting $descriptor
+     * @return boolean
+     */
+    protected function skipIfNotSupported($descriptor)
+    {
+        if (false === $this->session->getRepository()->getDescriptor($descriptor)) {
+            $this->markTestSkipped('Descriptor "' . $descriptor . '" not supported');
+            return false;
+        }
+
+        return true;
+    }
 }

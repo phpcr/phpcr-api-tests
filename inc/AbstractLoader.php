@@ -253,7 +253,7 @@ abstract class AbstractLoader
             $session = $adminRepository->login($this->getCredentials(), 'default');
             $workspace = $session->getWorkspace();
             if (in_array($workspaceName, $workspace->getAccessibleWorkspaceNames())) {
-                throw new \Exception("Failed to log into $workspaceName");
+                throw new \Exception(sprintf('Workspace "%s" already exists but could not login to it', $workspaceName), null, $e);
             }
             $workspace->createWorkspace($workspaceName);
 

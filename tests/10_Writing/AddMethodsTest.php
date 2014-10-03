@@ -4,6 +4,7 @@ namespace PHPCR\Tests\Writing;
 require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 use PHPCR\PropertyType as Type;
+use PHPCR\RepositoryInterface;
 
 /**
  * Covering jcr-283 spec $10.4
@@ -386,6 +387,10 @@ class AddMethodsTest extends \PHPCR\Test\BaseCase
 
     public function testAddNodeWithAutoCreatedNode()
     {
+        if ($this->skipIfNotSupported(RepositoryInterface::NODE_TYPE_MANAGEMENT_AUTOCREATED_DEFINITIONS_SUPPORTED)) {
+            return;
+        }
+
         $workspace = $this->session->getWorkspace();
         $cnd = file_get_contents(__DIR__.'/../../fixtures/10_Writing/add_auto_create.cnd');
         $workspace->getNodeTypeManager()->registerNodeTypesCnd($cnd, true);
