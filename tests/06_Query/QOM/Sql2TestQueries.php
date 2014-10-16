@@ -99,7 +99,7 @@ class Sql2TestQueries
         /**
         * 6.7.15. NotConstraint
         */
-        $queries['6.7.15.Not'] = 'SELECT * FROM [nt:file] AS file WHERE NOT file.prop1 IS NOT NULL';
+        $queries['6.7.15.Not'] = 'SELECT * FROM [nt:file] AS file WHERE (NOT file.prop1 IS NOT NULL)';
 
         /**
         * 6.7.16. Comparison
