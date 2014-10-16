@@ -60,6 +60,7 @@ class Sql2TestQueries
         $queries['6.7.12.Constraint.Precedence.3'] = array(
             'SELECT * FROM [nt:file] AS file WHERE NOT file.prop1 = \'1\' OR file.prop2 = \'2\' AND NOT file.prop3 = \'3\'',
             'SELECT * FROM [nt:file] AS file WHERE (NOT file.prop1 = \'1\' OR (file.prop2 = \'2\' AND NOT file.prop3 = \'3\'))',
+            'SELECT * FROM [nt:file] AS file WHERE ((NOT file.prop1 = \'1\') OR (file.prop2 = \'2\' AND (NOT file.prop3 = \'3\')))',
         );
 
         $queries['6.7.12.Constraint.Precedence.4'] = array(
@@ -76,8 +77,8 @@ class Sql2TestQueries
             'SELECT * FROM [nt:file] AS file WHERE
                 NOT file.prop1 IS NOT NULL AND NOT NOT file.prop2 IS NOT NULL
                 OR NOT file.prop3 = \'hello\' AND file.prop4 <> \'hello\'',
-
             'SELECT * FROM [nt:file] AS file WHERE ((NOT file.prop1 IS NOT NULL AND NOT NOT file.prop2 IS NOT NULL) OR (NOT file.prop3 = \'hello\' AND file.prop4 <> \'hello\'))',
+            'SELECT * FROM [nt:file] AS file WHERE (((NOT file.prop1 IS NOT NULL) AND (NOT (NOT file.prop2 IS NOT NULL))) OR ((NOT file.prop3 = \'hello\') AND file.prop4 <> \'hello\'))',
         );
 
         /**
@@ -99,7 +100,10 @@ class Sql2TestQueries
         /**
         * 6.7.15. NotConstraint
         */
-        $queries['6.7.15.Not'] = 'SELECT * FROM [nt:file] AS file WHERE (NOT file.prop1 IS NOT NULL)';
+        $queries['6.7.15.Not'] = array(
+            'SELECT * FROM [nt:file] AS file WHERE NOT file.prop1 IS NOT NULL',
+            'SELECT * FROM [nt:file] AS file WHERE (NOT file.prop1 IS NOT NULL)',
+        );
 
         /**
         * 6.7.16. Comparison
