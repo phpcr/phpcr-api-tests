@@ -116,4 +116,24 @@ hello world
             $this->assertEquals(strlen($this->decodedstring), $size);
         }
     }
+
+    public function testReadBinaryPathEncoding()
+    {
+        $node = $this->session->getRootNode()->getNode('tests_general_base/index.txt/jcr:content');
+        $binary = $node->getProperty('encoding?%$-test');
+        $this->assertEquals(\PHPCR\PropertyType::BINARY, $binary->getType());
+        $value = $binary->getString();
+        $this->assertInternalType('string', $value);
+        $this->assertEquals($this->decodedstring, $value);
+    }
+
+    public function testReadBinaryPathTrailingQuestionmark()
+    {
+        $node = $this->session->getRootNode()->getNode('tests_general_base/index.txt/jcr:content');
+        $binary = $node->getProperty('encoding?');
+        $this->assertEquals(\PHPCR\PropertyType::BINARY, $binary->getType());
+        $value = $binary->getString();
+        $this->assertInternalType('string', $value);
+        $this->assertEquals($this->decodedstring, $value);
+    }
 }
