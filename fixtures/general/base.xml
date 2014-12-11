@@ -158,6 +158,16 @@
                 </sv:property>
             </sv:node>
 
+            <sv:node sv:name="weakreference_repeated">
+                <sv:property sv:name="jcr:primaryType" sv:type="Name">
+                    <sv:value>nt:unstructured</sv:value>
+                </sv:property>
+                <sv:property sv:name="other_ref" sv:type="WeakReference">
+                    <sv:value>13543fc6-1abf-4708-bfcc-e49511754b40</sv:value>
+                    <sv:value>13543fc6-1abf-4708-bfcc-e49511754b40</sv:value>
+                </sv:property>
+            </sv:node>
+
         </sv:node>
     </sv:node>
 
