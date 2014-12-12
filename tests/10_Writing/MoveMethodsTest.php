@@ -43,6 +43,9 @@ class MoveMethodsTest extends \PHPCR\Test\BaseCase
         $session = $this->saveAndRenewSession();
 
         $this->assertTrue($session->nodeExists('/tests_write_manipulation_move/testNodeRename/otherName'));
+
+        $parent = $session->getNode('/tests_write_manipulation_move/testNodeRename');
+        $this->assertEquals(array('otherName', 'secondNode'), (array) $parent->getNodeNames(), 'Rename may not change position of nodes');
     }
 
     public function testSessionMove()
