@@ -396,6 +396,17 @@ class NodeReadMethodsTest extends \PHPCR\Test\BaseCase
         }
     }
 
+    public function testGetReferencePropertyRepeated()
+    {
+        $node = $this->session->getNode('/tests_general_base/idExample/jcr:content/weakreference_repeated');
+        $refs = $node->getPropertyValue('other_ref');
+        $this->assertInternalType('array', (array) $refs);
+        $this->assertCount(2, $refs);
+        foreach ($refs as $node) {
+            $this->assertInstanceOf('PHPCR\NodeInterface', $node);
+        }
+    }
+
     /**
      * @group getPrimaryItem
      */
@@ -526,11 +537,13 @@ class NodeReadMethodsTest extends \PHPCR\Test\BaseCase
         $target = $this->rootNode->getNode('tests_general_base/idExample/jcr:content/weakreference_target');
         $source[] = $this->rootNode->getProperty('tests_general_base/idExample/jcr:content/weakreference_source1/ref1');
         $source[] = $this->rootNode->getProperty('tests_general_base/idExample/jcr:content/weakreference_source2/ref2');
+        $source[] = $this->rootNode->getProperty('tests_general_base/idExample/jcr:content/weakreference_repeated/other_ref');
 
         $iterator = $target->getWeakReferences();
         $this->assertInstanceOf('Iterator', $iterator);
 
-        $this->assertCount(2, $iterator, "Wrong number of weak references to weakreference_target");
+        // there are 4 different references, but 2 come from the same property so should only count once.
+        $this->assertCount(3, $iterator, "Wrong number of weak references to weakreference_target");
         foreach ($iterator as $prop) {
             $this->assertInstanceOf('\PHPCR\PropertyInterface', $prop);
             $this->assertTrue(in_array($prop, $source, true));
@@ -608,7 +621,7 @@ class NodeReadMethodsTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException \InvalidArgumentException
      */
     public function testHasNodeAbsolutePathException()
     {
@@ -642,7 +655,7 @@ class NodeReadMethodsTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException \InvalidArgumentException
      */
     public function testHasPropertyAbsolutePathException()
     {

@@ -50,14 +50,14 @@ class QueryOperationsTest extends QueryBaseCase
             $vals[] = ($node->hasProperty('foo') ? $node->getPropertyValue('foo') : null);
         }
         $this->assertContains('bar', $vals);
-        $this->assertCount(9, $vals);
+        $this->assertCount(10, $vals);
 
         $vals = array();
         foreach ($result->getRows() as $row) {
             $vals[] = $row->getValue('foo');
         }
         $this->assertContains('bar', $vals);
-        $this->assertCount(9, $vals);
+        $this->assertCount(10, $vals);
     }
 
     public function testQueryOrder()
@@ -76,7 +76,7 @@ class QueryOperationsTest extends QueryBaseCase
             $vals[] = $row->getValue('zeronumber');
         }
         // rows that do not have that field are null. empty is before fields with values
-        $this->assertEquals(array(null, null, null, null, null, null, null, null, 0), $vals);
+        $this->assertEquals(array(null, null, null, null, null, null, null, null, null, 0), $vals);
     }
 
 }
