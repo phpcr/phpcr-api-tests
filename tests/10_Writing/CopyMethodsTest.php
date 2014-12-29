@@ -71,6 +71,38 @@ class CopyMethodsTest extends \PHPCR\Test\BaseCase
         $this->assertNotEquals($sfile->getPropertyValue('jcr:data'), $dfile->getPropertyValue('jcr:data'));
     }
 
+    public function testWorkspaceCopyReference()
+    {
+        $src = '/tests_write_manipulation_copy/testWorkspaceCopy/referencedNodeSet';
+        $dst = '/tests_write_manipulation_copy/testWorkspaceCopy/dstNode/copiedReferencedSet';
+
+        $this->ws->copy($src, $dst);
+
+        $snode = $this->session->getNode($src);
+        $dnode = $this->session->getNode($dst);
+
+        $this->assertNotEquals($snode->getIdentifier(), $dnode->getIdentifier());
+
+        $homeNode = $dnode->getNode('home');
+        $block1Ref = $homeNode->getProperty('block_1')->getValue()->getIdentifier();
+        $block2Ref = $homeNode->getProperty('block_2')->getValue()->getIdentifier();
+        $block3Ref = $homeNode->getProperty('block_2')->getValue()->getIdentifier();
+
+        $externalRef = $homeNode->getProperty('external_reference')->getValue()->getIdentifier();
+
+        $this->assertEquals('842e61c0-09ab-42a9-87c0-308ccc90e6f6', $externalRef);
+
+        $block1 = $homeNode->getNode('block_1');
+        $this->assertEquals($block1->getIdentifier(), $block1Ref);
+
+        $block2 = $block1->getNode('block_2');
+        $this->assertEquals($block2->getIdentifier(), $block2Ref);
+
+        // weak reference
+        $block3 = $block1->getNode('block_3');
+        $this->assertEquals($block2->getIdentifier(), $block2Ref);
+    }
+
     public function testWorkspaceCopyOther()
     {
         self::$staticSharedFixture['ie']->import('general/additionalWorkspace', 'additionalWorkspace');
