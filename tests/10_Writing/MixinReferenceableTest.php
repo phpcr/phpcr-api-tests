@@ -97,4 +97,46 @@ class MixinReferenceableTest extends \PHPCR\Test\BaseCase
         $referenced2 = $session->getNode('/tests_general_base/idExample');
         $this->assertSame($referenced2, $session->getProperty('/tests_general_base/index.txt/jcr:content/reference')->getValue());
     }
+
+    public function testSetUuidNewReferenceable()
+    {
+        $uuid = 'aaaa61c0-09ab-42a9-87c0-308ccc93aaaa';
+        $node = $this->session->getNode('/tests_general_base/index.txt/jcr:content')->addNode('newId', 'nt:unstructured');
+        $node->addMixin('mix:referenceable');
+        $node->setProperty('jcr:uuid', $uuid);
+        $this->session->save();
+        $this->assertSame($uuid, $node->getIdentifier());
+
+        $session = $this->renewSession();
+
+        $node = $session->getNode('/tests_general_base/index.txt/jcr:content/newId');
+        $this->assertSame($uuid, $node->getIdentifier());
+    }
+
+    /**
+     * @expectedException \PHPCR\NodeType\ConstraintViolationException
+     */
+    public function testSetUuidNewButNonreferenceable()
+    {
+        $node = $this->session->getNode('/tests_general_base/index.txt/jcr:content')->addNode('newNonref', 'nt:unstructured');
+        $node->setProperty('jcr:uuid', 'bbbb61c0-09ab-42a9-87c0-308ccc93aaaa');
+    }
+
+    /**
+     * @expectedException \PHPCR\NodeType\ConstraintViolationException
+     */
+    public function testSetUuidReferenceableButExisting()
+    {
+        $node = $this->session->getNode('/tests_general_base/idExample');
+        $node->setProperty('jcr:uuid', 'cccc61c0-09ab-42a9-87c0-308ccc93aaaa');
+    }
+
+    /**
+     * @expectedException \PHPCR\NodeType\ConstraintViolationException
+     */
+    public function testSetUuidButNotReferenceableExisting()
+    {
+        $node = $this->session->getNode('/tests_general_base/index.txt/jcr:content');
+        $node->setProperty('jcr:uuid', 'dddd61c0-09ab-42a9-87c0-308ccc93aaaa');
+    }
 }
