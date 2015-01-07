@@ -84,9 +84,9 @@ class CopyMethodsTest extends \PHPCR\Test\BaseCase
         $this->assertNotEquals($snode->getIdentifier(), $dnode->getIdentifier());
 
         $homeNode = $dnode->getNode('home');
-        $block1Ref = $homeNode->getProperty('block_1')->getValue()->getIdentifier();
-        $block2Ref = $homeNode->getProperty('block_2')->getValue()->getIdentifier();
-        $block3Ref = $homeNode->getProperty('block_2')->getValue()->getIdentifier();
+        $block1Ref = $homeNode->getProperty('block_1_ref')->getValue()->getIdentifier();
+        $block2Ref = $homeNode->getProperty('block_2_ref')->getValue()->getIdentifier();
+        $block3Ref = $homeNode->getProperty('block_2_ref')->getValue()->getIdentifier();
 
         $externalRef = $homeNode->getProperty('external_reference')->getValue()->getIdentifier();
 
