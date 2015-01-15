@@ -444,9 +444,21 @@ class NodeReadMethodsTest extends \PHPCR\Test\BaseCase
         $this->assertEquals('842e61c0-09ab-42a9-87c0-308ccc90e6f4', $id);
     }
 
+    /**
+     * The JCR specification is not saying what the properties of this id
+     * should be. But it must be a string.
+     */
+    public function testGetIdentifierNonReferenceable()
+    {
+        $id = $this->node->getNode('index.txt')->getIdentifier();
+        $this->assertInternalType('string', $id);
+    }
+
+    /**
+     * getIndex has to work even when same-name siblings are not allowed.
+     */
     public function testGetIndex()
     {
-        //TODO: Improve this test to test actual multiple nodes
         $index = $this->node->getIndex();
         $this->assertTrue(is_numeric($index));
         $this->assertEquals(1, $index);
