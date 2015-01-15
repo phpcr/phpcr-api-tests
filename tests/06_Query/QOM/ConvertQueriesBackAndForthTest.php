@@ -64,7 +64,7 @@ class ConvertQueriesBackAndForthTest extends \PHPCR\Test\BaseCase
                         }
                     }
                 }
-                $this->assertTrue($passed, "QOM-->SQL2->QOM: Original query variation = ".$query);
+                $this->assertEquals($passed, "QOM-->SQL2->QOM: Original query variation = ".$query);
             } else {
                 $qom = $this->sql2Parser->parse($originalSql2Query);
                 $this->assertEquals($originalQomQuery, $qom, "QOM-->SQL2: Original query = $originalSql2Query");
