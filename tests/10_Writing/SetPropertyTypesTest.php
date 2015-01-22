@@ -113,6 +113,25 @@ class SetPropertyTypesTest extends \PHPCR\Test\BaseCase
         $this->assertEquals(\PHPCR\PropertyType::LONG, $value->getType());
     }
 
+    /**
+     * Test that explicitly setting the type overrides autodetection.
+     */
+    public function testCreateValueIntWithDouble()
+    {
+        $value = $this->node->setProperty('propIntNum', 100.3, PropertyType::LONG);
+        $this->assertInstanceOf('PHPCR\PropertyInterface', $value);
+        $this->assertSame('100', $value->getString());
+        $this->assertSame(100, $value->getLong());
+        $this->assertEquals(\PHPCR\PropertyType::LONG, $value->getType());
+
+        $this->saveAndRenewSession();
+        $value = $this->session->getProperty('/tests_general_base/numberPropertyNode/jcr:content/propIntNum');
+        $this->assertSame('100', $value->getString());
+        $this->assertSame(100, $value->getLong());
+        $this->assertEquals(\PHPCR\PropertyType::LONG, $value->getType());
+    }
+
+
     public function testCreateValueDouble()
     {
         $value = $this->node->setProperty('propDouble', 10.6);
@@ -126,6 +145,26 @@ class SetPropertyTypesTest extends \PHPCR\Test\BaseCase
         $value = $this->session->getProperty('/tests_general_base/numberPropertyNode/jcr:content/propDouble');
         $this->assertSame('10.6', $value->getString());
         $this->assertSame(10.6, $value->getDouble());
+        $this->assertSame(10, $value->getLong());
+        $this->assertEquals(\PHPCR\PropertyType::DOUBLE, $value->getType());
+    }
+
+    /**
+     * Test that explicitly setting the type overrides autodetection.
+     */
+    public function testCreateValueDoubleWithInt()
+    {
+        $value = $this->node->setProperty('propDoubleNum', 10, PropertyType::DOUBLE);
+        $this->assertInstanceOf('PHPCR\PropertyInterface', $value);
+        $this->assertSame('10', $value->getString());
+        $this->assertSame(10.0, $value->getDouble());
+        $this->assertSame(10, $value->getLong());
+        $this->assertEquals(\PHPCR\PropertyType::DOUBLE, $value->getType());
+
+        $this->saveAndRenewSession();
+        $value = $this->session->getProperty('/tests_general_base/numberPropertyNode/jcr:content/propDoubleNum');
+        $this->assertSame('10', $value->getString());
+        $this->assertSame(10.0, $value->getDouble());
         $this->assertSame(10, $value->getLong());
         $this->assertEquals(\PHPCR\PropertyType::DOUBLE, $value->getType());
     }
