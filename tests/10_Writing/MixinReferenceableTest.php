@@ -159,7 +159,7 @@ class MixinReferenceableTest extends \PHPCR\Test\BaseCase
     public function testSetUuidNewReferenceable()
     {
         $uuid = 'aaaa61c0-09ab-42a9-87c0-308ccc93aaaa';
-        $node = $this->session->getNode('/tests_general_base/index.txt/jcr:content')->addNode('newId', 'nt:unstructured');
+        $node = $this->node->addNode('newId', 'nt:unstructured');
         $node->addMixin('mix:referenceable');
         $node->setProperty('jcr:uuid', $uuid);
         $this->session->save();
@@ -167,7 +167,7 @@ class MixinReferenceableTest extends \PHPCR\Test\BaseCase
 
         $session = $this->renewSession();
 
-        $node = $session->getNode('/tests_general_base/index.txt/jcr:content/newId');
+        $node = $this->node->getNode('newId');
         $this->assertSame($uuid, $node->getIdentifier());
     }
 
@@ -176,7 +176,7 @@ class MixinReferenceableTest extends \PHPCR\Test\BaseCase
      */
     public function testSetUuidNewButNonreferenceable()
     {
-        $node = $this->session->getNode('/tests_general_base/index.txt/jcr:content')->addNode('newNonref', 'nt:unstructured');
+        $node = $this->node->addNode('newNonref', 'nt:unstructured');
         $node->setProperty('jcr:uuid', 'bbbb61c0-09ab-42a9-87c0-308ccc93aaaa');
     }
 
@@ -185,8 +185,7 @@ class MixinReferenceableTest extends \PHPCR\Test\BaseCase
      */
     public function testSetUuidReferenceableButExisting()
     {
-        $node = $this->session->getNode('/tests_general_base/idExample');
-        $node->setProperty('jcr:uuid', 'cccc61c0-09ab-42a9-87c0-308ccc93aaaa');
+        $this->node->setProperty('jcr:uuid', 'cccc61c0-09ab-42a9-87c0-308ccc93aaaa');
     }
 
     /**
@@ -194,7 +193,6 @@ class MixinReferenceableTest extends \PHPCR\Test\BaseCase
      */
     public function testSetUuidButNotReferenceableExisting()
     {
-        $node = $this->session->getNode('/tests_general_base/index.txt/jcr:content');
-        $node->setProperty('jcr:uuid', 'dddd61c0-09ab-42a9-87c0-308ccc93aaaa');
+        $this->node->setProperty('jcr:uuid', 'dddd61c0-09ab-42a9-87c0-308ccc93aaaa');
     }
 }
