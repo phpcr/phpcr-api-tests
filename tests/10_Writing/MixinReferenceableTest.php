@@ -1,6 +1,8 @@
 <?php
 namespace PHPCR\Tests\Writing;
 
+use PHPCR\PropertyType;
+
 require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 /**
@@ -10,6 +12,11 @@ require_once(__DIR__ . '/../../inc/BaseCase.php');
  */
 class MixinReferenceableTest extends \PHPCR\Test\BaseCase
 {
+    public static function setupBeforeClass($fixtures = '10_Writing/mixinreferenceable')
+    {
+        parent::setupBeforeClass($fixtures);
+    }
+
     public function setUp()
     {
         $this->renewSession(); // discard changes
@@ -22,11 +29,11 @@ class MixinReferenceableTest extends \PHPCR\Test\BaseCase
     public function testReferenceOnNonReferenceableNode()
     {
         // Load a non-referenceable node
-        $referenced_node = $this->session->getNode('/tests_general_base/emptyExample');
+        $nonReferenceableNode = $this->node->getNode('non-referenceable');
 
         // Try to reference it
-        $source_node = $this->session->getNode('/tests_general_base/index.txt/jcr:content');
-        $source_node->setProperty('reference', $referenced_node, \PHPCR\PropertyType::WEAKREFERENCE);
+        $sourceNode = $this->node->getNode('node');
+        $sourceNode->setProperty('reference', $nonReferenceableNode, \PHPCR\PropertyType::WEAKREFERENCE);
         $this->session->save();
     }
 
@@ -36,24 +43,24 @@ class MixinReferenceableTest extends \PHPCR\Test\BaseCase
     public function testReferenceOnNewlyReferenceableNode()
     {
         // Load a non-referenceable node and make it referenceable
-        $referenced_node = $this->session->getNode('/tests_general_base/emptyExample');
-        $referenced_node->addMixin('mix:referenceable');
+        $referencedNode = $this->node->getNode('node');
+        $referencedNode->addMixin('mix:referenceable');
 
         // Re-read the node to be sure it has a UUID
         $this->saveAndRenewSession();
-        $referenced_node = $this->session->getNode('/tests_general_base/emptyExample');
+        $referencedNode = $this->node->getNode('node');
 
         // Reference it from another node
-        $source_node = $this->session->getNode('/tests_general_base/index.txt/jcr:content');
-        $source_node->setProperty('reference', $referenced_node, \PHPCR\PropertyType::WEAKREFERENCE);
+        $sourceNode = $this->node->getNode('other-node');
+        $sourceNode->setProperty('reference', $referencedNode, \PHPCR\PropertyType::WEAKREFERENCE);
 
         $this->session->save();
 
-        $this->assertInstanceOf('PHPCR\NodeInterface', $source_node->getPropertyValue('reference'));
+        $this->assertInstanceOf('PHPCR\NodeInterface', $sourceNode->getPropertyValue('reference'));
 
         // referrers only required to work once save happened
-        $this->assertCount(0, $referenced_node->getReferences());
-        $this->assertCount(1, $referenced_node->getWeakReferences());
+        $this->assertCount(0, $referencedNode->getReferences());
+        $this->assertCount(1, $referencedNode->getWeakReferences());
     }
 
     /**
@@ -62,14 +69,14 @@ class MixinReferenceableTest extends \PHPCR\Test\BaseCase
     public function testReferenceOnReferenceableNode()
     {
         // Load a referenceable node
-        $referenced_node = $this->session->getNode('/tests_general_base/idExample');
+        $referencedNode = $this->node->getNode('referenceable');
 
         // Reference it from another node
-        $source_node = $this->session->getNode('/tests_general_base/index.txt/jcr:content');
-        $source_node->setProperty('oreference', $referenced_node, \PHPCR\PropertyType::WEAKREFERENCE);
+        $sourceNode = $this->node->getNode('node');
+        $sourceNode->setProperty('oreference', $referencedNode, \PHPCR\PropertyType::WEAKREFERENCE);
         $this->session->save();
 
-        $this->assertInstanceOf('PHPCR\NodeInterface', $source_node->getPropertyValue('oreference'));
+        $this->assertInstanceOf('PHPCR\NodeInterface', $sourceNode->getPropertyValue('oreference'));
     }
 
     /**
@@ -77,31 +84,82 @@ class MixinReferenceableTest extends \PHPCR\Test\BaseCase
      */
     public function testUpdateReference()
     {
-        $referenced1 = $this->session->getNode('/tests_general_base/emptyExample');
+        $referenced1 = $this->node->getNode('node');
         $referenced1->addMixin('mix:referenceable');
         $this->session->save();
 
         // Load a referenceable node
-        $referenced2 = $this->session->getNode('/tests_general_base/idExample');
+        $referenced2 = $this->node->getNode('referenceable');
 
         // Reference it from another node
-        $source_node = $this->session->getNode('/tests_general_base/index.txt/jcr:content');
+        $sourceNode = $this->node->getNode('other-node');
 
-        $source_node->setProperty('reference', $referenced1, \PHPCR\PropertyType::WEAKREFERENCE);
+        $sourceNode->setProperty('reference', $referenced1, \PHPCR\PropertyType::WEAKREFERENCE);
         $this->session->save();
-        $source_node->setProperty('reference', $referenced2, \PHPCR\PropertyType::WEAKREFERENCE);
+        $sourceNode->setProperty('reference', $referenced2, \PHPCR\PropertyType::WEAKREFERENCE);
         $this->session->save();
-        $this->assertSame($referenced2, $source_node->getPropertyValue('reference'));
+        $this->assertSame($referenced2, $sourceNode->getPropertyValue('reference'));
 
-        $session = $this->renewSession();
-        $referenced2 = $session->getNode('/tests_general_base/idExample');
-        $this->assertSame($referenced2, $session->getProperty('/tests_general_base/index.txt/jcr:content/reference')->getValue());
+        $this->renewSession();
+        $referenced2 = $this->node->getNode('referenceable');
+        $this->assertSame($referenced2, $this->node->getNode('other-node')->getProperty('reference')->getValue());
+    }
+
+    public function testMultiValueReference()
+    {
+        $this->doTestMultiValueReference(
+            array('one', 'two', 'three'),
+            array('one', 'two', 'one', 'one', 'two', 'three'),
+            PropertyType::REFERENCE
+        );
+    }
+
+    public function testMultiValueWeakReference()
+    {
+        $this->doTestMultiValueReference(
+            array('one', 'two', 'three'),
+            array('one', 'two', 'one', 'one', 'two', 'three'),
+            PropertyType::WEAKREFERENCE
+        );
+    }
+
+    private function doTestMultiValueReference($nodeNames, $nodeCollectionNames, $referenceType)
+    {
+        $baseNode = $this->node;
+        $nodes = array();
+        foreach ($nodeNames as $nodeName) {
+            $node = $baseNode->addNode($nodeName);
+            $node->addMixin('mix:referenceable');
+            $nodes[$nodeName] = $node;
+        }
+
+        $this->session->save();
+
+        $referrer = $baseNode->addNode('referrer');
+
+        $nodeCollection = array();
+
+        foreach ($nodeCollectionNames as $nodeCollectionName) {
+            $nodeCollection[] = $nodes[$nodeCollectionName];
+        }
+        $referrer->setProperty('references', $nodeCollection, $referenceType);
+
+        $this->session->save();
+
+        $this->renewSession();
+        $referrer = $this->node->getNode('referrer');
+        $values = $referrer->getProperty('references');
+
+        foreach ($values as $referencedNode) {
+            $name = array_shift($nodeCollectionNames);
+            $this->assertSame($name, $referencedNode->getName());
+        }
     }
 
     public function testSetUuidNewReferenceable()
     {
         $uuid = 'aaaa61c0-09ab-42a9-87c0-308ccc93aaaa';
-        $node = $this->session->getNode('/tests_general_base/index.txt/jcr:content')->addNode('newId', 'nt:unstructured');
+        $node = $this->node->addNode('newId', 'nt:unstructured');
         $node->addMixin('mix:referenceable');
         $node->setProperty('jcr:uuid', $uuid);
         $this->session->save();
@@ -109,7 +167,7 @@ class MixinReferenceableTest extends \PHPCR\Test\BaseCase
 
         $session = $this->renewSession();
 
-        $node = $session->getNode('/tests_general_base/index.txt/jcr:content/newId');
+        $node = $this->node->getNode('newId');
         $this->assertSame($uuid, $node->getIdentifier());
     }
 
@@ -118,7 +176,7 @@ class MixinReferenceableTest extends \PHPCR\Test\BaseCase
      */
     public function testSetUuidNewButNonreferenceable()
     {
-        $node = $this->session->getNode('/tests_general_base/index.txt/jcr:content')->addNode('newNonref', 'nt:unstructured');
+        $node = $this->node->addNode('newNonref', 'nt:unstructured');
         $node->setProperty('jcr:uuid', 'bbbb61c0-09ab-42a9-87c0-308ccc93aaaa');
     }
 
@@ -127,8 +185,7 @@ class MixinReferenceableTest extends \PHPCR\Test\BaseCase
      */
     public function testSetUuidReferenceableButExisting()
     {
-        $node = $this->session->getNode('/tests_general_base/idExample');
-        $node->setProperty('jcr:uuid', 'cccc61c0-09ab-42a9-87c0-308ccc93aaaa');
+        $this->node->setProperty('jcr:uuid', 'cccc61c0-09ab-42a9-87c0-308ccc93aaaa');
     }
 
     /**
@@ -136,7 +193,6 @@ class MixinReferenceableTest extends \PHPCR\Test\BaseCase
      */
     public function testSetUuidButNotReferenceableExisting()
     {
-        $node = $this->session->getNode('/tests_general_base/index.txt/jcr:content');
-        $node->setProperty('jcr:uuid', 'dddd61c0-09ab-42a9-87c0-308ccc93aaaa');
+        $this->node->setProperty('jcr:uuid', 'dddd61c0-09ab-42a9-87c0-308ccc93aaaa');
     }
 }
