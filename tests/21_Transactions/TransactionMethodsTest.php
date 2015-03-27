@@ -3,6 +3,7 @@ namespace PHPCR\Tests\Transactions;
 
 require_once(__DIR__ . '/../../inc/BaseCase.php');
 
+use PHPCR\RepositoryInterface;
 use \PHPCR\Transaction;
 
 /**
@@ -25,23 +26,21 @@ class TransactionMethodsTest extends \PHPCR\Test\BaseCase
 
     public function testGetTransactionManager()
     {
-        $session = self::$staticSharedFixture['session'];
-        $utx = $session->getWorkspace()->getTransactionManager();
+        $utx = $this->session->getWorkspace()->getTransactionManager();
 
         $this->assertInstanceOf('\PHPCR\Transaction\UserTransactionInterface', $utx);
     }
 
     public function testTransactionCommit()
     {
-        $session = self::$staticSharedFixture['session'];
-        $utx = $session->getWorkspace()->getTransactionManager();
+        $utx = $this->session->getWorkspace()->getTransactionManager();
 
         $utx->begin();
         $child = $this->node->addNode('insideTransaction');
 
         $this->assertEquals($this->node->getPath() . '/insideTransaction', $child->getPath());
 
-        $session->save();
+        $this->session->save();
 
         $sessionbeforesave = self::$loader->getSession();
         $this->assertFalse($sessionbeforesave->nodeExists($child->getPath()));
@@ -55,19 +54,17 @@ class TransactionMethodsTest extends \PHPCR\Test\BaseCase
 
     public function testTransactionRollback()
     {
-        $session = self::$staticSharedFixture['session'];
-
         $copy = $this->node->addNode('copyTransaction');
         $copiedNodePath = $this->node->getPath()."/copyTransactionCopy";
-        $session->save();
+        $this->session->save();
 
-        $utx = $session->getWorkspace()->getTransactionManager();
+        $utx = $this->session->getWorkspace()->getTransactionManager();
 
         $child = $this->node->addNode('insideTransaction');
         $utx->begin();
         //workspace operation
-        $session->getWorkspace()->copy($copy->getPath(),$copiedNodePath);
-        $session->save();
+        $this->session->getWorkspace()->copy($copy->getPath(),$copiedNodePath);
+        $this->session->save();
         $this->assertFalse($child->isNew());
         $utx->rollback();
 
@@ -79,7 +76,7 @@ class TransactionMethodsTest extends \PHPCR\Test\BaseCase
 
         // semantics of rollback is that the local session state does not roll back
         // this must work
-        $session->save();
+        $this->session->save();
 
         $sessionaftersave = self::$loader->getSession();
         $this->assertFalse($sessionaftersave->nodeExists($child->getPath()));
@@ -88,20 +85,19 @@ class TransactionMethodsTest extends \PHPCR\Test\BaseCase
 
     public function testInTransaction()
     {
-        $session = self::$staticSharedFixture['session'];
-        $utx= $session->getWorkspace()->getTransactionManager();
+        $utx= $this->session->getWorkspace()->getTransactionManager();
 
         $this->assertFalse($utx->inTransaction());
         $utx->begin();
         $this->node->addNode('insideTransaction0');
-        $session->save();
+        $this->session->save();
         $this->assertTrue($utx->inTransaction());
         $utx->commit();
         $this->assertFalse($utx->inTransaction());
 
         $utx->begin();
         $this->node->addNode('insideTransaction1');
-        $session->save();
+        $this->session->save();
         $this->assertTrue($utx->inTransaction());
         $utx->rollback();
         $this->assertFalse($utx->inTransaction());
@@ -114,19 +110,16 @@ class TransactionMethodsTest extends \PHPCR\Test\BaseCase
      */
     public function testIllegalCheckin()
     {
-        if (!self::$staticSharedFixture['session']->getRepository()->getDescriptor('option.versioning.supported')) {
-            $this->markTestSkipped('PHPCR repository doesn\'t support versioning');
-        }
+        $this->skipIfNotSupported(RepositoryInterface::OPTION_VERSIONING_SUPPORTED);
 
-        $session = self::$staticSharedFixture['session'];
-        $vm = $session->getWorkspace()->getVersionManager();
+        $vm = $this->session->getWorkspace()->getVersionManager();
 
-        $utx= $session->getWorkspace()->getTransactionManager();
+        $utx= $this->session->getWorkspace()->getTransactionManager();
         $vm->checkout($this->node->getPath());
         $this->node->setProperty('foo', 'bar2');
 
         $utx->begin();
-        $session->save();
+        $this->session->save();
 
         $vm->checkin($this->node->getPath());
     }

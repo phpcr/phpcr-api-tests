@@ -1,6 +1,7 @@
 <?php
 namespace PHPCR\Tests\Writing;
 
+use PHPCR\RepositoryInterface;
 use PHPCR\WorkspaceInterface;
 use PHPCR\Test\BaseCase;
 
@@ -567,9 +568,13 @@ class CloneMethodsTest extends BaseCase
         self::$destWs = $destSession->getWorkspace();
     }
 
+    /**
+     * Some of the tests in this test case assume that same name siblings are *not* supported.
+     * Those would fail if the repository supports same name siblings, so we skip them in that case.
+     */
     private function skipIfSameNameSiblingsSupported()
     {
-        if ($this->session->getRepository()->getDescriptor('node.type.management.same.name.siblings.supported')) {
+        if ($this->session->getRepository()->getDescriptor(RepositoryInterface::NODE_TYPE_MANAGEMENT_SAME_NAME_SIBLINGS_SUPPORTED)) {
             $this->markTestSkipped('Test does not yet cover repositories that support same name siblings.');
         }
     }

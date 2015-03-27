@@ -1,6 +1,9 @@
 <?php
 namespace PHPCR\Tests\NodeTypeDiscovery;
 
+use PHPCR\NodeType\NodeTypeInterface;
+use PHPCR\RepositoryInterface;
+
 require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 /**
@@ -10,10 +13,29 @@ require_once(__DIR__ . '/../../inc/BaseCase.php');
  */
 class NodeTypeTest extends \PHPCR\Test\BaseCase
 {
+    /**
+     * @var NodeTypeInterface
+     */
     private static $base;
+
+    /**
+     * @var NodeTypeInterface
+     */
     private static $hierarchyNode;
+
+    /**
+     * @var NodeTypeInterface
+     */
     private static $file;
+
+    /**
+     * @var NodeTypeInterface
+     */
     private static $resource;
+
+    /**
+     * @var NodeTypeInterface
+     */
     private static $created;
 
     public static function setupBeforeClass($fixtures = false)
@@ -155,11 +177,9 @@ class NodeTypeTest extends \PHPCR\Test\BaseCase
      */
     public function testIsNodeTypeMixinVersion()
     {
-        if (!self::$staticSharedFixture['session']->getRepository()->getDescriptor('option.versioning.supported')) {
-            $this->markTestSkipped('PHPCR repository doesn\'t support versioning');
-        }
+        $this->skipIfNotSupported(RepositoryInterface::OPTION_VERSIONING_SUPPORTED);
 
-        $ntm = self::$staticSharedFixture['session']->getWorkspace()->getNodeTypeManager();
+        $ntm = $this->session->getWorkspace()->getNodeTypeManager();
         $versionable = $ntm->getNodeType('mix:versionable');
         $this->assertTrue($versionable->isNodeType('mix:versionable'));
         $this->assertTrue($versionable->isNodeType('mix:referenceable'));
