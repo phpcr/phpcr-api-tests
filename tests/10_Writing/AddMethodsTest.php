@@ -3,8 +3,10 @@ namespace PHPCR\Tests\Writing;
 
 require_once(__DIR__ . '/../../inc/BaseCase.php');
 
-use PHPCR\PropertyType as Type;
+use PHPCR\NodeType\ConstraintViolationException;
+use PHPCR\PropertyType;
 use PHPCR\RepositoryInterface;
+use PHPCR\ValueFormatException;
 
 /**
  * Covering jcr-283 spec $10.4
@@ -58,9 +60,9 @@ class AddMethodsTest extends \PHPCR\Test\BaseCase
         $path = $this->node->getPath();
         $newNode = $this->node->addNode('newFileNode', 'nt:file');
         $contentNode = $newNode->addNode('jcr:content', 'nt:resource');
-        $contentNode->setProperty('jcr:mimeType', 'text/plain', Type::STRING);
-        $contentNode->setProperty('jcr:data', 'Hello', Type::BINARY);
-        $contentNode->setProperty('jcr:lastModified', new \DateTime('2010-12-12'), Type::DATE);
+        $contentNode->setProperty('jcr:mimeType', 'text/plain', PropertyType::STRING);
+        $contentNode->setProperty('jcr:data', 'Hello', PropertyType::BINARY);
+        $contentNode->setProperty('jcr:lastModified', new \DateTime('2010-12-12'), PropertyType::DATE);
 
         $this->assertNotNull($newNode, 'Node newFileNode was not created');
         $this->assertTrue($newNode->isNew(), 'Node newFileNode is not marked dirty');
@@ -274,7 +276,7 @@ class AddMethodsTest extends \PHPCR\Test\BaseCase
      */
     public function testAddNodePathNotFound()
     {
-        $parent = $this->node->addNode('nonExistent/newNode', 'nt:unstructured');
+        $this->node->addNode('nonExistent/newNode', 'nt:unstructured');
     }
 
     /**
@@ -297,10 +299,10 @@ class AddMethodsTest extends \PHPCR\Test\BaseCase
         try {
             $data->setProperty('jcr:lastModified', true);
             $this->saveAndRenewSession();
-        } catch (\PHPCR\ValueFormatException $e) {
+        } catch (ValueFormatException $e) {
             //correct according to JSR-287 3.6.4 Property Type Conversion
             return;
-        } catch (\PHPCR\NodeType\ConstraintViolationException $e) {
+        } catch (ConstraintViolationException $e) {
             //also correct
             return;
         }
@@ -344,7 +346,7 @@ class AddMethodsTest extends \PHPCR\Test\BaseCase
         $parent = $this->node->addNode('parent', 'nt:folder');
         $child = $parent->addNode('child', 'nt:file');
         $content = $child->addNode('jcr:content', 'nt:resource');
-        $content->setProperty('jcr:data', '1234', \PHPCR\PropertyType::BINARY);
+        $content->setProperty('jcr:data', '1234', PropertyType::BINARY);
         $path = $child->getPath();
 
         $this->saveAndRenewSession();

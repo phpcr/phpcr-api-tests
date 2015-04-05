@@ -271,17 +271,16 @@ abstract class BaseCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Check to see if the given descriptor evaluates to false, if it does
-     * mark the test as skipped and return False, else return True.
+     * Check whether the repository supports this descriptor and skip the test if it is not supported.
      *
-     * @param sting $descriptor
-     * @return boolean
+     * @param string $descriptor
+     *
+     * @return boolean True if the test can be done. Otherwise the test is skipped.
      */
     protected function skipIfNotSupported($descriptor)
     {
         if (false === $this->session->getRepository()->getDescriptor($descriptor)) {
             $this->markTestSkipped('Descriptor "' . $descriptor . '" not supported');
-            return false;
         }
 
         return true;
