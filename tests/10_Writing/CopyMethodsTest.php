@@ -187,8 +187,7 @@ class CopyMethodsTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * Copied nodes which reference other nodes should be shown in the referrers list of references
-     * Single value
+     * When a node is copied, any nodes to which it refers should show the copied node in its list of references.
      */
     public function testCopyUpdateReferencesSingleValue()
     {
@@ -196,7 +195,15 @@ class CopyMethodsTest extends \PHPCR\Test\BaseCase
         $dst = '/tests_write_manipulation_copy/testCopyUpdateReferrersSingleValue/dstNode';
         $ref = '/tests_write_manipulation_copy/testCopyUpdateReferrersSingleValue/referencedNode';
 
+        $node = $this->session->getNode($ref);
+        $references = $node->getReferences();
+        $this->assertCount(1, $references);
+
         $this->ws->copy($src, $dst);
+
+        $references = $node->getReferences();
+        $this->assertCount(2, $references);
+
         $this->session->refresh(true );
 
         $node = $this->session->getNode($ref);
