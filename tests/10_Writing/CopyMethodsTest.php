@@ -186,16 +186,49 @@ class CopyMethodsTest extends \PHPCR\Test\BaseCase
         $this->ws->copy($src, $dst);
     }
 
-    public function testCopyUpdateOnCopy()
+    /**
+     * When a node is copied, any nodes to which it refers should show the copied node in its list of references.
+     */
+    public function testCopyUpdateReferencesSingleValue()
     {
-        $src = '/tests_write_manipulation_copy/testCopyUpdateOnCopy/srcNode';
-        $dst = '/tests_write_manipulation_copy/testCopyUpdateOnCopy/dstNode/srcNode';
+        $src = '/tests_write_manipulation_copy/testCopyUpdateReferrersSingleValue/srcNode';
+        $dst = '/tests_write_manipulation_copy/testCopyUpdateReferrersSingleValue/dstNode';
+        $ref = '/tests_write_manipulation_copy/testCopyUpdateReferrersSingleValue/referencedNode';
+
+        $node = $this->session->getNode($ref);
+        $references = $node->getReferences();
+        $this->assertCount(1, $references);
+
         $this->ws->copy($src, $dst);
 
-        // make sure child node was copied
-        $this->assertTrue($this->session->nodeExists($dst.'/srcFile'));
-        // make sure things were updated
-        $this->assertEquals('123', $this->session->getProperty($dst.'/updateFile/jcr:data')->getValue());
+        $references = $node->getReferences();
+        $this->assertCount(2, $references);
+
+        $this->session->refresh(true );
+
+        $node = $this->session->getNode($ref);
+        $references = $node->getReferences();
+
+        $this->assertCount(2, $references);
     }
 
+    /**
+     * Copied nodes which reference other nodes should be shown in the referrers list of references
+     * Multi-value
+     */
+    public function testCopyUpdateReferencesMultiValue()
+    {
+        $src = '/tests_write_manipulation_copy/testCopyUpdateReferrersMultiValue/srcNode';
+        $dst = '/tests_write_manipulation_copy/testCopyUpdateReferrersMultiValue/dstNode';
+        $ref1 = '/tests_write_manipulation_copy/testCopyUpdateReferrersMultiValue/referencedNode1';
+        $ref2 = '/tests_write_manipulation_copy/testCopyUpdateReferrersMultiValue/referencedNode2';
+
+        $this->ws->copy($src, $dst);
+        $this->session->refresh(true);
+
+        $node = $this->session->getNode($ref1);
+        $references = $node->getReferences();
+
+        $this->assertCount(2, $references);
+    }
 }
