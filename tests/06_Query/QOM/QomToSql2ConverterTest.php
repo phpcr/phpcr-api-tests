@@ -5,6 +5,10 @@ require_once(__DIR__ . '/../../../inc/BaseCase.php');
 require_once 'Sql2TestQueries.php';
 
 use Jackalope\Query\QOM; // TODO get rid of jackalope dependency
+use PHPCR\Query\QOM\ConstraintInterface;
+use PHPCR\Query\QOM\QueryObjectModelFactoryInterface;
+use PHPCR\Query\QOM\SourceInterface;
+use PHPCR\Test\BaseCase;
 use PHPCR\Util\QOM\QomToSql2QueryConverter;
 use PHPCR\Util\QOM\Sql2Generator;
 use PHPCR\Query\QOM\QueryObjectModelConstantsInterface as Constants;
@@ -13,15 +17,15 @@ use PHPCR\Util\ValueConverter;
 /**
  * Test for PHPCR\Util\QOM\QomToSql2QueryConverter
  */
-class QomToSql2ConverterTest extends \PHPCR\Test\BaseCase
+class QomToSql2ConverterTest extends BaseCase
 {
     /**
-     * @var \PHPCR\Util\QOM\QomToSql2QueryConverter
+     * @var QomToSql2QueryConverter
      */
     protected $parser;
 
     /**
-     * @var \PHPCR\Query\QOM\QueryObjectModelFactoryInterface
+     * @var QueryObjectModelFactoryInterface
      */
     protected $factory;
 
@@ -382,11 +386,11 @@ class QomToSql2ConverterTest extends \PHPCR\Test\BaseCase
      * Assert that a QOM query specified by its source, columns, constraint and orderings
      * will be converted in the expected SQL2 query.
      *
-     * @param string                              $expectedSql2 The expected SQL2 query
-     * @param \PHPCR\Query\QOM\SourceInterface    $source       The source of the QOM query
-     * @param array                               $columns      The columns of the QOM query
-     * @param \PHPCR\Query\QOM\ContraintInterface $constraint   The contraint of the QOM query
-     * @param array                               $ordering     The orderings of the QOM query
+     * @param string              $expectedSql2 The expected SQL2 query
+     * @param SourceInterface     $source       The source of the QOM query
+     * @param array               $columns      The columns of the QOM query
+     * @param ConstraintInterface $constraint   The contraint of the QOM query
+     * @param array               $ordering     The orderings of the QOM query
      */
     protected function assertQuery($expectedSql2, $source, $columns = array(), $constraint = null, $ordering = array())
     {

@@ -2,6 +2,7 @@
 namespace PHPCR\Tests\Query\QOM;
 
 use PHPCR\Query\QOM\QueryObjectModelConstantsInterface as Constants;
+use PHPCR\Query\QOM\QueryObjectModelFactoryInterface;
 
 /**
 * Test queries for QOM language
@@ -11,7 +12,7 @@ use PHPCR\Query\QOM\QueryObjectModelConstantsInterface as Constants;
 */
 class QomTestQueries
 {
-    public static function getQueries(\PHPCR\Query\QOM\QueryObjectModelFactoryInterface $factory)
+    public static function getQueries(QueryObjectModelFactoryInterface $factory)
     {
         $queries = array();
 
@@ -407,8 +408,8 @@ class QomTestQueries
                 array(),
                 array());
 
-        // SELECT * FROM nt:unstructured WHERE sel.prop > '2013-04-15' 
-        $queries['6.7.27.1.PropertyValue'] = 
+        // SELECT * FROM nt:unstructured WHERE sel.prop > '2013-04-15'
+        $queries['6.7.27.1.PropertyValue'] =
             $factory->createQuery(
                 $factory->selector('sel', 'nt:unstructured'),
                 $factory->comparison(
