@@ -1,6 +1,8 @@
 <?php
 namespace PHPCR\Tests\Versioning;
 
+use PHPCR\NodeInterface;
+
 require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 /**
@@ -11,7 +13,14 @@ require_once(__DIR__ . '/../../inc/BaseCase.php');
  */
 class NodeNodeTypeReadMethodsTest extends \PHPCR\Test\BaseCase
 {
+    /**
+     * @var NodeInterface
+     */
     protected $versioned;
+
+    /**
+     * @var NodeInterface
+     */
     protected $simpleVersioned;
 
     public static function setupBeforeClass($fixtures = '15_Versioning/base')
@@ -45,5 +54,4 @@ class NodeNodeTypeReadMethodsTest extends \PHPCR\Test\BaseCase
     {
         $this->assertFalse($this->versioned->isNodeType('mix:language'));
     }
-
 }
