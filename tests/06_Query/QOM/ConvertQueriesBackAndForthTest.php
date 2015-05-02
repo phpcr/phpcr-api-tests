@@ -53,6 +53,7 @@ class ConvertQueriesBackAndForthTest extends \PHPCR\Test\BaseCase
         foreach ($this->qomQueries as $name => $originalQomQuery) {
             $originalSql2Query = $this->sql2Queries[$name];
             if (is_array($originalSql2Query)) {
+                $this->assertGreaterThan(0, count($originalSql2Query), 'empty list of queries');
                 $passed = false;
                 foreach ($originalSql2Query as $query) {
                     $qom = $this->sql2Parser->parse($query);
@@ -64,7 +65,7 @@ class ConvertQueriesBackAndForthTest extends \PHPCR\Test\BaseCase
                         }
                     }
                 }
-                $this->assertTrue($passed, "QOM-->SQL2->QOM: Original query variation = ".$query);
+                $this->assertTrue($passed, "QOM-->SQL2->QOM: Query variation $name resulted in SQL2 that is not found: $sql2");
             } else {
                 $qom = $this->sql2Parser->parse($originalSql2Query);
                 $this->assertEquals($originalQomQuery, $qom, "QOM-->SQL2: Original query = $originalSql2Query");
