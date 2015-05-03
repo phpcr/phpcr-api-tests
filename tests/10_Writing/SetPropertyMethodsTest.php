@@ -156,7 +156,7 @@ class SetPropertyMethodsTest extends \PHPCR\Test\BaseCase
         $prop = $node->getProperty('multivalue');
         $this->assertEquals(\PHPCR\PropertyType::LONG, $prop->getType());
         $this->assertTrue($prop->isMultiple());
-        $this->assertEquals(array(1,2,3), $prop->getValue('multivalue'));
+        $this->assertEquals(array(1,2,3), $prop->getValue());
     }
 
     public function testSetPropertyMultivalueOne()
@@ -171,7 +171,47 @@ class SetPropertyMethodsTest extends \PHPCR\Test\BaseCase
         $prop = $node->getProperty('multivalue2');
         $this->assertEquals(\PHPCR\PropertyType::LONG, $prop->getType());
         $this->assertTrue($prop->isMultiple());
-        $this->assertEquals(array(1), $prop->getValue('multivalue2'));
+        $this->assertEquals(array(1), $prop->getValue());
+    }
+
+    /**
+     * 10.4.2.5 Multi-value Properties and Null
+     *
+     * Null values must be removed from the list of values.
+     */
+    public function testSetPropertyMultivalueNull()
+    {
+        $prop = $this->node->setProperty('multivalue_null', array(1, null, 3));
+        $this->assertEquals(array(1, 3), $this->node->getPropertyValue('multivalue_null'));
+        $this->assertEquals(\PHPCR\PropertyType::LONG, $prop->getType());
+        $this->assertTrue($prop->isMultiple());
+
+        $this->saveAndRenewSession();
+        $node = $this->session->getNode($this->nodePath);
+        $prop = $node->getProperty('multivalue_null');
+        $this->assertEquals(\PHPCR\PropertyType::LONG, $prop->getType());
+        $this->assertTrue($prop->isMultiple());
+        $this->assertEquals(array(1, 3), $prop->getValue());
+    }
+
+    /**
+     * 10.4.2.5 Multi-value Properties and Null
+     *
+     * Null values must be removed from the list of values.
+     */
+    public function testSetPropertyMultivalueAllNull()
+    {
+        $prop = $this->node->setProperty('multivalue_allnull', array(null, null, null));
+        $this->assertEquals(array(), $this->node->getPropertyValue('multivalue_allnull'));
+        $this->assertEquals(\PHPCR\PropertyType::STRING, $prop->getType());
+        $this->assertTrue($prop->isMultiple());
+
+        $this->saveAndRenewSession();
+        $node = $this->session->getNode($this->nodePath);
+        $prop = $node->getProperty('multivalue_allnull');
+        $this->assertEquals(\PHPCR\PropertyType::STRING, $prop->getType());
+        $this->assertTrue($prop->isMultiple());
+        $this->assertEquals(array(), $prop->getValue());
     }
 
     public function testSetPropertyMultivalueRef()
@@ -187,7 +227,7 @@ class SetPropertyMethodsTest extends \PHPCR\Test\BaseCase
         $prop = $node->getProperty('multiref');
         $this->assertEquals(\PHPCR\PropertyType::WEAKREFERENCE, $prop->getType());
         $this->assertTrue($prop->isMultiple());
-        $this->assertEquals($ids, $prop->getString('multiref'));
+        $this->assertEquals($ids, $prop->getString());
         $nodes = $prop->getValue();
         $this->assertInternalType('array', $nodes);
         $this->assertCount(3, $nodes);

@@ -75,6 +75,7 @@ hello world
     public function testGetLength()
     {
         $size = $this->binaryProperty->getLength();
+        $this->assertInternalType('integer', $size);
         $this->assertEquals(strlen($this->decodedstring), $size);
     }
 
@@ -113,6 +114,7 @@ hello world
         $sizes = $binaryMulti->getLength();
         $this->assertInternalType('array', $sizes);
         foreach ($sizes as $size) {
+            $this->assertInternalType('integer', $size);
             $this->assertEquals(strlen($this->decodedstring), $size);
         }
     }
