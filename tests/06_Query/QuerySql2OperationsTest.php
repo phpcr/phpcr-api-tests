@@ -271,6 +271,56 @@ class QuerySql2OperationsTest extends QueryBaseCase
         $this->assertEquals(array(999), $vals);
     }
 
+    public function testQueryJoinSamenode()
+    {
+        /** @var $query QueryInterface */
+        $query = $this->sharedFixture['qm']->createQuery('
+            SELECT [nt:unstructured].longNumber
+            FROM [nt:unstructured]
+              INNER JOIN [nt:file]
+                ON ISSAMENODE([nt:unstructured], [nt:file], "jcr:content")
+            WHERE [nt:unstructured].longNumber = 999
+              AND ISDESCENDANTNODE([nt:unstructured], [/tests_general_base])
+            ',
+            QueryInterface::JCR_SQL2
+        );
+
+        $this->assertInstanceOf('\PHPCR\Query\QueryInterface', $query);
+        $result = $query->execute();
+        $this->assertInstanceOf('\PHPCR\Query\QueryResultInterface', $result);
+        $vals = array();
+
+        foreach ($result->getRows() as $row) {
+            $vals[] = $row->getValue('nt:file.path');
+        }
+        $this->assertEquals(array(999), $vals);
+    }
+
+    public function testQueryJoinSamenodeIdent()
+    {
+        /** @var $query QueryInterface */
+        $query = $this->sharedFixture['qm']->createQuery('
+            SELECT [nt:unstructured].longNumber
+            FROM [nt:unstructured]
+              INNER JOIN [mix:referenceable]
+                ON ISSAMENODE([mix:referenceable], [nt:unstructured])
+            WHERE [nt:unstructured].longNumber = 999
+              AND ISDESCENDANTNODE([nt:unstructured], [/tests_general_base])
+            ',
+            QueryInterface::JCR_SQL2
+        );
+
+        $this->assertInstanceOf('\PHPCR\Query\QueryInterface', $query);
+        $result = $query->execute();
+        $this->assertInstanceOf('\PHPCR\Query\QueryResultInterface', $result);
+        $vals = array();
+
+        foreach ($result->getRows() as $row) {
+            $vals[] = $row->getValue('nt:file.path');
+        }
+        $this->assertEquals(array(999), $vals);
+    }
+
     public function testQueryOrder()
     {
         /** @var $query QueryInterface */
