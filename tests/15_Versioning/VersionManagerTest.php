@@ -1,7 +1,6 @@
 <?php
 namespace PHPCR\Tests\Versioning;
 
-use PHPCR\Util\UUIDHelper;
 use PHPCR\Version\VersionManagerInterface;
 
 require_once(__DIR__ . '/../../inc/BaseCase.php');
@@ -315,7 +314,7 @@ class VersionManagerTest extends \PHPCR\Test\BaseCase
 
     public function testRestoreBaseProperties()
     {
-        // TODO also check for primary node type and uuid once it can be changed
+        // TODO also check for primary node type once it can be changed
 
         $nodePath = '/tests_version_base/versioned';
         $version = $this->vm->checkpoint($nodePath);
