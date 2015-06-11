@@ -1,6 +1,7 @@
 <?php
 namespace PHPCR\Tests\Versioning;
 
+use PHPCR\Util\UUIDHelper;
 use PHPCR\Version\VersionManagerInterface;
 
 require_once(__DIR__ . '/../../inc/BaseCase.php');
@@ -289,8 +290,30 @@ class VersionManagerTest extends \PHPCR\Test\BaseCase
         $this->vm->checkout($nodePath);
         $this->assertTrue($this->vm->isCheckedOut($nodePath));
 
-        $this->vm->restore($nodePath, $version);
+        $this->vm->restore(true, $version);
         $this->assertFalse($this->vm->isCheckedOut($nodePath));
+    }
+
+    public function testRestoreBaseProperties()
+    {
+        // TODO also check for primary node type and uuid once it can be changed
+
+        $nodePath = '/tests_version_base/versioned';
+        $version = $this->vm->checkpoint($nodePath);
+        $this->vm->checkout($nodePath);
+
+        $node = $this->session->getNode($nodePath);
+        $node->addMixin('mix:created');
+
+        $this->session->save();
+
+        $node = $this->session->getNode($nodePath);
+        $this->assertContains('mix:created', $node->getPropertyValue('jcr:mixinTypes'));
+
+        $this->vm->restore(true, $version);
+
+        $node = $this->session->getNode($nodePath);
+        $this->assertEquals(array('mix:versionable'), $node->getPropertyValue('jcr:mixinTypes'));
     }
 
     // TODO: test restore with removeExisting false and having an id clash
