@@ -283,6 +283,25 @@ class VersionManagerTest extends \PHPCR\Test\BaseCase
         $this->vm->restore(true, $version);
     }
 
+    public function testRestoreWithDeletedProperties()
+    {
+        $nodePath = '/tests_version_base/versioned';
+        $version = $this->vm->checkpoint($nodePath);
+        $this->vm->checkout($nodePath);
+
+        $node = $this->session->getNode($nodePath);
+        $node->getProperty('foo')->remove();
+
+        $this->session->save();
+
+        $this->assertFalse($node->hasProperty('foo'));
+
+        $this->vm->restore(true, $version);
+        $node = $this->session->getNode($nodePath);
+
+        $this->assertTrue($node->hasProperty('foo'));
+    }
+
     public function testRestoreIsCheckedIn()
     {
         $nodePath = '/tests_version_base/versioned';
