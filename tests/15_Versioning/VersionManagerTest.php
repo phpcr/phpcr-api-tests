@@ -1,7 +1,6 @@
 <?php
 namespace PHPCR\Tests\Versioning;
 
-use PHPCR\Util\UUIDHelper;
 use PHPCR\Version\VersionManagerInterface;
 
 require_once(__DIR__ . '/../../inc/BaseCase.php');
@@ -300,6 +299,25 @@ class VersionManagerTest extends \PHPCR\Test\BaseCase
         $node = $this->session->getNode($nodePath);
 
         $this->assertTrue($node->hasProperty('foo'));
+    }
+
+    public function testRestoreWithNewProperties()
+    {
+        $nodePath = '/tests_version_base/versioned';
+        $version = $this->vm->checkpoint($nodePath);
+        $this->vm->checkout($nodePath);
+
+        $node = $this->session->getNode($nodePath);
+        $node->setProperty('bar', 'value');
+
+        $this->session->save();
+
+        $this->assertTrue($node->hasProperty('bar'));
+
+        $this->vm->restore(true, $version);
+        $node = $this->session->getNode($nodePath);
+
+        $this->assertFalse($node->hasProperty('bar'));
     }
 
     public function testRestoreIsCheckedIn()
