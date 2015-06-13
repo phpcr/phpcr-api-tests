@@ -324,6 +324,7 @@ class VersionManagerTest extends \PHPCR\Test\BaseCase
     {
         $nodePath = '/tests_version_base/versioned';
         $version = $this->vm->checkpoint($nodePath);
+
         $this->vm->checkout($nodePath);
         $this->assertTrue($this->vm->isCheckedOut($nodePath));
 
@@ -351,6 +352,41 @@ class VersionManagerTest extends \PHPCR\Test\BaseCase
 
         $node = $this->session->getNode($nodePath);
         $this->assertEquals(array('mix:versionable'), $node->getPropertyValue('jcr:mixinTypes'));
+    }
+
+    public function testRestoreWithChildren()
+    {
+        $nodePath = '/tests_version_base/versioned';
+        $this->vm->checkout($nodePath);
+        $node = $this->session->getNode($nodePath);
+        $childNode1 = $node->addNode('childNode1');
+        $childNode1->setProperty('foo', 'child1');
+        $childNode2 = $node->addNode('childNode2');
+        $childNode2->setProperty('foo', 'child2');
+
+        $this->session->save();
+        $version = $this->vm->checkin($nodePath);
+
+        $this->assertCount(2, $node->getNodes());
+        $this->assertEquals('child1', $node->getNode('childNode1')->getPropertyValue('foo'));
+        $this->assertEquals('child2', $node->getNode('childNode2')->getPropertyValue('foo'));
+
+        $this->vm->checkout($nodePath);
+
+        $childNode1->remove();
+        $childNode2->setProperty('foo', 'child1');
+
+        $this->session->save();
+
+        $this->assertCount(1, $node->getNodes());
+        $this->assertEquals('child1', $node->getNode('childNode2')->getPropertyValue('foo'));
+
+        $this->vm->restore(false, $version);
+        $node = $this->session->getNode($nodePath);
+
+        $this->assertCount(2, $node->getNodes());
+        $this->assertEquals('child1', $node->getNode('childNode1')->getPropertyValue('foo'));
+        $this->assertEquals('child2', $node->getNode('childNode2')->getPropertyValue('foo'));
     }
 
     // TODO: test restore with removeExisting false and having an id clash
