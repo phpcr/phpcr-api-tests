@@ -1,6 +1,8 @@
 <?php
 namespace PHPCR\Tests\Versioning;
 
+use PHPCR\Version\VersionManagerInterface;
+
 require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 /**
@@ -10,6 +12,11 @@ require_once(__DIR__ . '/../../inc/BaseCase.php');
  */
 class VersionManagerTest extends \PHPCR\Test\BaseCase
 {
+    /**
+     * @var VersionManagerInterface
+     */
+    private $vm;
+
     public static function setupBeforeClass($fixtures = '15_Versioning/base')
     {
         parent::setupBeforeClass($fixtures);
@@ -273,6 +280,135 @@ class VersionManagerTest extends \PHPCR\Test\BaseCase
         $node->setProperty('foo', 'bar2');
 
         $this->vm->restore(true, $version);
+    }
+
+    public function testRestoreWithDeletedProperties()
+    {
+        $nodePath = '/tests_version_base/versioned';
+        $version = $this->vm->checkpoint($nodePath);
+        $this->vm->checkout($nodePath);
+
+        $node = $this->session->getNode($nodePath);
+        $node->getProperty('foo')->remove();
+
+        $this->session->save();
+
+        $this->assertFalse($node->hasProperty('foo'));
+
+        $this->vm->restore(true, $version);
+        $node = $this->session->getNode($nodePath);
+
+        $this->assertTrue($node->hasProperty('foo'));
+    }
+
+    public function testRestoreWithNewProperties()
+    {
+        $nodePath = '/tests_version_base/versioned';
+        $version = $this->vm->checkpoint($nodePath);
+        $this->vm->checkout($nodePath);
+
+        $node = $this->session->getNode($nodePath);
+        $node->setProperty('bar', 'value');
+
+        $this->session->save();
+
+        $this->assertTrue($node->hasProperty('bar'));
+
+        $this->vm->restore(true, $version);
+        $node = $this->session->getNode($nodePath);
+
+        $this->assertFalse($node->hasProperty('bar'));
+    }
+
+    public function testRestoreIsCheckedIn()
+    {
+        $nodePath = '/tests_version_base/versioned';
+        $version = $this->vm->checkpoint($nodePath);
+
+        $this->vm->checkout($nodePath);
+        $this->assertTrue($this->vm->isCheckedOut($nodePath));
+
+        $this->vm->restore(true, $version);
+        $this->assertFalse($this->vm->isCheckedOut($nodePath));
+    }
+
+    public function testRestoreBaseProperties()
+    {
+        // TODO also check for primary node type once it can be changed
+
+        $nodePath = '/tests_version_base/versioned';
+        $version = $this->vm->checkpoint($nodePath);
+        $this->vm->checkout($nodePath);
+
+        $node = $this->session->getNode($nodePath);
+        $node->addMixin('mix:created');
+
+        $this->session->save();
+
+        $node = $this->session->getNode($nodePath);
+        $this->assertContains('mix:created', $node->getPropertyValue('jcr:mixinTypes'));
+
+        $this->vm->restore(true, $version);
+
+        $node = $this->session->getNode($nodePath);
+        $this->assertEquals(array('mix:versionable'), $node->getPropertyValue('jcr:mixinTypes'));
+    }
+
+    public function testRestoreWithChildren()
+    {
+        $nodePath = '/tests_version_base/versioned';
+        $this->vm->checkout($nodePath);
+        $node = $this->session->getNode($nodePath);
+        $childNode1 = $node->addNode('childNode1');
+        $childNode1->setProperty('foo', 'child1');
+        $childNode2 = $node->addNode('childNode2');
+        $childNode2->setProperty('foo', 'child2');
+        $childNode3 = $childNode1->addNode('childNode3');
+
+        $this->session->save();
+        $version = $this->vm->checkin($nodePath);
+
+        $this->assertCount(2, $node->getNodes());
+        $this->assertEquals('child1', $node->getNode('childNode1')->getPropertyValue('foo'));
+        $this->assertEquals('child2', $node->getNode('childNode2')->getPropertyValue('foo'));
+
+        $this->assertCount(1, $node->getNode('childNode1')->getNodes());
+
+        $this->vm->checkout($nodePath);
+
+        $childNode1->remove();
+        $childNode2->setProperty('foo', 'child1');
+
+        $this->session->save();
+
+        $this->assertCount(1, $node->getNodes());
+        $this->assertEquals('child1', $node->getNode('childNode2')->getPropertyValue('foo'));
+
+        $this->vm->restore(true, $version);
+        $node = $this->session->getNode($nodePath);
+
+        $this->assertCount(2, $node->getNodes());
+        $this->assertEquals('child1', $node->getNode('childNode1')->getPropertyValue('foo'));
+        $this->assertEquals('child2', $node->getNode('childNode2')->getPropertyValue('foo'));
+        $this->assertCount(1, $node->getNode('childNode1')->getNodes());
+    }
+
+    public function testRestoreWithNewChildren()
+    {
+        $nodePath = '/tests_version_base/versioned';
+        $version = $this->vm->checkin($nodePath);
+        $this->vm->checkout($nodePath);
+        $node = $this->session->getNode($nodePath);
+        $node->addNode('newChildNode');
+        $this->session->save();
+
+        $node = $this->session->getNode($nodePath);
+        $this->assertTrue($node->hasNode('newChildNode'));
+
+        $this->vm->restore(true, $version);
+        $node = $this->session->getNode($nodePath);
+
+        $this->assertFalse($node->hasNode('newChildNode'));
     }
 
     // TODO: test restore with removeExisting false and having an id clash
