@@ -399,16 +399,16 @@ class VersionManagerTest extends \PHPCR\Test\BaseCase
         $version = $this->vm->checkin($nodePath);
         $this->vm->checkout($nodePath);
         $node = $this->session->getNode($nodePath);
-        $node->addNode('childNode1');
+        $node->addNode('newChildNode');
         $this->session->save();
 
         $node = $this->session->getNode($nodePath);
-        $this->assertCount(1, $node->getNodes());
+        $this->assertTrue($node->hasNode('newChildNode'));
 
         $this->vm->restore(true, $version);
         $node = $this->session->getNode($nodePath);
 
-        $this->assertCount(0, $node->getNodes());
+        $this->assertFalse($node->hasNode('newChildNode'));
     }
 
     // TODO: test restore with removeExisting false and having an id clash
