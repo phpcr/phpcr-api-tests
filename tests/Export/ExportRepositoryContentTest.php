@@ -3,7 +3,7 @@
 /*
  * This file is part of the PHPCR API Tests package
  *
- * Copyright (c) 2013 Liip and others
+ * Copyright (c) 2015 Liip and others
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -35,7 +35,7 @@ class ExportRepositoryContentTest extends \PHPCR\Test\BaseCase
         $output->loadXML(stream_get_contents($stream));
         $expected = new DOMDocument();
         $expected->preserveWhiteSpace = false;
-        $expected->load(__DIR__ . '/../../fixtures/07_Export/systemview.xml');
+        $expected->load(__DIR__.'/../../fixtures/07_Export/systemview.xml');
         fclose($stream);
         $this->assertEquivalentSystem($expected->documentElement, $output->documentElement, new DOMXPath($output));
     }
@@ -55,12 +55,12 @@ class ExportRepositoryContentTest extends \PHPCR\Test\BaseCase
                 if ($name == null) {
                     $elem = 'sv:node(unnamed)';
                 } else {
-                    $elem = $n->tagName . '(' . $name->value . ')';
+                    $elem = $n->tagName.'('.$name->value.')';
                 }
             } else {
                 $elem = $n->nodeName;
             }
-            $ret = $elem . '/' . $ret;
+            $ret = $elem.'/'.$ret;
             $n = $n->parentNode;
         }
 
@@ -85,7 +85,7 @@ class ExportRepositoryContentTest extends \PHPCR\Test\BaseCase
         foreach ($expected->attributes as $attr) {
             //i.e. sv:name attribute
             $oattr = $output->attributes->getNamedItem($attr->name);
-            $this->assertNotNull($oattr, 'missing attribute ' . $attr->name);
+            $this->assertNotNull($oattr, 'missing attribute '.$attr->name);
             $this->assertEquals($attr->value, $oattr->value, 'wrong attribute value');
         }
 
@@ -97,12 +97,12 @@ class ExportRepositoryContentTest extends \PHPCR\Test\BaseCase
                 foreach ($expected->childNodes as $index => $child) {
                     $this->assertEquals('sv:value', $child->tagName);
                     $o = $output->childNodes->item($index);
-                    $this->assertInstanceOf('DOMElement', $o, "No child element at $index in " . $this->buildPath($child));
-                    $this->assertEquals('sv:value', $o->tagName, 'Unexpected tag name at ' . $this->buildPath($expected) . "sv:value[$index]");
+                    $this->assertInstanceOf('DOMElement', $o, "No child element at $index in ".$this->buildPath($child));
+                    $this->assertEquals('sv:value', $o->tagName, 'Unexpected tag name at '.$this->buildPath($expected)."sv:value[$index]");
                     if ($this->isDate($child->textContent) && $this->isDate($o->textContent)) {
-                        $this->assertEqualDateString($child->textContent, $o->textContent, 'Not the same date at ' . $this->buildPath($output) . "sv:value[$index]");
+                        $this->assertEqualDateString($child->textContent, $o->textContent, 'Not the same date at '.$this->buildPath($output)."sv:value[$index]");
                     } else {
-                        $this->assertEquals($child->textContent, $o->textContent, 'Not the same text at ' . $this->buildPath($output) . "sv:value[$index]");
+                        $this->assertEquals($child->textContent, $o->textContent, 'Not the same text at '.$this->buildPath($output)."sv:value[$index]");
                     }
                 }
             }
@@ -111,8 +111,8 @@ class ExportRepositoryContentTest extends \PHPCR\Test\BaseCase
             foreach ($expected->childNodes as $child) {
                 $this->assertContains($child->tagName, array('sv:property', 'sv:node'), 'unexpected child of sv:node');
                 $childname = $child->attributes->getNamedItem('name')->value;
-                $q = $oxpath->query($child->tagName . '[@sv:name="' . $childname . '"]', $output);
-                $this->assertEquals(1, $q->length, 'expected to find exactly one node named ' . $childname . ' under ' . $this->buildPath($output));
+                $q = $oxpath->query($child->tagName.'[@sv:name="'.$childname.'"]', $output);
+                $this->assertEquals(1, $q->length, 'expected to find exactly one node named '.$childname.' under '.$this->buildPath($output));
                 $this->assertEquivalentSystem($child, $q->item(0), $oxpath);
             }
         }
@@ -128,7 +128,7 @@ class ExportRepositoryContentTest extends \PHPCR\Test\BaseCase
         $output->loadXML(stream_get_contents($stream));
         $expected = new DOMDocument();
         $expected->preserveWhiteSpace = false;
-        $expected->load(__DIR__ . '/../../fixtures/07_Export/documentview.xml');
+        $expected->load(__DIR__.'/../../fixtures/07_Export/documentview.xml');
         fclose($stream);
         $this->assertEquivalentDocument($expected->documentElement, $output->documentElement, new DOMXPath($output));
     }
@@ -142,7 +142,7 @@ class ExportRepositoryContentTest extends \PHPCR\Test\BaseCase
     private function assertEquivalentDocument(DOMElement $expected, DOMElement $output, DOMXPath $oxpath)
     {
         if ($expected instanceof DOMText) {
-            $this->assertEquals($expected->textContent, $output->textContent, 'Not the same text at ' . $this->buildPath($expected));
+            $this->assertEquals($expected->textContent, $output->textContent, 'Not the same text at '.$this->buildPath($expected));
         } elseif ($expected instanceof DOMElement) {
             $this->assertEquals($expected->tagName, $output->tagName);
 
@@ -151,18 +151,18 @@ class ExportRepositoryContentTest extends \PHPCR\Test\BaseCase
                     $this->assertNotEmpty($attr->value);
                 } else {
                     $oattr = $output->attributes->getNamedItem($attr->name);
-                    $this->assertNotNull($oattr, 'missing attribute ' . $attr->name . ' at ' . $this->buildPath($expected));
+                    $this->assertNotNull($oattr, 'missing attribute '.$attr->name.' at '.$this->buildPath($expected));
                     if ($this->isDate($attr->value) && $this->isDate($oattr->value)) {
-                        $this->assertEqualDateString($attr->value, $oattr->value, 'wrong attribute value at ' . $this->buildPath($expected) . '/' . $attr->name);
+                        $this->assertEqualDateString($attr->value, $oattr->value, 'wrong attribute value at '.$this->buildPath($expected).'/'.$attr->name);
                     } else {
-                        $this->assertEquals($attr->value, $oattr->value, 'wrong attribute value at ' . $this->buildPath($expected) . '/' . $attr->name);
+                        $this->assertEquals($attr->value, $oattr->value, 'wrong attribute value at '.$this->buildPath($expected).'/'.$attr->name);
                     }
                 }
             }
 
             foreach ($expected->childNodes as $child) {
                 $q = $oxpath->query($child->tagName, $output); //TODO: same-name siblings
-                $this->assertEquals(1, $q->length, 'expected to find exactly one node named ' . $child->tagName . ' under ' . $this->buildPath($expected));
+                $this->assertEquals(1, $q->length, 'expected to find exactly one node named '.$child->tagName.' under '.$this->buildPath($expected));
                 $this->assertEquivalentDocument($child, $q->item(0), $oxpath);
             }
         }

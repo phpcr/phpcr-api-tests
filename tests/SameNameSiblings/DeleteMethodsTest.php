@@ -3,7 +3,7 @@
 /*
  * This file is part of the PHPCR API Tests package
  *
- * Copyright (c) 2013 Liip and others
+ * Copyright (c) 2015 Liip and others
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -42,14 +42,14 @@ class DeleteMethodsTest extends \PHPCR\Test\BaseCase
 
         foreach ($childNames as $childName) {
             $this->assertTrue($parent->hasNode($childName));
-            $this->session->removeItem($parentPath . '/' . $childName);
+            $this->session->removeItem($parentPath.'/'.$childName);
             $this->assertFalse($parent->hasNode($childName), 'Node was not removed');
         }
 
         $this->saveAndRenewSession();
 
         foreach ($childNames as $childName) {
-            $this->assertFalse($this->session->nodeExists($parentPath . '/' . $childName));
+            $this->assertFalse($this->session->nodeExists($parentPath.'/'.$childName));
         }
     }
 
@@ -76,7 +76,7 @@ class DeleteMethodsTest extends \PHPCR\Test\BaseCase
         $this->saveAndRenewSession();
 
         foreach ($childNames as $childName) {
-            $this->assertFalse($this->session->nodeExists($parentPath . '/' . $childName));
+            $this->assertFalse($this->session->nodeExists($parentPath.'/'.$childName));
         }
     }
 
@@ -125,7 +125,7 @@ class DeleteMethodsTest extends \PHPCR\Test\BaseCase
         }
 
         foreach ($childrenToDelete as $childName) {
-            $this->session->removeItem($parentPath . '/' . $childName);
+            $this->session->removeItem($parentPath.'/'.$childName);
             $this->assertFalse($parent->hasNode($childName), 'Node was not removed');
         }
 
@@ -136,7 +136,7 @@ class DeleteMethodsTest extends \PHPCR\Test\BaseCase
 
         foreach ($parent->getNodes() as $node) {
             $child = each($childrenAtEnd);
-            $this->assertEquals($parentPath . '/' . $child['key'], $node->getPath());
+            $this->assertEquals($parentPath.'/'.$child['key'], $node->getPath());
             $this->assertEquals($child['value'], $node->getProperty('childNumber')->getValue());
         }
     }

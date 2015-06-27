@@ -3,7 +3,7 @@
 /*
  * This file is part of the PHPCR API Tests package
  *
- * Copyright (c) 2013 Liip and others
+ * Copyright (c) 2015 Liip and others
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -16,7 +16,7 @@ class WorkspaceManagementTest extends \PHPCR\Test\BaseCase
 {
     public function testCreateWorkspace()
     {
-        $workspacename = 'test' . time();
+        $workspacename = 'test'.time();
         $workspace = $this->session->getWorkspace();
         $workspace->createWorkspace($workspacename);
 
@@ -38,7 +38,7 @@ class WorkspaceManagementTest extends \PHPCR\Test\BaseCase
 
     public function testCreateWorkspaceWithSource()
     {
-        $workspacename = 'testWithSource' . time();
+        $workspacename = 'testWithSource'.time();
         $workspace = $this->session->getWorkspace();
         $workspace->createWorkspace($workspacename, $workspace->getName());
 
@@ -52,7 +52,7 @@ class WorkspaceManagementTest extends \PHPCR\Test\BaseCase
      */
     public function testCreateWorkspaceWithInvalidSource()
     {
-        $workspacename = 'testWithSource' . time();
+        $workspacename = 'testWithSource'.time();
         $workspace = $this->session->getWorkspace();
         $workspace->createWorkspace($workspacename, 'thisworkspaceisnotexisting');
     }

@@ -3,7 +3,7 @@
 /*
  * This file is part of the PHPCR API Tests package
  *
- * Copyright (c) 2013 Liip and others
+ * Copyright (c) 2015 Liip and others
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -42,7 +42,7 @@ class ImportRepositoryContentTest extends \PHPCR\Test\BaseCase
 
     private function doTestImportXMLSystem($connect, $session)
     {
-        $connect->importXML('/', __DIR__ . '/../../fixtures/general/base.xml', ImportUUIDBehaviorInterface::IMPORT_UUID_COLLISION_THROW);
+        $connect->importXML('/', __DIR__.'/../../fixtures/general/base.xml', ImportUUIDBehaviorInterface::IMPORT_UUID_COLLISION_THROW);
 
         $this->assertTrue($session->nodeExists('/tests_general_base'));
         $this->assertTrue($session->propertyExists('/tests_general_base/idExample/jcr:content/weakreference_target/jcr:uuid'));
@@ -72,14 +72,14 @@ class ImportRepositoryContentTest extends \PHPCR\Test\BaseCase
      */
     public function testImportXMLSystemPathNotFoundSession()
     {
-        $this->session->importXML('/inexistent-path', __DIR__ . '/../../fixtures/general/base.xml', ImportUUIDBehaviorInterface::IMPORT_UUID_COLLISION_THROW);
+        $this->session->importXML('/inexistent-path', __DIR__.'/../../fixtures/general/base.xml', ImportUUIDBehaviorInterface::IMPORT_UUID_COLLISION_THROW);
     }
     /**
      * @expectedException \PHPCR\PathNotFoundException
      */
     public function testImportXMLSystemPathNotFoundWorkspace()
     {
-        $this->session->getWorkspace()->importXML('/inexistent-path', __DIR__ . '/../../fixtures/general/base.xml', ImportUUIDBehaviorInterface::IMPORT_UUID_COLLISION_THROW);
+        $this->session->getWorkspace()->importXML('/inexistent-path', __DIR__.'/../../fixtures/general/base.xml', ImportUUIDBehaviorInterface::IMPORT_UUID_COLLISION_THROW);
     }
 
     /**
@@ -89,7 +89,7 @@ class ImportRepositoryContentTest extends \PHPCR\Test\BaseCase
     {
         self::$staticSharedFixture['ie']->import('11_Import/idnode');
         $session = $this->renewSession();
-        $session->importXML('/', __DIR__ . '/../../fixtures/general/base.xml', ImportUUIDBehaviorInterface::IMPORT_UUID_COLLISION_THROW);
+        $session->importXML('/', __DIR__.'/../../fixtures/general/base.xml', ImportUUIDBehaviorInterface::IMPORT_UUID_COLLISION_THROW);
     }
 
     /**
@@ -99,7 +99,7 @@ class ImportRepositoryContentTest extends \PHPCR\Test\BaseCase
     {
         self::$staticSharedFixture['ie']->import('11_Import/idnode');
         $session = $this->renewSession();
-        $session->getWorkspace()->importXML('/', __DIR__ . '/../../fixtures/general/base.xml', ImportUUIDBehaviorInterface::IMPORT_UUID_COLLISION_THROW);
+        $session->getWorkspace()->importXML('/', __DIR__.'/../../fixtures/general/base.xml', ImportUUIDBehaviorInterface::IMPORT_UUID_COLLISION_THROW);
     }
 
     /**
@@ -111,7 +111,7 @@ class ImportRepositoryContentTest extends \PHPCR\Test\BaseCase
     {
         self::$staticSharedFixture['ie']->import('11_Import/idnode');
         $session = $this->renewSession();
-        $session->importXML('/container/idExample', __DIR__ . '/../../fixtures/general/base.xml', ImportUUIDBehaviorInterface::IMPORT_UUID_COLLISION_REMOVE_EXISTING);
+        $session->importXML('/container/idExample', __DIR__.'/../../fixtures/general/base.xml', ImportUUIDBehaviorInterface::IMPORT_UUID_COLLISION_REMOVE_EXISTING);
     }
 
     /**
@@ -123,7 +123,7 @@ class ImportRepositoryContentTest extends \PHPCR\Test\BaseCase
     {
         self::$staticSharedFixture['ie']->import('11_Import/idnode');
         $session = $this->renewSession();
-        $session->getWorkspace()->importXML('/container/idExample', __DIR__ . '/../../fixtures/general/base.xml', ImportUUIDBehaviorInterface::IMPORT_UUID_COLLISION_REMOVE_EXISTING);
+        $session->getWorkspace()->importXML('/container/idExample', __DIR__.'/../../fixtures/general/base.xml', ImportUUIDBehaviorInterface::IMPORT_UUID_COLLISION_REMOVE_EXISTING);
     }
 
     public function testImportXMLUuidNewSession()
@@ -140,7 +140,7 @@ class ImportRepositoryContentTest extends \PHPCR\Test\BaseCase
     }
     private function doTestImportXMLUuidNew($connect, $session)
     {
-        $connect->importXML('/', __DIR__ . '/../../fixtures/general/base.xml', ImportUUIDBehaviorInterface::IMPORT_UUID_CREATE_NEW);
+        $connect->importXML('/', __DIR__.'/../../fixtures/general/base.xml', ImportUUIDBehaviorInterface::IMPORT_UUID_CREATE_NEW);
 
         // existing node did not change its uuid
         $this->assertTrue($session->nodeExists('/container/idExample'));
@@ -201,7 +201,7 @@ class ImportRepositoryContentTest extends \PHPCR\Test\BaseCase
 
     private function doTestImportXMLUuidRemoveExisting($connect, $session)
     {
-        $connect->importXML('/', __DIR__ . '/../../fixtures/general/base.xml', ImportUUIDBehaviorInterface::IMPORT_UUID_COLLISION_REMOVE_EXISTING);
+        $connect->importXML('/', __DIR__.'/../../fixtures/general/base.xml', ImportUUIDBehaviorInterface::IMPORT_UUID_COLLISION_REMOVE_EXISTING);
 
         // existing node removed
         $this->assertFalse($session->nodeExists('/container/idExample'));
@@ -252,7 +252,7 @@ class ImportRepositoryContentTest extends \PHPCR\Test\BaseCase
     }
     private function doTestImportXMLUuidReplaceExisting($connect, $session)
     {
-        $session->importXML('/', __DIR__ . '/../../fixtures/general/base.xml', ImportUUIDBehaviorInterface::IMPORT_UUID_COLLISION_REPLACE_EXISTING);
+        $session->importXML('/', __DIR__.'/../../fixtures/general/base.xml', ImportUUIDBehaviorInterface::IMPORT_UUID_COLLISION_REPLACE_EXISTING);
 
         // existing node replaced
         $this->assertTrue($session->nodeExists('/container/idExample'));
@@ -301,7 +301,7 @@ class ImportRepositoryContentTest extends \PHPCR\Test\BaseCase
         $this->assertTrue(\PHPCR\Util\UUIDHelper::isUUID($id));
         $filename = tempnam('/tmp', '');
         $file = fopen($filename, 'w+');
-        fwrite($file, str_replace('XXX_ROOT_ID_XXX', $id, file_get_contents(__DIR__ . '/../../fixtures/11_Import/rootnode.xml')));
+        fwrite($file, str_replace('XXX_ROOT_ID_XXX', $id, file_get_contents(__DIR__.'/../../fixtures/11_Import/rootnode.xml')));
         fclose($file);
         $session->importXML('/', $filename, ImportUUIDBehaviorInterface::IMPORT_UUID_COLLISION_REPLACE_EXISTING);
 
@@ -344,7 +344,7 @@ class ImportRepositoryContentTest extends \PHPCR\Test\BaseCase
 
         self::$staticSharedFixture['ie']->import('11_Import/idnode');
         $session = $this->renewSession();
-        $session->importXML('/', __DIR__ . '/../../fixtures/11_Import/documentview.xml', ImportUUIDBehaviorInterface::IMPORT_UUID_CREATE_NEW);
+        $session->importXML('/', __DIR__.'/../../fixtures/11_Import/documentview.xml', ImportUUIDBehaviorInterface::IMPORT_UUID_CREATE_NEW);
 
         // existing node did not change its uuid
         $this->assertTrue($session->nodeExists('/container/idExample'));
@@ -384,7 +384,7 @@ class ImportRepositoryContentTest extends \PHPCR\Test\BaseCase
         self::$staticSharedFixture['ie']->import('11_Import/empty');
         $session = $this->renewSession();
 
-        $session->importXML('/', __DIR__ . '/../../fixtures/11_Import/simple.xml', ImportUUIDBehaviorInterface::IMPORT_UUID_COLLISION_THROW);
+        $session->importXML('/', __DIR__.'/../../fixtures/11_Import/simple.xml', ImportUUIDBehaviorInterface::IMPORT_UUID_COLLISION_THROW);
 
         $this->assertTrue($session->nodeExists('/data/node'));
         $this->assertTrue($session->nodeExists('/data/sibling/child1'));

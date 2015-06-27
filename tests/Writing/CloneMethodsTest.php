@@ -3,7 +3,7 @@
 /*
  * This file is part of the PHPCR API Tests package
  *
- * Copyright (c) 2013 Liip and others
+ * Copyright (c) 2015 Liip and others
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -72,7 +72,7 @@ class CloneMethodsTest extends BaseCase
     {
         $srcNode = '/tests_write_manipulation_clone/testWorkspaceClone/referenceable';
         $dstNode = $srcNode;
-        $dstChildNode = $dstNode . '/cloneChild';
+        $dstChildNode = $dstNode.'/cloneChild';
         $destSession = self::$destWs->getSession();
 
         self::$destWs->cloneFrom($this->srcWsName, $srcNode, $dstNode, false);
@@ -456,10 +456,10 @@ class CloneMethodsTest extends BaseCase
     {
         $srcNode = '/tests_write_manipulation_clone/testWorkspaceUpdateNode/sourceNode';
         $dstNode = '/tests_write_manipulation_clone/testWorkspaceUpdateNode/destNode';
-        $srcChildNode = $srcNode . '/cloneChild';
-        $dstChildNode = $dstNode . '/cloneChild';
-        $srcChildOfChildNode = $srcChildNode . '/childOfChild';
-        $dstChildOfChildNode = $dstChildNode . '/childOfChild';
+        $srcChildNode = $srcNode.'/cloneChild';
+        $dstChildNode = $dstNode.'/cloneChild';
+        $srcChildOfChildNode = $srcChildNode.'/childOfChild';
+        $dstChildOfChildNode = $dstChildNode.'/childOfChild';
         $destSession = self::$destWs->getSession();
         $sourceSession = $this->srcWs->getSession();
 
@@ -558,7 +558,7 @@ class CloneMethodsTest extends BaseCase
         try {
             $clonedNode->update($this->srcWsName);
         } catch (\Exception $exception) {
-            $this->fail("'update' method should not raise an error when source not found, got error: " . $exception->getMessage());
+            $this->fail("'update' method should not raise an error when source not found, got error: ".$exception->getMessage());
         }
 
         $destSession->refresh(false);

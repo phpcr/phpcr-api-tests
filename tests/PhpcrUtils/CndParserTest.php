@@ -3,7 +3,7 @@
 /*
  * This file is part of the PHPCR API Tests package
  *
- * Copyright (c) 2013 Liip and others
+ * Copyright (c) 2015 Liip and others
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -30,19 +30,19 @@ class CndParserTest extends \PHPCR\Test\BaseCase
 
     public function testParseNormal()
     {
-        $res = $this->cndParser->parseFile(__DIR__ . '/resources/cnd/example.cnd');
+        $res = $this->cndParser->parseFile(__DIR__.'/resources/cnd/example.cnd');
         $this->assertExampleCnd($res);
     }
 
     public function testParseCompact()
     {
-        $res = $this->cndParser->parseFile(__DIR__ . '/resources/cnd/example.compact.cnd');
+        $res = $this->cndParser->parseFile(__DIR__.'/resources/cnd/example.compact.cnd');
         $this->assertExampleCnd($res);
     }
 
     public function testParseVerbose()
     {
-        $res = $this->cndParser->parseFile(__DIR__ . '/resources/cnd/example.verbose.cnd');
+        $res = $this->cndParser->parseFile(__DIR__.'/resources/cnd/example.verbose.cnd');
         $this->assertExampleCnd($res);
     }
 
@@ -143,7 +143,7 @@ EOT;
      */
     public function testNoStopAtEofError()
     {
-        $res = $this->cndParser->parseFile(__DIR__ . '/resources/cnd/no-stop-at-eof.cnd');
+        $res = $this->cndParser->parseFile(__DIR__.'/resources/cnd/no-stop-at-eof.cnd');
 
         $this->assertTrue(isset($res['namespaces']));
         $this->assertEquals(array('phpcr' => 'http://www.doctrine-project.org/projects/phpcr_odm'), $res['namespaces']);
@@ -154,7 +154,7 @@ EOT;
     public function testBigFile()
     {
         //var_dump($this->session->getWorkspace()->getNodeTypeManager()->getNodeType('nt:file')->hasOrderableChildNodes());die;
-        $res = $this->cndParser->parseFile(__DIR__ . '/resources/cnd/jackrabbit_nodetypes.cnd');
+        $res = $this->cndParser->parseFile(__DIR__.'/resources/cnd/jackrabbit_nodetypes.cnd');
 
         // some random sanity checks
         $this->assertTrue(isset($res['nodeTypes']));

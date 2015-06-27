@@ -32,7 +32,7 @@
     },
     "autoload": {
         "psr-4": {
-            "PHPCR\\Test\\": "lib/",
+            "PHPCR\\Test\\": "inc/",
             "PHPCR\\Tests\\": "tests/"
         }
     },

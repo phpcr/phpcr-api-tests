@@ -3,7 +3,7 @@
 /*
  * This file is part of the PHPCR API Tests package
  *
- * Copyright (c) 2013 Liip and others
+ * Copyright (c) 2015 Liip and others
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -62,7 +62,7 @@ class CopyMethodsTest extends \PHPCR\Test\BaseCase
         $dchild = $this->session->getNode("$dst/srcFile");
         $this->assertNotEquals($schild->getIdentifier(), $dchild->getIdentifier());
 
-        $this->assertTrue($this->session->nodeExists($dst . '/srcFile/jcr:content'), 'Did not copy the whole subgraph');
+        $this->assertTrue($this->session->nodeExists($dst.'/srcFile/jcr:content'), 'Did not copy the whole subgraph');
 
         $sfile = $this->session->getNode("$src/srcFile/jcr:content");
         $dfile = $this->session->getNode("$dst/srcFile/jcr:content");

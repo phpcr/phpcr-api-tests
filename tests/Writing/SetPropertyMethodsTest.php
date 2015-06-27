@@ -3,7 +3,7 @@
 /*
  * This file is part of the PHPCR API Tests package
  *
- * Copyright (c) 2013 Liip and others
+ * Copyright (c) 2015 Liip and others
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -280,18 +280,18 @@ class SetPropertyMethodsTest extends \PHPCR\Test\BaseCase
     {
         $node = $this->node->addNode('child');
         $prop = $node->setProperty('p', 'abc');
-        $this->assertTrue($this->session->nodeExists($this->nodePath . '/child'));
-        $this->assertTrue($this->session->propertyExists($this->nodePath . '/child/p'));
+        $this->assertTrue($this->session->nodeExists($this->nodePath.'/child'));
+        $this->assertTrue($this->session->propertyExists($this->nodePath.'/child/p'));
         $this->assertInstanceOf('\PHPCR\PropertyInterface', $prop);
         $this->assertEquals(\PHPCR\PropertyType::STRING, $prop->getType());
         $this->assertEquals('abc', $prop->getString());
 
         $session = $this->saveAndRenewSession();
 
-        $this->assertTrue($session->nodeExists($this->nodePath . '/child'));
-        $this->assertTrue($session->propertyExists($this->nodePath . '/child/p'));
+        $this->assertTrue($session->nodeExists($this->nodePath.'/child'));
+        $this->assertTrue($session->propertyExists($this->nodePath.'/child/p'));
 
-        $node = $session->getNode($this->nodePath . '/child');
+        $node = $session->getNode($this->nodePath.'/child');
         $prop = $node->getProperty('p');
 
         $this->assertInstanceOf('\PHPCR\PropertyInterface', $prop);
@@ -311,12 +311,12 @@ class SetPropertyMethodsTest extends \PHPCR\Test\BaseCase
     {
         $nodePath = '/tests_general_base/index.txt/jcr:content';
 
-        $this->assertTrue($this->session->propertyExists($nodePath . '/jcr:data'));
+        $this->assertTrue($this->session->propertyExists($nodePath.'/jcr:data'));
 
         $node = $this->session->getNode($nodePath);
         $node->setProperty('jcr:data', null);
 
         $this->saveAndRenewSession();
-        $this->assertFalse($this->session->propertyExists($nodePath . '/jcr:data'));
+        $this->assertFalse($this->session->propertyExists($nodePath.'/jcr:data'));
     }
 }

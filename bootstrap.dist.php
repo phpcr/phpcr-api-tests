@@ -3,7 +3,7 @@
 /*
  * This file is part of the PHPCR API Tests package
  *
- * Copyright (c) 2013 Liip and others
+ * Copyright (c) 2015 Liip and others
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -49,11 +49,11 @@ define('QUERY_XPATH_DOC_ORDER', 'query.xpath.doc.order');
  * you can do things here like registering your autoloader
  * or require files with classes that are used but not autoloaded
  */
-require __DIR__ . '/../src/Jackalope/autoloader.php';
+require __DIR__.'/../src/Jackalope/autoloader.php';
 
 ### Load two classes needed for jackalope unit tests ###
-require __DIR__ . '/../tests/Jackalope/TestCase.php';
-require __DIR__ . '/../tests/Jackalope/Transport/DoctrineDBAL/DoctrineDBALTestCase.php';
+require __DIR__.'/../tests/Jackalope/TestCase.php';
+require __DIR__.'/../tests/Jackalope/Transport/DoctrineDBAL/DoctrineDBALTestCase.php';
 
 ### Load the implementation loader class ###
 require 'ImplementationLoader.php';

@@ -3,7 +3,7 @@
 /*
  * This file is part of the PHPCR API Tests package
  *
- * Copyright (c) 2013 Liip and others
+ * Copyright (c) 2015 Liip and others
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -57,7 +57,7 @@ class LockManagerTest extends \PHPCR\Test\BaseCase
             $this->lm->lock('/lockable-node', true, true, 3, '');
         } catch (\PHPCR\Lock\LockException $ex) {
             // The lock didn't work, Huston, there is a problem...
-            $this->fail('An error occurred while trying to lock a valid node: ' . $ex->getMessage());
+            $this->fail('An error occurred while trying to lock a valid node: '.$ex->getMessage());
         }
 
         // The second lock should not work
@@ -78,7 +78,7 @@ class LockManagerTest extends \PHPCR\Test\BaseCase
         try {
             $this->lm->lock('/lockable-parent/lockable-child', true, true, 3, '');
         } catch (\PHPCR\Lock\LockException $ex) {
-            $this->fail('An error occurred while trying to lock a valid node: ' . $ex->getMessage());
+            $this->fail('An error occurred while trying to lock a valid node: '.$ex->getMessage());
         }
 
         // The *deep* lock on the parent should not work

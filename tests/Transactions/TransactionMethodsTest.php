@@ -3,7 +3,7 @@
 /*
  * This file is part of the PHPCR API Tests package
  *
- * Copyright (c) 2013 Liip and others
+ * Copyright (c) 2015 Liip and others
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -44,7 +44,7 @@ class TransactionMethodsTest extends \PHPCR\Test\BaseCase
         $utx->begin();
         $child = $this->node->addNode('insideTransaction');
 
-        $this->assertEquals($this->node->getPath() . '/insideTransaction', $child->getPath());
+        $this->assertEquals($this->node->getPath().'/insideTransaction', $child->getPath());
 
         $this->session->save();
 
@@ -61,7 +61,7 @@ class TransactionMethodsTest extends \PHPCR\Test\BaseCase
     public function testTransactionRollback()
     {
         $copy = $this->node->addNode('copyTransaction');
-        $copiedNodePath = $this->node->getPath() . '/copyTransactionCopy';
+        $copiedNodePath = $this->node->getPath().'/copyTransactionCopy';
         $this->session->save();
 
         $utx = $this->session->getWorkspace()->getTransactionManager();

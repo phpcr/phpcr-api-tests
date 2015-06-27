@@ -3,7 +3,7 @@
 /*
  * This file is part of the PHPCR API Tests package
  *
- * Copyright (c) 2013 Liip and others
+ * Copyright (c) 2015 Liip and others
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -128,14 +128,14 @@ abstract class BaseCase extends \PHPUnit_Framework_TestCase
         $chapter = '';
 
         for ($i = 2; $i < $case_n; $i++) {
-            $chapter .= $parts[$i] . '\\';
+            $chapter .= $parts[$i].'\\';
         }
 
-        $case = $chapter . $case;
-        $test = "$case::" . $this->getName();
+        $case = $chapter.$case;
+        $test = "$case::".$this->getName();
 
         if (!self::$loader->getTestSupported($chapter, $case, $test)) {
-            $this->markTestSkipped('Test ' . $this->getName() . ' not supported by this implementation');
+            $this->markTestSkipped('Test '.$this->getName().' not supported by this implementation');
         }
 
         $this->sharedFixture = self::$staticSharedFixture;
@@ -277,7 +277,7 @@ abstract class BaseCase extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('\DateTime', $expected);
         $this->assertInstanceOf('\DateTime', $data);
         $this->assertTrue(abs($expected->getTimestamp() - $data->getTimestamp()) <= 3,
-            $data->format('c') . ' is not close to the expected ' . $expected->format('c')
+            $data->format('c').' is not close to the expected '.$expected->format('c')
         );
     }
 
@@ -291,7 +291,7 @@ abstract class BaseCase extends \PHPUnit_Framework_TestCase
     protected function skipIfNotSupported($descriptor)
     {
         if (false === $this->session->getRepository()->getDescriptor($descriptor)) {
-            $this->markTestSkipped('Descriptor "' . $descriptor . '" not supported');
+            $this->markTestSkipped('Descriptor "'.$descriptor.'" not supported');
         }
 
         return true;

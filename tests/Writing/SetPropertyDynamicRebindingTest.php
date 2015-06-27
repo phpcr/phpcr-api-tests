@@ -3,7 +3,7 @@
 /*
  * This file is part of the PHPCR API Tests package
  *
- * Copyright (c) 2013 Liip and others
+ * Copyright (c) 2015 Liip and others
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -78,7 +78,7 @@ class SetPropertyDynamicRebindingTest extends \PHPCR\Test\BaseCase
 
         // Read it from backend check it's still valid
         $this->saveAndRenewSession();
-        $prop = $this->session->getProperty('/' . $propName);
+        $prop = $this->session->getProperty('/'.$propName);
         $this->assertInstanceOf('\PHPCR\PropertyInterface', $prop);
         $this->assertEquals($sourcePropType, $prop->getType(), 'Initial property type does not match after saving');
 
@@ -121,7 +121,7 @@ class SetPropertyDynamicRebindingTest extends \PHPCR\Test\BaseCase
 
         // Finally re-read it from backend and check it's still ok
         $this->saveAndRenewSession();
-        $prop = $this->session->getProperty('/' . $propName);
+        $prop = $this->session->getProperty('/'.$propName);
         $this->assertInstanceOf('\PHPCR\PropertyInterface', $prop);
         $this->assertEquals($destPropType, $prop->getType(), 'Property type does not match after re-binding and save');
 
@@ -182,8 +182,8 @@ class SetPropertyDynamicRebindingTest extends \PHPCR\Test\BaseCase
             foreach ($typesAndValues as $destKey => $destVal) {
                 if ($sourceKey !== $destKey) {
                     $propName =
-                        'dynRebinding_' . PropertyType::nameFromValue($sourceKey) .
-                        '_To_' . PropertyType::nameFromValue($destKey);
+                        'dynRebinding_'.PropertyType::nameFromValue($sourceKey).
+                        '_To_'.PropertyType::nameFromValue($destKey);
                     $provider[] = array($propName, $sourceKey, $sourceVal, $destKey, $destVal, $getters[$destKey]);
                 }
             }

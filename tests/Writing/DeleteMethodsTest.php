@@ -3,7 +3,7 @@
 /*
  * This file is part of the PHPCR API Tests package
  *
- * Copyright (c) 2013 Liip and others
+ * Copyright (c) 2015 Liip and others
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -43,11 +43,11 @@ class DeleteMethodsTest extends \PHPCR\Test\BaseCase
         $this->session->removeItem($this->node->getPath());
 
         $this->assertFalse($parent->hasNode('testRemoveItemNode'), 'Node was not removed');
-        $this->assertFalse($this->session->nodeExists($parent->getPath() . '/testRemoveItemNode'));
+        $this->assertFalse($this->session->nodeExists($parent->getPath().'/testRemoveItemNode'));
 
         $this->saveAndRenewSession();
 
-        $this->assertFalse($this->session->nodeExists($parent->getPath() . '/testRemoveItemNode'));
+        $this->assertFalse($this->session->nodeExists($parent->getPath().'/testRemoveItemNode'));
     }
 
     /**
@@ -135,19 +135,19 @@ class DeleteMethodsTest extends \PHPCR\Test\BaseCase
     {
         //relies on the base class setup trick to have the node populated from the fixtures
         $this->assertInstanceOf('PHPCR\NodeInterface', $this->node);
-        $path = $this->node->getPath() . '/parent/child';
+        $path = $this->node->getPath().'/parent/child';
 
         $child = $this->session->getNode($path);
         $child->remove();
 
-        $parent = $this->session->getNode($this->node->getPath() . '/parent');
+        $parent = $this->session->getNode($this->node->getPath().'/parent');
         $this->assertFalse($parent->hasNode('child'));
         $this->assertFalse($this->session->nodeExists($path));
 
         $session = $this->saveAndRenewSession();
 
         $this->assertFalse($session->nodeExists($path));
-        $parent = $session->getNode($this->node->getPath() . '/parent');
+        $parent = $session->getNode($this->node->getPath().'/parent');
         $this->assertFalse($parent->hasNode('child'));
     }
 
@@ -388,7 +388,7 @@ class DeleteMethodsTest extends \PHPCR\Test\BaseCase
         $items = array($this->node, $ptest, $prop, $child, $childprop, $childchild, $childchildprop);
         foreach ($items as $item) {
             try {
-                $this->fail('Should not be able to get path of deleted item ' . $item->getPath()); // this should explode
+                $this->fail('Should not be able to get path of deleted item '.$item->getPath()); // this should explode
             } catch (\PHPCR\InvalidItemStateException $e) {
                 // the exception is expected
             }
@@ -406,7 +406,7 @@ class DeleteMethodsTest extends \PHPCR\Test\BaseCase
 
         foreach ($items as $item) {
             try {
-                $this->fail('Should not be able to get path of deleted item ' . $item->getPath()); // this should explode
+                $this->fail('Should not be able to get path of deleted item '.$item->getPath()); // this should explode
             } catch (\PHPCR\InvalidItemStateException $e) {
                 // the exception is expected
             }
@@ -540,8 +540,8 @@ class DeleteMethodsTest extends \PHPCR\Test\BaseCase
 
         // Session
         $this->assertFalse($this->session->nodeExists($path));
-        $this->assertFalse($this->session->nodeExists($path . '/child'));
-        $this->assertFalse($this->session->propertyExists($path . '/child/prop'));
+        $this->assertFalse($this->session->nodeExists($path.'/child'));
+        $this->assertFalse($this->session->propertyExists($path.'/child/prop'));
         try {
             $this->node->getPath();
             $this->fail('Node was not notified that it is deleted');
@@ -558,7 +558,7 @@ class DeleteMethodsTest extends \PHPCR\Test\BaseCase
         // Backend
         $this->session = $this->saveAndRenewSession();
         $this->assertFalse($this->session->nodeExists($path));
-        $this->assertFalse($this->session->nodeExists($path . '/child'));
+        $this->assertFalse($this->session->nodeExists($path.'/child'));
     }
 
     public function testWorkspaceDeleteProperty()

@@ -3,7 +3,7 @@
 /*
  * This file is part of the PHPCR API Tests package
  *
- * Copyright (c) 2013 Liip and others
+ * Copyright (c) 2015 Liip and others
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -44,7 +44,7 @@ class MixinCreatedTest extends \PHPCR\Test\BaseCase
         $this->assertInstanceOf('DateTime', $date);
         /* @var $date \DateTime */
         $diff = time() - $date->getTimestamp();
-        $this->assertTrue($diff < 60 * 10, 'jcr:created should be current date as fixture was just imported: ' . $date->format('c'));
+        $this->assertTrue($diff < 60 * 10, 'jcr:created should be current date as fixture was just imported: '.$date->format('c'));
 
         // Re-read the node to be sure things got properly saved
         $this->renewSession();
@@ -55,6 +55,6 @@ class MixinCreatedTest extends \PHPCR\Test\BaseCase
         $date = $child->getPropertyValue('jcr:created');
         $this->assertInstanceOf('DateTime', $date);
         $diff = time() - $date->getTimestamp();
-        $this->assertTrue($diff < 60 * 10, 'jcr:created should be current date as fixture was just imported: ' . $date->format('c'));
+        $this->assertTrue($diff < 60 * 10, 'jcr:created should be current date as fixture was just imported: '.$date->format('c'));
     }
 }

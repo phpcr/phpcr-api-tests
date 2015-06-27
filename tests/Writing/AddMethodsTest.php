@@ -3,7 +3,7 @@
 /*
  * This file is part of the PHPCR API Tests package
  *
- * Copyright (c) 2013 Liip and others
+ * Copyright (c) 2015 Liip and others
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -40,25 +40,25 @@ class AddMethodsTest extends \PHPCR\Test\BaseCase
         // should take the primaryType
 
         $new = $this->node->addNode('newNode');
-        $this->assertNotNull($this->session->getNode($this->node->getPath() . '/newNode'), 'Node newNode was not created');
+        $this->assertNotNull($this->session->getNode($this->node->getPath().'/newNode'), 'Node newNode was not created');
         $this->session->save();
         $this->assertFalse($new->isNew(), 'Node was not saved');
 
         $this->renewSession();
 
-        $this->assertNotNull($this->session->getNode($this->node->getPath() . '/newNode'), 'Node newNode was not properly saved');
+        $this->assertNotNull($this->session->getNode($this->node->getPath().'/newNode'), 'Node newNode was not properly saved');
     }
 
     public function testAddNodeWithPath()
     {
         $new = $this->node->addNode('test:namespacedNode/newNode', 'nt:unstructured');
-        $this->assertNotNull($this->session->getNode($this->node->getPath() . '/test:namespacedNode/newNode'), 'Node newNode was not created');
+        $this->assertNotNull($this->session->getNode($this->node->getPath().'/test:namespacedNode/newNode'), 'Node newNode was not created');
         $this->session->save();
         $this->assertFalse($new->isNew(), 'Node was not saved');
 
         $this->renewSession();
 
-        $this->assertNotNull($this->session->getNode($this->node->getPath() . '/test:namespacedNode/newNode'), 'Node newNode was not properly saved');
+        $this->assertNotNull($this->session->getNode($this->node->getPath().'/test:namespacedNode/newNode'), 'Node newNode was not properly saved');
     }
 
     public function testAddNodeFileType()
@@ -77,7 +77,7 @@ class AddMethodsTest extends \PHPCR\Test\BaseCase
 
         $this->renewSession();
 
-        $newNode = $this->session->getNode($path . '/newFileNode');
+        $newNode = $this->session->getNode($path.'/newFileNode');
         $this->assertNotNull($newNode, 'Node newFileNode was not created');
         $this->assertEquals('nt:file', $newNode->getPrimaryNodeType()->getName(), 'Node newFileNode was not created');
         $lastModified = $newNode->getNode('jcr:content')->getPropertyValue('jcr:lastModified');
@@ -88,13 +88,13 @@ class AddMethodsTest extends \PHPCR\Test\BaseCase
     public function testAddNodeUnstructuredType()
     {
         $new = $this->node->addNode('newUnstructuredNode', 'nt:unstructured');
-        $this->assertNotNull($this->session->getNode($this->node->getPath() . '/newUnstructuredNode'), 'Node newUnstructuredNode was not created');
+        $this->assertNotNull($this->session->getNode($this->node->getPath().'/newUnstructuredNode'), 'Node newUnstructuredNode was not created');
         $this->session->save();
         $this->assertFalse($new->isNew(), 'Node was not saved');
 
         $this->renewSession();
 
-        $this->assertNotNull($this->session->getNode($this->node->getPath() . '/newUnstructuredNode'), 'Node newUnstructuredNode was not created');
+        $this->assertNotNull($this->session->getNode($this->node->getPath().'/newUnstructuredNode'), 'Node newUnstructuredNode was not created');
     }
 
     /**
@@ -121,7 +121,7 @@ class AddMethodsTest extends \PHPCR\Test\BaseCase
 
         $this->renewSession();
 
-        $this->assertNotNull($this->session->getNode($this->node->getPath() . '/jcr:content/' . $name), 'Node newNode was not properly saved');
+        $this->assertNotNull($this->session->getNode($this->node->getPath().'/jcr:content/'.$name), 'Node newNode was not properly saved');
     }
 
     public function testAddNodeAutoNamedNullNamehint()
@@ -139,7 +139,7 @@ class AddMethodsTest extends \PHPCR\Test\BaseCase
 
         $this->renewSession();
 
-        $this->assertNotNull($this->session->getNode($this->node->getPath() . '/jcr:content/' . $name), 'Node newNode was not properly saved');
+        $this->assertNotNull($this->session->getNode($this->node->getPath().'/jcr:content/'.$name), 'Node newNode was not properly saved');
     }
 
     public function testAddNodeAutoNamedValidNamespaceNamehint()
@@ -158,7 +158,7 @@ class AddMethodsTest extends \PHPCR\Test\BaseCase
 
         $this->renewSession();
 
-        $this->assertNotNull($this->session->getNode($this->node->getPath() . '/jcr:content/' . $name), 'Node newNode was not properly saved');
+        $this->assertNotNull($this->session->getNode($this->node->getPath().'/jcr:content/'.$name), 'Node newNode was not properly saved');
     }
 
     public function testAddPropertyOnUnstructured()
@@ -172,7 +172,7 @@ class AddMethodsTest extends \PHPCR\Test\BaseCase
         $this->assertFalse($node->isNew(), 'Node was not saved');
 
         $this->renewSession();
-        $node = $this->session->getNode($path . '/unstructuredNode');
+        $node = $this->session->getNode($path.'/unstructuredNode');
 
         $this->assertNotNull($node, 'Node was not created');
         $this->assertEquals('val', $node->getPropertyValue('testprop'), 'Property was not saved correctly');
@@ -183,7 +183,7 @@ class AddMethodsTest extends \PHPCR\Test\BaseCase
         $this->assertFalse($node->isNew(), 'Node was not saved');
         $this->assertFalse($node->getProperty('test2')->isNew(), 'Property was not saved');
         $this->renewSession();
-        $node = $this->session->getNode($path . '/unstructuredNode');
+        $node = $this->session->getNode($path.'/unstructuredNode');
 
         $this->assertEquals('val2', $node->getPropertyValue('test2'), 'Property was not added correctly');
     }
@@ -199,7 +199,7 @@ class AddMethodsTest extends \PHPCR\Test\BaseCase
         $this->assertFalse($node->isNew(), 'Node was not saved');
 
         $this->renewSession();
-        $node = $this->session->getNode($path . '/unstructuredNode2');
+        $node = $this->session->getNode($path.'/unstructuredNode2');
 
         $this->assertNotNull($node, 'Node was not created');
         $this->assertEquals(array('val', 'val2'), $node->getPropertyValue('test'), 'Property was not saved correctly');
@@ -210,7 +210,7 @@ class AddMethodsTest extends \PHPCR\Test\BaseCase
         $this->assertFalse($node->isNew(), 'Node was not saved');
         $this->assertFalse($node->getProperty('test2')->isNew(), 'Property was not saved');
         $this->renewSession();
-        $node = $this->session->getNode($path . '/unstructuredNode2');
+        $node = $this->session->getNode($path.'/unstructuredNode2');
 
         $this->assertEquals(array('val3', 'val4'), $node->getPropertyValue('test2'), 'Property was not added correctly');
     }
@@ -371,7 +371,7 @@ class AddMethodsTest extends \PHPCR\Test\BaseCase
         $nodeName =  'child';
 
         //add the node with an unregistered namespace, should throw a RepositoryException
-        $this->node->addNode($namespace . ':' . $nodeName, 'nt:unstructured');
+        $this->node->addNode($namespace.':'.$nodeName, 'nt:unstructured');
 
         //save the changes
         $this->saveAndRenewSession();
@@ -388,7 +388,7 @@ class AddMethodsTest extends \PHPCR\Test\BaseCase
         $propertyName =  'prop';
 
         //add a property with an unregistered namespace, should throw a RepositoryException
-        $this->node->setProperty($namespace . ':' . $propertyName, 'some value');
+        $this->node->setProperty($namespace.':'.$propertyName, 'some value');
 
         //save the changes
         $this->saveAndRenewSession();
@@ -401,25 +401,25 @@ class AddMethodsTest extends \PHPCR\Test\BaseCase
         }
 
         $workspace = $this->session->getWorkspace();
-        $cnd = file_get_contents(__DIR__ . '/../../fixtures/10_Writing/add_auto_create.cnd');
+        $cnd = file_get_contents(__DIR__.'/../../fixtures/10_Writing/add_auto_create.cnd');
         $workspace->getNodeTypeManager()->registerNodeTypesCnd($cnd, true);
         $this->node->addNode('foo', 'test:testautocreate');
         $this->session->save();
 
-        $childNode = $this->session->getNode($this->node->getPath() . '/foo');
+        $childNode = $this->session->getNode($this->node->getPath().'/foo');
         $this->assertNotNull($childNode);
 
-        $childNode = $this->session->getNode($this->node->getPath() . '/foo/autocreated');
+        $childNode = $this->session->getNode($this->node->getPath().'/foo/autocreated');
         $this->assertNotNull($childNode);
         $primaryType = $childNode->getPrimaryNodeType();
         $this->assertEquals('nt:unstructured', $primaryType->getName());
 
-        $childNode = $this->session->getNode($this->node->getPath() . '/foo/autocreatedwithchild');
+        $childNode = $this->session->getNode($this->node->getPath().'/foo/autocreatedwithchild');
         $this->assertNotNull($childNode);
         $primaryType = $childNode->getPrimaryNodeType();
         $this->assertEquals('test:testAutoCreateChild', $primaryType->getName());
 
-        $childNode = $this->session->getNode($this->node->getPath() . '/foo/autocreatedwithchild/foo');
+        $childNode = $this->session->getNode($this->node->getPath().'/foo/autocreatedwithchild/foo');
         $this->assertNotNull($childNode);
         $primaryType = $childNode->getPrimaryNodeType();
         $this->assertEquals('nt:unstructured', $primaryType->getName());
