@@ -30,6 +30,12 @@
         "php": ">=5.3.0",
         "phpcr/phpcr-implementation": "2.1.*"
     },
+    "autoload": {
+        "psr-4": {
+            "PHPCR\\Test\\": "lib",
+            "PHPCR\\Tests\\": "tests"
+        }
+    },
     "extra": {
         "branch-alias": {
             "dev-master": "2.1-dev"
