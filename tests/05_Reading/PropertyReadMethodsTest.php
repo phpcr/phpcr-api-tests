@@ -1,10 +1,19 @@
 <?php
-namespace PHPCR\Tests\Reading;
 
+/*
+ * This file is part of the PHPCR API Tests package
+ *
+ * Copyright (c) 2013 Liip and others
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace PHPCR\Tests\Reading;
 
 /**
  * javax.jcr.Property read methods
- * TODO: CONSTANTS
+ * TODO: CONSTANTS.
  *
  * PropertyWriteMethods: isModified, refresh, save, remove, setValue (in many variants)
  *
@@ -138,7 +147,7 @@ class PropertyReadMethodsTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * get a date property as string
+     * get a date property as string.
      *
      * everything can be converted to string
      */
@@ -152,7 +161,6 @@ class PropertyReadMethodsTest extends \PHPCR\Test\BaseCase
         $str = $this->valProperty->getString();
         $this->assertInternalType('string', $str);
         $this->assertEquals('bar', $str);
-
     }
 
     public function testJcrCreated()
@@ -172,7 +180,7 @@ class PropertyReadMethodsTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * everything can be converted to string and then to binary
+     * everything can be converted to string and then to binary.
      */
     public function testGetBinary()
     {
@@ -218,7 +226,7 @@ class PropertyReadMethodsTest extends \PHPCR\Test\BaseCase
         }
     }
     /**
-     * NAME can not be converted to long
+     * NAME can not be converted to long.
      *
      * @expectedException \PHPCR\ValueFormatException
      */
@@ -243,7 +251,7 @@ class PropertyReadMethodsTest extends \PHPCR\Test\BaseCase
         }
     }
     /**
-     * NAME can not be converted to double
+     * NAME can not be converted to double.
      *
      * @expectedException \PHPCR\ValueFormatException
      */
@@ -261,7 +269,7 @@ class PropertyReadMethodsTest extends \PHPCR\Test\BaseCase
         $this->assertEquals(999, $num);
     }
     /**
-     * NAME can not be converted to decimal
+     * NAME can not be converted to decimal.
      *
      * @expectedException \PHPCR\ValueFormatException
      */
@@ -270,7 +278,7 @@ class PropertyReadMethodsTest extends \PHPCR\Test\BaseCase
         $this->node->getProperty('jcr:primaryType')->getDecimal();
     }
     /**
-     * The PHP Implementation requires that getDouble and getDecimal return the same
+     * The PHP Implementation requires that getDouble and getDecimal return the same.
      */
     public function testGetDoubleAndDecimalSame()
     {
@@ -300,13 +308,13 @@ class PropertyReadMethodsTest extends \PHPCR\Test\BaseCase
         $expectedArray = array(
                 new \DateTime('2011-04-22T14:34:20+01:00'),
                 new \DateTime('2011-10-23T14:34:20+01:00'),
-                new \DateTime('2010-10-23T14:34:20+01:00'));
+                new \DateTime('2010-10-23T14:34:20+01:00'), );
         foreach ($expectedArray as $key => $expected) {
             $this->assertEqualDateTime($expected, $arr[$key]);
         }
     }
     /**
-     * arbitrary string can not be converted to date
+     * arbitrary string can not be converted to date.
      *
      * @expectedException \PHPCR\ValueFormatException
      */
@@ -326,7 +334,7 @@ class PropertyReadMethodsTest extends \PHPCR\Test\BaseCase
         $this->assertFalse($prop->getBoolean());
         // php interprets everything as true except null, 0, '' and boolean false. thus even the string "false" is true.
         // we require getString to return something that evaluates to false (the empty string makes sense)
-        $this->assertTrue(! $prop->getString(), 'boolean false returned as string should evaluate to php <false>');
+        $this->assertTrue(!$prop->getString(), 'boolean false returned as string should evaluate to php <false>');
 
         $prop = $this->node->getNode('numberPropertyNode/jcr:content')->getProperty('thisIsYes');
         $this->assertTrue($prop->getBoolean());
@@ -346,7 +354,7 @@ class PropertyReadMethodsTest extends \PHPCR\Test\BaseCase
         $this->assertTrue($arr[1]);
     }
     /**
-     * NAME can not be converted to boolean
+     * NAME can not be converted to boolean.
      *
      * @expectedException \PHPCR\ValueFormatException
      */
@@ -389,7 +397,8 @@ class PropertyReadMethodsTest extends \PHPCR\Test\BaseCase
         $node = $this->dateProperty->getNode();
     }
     /**
-     * only nodes but not properties can be found with getNode
+     * only nodes but not properties can be found with getNode.
+     *
      * @expectedException \PHPCR\ItemNotFoundException
      */
     public function testGetNodePropertyItemNotFound()
@@ -416,7 +425,7 @@ class PropertyReadMethodsTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * PATH property, the path references another property
+     * PATH property, the path references another property.
      */
     public function testGetProperty()
     {
@@ -561,5 +570,4 @@ class PropertyReadMethodsTest extends \PHPCR\Test\BaseCase
         }
         $this->assertEquals($expected, $returned);
     }
-
 }

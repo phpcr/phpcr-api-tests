@@ -1,13 +1,21 @@
 <?php
+
+/*
+ * This file is part of the PHPCR API Tests package
+ *
+ * Copyright (c) 2013 Liip and others
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace PHPCR\Tests\OrderableChildNodes;
 
-
 /**
- * Covering jcr-2.8.3 spec $23
+ * Covering jcr-2.8.3 spec $23.
  */
 class OrderBeforeTest extends \PHPCR\Test\BaseCase
 {
-
     public static function setupBeforeClass($fixtures = '23_OrderableChildNodes/orderable')
     {
         parent::setupBeforeClass($fixtures);
@@ -20,7 +28,7 @@ class OrderBeforeTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * Helper method to assert a certain order of the child nodes
+     * Helper method to assert a certain order of the child nodes.
      *
      * @param array                $names array values are the names in expected order
      * @param \PHPCR\NodeInterface $node  the node whos children are to be checked
@@ -35,7 +43,7 @@ class OrderBeforeTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * \PHPCR\NodeInterface::orderBefore
+     * \PHPCR\NodeInterface::orderBefore.
      */
     public function testNodeOrderBeforeUp()
     {
@@ -55,7 +63,7 @@ class OrderBeforeTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * \PHPCR\NodeInterface::orderBefore
+     * \PHPCR\NodeInterface::orderBefore.
      */
     public function testNodeOrderBeforeFirst()
     {
@@ -76,7 +84,7 @@ class OrderBeforeTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * \PHPCR\NodeInterface::orderBefore
+     * \PHPCR\NodeInterface::orderBefore.
      */
     public function testNodeOrderBeforeDown()
     {
@@ -96,7 +104,7 @@ class OrderBeforeTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * \PHPCR\NodeInterface::orderBefore
+     * \PHPCR\NodeInterface::orderBefore.
      */
     public function testNodeOrderBeforeEnd()
     {
@@ -116,7 +124,7 @@ class OrderBeforeTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * \PHPCR\NodeInterface::orderBefore
+     * \PHPCR\NodeInterface::orderBefore.
      */
     public function testNodeOrderBeforeNoop()
     {
@@ -133,7 +141,8 @@ class OrderBeforeTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * \PHPCR\NodeInterface::orderBefore
+     * \PHPCR\NodeInterface::orderBefore.
+     *
      * @expectedException \PHPCR\ItemNotFoundException
      */
     public function testNodeOrderBeforeSrcNotFound()
@@ -143,7 +152,8 @@ class OrderBeforeTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * \PHPCR\NodeInterface::orderBefore
+     * \PHPCR\NodeInterface::orderBefore.
+     *
      * @expectedException \PHPCR\ItemNotFoundException
      */
     public function testNodeOrderBeforeDestNotFound()
@@ -153,7 +163,7 @@ class OrderBeforeTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * \PHPCR\NodeInterface::orderBefore
+     * \PHPCR\NodeInterface::orderBefore.
      */
     public function testNodeOrderBeforeSwap()
     {
@@ -176,7 +186,7 @@ class OrderBeforeTest extends \PHPCR\Test\BaseCase
 
     /**
      * Test reordering and adding a node and removing another one
-     * \PHPCR\NodeInterface::orderBefore
+     * \PHPCR\NodeInterface::orderBefore.
      */
     public function testNodeOrderBeforeUpAndDelete()
     {
@@ -202,7 +212,7 @@ class OrderBeforeTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * \PHPCR\NodeInterface::orderBefore
+     * \PHPCR\NodeInterface::orderBefore.
      */
     public function testNodeOrderBeforeUpAndRefresh()
     {
@@ -220,7 +230,7 @@ class OrderBeforeTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * \PHPCR\NodeInterface::orderBefore
+     * \PHPCR\NodeInterface::orderBefore.
      */
     public function testNodeOrderBeforeUpAndRefreshKeepChanges()
     {
@@ -257,7 +267,7 @@ class OrderBeforeTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * \PHPCR\NodeInterface::orderBefore
+     * \PHPCR\NodeInterface::orderBefore.
      */
     public function testNodeOrderBeforeAndDeleteAndRefreshKeepChanges()
     {
@@ -284,7 +294,7 @@ class OrderBeforeTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * \PHPCR\NodeInterface::orderBefore
+     * \PHPCR\NodeInterface::orderBefore.
      */
     public function testNodeOrderOnAdd()
     {
@@ -304,7 +314,7 @@ class OrderBeforeTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * \PHPCR\NodeInterface::orderBefore
+     * \PHPCR\NodeInterface::orderBefore.
      */
     public function testNodeOrderOnMultipleAdds()
     {
@@ -325,7 +335,7 @@ class OrderBeforeTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * \PHPCR\NodeInterface::orderBefore
+     * \PHPCR\NodeInterface::orderBefore.
      */
     public function testNodeOrderOnMultipleAddsAndDelete()
     {
@@ -348,7 +358,7 @@ class OrderBeforeTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * \PHPCR\NodeInterface::orderBefore
+     * \PHPCR\NodeInterface::orderBefore.
      */
     public function testNodeOrderNamespaces()
     {
@@ -371,7 +381,7 @@ class OrderBeforeTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * \PHPCR\NodeInterface::orderBefore
+     * \PHPCR\NodeInterface::orderBefore.
      */
     public function testNodeOrderAfterOrderAndMove()
     {

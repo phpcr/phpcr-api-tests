@@ -1,9 +1,17 @@
 <?php
+
+/*
+ * This file is part of the PHPCR API Tests package
+ *
+ * Copyright (c) 2013 Liip and others
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace PHPCR\Tests\Writing;
 
 use Jackalope\Session;
-use PHPCR\PropertyInterface;
-
 
 /**
  * Testing the mix:lastModified support when properties should be updated

@@ -1,11 +1,20 @@
 <?php
-namespace PHPCR\Tests\Writing;
 
+/*
+ * This file is part of the PHPCR API Tests package
+ *
+ * Copyright (c) 2013 Liip and others
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace PHPCR\Tests\Writing;
 
 use Jackalope\Item;
 
 /**
- * Test the workflow of Item state
+ * Test the workflow of Item state.
  */
 class ItemStateTest extends \PHPCR\Test\BaseCase
 {
@@ -13,7 +22,7 @@ class ItemStateTest extends \PHPCR\Test\BaseCase
     {
         parent::setUp();
 
-        if (! $this->session instanceof \Jackalope\Session) {
+        if (!$this->session instanceof \Jackalope\Session) {
             $this->markTestSkipped('This test is only meant for Jackalope'); //TODO: this is a unit test that belongs into jackalope
         }
 

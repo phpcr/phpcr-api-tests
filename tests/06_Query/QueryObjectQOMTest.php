@@ -1,12 +1,21 @@
 <?php
+
+/*
+ * This file is part of the PHPCR API Tests package
+ *
+ * Copyright (c) 2013 Liip and others
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace PHPCR\Tests\Query;
 
 use PHPCR\Query\QOM\QueryObjectModelFactoryInterface;
 use PHPCR\Query\QueryInterface;
 
-
 /**
- * test the Query Factory integration
+ * test the Query Factory integration.
  *
  * setLimit, setOffset, bindValue, getBindVariableNames
  *
@@ -14,7 +23,6 @@ use PHPCR\Query\QueryInterface;
  */
 class QueryObjectQOMTest extends QueryBaseCase
 {
-
     /**
      * @var QueryObjectModelFactoryInterface
      */
@@ -32,7 +40,7 @@ class QueryObjectQOMTest extends QueryBaseCase
         try {
             $this->factory = $this->sharedFixture['qm']->getQOMFactory();
         } catch (\Exception $e) {
-            $this->markTestSkipped('Can not get the QOM factory, skipping tests about QOM query. '.$e->getMessage());
+            $this->markTestSkipped('Can not get the QOM factory, skipping tests about QOM query. ' . $e->getMessage());
         }
 
         $source = $this->factory->selector('data', 'nt:folder');
@@ -43,7 +51,7 @@ class QueryObjectQOMTest extends QueryBaseCase
         $orderings = array();
         $columns = array();
 
-        $this->query = $this->factory->createQuery($source,$constraint,$orderings,$columns);
+        $this->query = $this->factory->createQuery($source, $constraint, $orderings, $columns);
     }
 
     public function testExecute()
@@ -67,19 +75,19 @@ class QueryObjectQOMTest extends QueryBaseCase
         $orderings = array();
         $columns = array();
 
-        $query = $this->factory->createQuery($source,$constraint,$orderings,$columns);
+        $query = $this->factory->createQuery($source, $constraint, $orderings, $columns);
         $query->execute();
     }
 
     public function testGetStatement()
     {
-        $this->assertEquals('SELECT * FROM [nt:folder] AS data '.
+        $this->assertEquals('SELECT * FROM [nt:folder] AS data ' .
             'WHERE (ISDESCENDANTNODE(data, [/tests_general_base]) OR ISSAMENODE(data, [/tests_general_base]))', $this->query->getStatement());
     }
 
     /**
      * Even though the query is defined with QOM, it must return JCR_SQL2 as langugae:
-     * http://www.day.com/specs/jcr/2.0/6_Query.html#6.9.3%20Getting%20the%20Language
+     * http://www.day.com/specs/jcr/2.0/6_Query.html#6.9.3%20Getting%20the%20Language.
      */
     public function testGetLanguage()
     {
@@ -87,7 +95,8 @@ class QueryObjectQOMTest extends QueryBaseCase
     }
 
     /**
-     * a transient query has no stored query path
+     * a transient query has no stored query path.
+     *
      * @expectedException \PHPCR\ItemNotFoundException
      */
     public function testGetStoredQueryPathItemNotFound()

@@ -1,11 +1,20 @@
 <?php
+
+/*
+ * This file is part of the PHPCR API Tests package
+ *
+ * Copyright (c) 2013 Liip and others
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace PHPCR\Tests\Writing;
 
 use PHPCR\PropertyInterface;
 
-
 /**
- * Testing whether node property manipulations work correctly
+ * Testing whether node property manipulations work correctly.
  *
  * For every test we do the assertions twice:
  *   - Once after the property has been set in memory
@@ -31,7 +40,7 @@ class SetPropertyMethodsTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * \PHPCR\PropertyInterface::setValue
+     * \PHPCR\PropertyInterface::setValue.
      */
     public function testSetValue()
     {
@@ -44,7 +53,7 @@ class SetPropertyMethodsTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * \PHPCR\NodeInterface::setProperty
+     * \PHPCR\NodeInterface::setProperty.
      */
     public function testSetPropertyExisting()
     {
@@ -64,7 +73,7 @@ class SetPropertyMethodsTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * \PHPCR\NodeInterface::setProperty
+     * \PHPCR\NodeInterface::setProperty.
      */
     public function testSetPropertyNew()
     {
@@ -83,7 +92,7 @@ class SetPropertyMethodsTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * Setting a property with the same name as an existing child node
+     * Setting a property with the same name as an existing child node.
      *
      * this is valid in jcr 2.0
      * http://www.day.com/specs/jcr/2.0/3_Repository_Model.html#3.4.2.2
@@ -111,7 +120,7 @@ class SetPropertyMethodsTest extends \PHPCR\Test\BaseCase
 
     /**
      * change type of existing property
-     * \PHPCR\NodeInterface::setProperty
+     * \PHPCR\NodeInterface::setProperty.
      */
     public function testSetPropertyWithType()
     {
@@ -127,7 +136,7 @@ class SetPropertyMethodsTest extends \PHPCR\Test\BaseCase
 
     /**
      * add new property
-     * \PHPCR\NodeInterface::setProperty
+     * \PHPCR\NodeInterface::setProperty.
      */
     public function testSetPropertyNewWithType()
     {
@@ -146,7 +155,7 @@ class SetPropertyMethodsTest extends \PHPCR\Test\BaseCase
     public function testSetPropertyMultivalue()
     {
         $prop = $this->node->setProperty('multivalue', array(1, 2, 3));
-        $this->assertEquals(array(1,2,3), $this->node->getPropertyValue('multivalue'));
+        $this->assertEquals(array(1, 2, 3), $this->node->getPropertyValue('multivalue'));
         $this->assertEquals(\PHPCR\PropertyType::LONG, $prop->getType());
         $this->assertTrue($prop->isMultiple());
 
@@ -155,7 +164,7 @@ class SetPropertyMethodsTest extends \PHPCR\Test\BaseCase
         $prop = $node->getProperty('multivalue');
         $this->assertEquals(\PHPCR\PropertyType::LONG, $prop->getType());
         $this->assertTrue($prop->isMultiple());
-        $this->assertEquals(array(1,2,3), $prop->getValue());
+        $this->assertEquals(array(1, 2, 3), $prop->getValue());
     }
 
     public function testSetPropertyMultivalueOne()
@@ -236,17 +245,17 @@ class SetPropertyMethodsTest extends \PHPCR\Test\BaseCase
     public function testPropertyAddValue()
     {
         $prop = $this->node->getProperty('multiBoolean');
-        $this->assertEquals(array(false,true), $prop->getValue());
+        $this->assertEquals(array(false, true), $prop->getValue());
         $this->assertTrue($prop->isMultiple());
         $prop->addValue(true);
-        $this->assertEquals(array(false,true,true), $prop->getValue());
+        $this->assertEquals(array(false, true, true), $prop->getValue());
 
         $this->saveAndRenewSession();
         $node = $this->session->getNode($this->nodePath);
         $prop = $node->getProperty('multiBoolean');
         $this->assertEquals(\PHPCR\PropertyType::BOOLEAN, $prop->getType());
         $this->assertTrue($prop->isMultiple());
-        $this->assertEquals(array(false,true,true), $prop->getValue());
+        $this->assertEquals(array(false, true, true), $prop->getValue());
     }
 
     /**
@@ -264,7 +273,7 @@ class SetPropertyMethodsTest extends \PHPCR\Test\BaseCase
     public function testPropertySetValueNoMultivalue()
     {
         $prop = $this->node->getProperty('longNumber');
-        $prop->setValue(array(33,34));
+        $prop->setValue(array(33, 34));
     }
 
     public function testNewNodeSetProperty()

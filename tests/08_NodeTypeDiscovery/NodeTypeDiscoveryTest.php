@@ -1,11 +1,20 @@
 <?php
+
+/*
+ * This file is part of the PHPCR API Tests package
+ *
+ * Copyright (c) 2013 Liip and others
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace PHPCR\Tests\NodeTypeDiscovery;
 
 use PHPCR\NodeType\NodeTypeManagerInterface;
 
-
 /**
- * Test the NoteTypeManager §8
+ * Test the NoteTypeManager §8.
  */
 class NodeTypeDiscoveryTest extends \PHPCR\Test\BaseCase
 {
@@ -15,17 +24,17 @@ class NodeTypeDiscoveryTest extends \PHPCR\Test\BaseCase
     private $nodeTypeManager;
 
     /**
-     * the predefined primary types that do not depend on optional features
+     * the predefined primary types that do not depend on optional features.
      */
     public static $primary = array('nt:hierarchyNode', 'nt:file',
-        'nt:linkedFile', 'nt:folder', 'nt:resource', 'nt:address');
+        'nt:linkedFile', 'nt:folder', 'nt:resource', 'nt:address', );
 
     /**
-     * the predefined mixin types that do not depend on optional features
+     * the predefined mixin types that do not depend on optional features.
      */
     public static $mixins = array(
-            "mix:etag", "mix:language", "mix:lastModified", "mix:mimeType",
-            "mix:referenceable", "mix:shareable", "mix:title"
+            'mix:etag', 'mix:language', 'mix:lastModified', 'mix:mimeType',
+            'mix:referenceable', 'mix:shareable', 'mix:title',
             );
 
     public function setUp()
@@ -57,7 +66,7 @@ class NodeTypeDiscoveryTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * check if node types exist without fetching them
+     * check if node types exist without fetching them.
      */
     public function testHasNodeType()
     {

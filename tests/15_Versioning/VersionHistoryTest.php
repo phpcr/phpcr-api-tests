@@ -1,13 +1,22 @@
 <?php
+
+/*
+ * This file is part of the PHPCR API Tests package
+ *
+ * Copyright (c) 2013 Liip and others
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace PHPCR\Tests\Versioning;
 
 use PHPCR\Util\PathHelper;
 use PHPCR\Version\VersionHistoryInterface;
 use PHPCR\Version\VersionManagerInterface;
 
-
 /**
- * Testing whether the version history methods work correctly
+ * Testing whether the version history methods work correctly.
  *
  * Covering jcr-2.8.3 spec $15.1
  */
@@ -68,7 +77,6 @@ class VersionHistoryTest extends \PHPCR\Test\BaseCase
         $currentNode = $this->vm->getBaseVersion('/tests_version_base/versioned')->getFrozenNode();
 
         $this->assertSame($currentNode, $lastNode);
-
     }
     public function testGetAllFrozenNodes()
     {
@@ -244,7 +252,7 @@ class VersionHistoryTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * Create two versions then delete the first version
+     * Create two versions then delete the first version.
      *
      * Note that you can not use $version->remove() although version is a node.
      */
@@ -279,7 +287,7 @@ class VersionHistoryTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * Check the last version cannot be removed
+     * Check the last version cannot be removed.
      *
      * @expectedException \PHPCR\ReferentialIntegrityException
      */
@@ -291,7 +299,7 @@ class VersionHistoryTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * Try removing an unexisting version
+     * Try removing an unexisting version.
      *
      * @expectedException \PHPCR\Version\VersionException
      */
@@ -303,12 +311,12 @@ class VersionHistoryTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * Check if a version node with the given name exists in the version history
+     * Check if a version node with the given name exists in the version history.
      *
      * @param VersionHistoryInterface $history     The version history node
      * @param string                  $versionName The name of the version to search for
      *
-     * @return boolean
+     * @return bool
      */
     protected function versionExists($history, $versionName)
     {

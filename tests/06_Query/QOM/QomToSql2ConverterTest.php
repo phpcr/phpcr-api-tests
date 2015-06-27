@@ -1,6 +1,15 @@
 <?php
-namespace PHPCR\Tests\Query\QOM;
 
+/*
+ * This file is part of the PHPCR API Tests package
+ *
+ * Copyright (c) 2013 Liip and others
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace PHPCR\Tests\Query\QOM;
 
 use Jackalope\Query\QOM; // TODO get rid of jackalope dependency
 use PHPCR\Query\QOM\ConstraintInterface;
@@ -13,7 +22,7 @@ use PHPCR\Query\QOM\QueryObjectModelConstantsInterface as Constants;
 use PHPCR\Util\ValueConverter;
 
 /**
- * Test for PHPCR\Util\QOM\QomToSql2QueryConverter
+ * Test for PHPCR\Util\QOM\QomToSql2QueryConverter.
  */
 class QomToSql2ConverterTest extends BaseCase
 {
@@ -33,7 +42,7 @@ class QomToSql2ConverterTest extends BaseCase
     {
         parent::setUp();
 
-        if (! $this->session->getWorkspace() instanceof \Jackalope\Workspace) {
+        if (!$this->session->getWorkspace() instanceof \Jackalope\Workspace) {
             $this->markTestSkipped('TODO: fix the dependency on jackalope and always use the factory');
         }
 
@@ -47,7 +56,7 @@ class QomToSql2ConverterTest extends BaseCase
     }
 
     /**
-     * 6.7.3. Selector
+     * 6.7.3. Selector.
      */
     public function testSelector()
     {
@@ -55,7 +64,7 @@ class QomToSql2ConverterTest extends BaseCase
     }
 
     /**
-     * 6.7.8. EquiJoinCondition
+     * 6.7.8. EquiJoinCondition.
      */
     public function testEquiJoin()
     {
@@ -69,7 +78,7 @@ class QomToSql2ConverterTest extends BaseCase
     }
 
     /**
-     * 6.7.9. SameNodeJoinCondition
+     * 6.7.9. SameNodeJoinCondition.
      */
     public function testSameNodeJoin()
     {
@@ -84,7 +93,7 @@ class QomToSql2ConverterTest extends BaseCase
     }
 
     /**
-     * 6.7.9. SameNodeJoinCondition with space in path
+     * 6.7.9. SameNodeJoinCondition with space in path.
      */
     public function testSameNodeJoinSpace()
     {
@@ -96,7 +105,7 @@ class QomToSql2ConverterTest extends BaseCase
     }
 
     /**
-     * 6.7.10 ChildNodeJoinCondition
+     * 6.7.10 ChildNodeJoinCondition.
      */
     public function testChildNodeJoin()
     {
@@ -108,7 +117,7 @@ class QomToSql2ConverterTest extends BaseCase
     }
 
     /**
-     * 6.7.11 DescendantNodeJoinCondition
+     * 6.7.11 DescendantNodeJoinCondition.
      */
     public function testDescendantNodeJoin()
     {
@@ -120,7 +129,7 @@ class QomToSql2ConverterTest extends BaseCase
     }
 
     /**
-     * 6.7.13. AndConstraint
+     * 6.7.13. AndConstraint.
      */
     public function testAndConstraint()
     {
@@ -131,7 +140,7 @@ class QomToSql2ConverterTest extends BaseCase
     }
 
     /**
-     * 6.7.14. OrConstraint
+     * 6.7.14. OrConstraint.
      */
     public function testOrConstraint()
     {
@@ -142,7 +151,7 @@ class QomToSql2ConverterTest extends BaseCase
     }
 
     /**
-     * 6.7.15. NotConstraint
+     * 6.7.15. NotConstraint.
      */
     public function testNotConstraint()
     {
@@ -152,7 +161,7 @@ class QomToSql2ConverterTest extends BaseCase
     }
 
     /**
-     * 6.7.16. Comparison
+     * 6.7.16. Comparison.
      */
     public function testComparison()
     {
@@ -164,7 +173,7 @@ class QomToSql2ConverterTest extends BaseCase
     }
 
     /**
-     * 6.7.18. PropertyExistence
+     * 6.7.18. PropertyExistence.
      */
     public function testPropertyExistence()
     {
@@ -173,7 +182,7 @@ class QomToSql2ConverterTest extends BaseCase
     }
 
     /**
-     * 6.7.19. FullTextSearch
+     * 6.7.19. FullTextSearch.
      */
     public function testFullTextSearch()
     {
@@ -182,7 +191,7 @@ class QomToSql2ConverterTest extends BaseCase
     }
 
     /**
-     * 6.7.20. SameNode
+     * 6.7.20. SameNode.
      */
     public function testSameNode()
     {
@@ -191,7 +200,7 @@ class QomToSql2ConverterTest extends BaseCase
     }
 
     /**
-     * 6.7.20. SameNode with space in path
+     * 6.7.20. SameNode with space in path.
      */
     public function testSameNodeSpace()
     {
@@ -200,7 +209,7 @@ class QomToSql2ConverterTest extends BaseCase
     }
 
     /**
-     * 6.7.21. ChildNode
+     * 6.7.21. ChildNode.
      */
     public function testChildNode()
     {
@@ -209,7 +218,7 @@ class QomToSql2ConverterTest extends BaseCase
     }
 
     /**
-     * 6.7.21. ChildNode with space in path
+     * 6.7.21. ChildNode with space in path.
      */
     public function testChildNodeSpace()
     {
@@ -218,7 +227,7 @@ class QomToSql2ConverterTest extends BaseCase
     }
 
     /**
-     * 6.7.22. DescendantNode
+     * 6.7.22. DescendantNode.
      */
     public function testDescendantNode()
     {
@@ -227,7 +236,7 @@ class QomToSql2ConverterTest extends BaseCase
     }
 
     /**
-     * 6.7.22. DescendantNode with space in path
+     * 6.7.22. DescendantNode with space in path.
      */
     public function testDescendantNodeSpace()
     {
@@ -236,18 +245,17 @@ class QomToSql2ConverterTest extends BaseCase
     }
 
     /**
-     * 6.7.23. Path
+     * 6.7.23. Path.
      */
     public function testPath()
     {
         $selector = $this->factory->selector('file', 'nt:file');
         $this->assertQuery($this->queries['6.7.20.SameNode.Selector'], $selector, array(), $this->factory->sameNode('file', '/home'), array());
         $this->assertQuery($this->queries['6.7.20.SameNode.Selector'], $selector, array(), $this->factory->sameNode('file', '[/home]'), array());
-
     }
 
     /**
-     * 6.7.27. ProperyValue
+     * 6.7.27. ProperyValue.
      */
     public function testPropertyValue()
     {
@@ -260,7 +268,7 @@ class QomToSql2ConverterTest extends BaseCase
     }
 
     /**
-     * 6.7.28. Length
+     * 6.7.28. Length.
      */
     public function testLength()
     {
@@ -273,7 +281,7 @@ class QomToSql2ConverterTest extends BaseCase
     }
 
     /**
-     * 6.7.29. NodeName
+     * 6.7.29. NodeName.
      */
     public function testNodeName()
     {
@@ -286,7 +294,7 @@ class QomToSql2ConverterTest extends BaseCase
     }
 
     /**
-     * 6.7.30. NodeLocalName
+     * 6.7.30. NodeLocalName.
      */
     public function testNodeLocalName()
     {
@@ -299,7 +307,7 @@ class QomToSql2ConverterTest extends BaseCase
     }
 
     /**
-     * 6.7.31. FullTextSearchScore
+     * 6.7.31. FullTextSearchScore.
      */
     public function testFullTextSearchScore()
     {
@@ -312,7 +320,7 @@ class QomToSql2ConverterTest extends BaseCase
     }
 
     /**
-     * 6.7.32. LowerCase
+     * 6.7.32. LowerCase.
      */
     public function testLowerCase()
     {
@@ -325,7 +333,7 @@ class QomToSql2ConverterTest extends BaseCase
     }
 
     /**
-     * 6.7.33. UpperCase
+     * 6.7.33. UpperCase.
      */
     public function testUpperCase()
     {
@@ -338,7 +346,7 @@ class QomToSql2ConverterTest extends BaseCase
     }
 
     /**
-     * 6.7.35. BindVariable
+     * 6.7.35. BindVariable.
      */
     public function testBindVariable()
     {
@@ -351,7 +359,7 @@ class QomToSql2ConverterTest extends BaseCase
     }
 
     /**
-     * 6.7.38 Order
+     * 6.7.38 Order.
      */
     public function testOrdering()
     {
@@ -365,7 +373,7 @@ class QomToSql2ConverterTest extends BaseCase
     }
 
     /**
-     * 6.7.39 Column
+     * 6.7.39 Column.
      */
     public function testColumns()
     {

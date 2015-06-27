@@ -1,9 +1,18 @@
 <?php
+
+/*
+ * This file is part of the PHPCR API Tests package
+ *
+ * Copyright (c) 2013 Liip and others
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace PHPCR\Tests\Locking;
 
-
 /**
- * Tests for the LockManager
+ * Tests for the LockManager.
  *
  * NOTE: Some of these tests depend on each other. Please see the @ depends
  *  annotations to see how they depend.
@@ -24,17 +33,19 @@ class LockManagerTest extends \PHPCR\Test\BaseCase
     // ----- LOCK TESTS -------------------------------------------------------
 
     /**
-     * Try to lock a non-lockable node
+     * Try to lock a non-lockable node.
+     *
      * @expectedException \PHPCR\Lock\LockException
      */
     public function testCannotLockNonLockableNodes()
     {
         $this->recreateTestNode('non-lockable', false);
-        $this->lm->lock('/non-lockable', true, true, 3, "");
+        $this->lm->lock('/non-lockable', true, true, 3, '');
     }
 
     /**
-     * Try to lock an already locked node
+     * Try to lock an already locked node.
+     *
      * @expectedException \PHPCR\Lock\LockException
      */
     public function testLockAlreadyLocked()
@@ -43,18 +54,19 @@ class LockManagerTest extends \PHPCR\Test\BaseCase
 
         // The first lock should work
         try {
-            $this->lm->lock('/lockable-node', true, true, 3, "");
+            $this->lm->lock('/lockable-node', true, true, 3, '');
         } catch (\PHPCR\Lock\LockException $ex) {
             // The lock didn't work, Huston, there is a problem...
             $this->fail('An error occurred while trying to lock a valid node: ' . $ex->getMessage());
         }
 
         // The second lock should not work
-        $this->lm->lock('/lockable-node', true, true, 3, "");
+        $this->lm->lock('/lockable-node', true, true, 3, '');
     }
 
     /**
-     * Try to deep lock a node which subtree contains a locked node
+     * Try to deep lock a node which subtree contains a locked node.
+     *
      * @expectedException \PHPCR\Lock\LockException
      */
     public function testLockDeepOnAlreadyLocked()
@@ -64,28 +76,30 @@ class LockManagerTest extends \PHPCR\Test\BaseCase
 
         // The lock on the child should work
         try {
-            $this->lm->lock('/lockable-parent/lockable-child', true, true, 3, "");
+            $this->lm->lock('/lockable-parent/lockable-child', true, true, 3, '');
         } catch (\PHPCR\Lock\LockException $ex) {
             $this->fail('An error occurred while trying to lock a valid node: ' . $ex->getMessage());
         }
 
         // The *deep* lock on the parent should not work
-        $this->lm->lock('/lockable-parent', true, true, 3, "");
+        $this->lm->lock('/lockable-parent', true, true, 3, '');
     }
 
     /**
      * Try to lock a node with non-saved pending changes.
+     *
      * @expectedException \PHPCR\InvalidItemStateException
      */
     public function testLockNonSavedNode()
     {
         $node = $this->recreateTestNode('unsaved', true);
         $node->setProperty('testprop', 'foobar');
-        $this->lm->lock('/unsaved', true, true, 3, "");
+        $this->lm->lock('/unsaved', true, true, 3, '');
     }
 
     /**
-     * Try to lock an unexisting node
+     * Try to lock an unexisting node.
+     *
      * @expectedException \PHPCR\PathNotFoundException
      */
     public function testLockNonExistingNode()
@@ -94,7 +108,7 @@ class LockManagerTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * Test a simple lock on a lockable node
+     * Test a simple lock on a lockable node.
      */
     public function testCanLockLockableNodes()
     {
@@ -142,7 +156,7 @@ class LockManagerTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * Check that a deep lock locks the children but still the lock is hold by the parent node
+     * Check that a deep lock locks the children but still the lock is hold by the parent node.
      */
     public function testDeepLock()
     {
@@ -155,7 +169,7 @@ class LockManagerTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * Check deep lock with the LockInfo
+     * Check deep lock with the LockInfo.
      */
     public function testDeepLockInfo()
     {
@@ -182,7 +196,7 @@ class LockManagerTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * Check that a non-deep lock does not lock the children
+     * Check that a non-deep lock does not lock the children.
      */
     public function testNonDeepLock()
     {
@@ -201,7 +215,7 @@ class LockManagerTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * Test a simple lock on a lockable node
+     * Test a simple lock on a lockable node.
      */
     public function testLockOwner()
     {
@@ -214,7 +228,8 @@ class LockManagerTest extends \PHPCR\Test\BaseCase
     // ----- ISLOCKED TESTS ---------------------------------------------------
 
     /**
-     * Check a locked node is locked
+     * Check a locked node is locked.
+     *
      * @depends testCanLockLockableNodeInfiniteTimeout
      */
     public function testIsLockedOnLocked()
@@ -223,7 +238,8 @@ class LockManagerTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * Check an unlocked node is not locked
+     * Check an unlocked node is not locked.
+     *
      * @depends testCannotLockNonLockableNodes
      */
     public function testIsLockedOnUnlocked()
@@ -234,7 +250,8 @@ class LockManagerTest extends \PHPCR\Test\BaseCase
     // ----- HOLDSLOCK TESTS --------------------------------------------------
 
     /**
-     * Try to test the lock on an unexisting node
+     * Try to test the lock on an unexisting node.
+     *
      * @expectedException \PHPCR\PathNotFoundException
      */
     public function testHoldsLockUnexistingNode()
@@ -261,7 +278,8 @@ class LockManagerTest extends \PHPCR\Test\BaseCase
     // ----- UNLOCK TESTS -----------------------------------------------------
 
     /**
-     * Try to unlock a locked node
+     * Try to unlock a locked node.
+     *
      * @depends testCanLockLockableNodeInfiniteTimeout
      */
     public function testUnlockOnLocked()
@@ -272,7 +290,8 @@ class LockManagerTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * Try to unlock a non-lockable node
+     * Try to unlock a non-lockable node.
+     *
      * @depends testIsLockedOnUnlocked
      * @expectedException \PHPCR\Lock\LockException
      */
@@ -282,19 +301,21 @@ class LockManagerTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * Try to unlock a unsaved node
+     * Try to unlock a unsaved node.
+     *
      * @expectedException \PHPCR\InvalidItemStateException
      */
     public function testUnlockInvalidState()
     {
         $node = $this->recreateTestNode('locked-unsaved', true);
-        $this->lm->lock('/locked-unsaved', true, true, 3, "");
+        $this->lm->lock('/locked-unsaved', true, true, 3, '');
         $node->setProperty('testprop', 'foobar');
         $this->lm->unlock('/locked-unsaved');
     }
 
     /**
-     * Try to unlock an unexisting node
+     * Try to unlock an unexisting node.
+     *
      * @expectedException \PHPCR\PathNotFoundException
      */
     public function testUnlockUnexistingNode()
@@ -302,16 +323,16 @@ class LockManagerTest extends \PHPCR\Test\BaseCase
         $this->lm->unlock('/some-unexisting-node');
     }
 
-
     // ----- HELPERS ----------------------------------------------------------
 
     /**
-     * Helper function to simplify the test of valid Lock objects
+     * Helper function to simplify the test of valid Lock objects.
+     *
      * @param \PHPCR\Lock\LockInterface $lock The lock to check
      * @param NodeInterface the expected node of this lock
      * @param string  $expectedOwner
-     * @param boolean $expectedIsDeep
-     * @param boolean $expectedIsSessionScoped
+     * @param bool $expectedIsDeep
+     * @param bool $expectedIsSessionScoped
      * @param int     $timeout                 the expected seconds remaining. One second less remaining is accepted too to permit for one second change
      */
     protected function assertLockEquals($lock, $expectedNode, $expectedOwner, $expectedIsDeep, $expectedIsSessionScoped, $timeout)
@@ -361,5 +382,4 @@ class LockManagerTest extends \PHPCR\Test\BaseCase
 
         return $node;
     }
-
 }

@@ -1,13 +1,20 @@
 <?php
 
-namespace PHPCR\Tests\PhpcrUtils;
+/*
+ * This file is part of the PHPCR API Tests package
+ *
+ * Copyright (c) 2013 Liip and others
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
+namespace PHPCR\Tests\PhpcrUtils;
 
 use PHPCR\NodeType\NodeTypeDefinitionInterface;
 use PHPCR\PropertyType;
 use PHPCR\NodeType\PropertyDefinitionTemplateInterface;
 use PHPCR\Version\OnParentVersionAction;
-
 use PHPCR\Util\CND\Parser\CndParser;
 
 class CndParserTest extends \PHPCR\Test\BaseCase
@@ -31,7 +38,6 @@ class CndParserTest extends \PHPCR\Test\BaseCase
     {
         $res = $this->cndParser->parseFile(__DIR__ . '/resources/cnd/example.compact.cnd');
         $this->assertExampleCnd($res);
-
     }
 
     public function testParseVerbose()
@@ -63,7 +69,7 @@ EOT;
     }
 
     /**
-     * Have invalid-string in the middle of options for a property
+     * Have invalid-string in the middle of options for a property.
      *
      * @expectedException \PHPCR\Util\CND\Exception\ParserException
      */
@@ -111,7 +117,7 @@ EOT;
     }
 
     /**
-     * Have a newline in a name (here the ns declaration)
+     * Have a newline in a name (here the ns declaration).
      *
      * @expectedException \PHPCR\Util\CND\Exception\ScannerException
      */
@@ -207,5 +213,4 @@ EOT;
         $this->assertTrue($prop->isFullTextSearchable()); // True because there was no "nofulltext" attribute
         $this->assertTrue($prop->isQueryOrderable());     // True because there was no "noqueryorder" attribute
     }
-
 }

@@ -1,10 +1,18 @@
 <?php
 
+/*
+ * This file is part of the PHPCR API Tests package
+ *
+ * Copyright (c) 2013 Liip and others
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace PHPCR\Tests\Query;
 
 use PHPCR\Query\QueryInterface;
 use PHPCR\Query\QueryManagerInterface;
-
 
 class CharacterTest extends \PHPCR\Test\BaseCase
 {
@@ -15,7 +23,7 @@ class CharacterTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * Using /tests_general_base/propertyCharacterComparison/jcr:content
+     * Using /tests_general_base/propertyCharacterComparison/jcr:content.
      */
     public function testPropertyWithBackslash()
     {
@@ -36,7 +44,7 @@ class CharacterTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * Using /tests_general_base/propertyCharacterComparison/jcr:content
+     * Using /tests_general_base/propertyCharacterComparison/jcr:content.
      */
     public function testPropertyWithDoubleBackslash()
     {
@@ -57,7 +65,7 @@ class CharacterTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * Using /tests_general_base/propertyCharacterComparison/jcr:content
+     * Using /tests_general_base/propertyCharacterComparison/jcr:content.
      */
     public function testPropertyWithQuotes()
     {
@@ -79,7 +87,7 @@ class CharacterTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * Using /tests_general_base/propertyCharacterComparison/jcr:content
+     * Using /tests_general_base/propertyCharacterComparison/jcr:content.
      */
     public function testPropertyWithQuotesAndBackslash()
     {

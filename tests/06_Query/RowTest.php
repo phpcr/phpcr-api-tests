@@ -1,9 +1,18 @@
 <?php
+
+/*
+ * This file is part of the PHPCR API Tests package
+ *
+ * Copyright (c) 2013 Liip and others
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace PHPCR\Tests\Query;
 
-
 /**
- * $ 6.11.1 Table View - Row part
+ * $ 6.11.1 Table View - Row part.
  */
 class RowTest extends QueryBaseCase
 {
@@ -48,7 +57,6 @@ class RowTest extends QueryBaseCase
         $keys = array_keys($values);
         sort($keys);
         $this->assertEquals(array('nt:folder.jcr:created', 'nt:folder.jcr:createdBy', 'nt:folder.jcr:primaryType'), $keys);
-
     }
 
     public function testGetValue()

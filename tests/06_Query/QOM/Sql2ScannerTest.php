@@ -1,11 +1,20 @@
 <?php
-namespace PHPCR\Tests\Query\QOM;
 
+/*
+ * This file is part of the PHPCR API Tests package
+ *
+ * Copyright (c) 2013 Liip and others
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace PHPCR\Tests\Query\QOM;
 
 use PHPCR\Util\QOM\Sql2Scanner;
 
 /**
- * Test for PHPCR\Util\QOM\Sql2Scanner
+ * Test for PHPCR\Util\QOM\Sql2Scanner.
  */
 class Sql2ScannerTest extends \PHPCR\Test\BaseCase
 {
@@ -23,7 +32,7 @@ class Sql2ScannerTest extends \PHPCR\Test\BaseCase
                 [nt:folder] ON ISSAMENODE(sel1, sel2, [/home])';
         $this->tokens = array(
             'SELECT', '*', 'FROM','[nt:file]', 'INNER', 'JOIN', '[nt:folder]',
-            'ON', 'ISSAMENODE', '(', 'sel1', ',', 'sel2', ',', '[/home]', ')');
+            'ON', 'ISSAMENODE', '(', 'sel1', ',', 'sel2', ',', '[/home]', ')', );
     }
 
     public function testConstructor()

@@ -1,13 +1,24 @@
 <?php
+
+/*
+ * This file is part of the PHPCR API Tests package
+ *
+ * Copyright (c) 2013 Liip and others
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace PHPCR\Tests\Query\QOM;
 
 use PHPCR\Query\QOM\QueryObjectModelConstantsInterface as Constants;
 use PHPCR\Query\QOM\QueryObjectModelFactoryInterface;
 
 /**
-* Test queries for QOM language
+* Test queries for QOM language.
 *
 * The QOM queries defined here correspond to the SQL2 queries defined in Sql2TestQueries.
+*
 * @see Sql2TestQueries
 */
 class QomTestQueries
@@ -16,7 +27,7 @@ class QomTestQueries
     {
         $queries = array();
 
-        /**
+        /*
         * 6.7.3. Selector
         */
         // SELECT * FROM nt:unstructured as test
@@ -27,7 +38,7 @@ class QomTestQueries
                 array(),
                 array());
 
-        /**
+        /*
         * 6.7.8. EquiJoinCondition
         */
 
@@ -67,7 +78,7 @@ class QomTestQueries
                 array(),
                 array());
 
-        /**
+        /*
         * 6.7.9. SameNodeJoinCondition
         */
 
@@ -95,7 +106,7 @@ class QomTestQueries
                 array(),
                 array());
 
-       /**
+       /*
         * 6.7.10 ChildNodeJoinCondition
         */
 
@@ -111,7 +122,7 @@ class QomTestQueries
                 array(),
                 array());
 
-        /**
+        /*
         * 6.7.11 DescendantNodeJoinCondition
         */
 
@@ -127,7 +138,7 @@ class QomTestQueries
                 array(),
                 array());
 
-        /**
+        /*
         * 6.7.12. Constraint (operator precedence)
         */
         $queries['6.7.12.Constraint.Precedence.1'] = $factory->createQuery(
@@ -266,7 +277,7 @@ class QomTestQueries
             array()
         );
 
-        /**
+        /*
         * 6.7.13. AndConstraint
         */
 
@@ -280,7 +291,7 @@ class QomTestQueries
                 array(),
                 array());
 
-        /**
+        /*
         * 6.7.14. OrConstraint
         */
 
@@ -294,7 +305,7 @@ class QomTestQueries
                 array(),
                 array());
 
-        /**
+        /*
         * 6.7.15. NotConstraint
         */
 
@@ -307,7 +318,7 @@ class QomTestQueries
                 array(),
                 array());
 
-        /**
+        /*
         * 6.7.16. Comparison
         */
 
@@ -322,7 +333,7 @@ class QomTestQueries
                 array(),
                 array());
 
-        /**
+        /*
         * 6.7.18. PropertyExistence
         */
 
@@ -334,7 +345,7 @@ class QomTestQueries
                 array(),
                 array());
 
-        /**
+        /*
         * 6.7.19. FullTextSearch
         */
 
@@ -352,7 +363,7 @@ class QomTestQueries
                 array(),
                 array());
 
-        /**
+        /*
         * 6.7.20. SameNode
         */
         // SELECT * FROM [nt:file] AS file WHERE ISSAMENODE(file, /home)
@@ -371,7 +382,7 @@ class QomTestQueries
                 array());
         */
 
-        /**
+        /*
         * 6.7.21. ChildNode
         */
         // SELECT * FROM [nt:file] AS file WHERE ISCHILDNODE(file, /home)
@@ -382,7 +393,7 @@ class QomTestQueries
                 array(),
                 array());
 
-        /**
+        /*
         * 6.7.22. DescendantNode
         */
         // SELECT * FROM [nt:file] AS file WHERE ISDESCENDANTNODE(file, /home)
@@ -393,7 +404,7 @@ class QomTestQueries
                 array(),
                 array());
 
-        /**
+        /*
         * 6.7.27. ProperyValue
         */
 
@@ -419,7 +430,7 @@ class QomTestQueries
                 array(),
                 array());
 
-        /**
+        /*
         * 6.7.28. Length
         */
 
@@ -434,7 +445,7 @@ class QomTestQueries
                 array(),
                 array());
 
-         /**
+         /*
         * 6.7.29. NodeName
         */
 
@@ -449,7 +460,7 @@ class QomTestQueries
                 array(),
                 array());
 
-        /**
+        /*
         * 6.7.30. NodeLocalName
         */
 
@@ -464,7 +475,7 @@ class QomTestQueries
                 array(),
                 array());
 
-        /**
+        /*
         * 6.7.31. FullTextSearchScore
         */
 
@@ -479,7 +490,7 @@ class QomTestQueries
                 array(),
                 array());
 
-        /**
+        /*
         * 6.7.32. LowerCase
         */
 
@@ -494,7 +505,7 @@ class QomTestQueries
                 array(),
                 array());
 
-        /**
+        /*
         * 6.7.33. UpperCase
         */
 
@@ -509,7 +520,7 @@ class QomTestQueries
                 array(),
                 array());
 
-        /**
+        /*
         * 6.7.35. BindVariable
         */
 
@@ -524,7 +535,7 @@ class QomTestQueries
                 array(),
                 array());
 
-        /**
+        /*
         * 6.7.38 Order
         */
 
@@ -542,7 +553,7 @@ class QomTestQueries
                 $factory->selector('u', 'nt:unstructured'),
                 null,
                 array(
-                    $factory->ascending($factory->propertyValue('u', 'prop1'))),
+                    $factory->ascending($factory->propertyValue('u', 'prop1')), ),
                 array());
 
         // SELECT * FROM nt:unstructured ORDER BY prop1 DESC
@@ -551,7 +562,7 @@ class QomTestQueries
                 $factory->selector('u', 'nt:unstructured'),
                 null,
                 array(
-                    $factory->descending($factory->propertyValue('u', 'prop1'))),
+                    $factory->descending($factory->propertyValue('u', 'prop1')), ),
                 array());
 
         // SELECT * FROM nt:unstructured ORDER BY prop1 ASC, prop2 DESC
@@ -561,10 +572,10 @@ class QomTestQueries
                 null,
                 array(
                     $factory->ascending($factory->propertyValue('u', 'prop1')),
-                    $factory->descending($factory->propertyValue('u', 'prop2'))),
+                    $factory->descending($factory->propertyValue('u', 'prop2')), ),
                 array());
 
-        /**
+        /*
         * 6.7.39 Column
         */
 
@@ -583,8 +594,7 @@ class QomTestQueries
                 null,
                 array(),
                 array(
-                    $factory->column('u', 'prop1', 'col1')));
-
+                    $factory->column('u', 'prop1', 'col1'), ));
 
         // SELECT u.prop1, u.prop2 AS col2 FROM nt:unstructured
         $queries['6.7.39.Colum.Mixed'] =

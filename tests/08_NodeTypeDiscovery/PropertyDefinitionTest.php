@@ -1,10 +1,20 @@
 <?php
+
+/*
+ * This file is part of the PHPCR API Tests package
+ *
+ * Copyright (c) 2013 Liip and others
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace PHPCR\Tests\NodeTypeDiscovery;
 
-
 use PHPCR\Query\QOM\QueryObjectModelConstantsInterface;
+
 /**
- * Test the PropertyDefinition §8
+ * Test the PropertyDefinition §8.
  *
  * Requires that NodeTypeManager->getNodeType and NodeTypeDefinition->getPropertyDefinitions() works correctly
  */
@@ -35,7 +45,6 @@ class PropertyDefinitionTest extends \PHPCR\Test\BaseCase
         self::$address = $ntm->getNodeType('nt:address');
         self::$mix_created = $ntm->getNodeType('mix:created');
         self::$resource = $ntm->getNodeType('nt:resource');
-
     }
 
     public function setUp()
@@ -98,7 +107,7 @@ class PropertyDefinitionTest extends \PHPCR\Test\BaseCase
             }
             $this->assertNotNull($this->data);
         } catch (\Exception $e) {
-            $this->markTestSkipped('getChildNodeDefinitions not working as it should, skipping tests about NodeDefinitionInterface: '.$e->getMessage());
+            $this->markTestSkipped('getChildNodeDefinitions not working as it should, skipping tests about NodeDefinitionInterface: ' . $e->getMessage());
         }
     }
 
@@ -111,7 +120,7 @@ class PropertyDefinitionTest extends \PHPCR\Test\BaseCase
                           QueryObjectModelConstantsInterface::JCR_OPERATOR_LESS_THAN_OR_EQUAL_TO,
                           QueryObjectModelConstantsInterface::JCR_OPERATOR_GREATER_THAN,
                           QueryObjectModelConstantsInterface::JCR_OPERATOR_GREATER_THAN_OR_EQUAL_TO,
-                          QueryObjectModelConstantsInterface::JCR_OPERATOR_LIKE
+                          QueryObjectModelConstantsInterface::JCR_OPERATOR_LIKE,
                           );
 
         asort($ops);

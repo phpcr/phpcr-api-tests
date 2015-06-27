@@ -1,9 +1,18 @@
 <?php
+
+/*
+ * This file is part of the PHPCR API Tests package
+ *
+ * Copyright (c) 2013 Liip and others
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace PHPCR\Tests\Reading;
 
-
 /**
- * Test Session read methods
+ * Test Session read methods.
  *
  * exportSystemView, exportDocumentView are covered in chapter 7
  * getNamespacePrefix, getNamespacePrefixes, getNamespaceURI, setNamespacePrefix are covered in SessionNamespaceRemappingTest
@@ -21,7 +30,7 @@ class SessionReadMethodsTest extends \PHPCR\Test\BaseCase
     {
         $node = $this->session->getRootNode();
         $this->assertInstanceOf('PHPCR\NodeInterface', $node);
-        $this->assertEquals( '/', $node->getPath());
+        $this->assertEquals('/', $node->getPath());
     }
 
     /**
@@ -83,7 +92,7 @@ class SessionReadMethodsTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * make sure getNodes works with a traversable object as well
+     * make sure getNodes works with a traversable object as well.
      */
     public function testGetNodesTraversable()
     {
@@ -111,7 +120,8 @@ class SessionReadMethodsTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * Get something that is a property and not a node
+     * Get something that is a property and not a node.
+     *
      * @expectedException \PHPCR\PathNotFoundException
      */
     public function testGetNodeInvalid()
@@ -119,7 +129,8 @@ class SessionReadMethodsTest extends \PHPCR\Test\BaseCase
         $this->session->getNode('/tests_general_base/idExample/jcr:primaryType');
     }
     /**
-     * Get something that is a node and not a property
+     * Get something that is a node and not a property.
+     *
      * @expectedException \PHPCR\PathNotFoundException
      */
     public function testGetPropertyInvalid()
@@ -179,7 +190,8 @@ class SessionReadMethodsTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * it is forbidden to call getItem on the session with a relative path
+     * it is forbidden to call getItem on the session with a relative path.
+     *
      * @expectedException \PHPCR\PathNotFoundException
      */
     public function testGetItemRelativePathException()
@@ -333,7 +345,8 @@ class SessionReadMethodsTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * spec 4.3
+     * spec 4.3.
+     *
      * @expectedException JavaException
      */
     public function testImpersonate()

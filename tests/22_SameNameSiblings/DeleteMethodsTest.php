@@ -1,6 +1,15 @@
 <?php
-namespace PHPCR\Tests\SameNameSiblings;
 
+/*
+ * This file is part of the PHPCR API Tests package
+ *
+ * Copyright (c) 2013 Liip and others
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace PHPCR\Tests\SameNameSiblings;
 
 /**
  * Test for deleting same name siblings (SNS).
@@ -22,7 +31,7 @@ class DeleteMethodsTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * Call session->removeItem() with multiple items before session->save()
+     * Call session->removeItem() with multiple items before session->save().
      */
     public function testRemoveItemMultiple()
     {
@@ -45,7 +54,7 @@ class DeleteMethodsTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * Call node->remove() with multiple items before session->save()
+     * Call node->remove() with multiple items before session->save().
      *
      * \PHPCR\ItemInterface::remove
      */
@@ -135,6 +144,7 @@ class DeleteMethodsTest extends \PHPCR\Test\BaseCase
     /**
      * @param $session
      * @param $parentPath
+     *
      * @return mixed
      */
     private function getParentNode($session, $parentPath)

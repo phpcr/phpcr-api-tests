@@ -1,12 +1,19 @@
 <?php
+
+/*
+ * This file is part of the PHPCR API Tests package
+ *
+ * Copyright (c) 2013 Liip and others
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace PHPCR\Tests\Connecting;
-
-use PHPCR\LoginException;
-
 
 class RepositoryTest extends \PHPCR\Test\BaseCase
 {
-    public static function setupBeforeClass($fixtures=null)
+    public static function setupBeforeClass($fixtures = null)
     {
         //don't care about fixtures
         parent::setupBeforeClass($fixtures);
@@ -36,12 +43,12 @@ class RepositoryTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * external authentication
+     * external authentication.
      */
     public function testNoLogin()
     {
         $repository = self::$loader->getRepository();
-        if (! self::$loader->prepareAnonymousLogin()) {
+        if (!self::$loader->prepareAnonymousLogin()) {
             $this->setExpectedException('PHPCR\LoginException');
         }
         $session = $repository->login(null, self::$loader->getWorkspaceName());
@@ -50,12 +57,12 @@ class RepositoryTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * external authentication
+     * external authentication.
      */
     public function testNoLoginAndWorkspace()
     {
         $repository = self::$loader->getRepository();
-        if (! self::$loader->prepareAnonymousLogin()) {
+        if (!self::$loader->prepareAnonymousLogin()) {
             $this->setExpectedException('PHPCR\LoginException');
         }
         $session = $repository->login();

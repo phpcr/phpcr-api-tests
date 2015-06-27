@@ -1,13 +1,22 @@
 <?php
+
+/*
+ * This file is part of the PHPCR API Tests package
+ *
+ * Copyright (c) 2013 Liip and others
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace PHPCR\Tests\Writing;
 
 use PHPCR\RepositoryInterface;
 use PHPCR\WorkspaceInterface;
 use PHPCR\Test\BaseCase;
 
-
 /**
- * Covering jcr-283 spec $10.8
+ * Covering jcr-283 spec $10.8.
  */
 class CloneMethodsTest extends BaseCase
 {
@@ -88,7 +97,7 @@ class CloneMethodsTest extends BaseCase
 
     /**
      * Clone a referenceable node, then clone again with removeExisting = true
-     * This should overwrite the existing, corresponding node (same UUID)
+     * This should overwrite the existing, corresponding node (same UUID).
      */
     public function testCloneReferenceableRemoveExisting()
     {
@@ -129,7 +138,7 @@ class CloneMethodsTest extends BaseCase
 
     /**
      * Clone a referenceable node, then clone again with removeExisting = false
-     * This should cause an exception, even with a corresponding node (same UUID)
+     * This should cause an exception, even with a corresponding node (same UUID).
      *
      * @expectedException \PHPCR\ItemExistsException
      */
@@ -163,7 +172,7 @@ class CloneMethodsTest extends BaseCase
     {
         $srcNode = '/tests_write_manipulation_clone/testWorkspaceClone/referenceableNoRemoveExisting_2';
         $dstNode = $srcNode;
-        $secondDstNode = '/tests_write_manipulation_clone/testWorkspaceClone/thisShouldStillConflict';;
+        $secondDstNode = '/tests_write_manipulation_clone/testWorkspaceClone/thisShouldStillConflict';
         $destSession = self::$destWs->getSession();
 
         try {
@@ -243,7 +252,7 @@ class CloneMethodsTest extends BaseCase
     }
 
     /**
-     * Test when source node is non-referenceable but a referenceable node exists at destination path
+     * Test when source node is non-referenceable but a referenceable node exists at destination path.
      *
      * @expectedException \PHPCR\ItemExistsException
      */
@@ -324,7 +333,7 @@ class CloneMethodsTest extends BaseCase
     }
 
     /**
-     * Main test for cloning a non-referenceable node
+     * Main test for cloning a non-referenceable node.
      */
     public function testCloneNonReferenceable()
     {
@@ -342,7 +351,7 @@ class CloneMethodsTest extends BaseCase
     }
 
     /**
-     * Clone a non-referenceable node, then clone again with removeExisting = true
+     * Clone a non-referenceable node, then clone again with removeExisting = true.
      *
      * @expectedException \PHPCR\ItemExistsException
      */
@@ -393,7 +402,7 @@ class CloneMethodsTest extends BaseCase
     public function testGetCorrespondingNode()
     {
         $srcNode = '/tests_write_manipulation_clone/testWorkspaceCorrespondingNode/sourceNode';
-        $dstNode = '/tests_write_manipulation_clone/testWorkspaceCorrespondingNode/destNode';;
+        $dstNode = '/tests_write_manipulation_clone/testWorkspaceCorrespondingNode/destNode';
         $destSession = self::$destWs->getSession();
 
         self::$destWs->cloneFrom($this->srcWsName, $srcNode, $dstNode, false);
@@ -441,12 +450,12 @@ class CloneMethodsTest extends BaseCase
 
     /**
      * Main test for cloning and then updating a node and its children.
-     * Using two levels of children to make sure copy works recursively (and affected nodes not cached)
+     * Using two levels of children to make sure copy works recursively (and affected nodes not cached).
      */
     public function testUpdateNodeWithChildren()
     {
         $srcNode = '/tests_write_manipulation_clone/testWorkspaceUpdateNode/sourceNode';
-        $dstNode = '/tests_write_manipulation_clone/testWorkspaceUpdateNode/destNode';;
+        $dstNode = '/tests_write_manipulation_clone/testWorkspaceUpdateNode/destNode';
         $srcChildNode = $srcNode . '/cloneChild';
         $dstChildNode = $dstNode . '/cloneChild';
         $srcChildOfChildNode = $srcChildNode . '/childOfChild';
@@ -524,7 +533,7 @@ class CloneMethodsTest extends BaseCase
 
     /**
      * Test that update has no effect if the source node not found
-     * (from JCR spec 10.8.3: "If this node does not have a corresponding node in srcWorkspace, then the method has no effect.")
+     * (from JCR spec 10.8.3: "If this node does not have a corresponding node in srcWorkspace, then the method has no effect.").
      */
     public function testUpdateSrcNotFound()
     {

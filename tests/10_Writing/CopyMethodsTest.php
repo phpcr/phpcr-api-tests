@@ -1,11 +1,20 @@
 <?php
+
+/*
+ * This file is part of the PHPCR API Tests package
+ *
+ * Copyright (c) 2013 Liip and others
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace PHPCR\Tests\Writing;
 
 use PHPCR\WorkspaceInterface;
 
-
 /**
- * Covering jcr-283 spec $10.7
+ * Covering jcr-283 spec $10.7.
  */
 class CopyMethodsTest extends \PHPCR\Test\BaseCase
 {
@@ -53,7 +62,7 @@ class CopyMethodsTest extends \PHPCR\Test\BaseCase
         $dchild = $this->session->getNode("$dst/srcFile");
         $this->assertNotEquals($schild->getIdentifier(), $dchild->getIdentifier());
 
-        $this->assertTrue($this->session->nodeExists($dst.'/srcFile/jcr:content'), 'Did not copy the whole subgraph');
+        $this->assertTrue($this->session->nodeExists($dst . '/srcFile/jcr:content'), 'Did not copy the whole subgraph');
 
         $sfile = $this->session->getNode("$src/srcFile/jcr:content");
         $dfile = $this->session->getNode("$dst/srcFile/jcr:content");
@@ -173,7 +182,7 @@ class CopyMethodsTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * Verifies that there is no update-on-copy if the target node already exists
+     * Verifies that there is no update-on-copy if the target node already exists.
      *
      * @expectedException \PHPCR\ItemExistsException
      */
@@ -203,7 +212,7 @@ class CopyMethodsTest extends \PHPCR\Test\BaseCase
         $references = $node->getReferences();
         $this->assertCount(2, $references);
 
-        $this->session->refresh(true );
+        $this->session->refresh(true);
 
         $node = $this->session->getNode($ref);
         $references = $node->getReferences();
@@ -213,7 +222,7 @@ class CopyMethodsTest extends \PHPCR\Test\BaseCase
 
     /**
      * Copied nodes which reference other nodes should be shown in the referrers list of references
-     * Multi-value
+     * Multi-value.
      */
     public function testCopyUpdateReferencesMultiValue()
     {

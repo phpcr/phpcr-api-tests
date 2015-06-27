@@ -1,11 +1,20 @@
 <?php
+
+/*
+ * This file is part of the PHPCR API Tests package
+ *
+ * Copyright (c) 2013 Liip and others
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace PHPCR\Tests\Writing;
 
 use PHPCR\PropertyType;
 
-
 /**
- * Testing that mix:referenceable nodes references work correctly
+ * Testing that mix:referenceable nodes references work correctly.
  *
  * Covering jcr-2.8.3 spec $10.10.3
  */
@@ -22,7 +31,8 @@ class MixinReferenceableTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * Test that a node without mix:referenceable type cannot be referenced
+     * Test that a node without mix:referenceable type cannot be referenced.
+     *
      * @expectedException \PHPCR\ValueFormatException
      */
     public function testReferenceOnNonReferenceableNode()
@@ -37,7 +47,7 @@ class MixinReferenceableTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * Test that a node with newly set mix:referenceable type can be referenced
+     * Test that a node with newly set mix:referenceable type can be referenced.
      */
     public function testReferenceOnNewlyReferenceableNode()
     {
@@ -63,7 +73,7 @@ class MixinReferenceableTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * Test that a node with mix:referenceable in the fixtures can be referenced
+     * Test that a node with mix:referenceable in the fixtures can be referenced.
      */
     public function testReferenceOnReferenceableNode()
     {
@@ -79,7 +89,7 @@ class MixinReferenceableTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * Test that we can update a reference
+     * Test that we can update a reference.
      */
     public function testUpdateReference()
     {

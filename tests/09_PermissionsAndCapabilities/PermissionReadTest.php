@@ -1,10 +1,18 @@
 <?php
 
+/*
+ * This file is part of the PHPCR API Tests package
+ *
+ * Copyright (c) 2013 Liip and others
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace PHPCR\Tests\PermissionsAndCapabilities;
 
-
 /**
- * Test Permission read methods
+ * Test Permission read methods.
  */
 class PermissionReadTest extends \PHPCR\Test\BaseCase
 {
@@ -60,5 +68,4 @@ class PermissionReadTest extends \PHPCR\Test\BaseCase
         //$this->assertFalse($this->session->hasCapability('inexistentXXX', $property, array()));
         //actually, the repository is not required to know, it can always say that the info can not be determined and return true. this makes me think that this method is pretty useless...
     }
-
 }

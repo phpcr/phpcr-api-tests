@@ -1,9 +1,18 @@
 <?php
+
+/*
+ * This file is part of the PHPCR API Tests package
+ *
+ * Copyright (c) 2013 Liip and others
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace PHPCR\Tests\Query;
 
-
 /**
- * test the Query interface. $ 6.9
+ * test the Query interface. $ 6.9.
  *
  * bindValue, getBindVariableNames
  */
@@ -73,7 +82,8 @@ class QueryObjectSql2Test extends QueryBaseCase
     }
 
     /**
-     * a transient query has no stored query path
+     * a transient query has no stored query path.
+     *
      * @expectedException \PHPCR\ItemNotFoundException
      */
     public function testGetStoredQueryPathItemNotFound()

@@ -1,6 +1,15 @@
 <?php
-namespace PHPCR\Tests\Writing;
 
+/*
+ * This file is part of the PHPCR API Tests package
+ *
+ * Copyright (c) 2013 Liip and others
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace PHPCR\Tests\Writing;
 
 use PHPCR\PropertyType;
 
@@ -127,7 +136,7 @@ class SetPropertyDynamicRebindingTest extends \PHPCR\Test\BaseCase
 
     /**
      * Construct the test data for the testDynamicRebinding test.
-     * The resulting array is composed of arrays as follow:
+     * The resulting array is composed of arrays as follow:.
      *
      *      array(new_property_name,
      *            initial_property_type, initial_property_value,

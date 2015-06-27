@@ -1,9 +1,18 @@
 <?php
+
+/*
+ * This file is part of the PHPCR API Tests package
+ *
+ * Copyright (c) 2013 Liip and others
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace PHPCR\Tests\Versioning;
 
-
 /**
- * Testing version manager functions
+ * Testing version manager functions.
  *
  * Covering jcr-2.8.3 spec $15.1
  */
@@ -55,7 +64,6 @@ class VersionManagerTest extends \PHPCR\Test\BaseCase
         $this->setExpectedException('PHPCR\Version\VersionException');
         $node->setProperty('foo', 'bar2');
         $this->session->save();
-
     }
 
     /**
@@ -324,5 +332,4 @@ class VersionManagerTest extends \PHPCR\Test\BaseCase
     }
 
     // TODO: cancelMerge, merge, doneMerge, createConfiguration, createActivity, setActivity, getActivity, removeActivity, restoreByLabel
-
 }

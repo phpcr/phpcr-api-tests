@@ -1,16 +1,24 @@
 <?php
+
+/*
+ * This file is part of the PHPCR API Tests package
+ *
+ * Copyright (c) 2013 Liip and others
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace PHPCR\Tests\NodeTypeManagement;
 
 use PHPCR\NodeType\NodeTypeInterface;
 use PHPCR\WorkspaceInterface;
 use PHPCR\SessionInterface;
 use PHPCR\NodeType\NodeTypeDefinitionInterface;
-
 use PHPCR\Test\BaseCase;
 
-
 /**
- * Covering jcr-2.8.3 spec $19
+ * Covering jcr-2.8.3 spec $19.
  */
 abstract class NodeTypeBaseCase extends BaseCase
 {
@@ -32,7 +40,7 @@ abstract class NodeTypeBaseCase extends BaseCase
     }
 
     /**
-     * Register the node types cnd/classes
+     * Register the node types cnd/classes.
      *
      * @param bool $allowUpdate
      *
@@ -42,7 +50,7 @@ abstract class NodeTypeBaseCase extends BaseCase
     abstract protected function registerNodeTypes($allowUpdate);
 
     /**
-     * Register the node type cnd/class that defines a primary item
+     * Register the node type cnd/class that defines a primary item.
      *
      * @param bool $allowUpdate
      *
@@ -53,7 +61,7 @@ abstract class NodeTypeBaseCase extends BaseCase
 
     /**
      * Try to register a node type with an object or cnd that would overwrite
-     * a build-in node type, e.g. nt:file
+     * a build-in node type, e.g. nt:file.
      *
      * Have allowUpdate true, should still fail.
      */
@@ -87,7 +95,7 @@ abstract class NodeTypeBaseCase extends BaseCase
         list($name, $type) = each($types);
         $this->assertEquals('phpcr:apitest', $name);
         $this->assertInstanceOf('PHPCR\NodeType\NodeTypeDefinitionInterface', $type);
-        /** @var $type NodeTypeDefinitionInterface */
+        /* @var $type NodeTypeDefinitionInterface */
         $props = $type->getDeclaredPropertyDefinitions();
         $this->assertCount(1, $props, 'Wrong number of properties in phpcr:apitest');
         $this->assertEquals('phpcr:class', $props[0]->getName());
@@ -97,7 +105,7 @@ abstract class NodeTypeBaseCase extends BaseCase
         list($name, $type) = each($types);
         $this->assertEquals('phpcr:test', $name);
         $this->assertInstanceOf('PHPCR\NodeType\NodeTypeDefinitionInterface', $type);
-        /** @var $type NodeTypeDefinitionInterface */
+        /* @var $type NodeTypeDefinitionInterface */
         $props = $type->getDeclaredPropertyDefinitions();
         $this->assertCount(1, $props, 'Wrong number of properties in phpcr:test');
         $this->assertEquals('phpcr:prop', $props[0]->getName());
@@ -157,7 +165,7 @@ abstract class NodeTypeBaseCase extends BaseCase
         }
 
         $node = $root->addNode('test_node', 'phpcr:primary_item_test');
-        $node->setProperty("phpcr:content", 'test');
+        $node->setProperty('phpcr:content', 'test');
         $this->session->save();
 
         // Check the primary item of the new node

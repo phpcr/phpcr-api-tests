@@ -1,9 +1,18 @@
 <?php
+
+/*
+ * This file is part of the PHPCR API Tests package
+ *
+ * Copyright (c) 2013 Liip and others
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace PHPCR\Tests\Versioning;
 
-
 /**
-* Testing whether mix:versionable node type is properly handled
+* Testing whether mix:versionable node type is properly handled.
 *
 * Covering jcr-2.8.3 spec $15.1
 */
@@ -36,7 +45,7 @@ class CreateVersionableNodeTest extends \PHPCR\Test\BaseCase
         //get the node again from the server
         $this->node = $this->session->getNode('/tests_version_base/versionable');
         $this->assertContains('mix:versionable', $mixins, 'Node does not have mix:versionable mixin');
-        $this->assertTrue( $this->node->getProperty('jcr:isCheckedOut')->getBoolean(),'jcr:isCheckout is not true');
+        $this->assertTrue($this->node->getProperty('jcr:isCheckedOut')->getBoolean(), 'jcr:isCheckout is not true');
     }
 
     public function testNewVersionableNode()

@@ -1,9 +1,18 @@
 <?php
+
+/*
+ * This file is part of the PHPCR API Tests package
+ *
+ * Copyright (c) 2013 Liip and others
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace PHPCR\Tests\NodeTypeDiscovery;
 
-
 /**
- * Test the NoteDefinition §8
+ * Test the NoteDefinition §8.
  *
  * Requires that NodeTypeManager->getNodeType and NodeTypeDefinition->getChildNodeDefinitions() works correctly
  */
@@ -22,8 +31,8 @@ class NodeDefinitionTest extends \PHPCR\Test\BaseCase
         parent::setupBeforeClass($fixtures);
         $ntm = self::$staticSharedFixture['session']->getWorkspace()->getNodeTypeManager();
         self::$file = $ntm->getNodeType('nt:file');
-        self::$folder= $ntm->getNodeType('nt:folder');
-        self::$hierarchyNodeType= $ntm->getNodeType('nt:hierarchyNode');
+        self::$folder = $ntm->getNodeType('nt:folder');
+        self::$hierarchyNodeType = $ntm->getNodeType('nt:hierarchyNode');
     }
 
     public function setUp()
@@ -42,9 +51,8 @@ class NodeDefinitionTest extends \PHPCR\Test\BaseCase
             list($key, $this->hierarchyNodeDef) = each($defs);
             $this->assertInstanceOf('\PHPCR\NodeType\NodeDefinitionInterface', $this->hierarchyNodeDef);
             $this->assertEquals('*', $this->hierarchyNodeDef->getName());
-
         } catch (\Exception $e) {
-            $this->markTestSkipped('getChildNodeDefinitions not working as it should, skipping tests about NodeDefinitionInterface: '.$e->getMessage());
+            $this->markTestSkipped('getChildNodeDefinitions not working as it should, skipping tests about NodeDefinitionInterface: ' . $e->getMessage());
         }
     }
     public function testAllowsSameNameSiblings()

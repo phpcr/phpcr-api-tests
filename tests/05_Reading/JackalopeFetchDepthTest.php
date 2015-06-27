@@ -1,13 +1,21 @@
 <?php
+
+/*
+ * This file is part of the PHPCR API Tests package
+ *
+ * Copyright (c) 2013 Liip and others
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace PHPCR\Tests\Reading;
 
-
 /**
- * functional tests for Jackalope fetch depth
+ * functional tests for Jackalope fetch depth.
  */
 class JackalopeFetchDepthTest extends \PHPCR\Test\BaseCase
 {
-
     public static function setupBeforeClass($fixtures = '05_Reading/jackalopeFetchDepth')
     {
         parent::setupBeforeClass($fixtures);
@@ -39,7 +47,7 @@ class JackalopeFetchDepthTest extends \PHPCR\Test\BaseCase
 
         $deepExample = $deepExample->getNode('deepExample');
         $this->assertEquals(array('deepExample'), (array) $deepExample->getNodeNames());
-   }
+    }
 
     public function testGetNodesWithFetchDepth()
     {

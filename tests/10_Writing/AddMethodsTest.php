@@ -1,6 +1,15 @@
 <?php
-namespace PHPCR\Tests\Writing;
 
+/*
+ * This file is part of the PHPCR API Tests package
+ *
+ * Copyright (c) 2013 Liip and others
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace PHPCR\Tests\Writing;
 
 use PHPCR\NodeType\ConstraintViolationException;
 use PHPCR\PropertyType;
@@ -8,11 +17,10 @@ use PHPCR\RepositoryInterface;
 use PHPCR\ValueFormatException;
 
 /**
- * Covering jcr-283 spec $10.4
+ * Covering jcr-283 spec $10.4.
  */
 class AddMethodsTest extends \PHPCR\Test\BaseCase
 {
-
     public static function setupBeforeClass($fixtures = '10_Writing/add')
     {
         parent::setupBeforeClass($fixtures);
@@ -23,7 +31,7 @@ class AddMethodsTest extends \PHPCR\Test\BaseCase
         $this->renewSession();
         parent::setUp();
         //all tests in this suite rely on the trick to have the node populated from the fixtures
-        $this->assertInstanceOf('PHPCR\NodeInterface', $this->node, "Something went wrong with fixture loading");
+        $this->assertInstanceOf('PHPCR\NodeInterface', $this->node, 'Something went wrong with fixture loading');
     }
 
     public function testAddNode()
@@ -39,7 +47,6 @@ class AddMethodsTest extends \PHPCR\Test\BaseCase
         $this->renewSession();
 
         $this->assertNotNull($this->session->getNode($this->node->getPath() . '/newNode'), 'Node newNode was not properly saved');
-
     }
 
     public function testAddNodeWithPath()
@@ -88,7 +95,6 @@ class AddMethodsTest extends \PHPCR\Test\BaseCase
         $this->renewSession();
 
         $this->assertNotNull($this->session->getNode($this->node->getPath() . '/newUnstructuredNode'), 'Node newUnstructuredNode was not created');
-
     }
 
     /**
@@ -271,6 +277,7 @@ class AddMethodsTest extends \PHPCR\Test\BaseCase
 
     /**
      * try to add a node below a not existing node.
+     *
      * @expectedException \PHPCR\PathNotFoundException
      */
     public function testAddNodePathNotFound()
@@ -279,7 +286,7 @@ class AddMethodsTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * try to add a node below a property
+     * try to add a node below a property.
      *
      * @expectedException \PHPCR\NodeType\ConstraintViolationException
      */
@@ -289,7 +296,7 @@ class AddMethodsTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * try to add a property of the wrong type
+     * try to add a property of the wrong type.
      */
     public function testAddPropertyWrongType()
     {
@@ -305,8 +312,7 @@ class AddMethodsTest extends \PHPCR\Test\BaseCase
             //also correct
             return;
         }
-        $this->fail("Expected PHPCR\\NodeType\\ConstraintViolationException or PHPCR\\ValueFormatException");
-
+        $this->fail('Expected PHPCR\\NodeType\\ConstraintViolationException or PHPCR\\ValueFormatException');
     }
 
     /**
@@ -318,7 +324,7 @@ class AddMethodsTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * Add a node and a child node to it
+     * Add a node and a child node to it.
      */
     public function testAddNodeChild()
     {
@@ -338,7 +344,7 @@ class AddMethodsTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * Add a node and a child node with some properties
+     * Add a node and a child node with some properties.
      */
     public function testAddNodeChildProperties()
     {
@@ -355,7 +361,8 @@ class AddMethodsTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * try to add a node with an unregistered namespace
+     * try to add a node with an unregistered namespace.
+     *
      * @expectedException \PHPCR\RepositoryException
      */
     public function testAddNodeWithUnregisteredNamespace()
@@ -371,7 +378,8 @@ class AddMethodsTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * try to add a property with an unregistered namespace
+     * try to add a property with an unregistered namespace.
+     *
      * @expectedException \PHPCR\RepositoryException
      */
     public function testAddPropertyWithUnregisteredNamespace()
@@ -393,7 +401,7 @@ class AddMethodsTest extends \PHPCR\Test\BaseCase
         }
 
         $workspace = $this->session->getWorkspace();
-        $cnd = file_get_contents(__DIR__.'/../../fixtures/10_Writing/add_auto_create.cnd');
+        $cnd = file_get_contents(__DIR__ . '/../../fixtures/10_Writing/add_auto_create.cnd');
         $workspace->getNodeTypeManager()->registerNodeTypesCnd($cnd, true);
         $this->node->addNode('foo', 'test:testautocreate');
         $this->session->save();

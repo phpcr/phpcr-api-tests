@@ -1,13 +1,22 @@
 <?php
+
+/*
+ * This file is part of the PHPCR API Tests package
+ *
+ * Copyright (c) 2013 Liip and others
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace PHPCR\Tests\Reading;
 
 use PHPCR\PropertyInterface;
 
-
 // According to PHPCR\BinaryInterface
 
 /**
- * §5.10.5
+ * §5.10.5.
  */
 class BinaryReadMethodsTest extends \PHPCR\Test\BaseCase
 {

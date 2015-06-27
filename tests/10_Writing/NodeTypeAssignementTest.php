@@ -1,6 +1,15 @@
 <?php
-namespace PHPCR\Tests\Writing;
 
+/*
+ * This file is part of the PHPCR API Tests package
+ *
+ * Copyright (c) 2013 Liip and others
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace PHPCR\Tests\Writing;
 
 /**
  * Test setting node types on nodes.
@@ -28,11 +37,11 @@ class NodeTypeAssignementTest extends \PHPCR\Test\BaseCase
     // TODO: a repository MAY also allow changing the primary node type.
 
     /**
-     * the predefined mixin types that do not depend on optional features
+     * the predefined mixin types that do not depend on optional features.
      */
     public static $mixins = array(
-    "mix:etag", "mix:language", "mix:lastModified", "mix:mimeType",
-    "mix:referenceable", "mix:shareable", "mix:title"
+    'mix:etag', 'mix:language', 'mix:lastModified', 'mix:mimeType',
+    'mix:referenceable', 'mix:shareable', 'mix:title',
     );
 
     public static function mixinTypes()
@@ -50,7 +59,7 @@ class NodeTypeAssignementTest extends \PHPCR\Test\BaseCase
      */
     public function testAddMixinOnNewNode($mixin)
     {
-        $newNode = $this->node->addNode('parent-'.strtr($mixin, ':', '-'), 'nt:unstructured');
+        $newNode = $this->node->addNode('parent-' . strtr($mixin, ':', '-'), 'nt:unstructured');
         $newNode->addMixin($mixin);
         $path = $newNode->getPath();
         $session = $this->saveAndRenewSession();
@@ -81,7 +90,7 @@ class NodeTypeAssignementTest extends \PHPCR\Test\BaseCase
 
     /**
      * adding an already existing mixin should not set the node into the modified state
-     * adding a mixin to a node that already has a mixin in the permanent storage should work too
+     * adding a mixin to a node that already has a mixin in the permanent storage should work too.
      */
     public function testAddMixinTwice()
     {
@@ -122,7 +131,8 @@ class NodeTypeAssignementTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * Test that assigning an unexisting mixin type to a node will fail
+     * Test that assigning an unexisting mixin type to a node will fail.
+     *
      * @expectedException \PHPCR\NodeType\NoSuchNodeTypeException
      */
     public function testAddMixinNonexisting()

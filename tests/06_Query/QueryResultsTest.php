@@ -1,18 +1,27 @@
 <?php
+
+/*
+ * This file is part of the PHPCR API Tests package
+ *
+ * Copyright (c) 2013 Liip and others
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace PHPCR\Tests\Query;
 
 use PHPCR\Query\QueryResultInterface;
 
-
 /**
- * $ 6.11 QueryResult - Test the query result object
+ * $ 6.11 QueryResult - Test the query result object.
  */
 class QueryResultsTest extends QueryBaseCase
 {
     /** @var QueryResultInterface */
     protected $qr;
 
-    public static $expect = array("jcr:createdBy","jcr:created","jcr:primaryType","jcr:path","jcr:score");
+    public static $expect = array('jcr:createdBy','jcr:created','jcr:primaryType','jcr:path','jcr:score');
 
     public function setUp()
     {
@@ -44,16 +53,16 @@ class QueryResultsTest extends QueryBaseCase
         sort($columnNames); //order is not determined
         $columnNamesExpected = array('nt:folder.jcr:created', 'nt:folder.jcr:createdBy', 'nt:folder.jcr:primaryType');
 
-       $this->assertEquals($columnNamesExpected, $columnNames);
+        $this->assertEquals($columnNamesExpected, $columnNames);
     }
 
     public function testGetAliasColumnNames()
     {
-        $query = $this->sharedFixture['qm']->createQuery("
+        $query = $this->sharedFixture['qm']->createQuery('
             SELECT [jcr:mimeType] AS bar, stringToCompare as foo, [nt:unstructured].longNumberToCompare, ding
             FROM [nt:unstructured]
             WHERE stringToCompare IS NOT NULL
-            ",
+            ',
             \PHPCR\Query\QueryInterface::JCR_SQL2
         );
         $qr = $query->execute();
@@ -69,7 +78,6 @@ class QueryResultsTest extends QueryBaseCase
             $this->assertNotNull($row->getValue('longNumberToCompare'));
             $this->assertEquals('', $row->getValue('ding'));
         }
-
     }
 
     public function testGetNodes()
@@ -130,7 +138,9 @@ class QueryResultsTest extends QueryBaseCase
 
         $this->assertTrue(count($this->qr->getNodes()) > 0);
         foreach ($this->qr->getNodes() as $path => $node) {
-            if ($seekName == $path) break;
+            if ($seekName == $path) {
+                break;
+            }
         }
 
         $this->assertInstanceOf('PHPCR\NodeInterface', $node);
@@ -195,7 +205,7 @@ class QueryResultsTest extends QueryBaseCase
         $this->assertCount(1, $rows);
         $this->assertEquals(false, $rows[0]->getValue('data.thisIsNo'));
 
-         $query = $this->sharedFixture['qm']->createQuery(
+        $query = $this->sharedFixture['qm']->createQuery(
             'SELECT data.thisIsYes FROM [nt:unstructured] as data WHERE data.thisIsYes = true',
              \PHPCR\Query\QueryInterface::JCR_SQL2
         );

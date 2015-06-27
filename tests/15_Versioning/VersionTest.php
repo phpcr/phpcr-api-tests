@@ -1,13 +1,22 @@
 <?php
+
+/*
+ * This file is part of the PHPCR API Tests package
+ *
+ * Copyright (c) 2013 Liip and others
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace PHPCR\Tests\Versioning;
 
 use PHPCR\NodeInterface;
 use PHPCR\Version\VersionInterface;
 use PHPCR\Version\VersionManagerInterface;
 
-
 /**
- * Testing whether getting predecessor / successor works correctly
+ * Testing whether getting predecessor / successor works correctly.
  *
  * Covering jcr-283 spec $15.1
  */
@@ -79,7 +88,7 @@ class VersionTest extends \PHPCR\Test\BaseCase
         $this->assertInstanceOf('PHPCR\Version\VersionInterface', $firstVersion);
         $frozen2 = $firstVersion->getFrozenNode();
         $this->assertInstanceOf('PHPCR\NodeInterface', $firstVersion);
-        /** @var $frozen2 NodeInterface */
+        /* @var $frozen2 NodeInterface */
         $this->assertTrue($frozen2->hasProperty('foo'));
         $this->assertEquals('bar2', $frozen2->getPropertyValue('foo'));
     }
@@ -134,7 +143,7 @@ class VersionTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * Check $version->remove() is not possible. This must go through VersionHistory::remove
+     * Check $version->remove() is not possible. This must go through VersionHistory::remove.
      *
      * @expectedException \PHPCR\RepositoryException
      */

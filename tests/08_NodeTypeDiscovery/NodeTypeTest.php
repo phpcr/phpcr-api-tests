@@ -1,12 +1,21 @@
 <?php
+
+/*
+ * This file is part of the PHPCR API Tests package
+ *
+ * Copyright (c) 2013 Liip and others
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace PHPCR\Tests\NodeTypeDiscovery;
 
 use PHPCR\NodeType\NodeTypeInterface;
 use PHPCR\RepositoryInterface;
 
-
 /**
- * Test the NoteType §8
+ * Test the NoteType §8.
  *
  * Requires that NodeTypeManager->getNodeType works correctly
  */
@@ -146,7 +155,7 @@ class NodeTypeTest extends \PHPCR\Test\BaseCase
         $properties = self::$file->getPropertyDefinitions();
         $this->assertInternalType('array', $properties);
         $this->assertCount(4, $properties);
-        $names=array();
+        $names = array();
         foreach ($properties as $prop) {
             $this->assertInstanceOf('\PHPCR\NodeType\PropertyDefinitionInterface', $prop);
             $names[] = $prop->getName();
@@ -172,7 +181,7 @@ class NodeTypeTest extends \PHPCR\Test\BaseCase
     /**
      * If your implementation supports versioning, this test checks if isNodeType
      * works for parent mixin types as well.
-     * If the repository does not declare it supports versioning, this test is skipped
+     * If the repository does not declare it supports versioning, this test is skipped.
      */
     public function testIsNodeTypeMixinVersion()
     {

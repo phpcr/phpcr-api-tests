@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the PHPCR API Tests package
+ *
+ * Copyright (c) 2013 Liip and others
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace PHPCR\Test;
 
 use PHPCR\NoSuchWorkspaceException;
@@ -18,20 +27,20 @@ abstract class AbstractLoader
     protected $otherWorkspacename;
 
     /**
-     * array with chapter names to skip all test cases in (without the numbers)
+     * array with chapter names to skip all test cases in (without the numbers).
      */
     protected $unsupportedChapters = array();
     /**
-     * array in the format Chapter\FeatureTest with all cases to skip
+     * array in the format Chapter\FeatureTest with all cases to skip.
      */
     protected $unsupportedCases = array();
     /**
-     * array in the format Chapter\FeatureTest::testName with all single tests to skip
+     * array in the format Chapter\FeatureTest::testName with all single tests to skip.
      */
     protected $unsupportedTests = array();
 
     /**
-     * Create the loader
+     * Create the loader.
      *
      * @param string $factoryclass the class name of your implementations
      *      RepositoryFactory. You can pass null but then you must overwrite
@@ -71,7 +80,7 @@ abstract class AbstractLoader
     /**
      * @return array hashmap with the parameters for the repository factory
      */
-    public abstract function getRepositoryFactoryParameters();
+    abstract public function getRepositoryFactoryParameters();
 
     /**
      * You should overwrite this to instantiate the repository without the
@@ -85,39 +94,38 @@ abstract class AbstractLoader
     public function getRepository()
     {
         $factoryclass = $this->getRepositoryFactoryClass();
-        $factory = new $factoryclass;
-        if (! $factory instanceof RepositoryFactoryInterface) {
+        $factory = new $factoryclass();
+        if (!$factory instanceof RepositoryFactoryInterface) {
             throw new \Exception("$factoryclass is not of type RepositoryFactoryInterface");
         }
-        /** @var $factory RepositoryFactoryInterface */
+        /* @var $factory RepositoryFactoryInterface */
         return $factory->getRepository($this->getRepositoryFactoryParameters());
     }
 
     /**
      * @return \PHPCR\CredentialsInterface the login credentials that lead to successful login into the repository
      */
-    public abstract function getCredentials();
+    abstract public function getCredentials();
 
     /**
      * @return \PHPCR\CredentialsInterface the login credentials that lead to login failure
      */
-    public abstract function getInvalidCredentials();
+    abstract public function getInvalidCredentials();
 
     /**
      * Used when impersonating another user in Reading\SessionReadMethodsTests::testImpersonate
-     * And for Reading\SessionReadMethodsTest::testCheckPermissionAccessControlException
+     * And for Reading\SessionReadMethodsTest::testCheckPermissionAccessControlException.
      *
      * The user may not have write access to /tests_general_base/numberPropertyNode/jcr:content/foo
      *
      * @return \PHPCR\CredentialsInterface the login credentials with limited permissions for testing impersonate and access control
      */
-    public abstract function getRestrictedCredentials();
+    abstract public function getRestrictedCredentials();
 
     /**
      * @return string the user id that is used in the credentials
      */
-    public abstract function getUserId();
-
+    abstract public function getUserId();
 
     /**
      * Make the repository ready for login with null credentials, handling the
@@ -126,9 +134,9 @@ abstract class AbstractLoader
      * If the implementation does not support this feature, it must return
      * false for this method, otherwise true.
      *
-     * @return boolean true if anonymous login is supposed to work
+     * @return bool true if anonymous login is supposed to work
      */
-    public abstract function prepareAnonymousLogin();
+    abstract public function prepareAnonymousLogin();
 
     /**
      * @return string the workspace name used for the tests
@@ -158,6 +166,7 @@ abstract class AbstractLoader
      * Get a session for this implementation.
      *
      * @param \PHPCR\CredentialsInterface $credentials The credentials to log into the repository. If omitted, self::getCredentials should be used
+     *
      * @return \PHPCR\SessionInterface the session resulting from logging into the repository with the provided credentials
      */
     public function getSession($credentials = false)
@@ -169,6 +178,7 @@ abstract class AbstractLoader
      * Get a session corresponding to the additional workspace for this implementation.
      *
      * @param \PHPCR\CredentialsInterface $credentials The credentials to log into the repository. If omitted, self::getCredentials should be used
+     *
      * @return \PHPCR\SessionInterface the session resulting from logging into the repository with the provided credentials
      */
     public function getAdditionalSession($credentials = false)
@@ -202,7 +212,7 @@ abstract class AbstractLoader
      * mix:lastModified. If that is not possible, this method should return
      * true, which will skip the test about this feature.
      *
-     * @return boolean
+     * @return bool
      */
     public function doesSessionLastModified()
     {
@@ -223,7 +233,7 @@ abstract class AbstractLoader
      */
     public function getTestSupported($chapter, $case, $name)
     {
-        return ! (   in_array($chapter, $this->unsupportedChapters)
+        return !(in_array($chapter, $this->unsupportedChapters)
                   || in_array($case, $this->unsupportedCases)
                   || in_array($name, $this->unsupportedTests)
                  );
@@ -232,11 +242,12 @@ abstract class AbstractLoader
     /**
      * @return \PHPCR\Test\FixtureLoaderInterface implementation that is used to load test fixtures
      */
-    public abstract function getFixtureLoader();
+    abstract public function getFixtureLoader();
 
     /**
      * @param $credentials
      * @param $workspaceName
+     *
      * @return mixed
      */
     private function getSessionForWorkspace($credentials, $workspaceName)

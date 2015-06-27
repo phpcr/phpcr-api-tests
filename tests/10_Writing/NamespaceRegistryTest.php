@@ -1,8 +1,17 @@
 <?php
+
+/*
+ * This file is part of the PHPCR API Tests package
+ *
+ * Copyright (c) 2013 Liip and others
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace PHPCR\Tests\Writing;
 
 use PHPCR\NamespaceRegistryInterface;
-
 
 //6.3.1 Namespace Registry
 class NamespaceRegistryTest extends \PHPCR\Test\BaseCase
@@ -16,7 +25,7 @@ class NamespaceRegistryTest extends \PHPCR\Test\BaseCase
                                  'nt'  => 'http://www.jcp.org/jcr/nt/1.0',
                                  'mix' => 'http://www.jcp.org/jcr/mix/1.0',
                                  'xml' => 'http://www.w3.org/XML/1998/namespace',
-                                 ''    => '');
+                                 ''    => '', );
 
     public function setUp()
     {
@@ -142,7 +151,6 @@ class NamespaceRegistryTest extends \PHPCR\Test\BaseCase
             $this->assertInternalType('string', $url);
             $this->assertEquals($url, $this->nr->getURI($prefix));
         }
-        $this->assertTrue($results>3, 'Not enough namespaces');
+        $this->assertTrue($results > 3, 'Not enough namespaces');
     }
-
 }

@@ -1,11 +1,20 @@
 <?php
-namespace PHPCR\Tests\NodeTypeManagement;
 
+/*
+ * This file is part of the PHPCR API Tests package
+ *
+ * Copyright (c) 2013 Liip and others
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace PHPCR\Tests\NodeTypeManagement;
 
 use PHPCR\PropertyType;
 
 /**
- * Covering jcr-2.8.3 spec $19
+ * Covering jcr-2.8.3 spec $19.
  */
 class NodeTypeTest extends NodeTypeBaseCase
 {

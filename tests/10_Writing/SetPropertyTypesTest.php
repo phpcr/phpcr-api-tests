@@ -1,12 +1,21 @@
 <?php
+
+/*
+ * This file is part of the PHPCR API Tests package
+ *
+ * Copyright (c) 2013 Liip and others
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace PHPCR\Tests\Writing;
 
 use PHPCR\PropertyInterface;
 use PHPCR\PropertyType;
 
-
 /**
- * Testing whether the property correctly handles all types
+ * Testing whether the property correctly handles all types.
  *
  * For every test we do the assertions twice:
  *   - Once after the property has been set in memory
@@ -129,7 +138,6 @@ class SetPropertyTypesTest extends \PHPCR\Test\BaseCase
         $this->assertSame(100, $value->getLong());
         $this->assertEquals(\PHPCR\PropertyType::LONG, $value->getType());
     }
-
 
     public function testCreateValueDouble()
     {
