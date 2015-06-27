@@ -32,8 +32,8 @@
     },
     "autoload": {
         "psr-4": {
-            "PHPCR\\Test\\": "lib",
-            "PHPCR\\Tests\\": "tests"
+            "PHPCR\\Test\\": "lib/",
+            "PHPCR\\Tests\\": "tests/"
         }
     },
     "extra": {
