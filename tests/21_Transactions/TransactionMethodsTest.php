@@ -1,7 +1,6 @@
 <?php
 namespace PHPCR\Tests\Transactions;
 
-require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 use PHPCR\RepositoryInterface;
 use \PHPCR\Transaction;

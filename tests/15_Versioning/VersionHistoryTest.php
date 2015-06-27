@@ -5,7 +5,6 @@ use PHPCR\Util\PathHelper;
 use PHPCR\Version\VersionHistoryInterface;
 use PHPCR\Version\VersionManagerInterface;
 
-require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 /**
  * Testing whether the version history methods work correctly

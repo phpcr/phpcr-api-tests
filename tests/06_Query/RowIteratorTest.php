@@ -1,7 +1,6 @@
 <?php
 namespace PHPCR\Tests\Query;
 
-require_once 'QueryBaseCase.php';
 
 /**
  * $ 6.11.1 Row View - Iterator part

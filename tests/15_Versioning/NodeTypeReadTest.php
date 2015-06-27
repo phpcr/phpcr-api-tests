@@ -3,7 +3,6 @@ namespace PHPCR\Tests\Versioning;
 
 use PHPCR\NodeInterface;
 
-require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 /**
  * test some more NodeInterface::isNodeType (read) §8.6 things that can only

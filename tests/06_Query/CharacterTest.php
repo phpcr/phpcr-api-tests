@@ -5,7 +5,6 @@ namespace PHPCR\Tests\Query;
 use PHPCR\Query\QueryInterface;
 use PHPCR\Query\QueryManagerInterface;
 
-require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 class CharacterTest extends \PHPCR\Test\BaseCase
 {

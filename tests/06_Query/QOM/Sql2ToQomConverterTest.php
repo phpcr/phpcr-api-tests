@@ -1,9 +1,6 @@
 <?php
 namespace PHPCR\Tests\Query\QOM;
 
-require_once(__DIR__ . '/../../../inc/BaseCase.php');
-require_once 'Sql2TestQueries.php';
-require_once 'QomTestQueries.php';
 
 use PHPCR\Util\QOM\Sql2ToQomQueryConverter;
 

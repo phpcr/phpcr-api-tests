@@ -4,7 +4,6 @@ namespace PHPCR\Tests\Writing;
 use PHPCR\NodeType\NodeTypeInterface;
 use PHPCR\NodeType\NodeTypeManagerInterface;
 
-require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 /**
  * Test pre-emptive validation (§10.10.3.2)

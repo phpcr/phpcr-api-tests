@@ -3,7 +3,6 @@ namespace PHPCR\Tests\Connecting;
 
 use PHPCR\RepositoryFactoryInterface;
 
-require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 class RepositoryFactoryTest extends \PHPCR\Test\BaseCase
 {

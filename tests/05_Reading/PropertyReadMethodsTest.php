@@ -1,7 +1,6 @@
 <?php
 namespace PHPCR\Tests\Reading;
 
-require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 /**
  * javax.jcr.Property read methods

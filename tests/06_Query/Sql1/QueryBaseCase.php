@@ -1,8 +1,6 @@
 <?php
 namespace PHPCR\Tests\Query\Sql1;
 
-require_once(__DIR__ . '/../../../inc/BaseCase.php');
-require_once(__DIR__ . '/../QueryBaseCase.php');
 
 /**
  * a base class for all query tests

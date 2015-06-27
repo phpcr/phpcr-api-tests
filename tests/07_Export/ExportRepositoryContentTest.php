@@ -1,7 +1,6 @@
 <?php
 namespace PHPCR\Tests\Export;
 
-require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 use DOMDocument, DOMElement, DOMNode, DOMText, DOMXPath;
 

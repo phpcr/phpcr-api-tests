@@ -5,7 +5,6 @@ use PHPCR\RepositoryInterface;
 use PHPCR\WorkspaceInterface;
 use PHPCR\Test\BaseCase;
 
-require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 /**
  * Covering jcr-283 spec $10.8

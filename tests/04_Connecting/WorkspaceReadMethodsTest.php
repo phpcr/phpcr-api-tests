@@ -3,7 +3,6 @@ namespace PHPCR\Tests\Connecting;
 
 use PHPCR\WorkspaceInterface;
 
-require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 /** test javax.jcr.Workspace read methods (read)
  *  most of the pdf specification is in chapter 4.5

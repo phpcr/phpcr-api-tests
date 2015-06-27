@@ -3,7 +3,6 @@ namespace PHPCR\Tests\Writing;
 
 use PHPCR\PropertyInterface;
 
-require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 /**
  * Testing whether node property manipulations work correctly

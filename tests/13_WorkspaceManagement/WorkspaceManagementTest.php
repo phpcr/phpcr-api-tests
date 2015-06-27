@@ -1,7 +1,6 @@
 <?php
 namespace PHPCR\Tests\WorkspaceManagement;
 
-require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 //6.5 Import Repository Content
 class WorkspaceManagementTest extends \PHPCR\Test\BaseCase

@@ -1,7 +1,6 @@
 <?php
 namespace PHPCR\Tests\Writing;
 
-require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 /**
  * test sequences of adding / moving / removing stuff inside a transaction

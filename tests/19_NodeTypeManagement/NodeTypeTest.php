@@ -1,7 +1,6 @@
 <?php
 namespace PHPCR\Tests\NodeTypeManagement;
 
-require_once 'NodeTypeBaseCase.php';
 
 use PHPCR\PropertyType;
 

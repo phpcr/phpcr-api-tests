@@ -1,7 +1,6 @@
 <?php
 namespace PHPCR\Tests\Writing;
 
-require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 /**
  * Test javax.jcr.Node read methods (read) §5.6

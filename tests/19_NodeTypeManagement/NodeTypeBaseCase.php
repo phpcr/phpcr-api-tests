@@ -8,7 +8,6 @@ use PHPCR\NodeType\NodeTypeDefinitionInterface;
 
 use PHPCR\Test\BaseCase;
 
-require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 /**
  * Covering jcr-2.8.3 spec $19

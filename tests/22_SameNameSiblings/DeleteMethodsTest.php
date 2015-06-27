@@ -1,7 +1,6 @@
 <?php
 namespace PHPCR\Tests\SameNameSiblings;
 
-require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 /**
  * Test for deleting same name siblings (SNS).

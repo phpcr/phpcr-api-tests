@@ -2,7 +2,6 @@
 
 namespace PHPCR\Tests\PermissionsAndCapabilities;
 
-require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 /**
  * Test Permission read methods

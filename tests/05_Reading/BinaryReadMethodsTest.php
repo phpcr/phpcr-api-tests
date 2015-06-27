@@ -3,7 +3,6 @@ namespace PHPCR\Tests\Reading;
 
 use PHPCR\PropertyInterface;
 
-require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 // According to PHPCR\BinaryInterface
 

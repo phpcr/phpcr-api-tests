@@ -3,7 +3,6 @@ namespace PHPCR\Tests\Writing;
 
 use PHPCR\WorkspaceInterface;
 
-require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 /**
  * Covering jcr-283 spec $10.7

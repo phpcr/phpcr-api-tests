@@ -4,7 +4,6 @@ namespace PHPCR\Tests\Query;
 use PHPCR\Query\QOM\QueryObjectModelFactoryInterface;
 use PHPCR\Query\QueryInterface;
 
-require_once 'QueryBaseCase.php';
 
 /**
  * test the Query Factory integration

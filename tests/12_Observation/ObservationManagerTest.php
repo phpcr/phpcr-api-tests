@@ -8,7 +8,6 @@ use PHPCR\Observation\EventInterface;
 use PHPCR\Observation\ObservationManagerInterface;
 use PHPCR\Observation\EventJournalInterface;
 
-require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 /**
  * Tests for the ObservationManager

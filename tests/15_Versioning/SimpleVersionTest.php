@@ -6,7 +6,6 @@ use PHPCR\Test\BaseCase;
 use PHPCR\Version\VersionInterface;
 use PHPCR\Version\VersionManagerInterface;
 
-require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 /**
  * Testing whether simple versioning works

@@ -4,7 +4,6 @@ namespace PHPCR\Tests\Writing;
 use PHPCR\PropertyInterface;
 use PHPCR\PropertyType;
 
-require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 /**
  * Testing whether the property correctly handles all types

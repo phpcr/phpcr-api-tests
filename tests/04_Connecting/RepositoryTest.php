@@ -3,7 +3,6 @@ namespace PHPCR\Tests\Connecting;
 
 use PHPCR\LoginException;
 
-require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 class RepositoryTest extends \PHPCR\Test\BaseCase
 {

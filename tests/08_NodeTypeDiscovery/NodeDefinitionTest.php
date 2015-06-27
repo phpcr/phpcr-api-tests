@@ -1,7 +1,6 @@
 <?php
 namespace PHPCR\Tests\NodeTypeDiscovery;
 
-require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 /**
  * Test the NoteDefinition §8

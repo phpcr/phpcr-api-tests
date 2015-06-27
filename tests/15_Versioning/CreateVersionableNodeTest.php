@@ -1,7 +1,6 @@
 <?php
 namespace PHPCR\Tests\Versioning;
 
-require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 /**
 * Testing whether mix:versionable node type is properly handled

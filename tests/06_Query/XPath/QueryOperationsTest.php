@@ -3,7 +3,6 @@ namespace PHPCR\Tests\Query\XPath;
 
 use PHPCR\Query\QueryInterface;
 
-require_once 'QueryBaseCase.php';
 
 /**
  * Run non-trivial queries to try out where, the join features and such

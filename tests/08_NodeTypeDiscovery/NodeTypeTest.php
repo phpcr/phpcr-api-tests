@@ -4,7 +4,6 @@ namespace PHPCR\Tests\NodeTypeDiscovery;
 use PHPCR\NodeType\NodeTypeInterface;
 use PHPCR\RepositoryInterface;
 
-require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 /**
  * Test the NoteType §8

@@ -3,7 +3,6 @@ namespace PHPCR\Tests\NodeTypeDiscovery;
 
 use PHPCR\NodeType\NodeTypeManagerInterface;
 
-require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 /**
  * Test the NoteTypeManager §8

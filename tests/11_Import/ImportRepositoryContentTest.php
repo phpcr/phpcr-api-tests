@@ -3,7 +3,6 @@ namespace PHPCR\Tests\Import;
 
 use PHPCR\ImportUUIDBehaviorInterface;
 
-require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 //6.5 Import Repository Content
 class ImportRepositoryContentTest extends \PHPCR\Test\BaseCase

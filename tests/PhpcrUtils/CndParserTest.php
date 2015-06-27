@@ -2,7 +2,6 @@
 
 namespace PHPCR\Tests\PhpcrUtils;
 
-require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 use PHPCR\NodeType\NodeTypeDefinitionInterface;
 use PHPCR\PropertyType;

@@ -3,7 +3,6 @@ namespace PHPCR\Tests\Writing;
 
 use PHPCR\PropertyType;
 
-require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 /**
  * Testing that mix:referenceable nodes references work correctly

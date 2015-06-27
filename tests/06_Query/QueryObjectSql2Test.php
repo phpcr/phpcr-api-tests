@@ -1,7 +1,6 @@
 <?php
 namespace PHPCR\Tests\Query;
 
-require_once 'QueryBaseCase.php';
 
 /**
  * test the Query interface. $ 6.9

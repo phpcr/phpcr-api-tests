@@ -1,7 +1,6 @@
 <?php
 namespace PHPCR\Tests\Query;
 
-require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 /**
  * a base class for all query tests

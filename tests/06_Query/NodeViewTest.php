@@ -1,7 +1,6 @@
 <?php
 namespace PHPCR\Tests\Query;
 
-require_once 'QueryBaseCase.php';
 
 /**
  * test the query result node view $ 6.11.2

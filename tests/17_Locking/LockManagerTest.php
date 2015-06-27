@@ -1,7 +1,6 @@
 <?php
 namespace PHPCR\Tests\Locking;
 
-require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 /**
  * Tests for the LockManager

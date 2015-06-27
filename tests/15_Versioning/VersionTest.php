@@ -5,7 +5,6 @@ use PHPCR\NodeInterface;
 use PHPCR\Version\VersionInterface;
 use PHPCR\Version\VersionManagerInterface;
 
-require_once(__DIR__ . '/../../inc/BaseCase.php');
 
 /**
  * Testing whether getting predecessor / successor works correctly
