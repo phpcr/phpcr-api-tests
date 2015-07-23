@@ -451,6 +451,28 @@ class DeleteMethodsTest extends \PHPCR\Test\BaseCase
     }
 
     /**
+     * however, if the reference is first deleted, it must be possible to
+     * delete the node, also if it is an multiple reference property
+     */
+    public function testDeletePreviouslyReferencedNodeInMultipleProperty()
+    {
+        //relies on the base class setup trick to have the node populated from the fixtures
+        $this->assertInstanceOf('PHPCR\NodeInterface', $this->node);
+
+        // 2) Get the referencing property and delete it
+        $sourceprop = $this->node->getProperty('reference');
+        $sourceprop->setValue(array());
+
+        // 4) Load the previously referenced node and remove it
+        $destnode = $this->node->getNode('idExample');
+
+        $destnode->remove();
+        $this->saveAndRenewSession();
+
+        $this->assertFalse($this->node->hasNode($this->getName()));
+    }
+
+    /**
      * it must be possible to delete a weakly referenced node.
      */
     public function testDeleteWeakReferencedNode()
