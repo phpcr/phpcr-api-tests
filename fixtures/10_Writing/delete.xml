@@ -209,6 +209,28 @@
     </sv:node>
   </sv:node>
 
+  <sv:node sv:name="testDeletePreviouslyReferencedNodeInMultipleProperty">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>nt:unstructured</sv:value>
+    </sv:property>
+    <sv:property sv:name="reference" sv:type="Reference" sv:multiple="true">
+      <sv:value>7aa10003-0cba-4820-a3e4-f9b1ae8126de</sv:value>
+      <sv:value>7aa10003-0cba-4820-a3e4-f9b1ae8126de</sv:value>
+    </sv:property>
+
+    <sv:node sv:name="idExample">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>nt:unstructured</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+        <sv:value>mix:referenceable</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:uuid" sv:type="String">
+        <sv:value>7aa10003-0cba-4820-a3e4-f9b1ae8126de</sv:value>
+      </sv:property>
+    </sv:node>
+  </sv:node>
+
   <sv:node sv:name="testDeleteWeakReferencedNode">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
       <sv:value>nt:unstructured</sv:value>
