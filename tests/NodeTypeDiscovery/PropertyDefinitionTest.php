@@ -11,6 +11,9 @@
 
 namespace PHPCR\Tests\NodeTypeDiscovery;
 
+use PHPCR\NodeType\NodeTypeInterface;
+use PHPCR\NodeType\NodeTypeManagerInterface;
+use PHPCR\NodeType\PropertyDefinitionInterface;
 use PHPCR\Query\QOM\QueryObjectModelConstantsInterface;
 
 /**
@@ -20,26 +23,77 @@ use PHPCR\Query\QOM\QueryObjectModelConstantsInterface;
  */
 class PropertyDefinitionTest extends \PHPCR\Test\BaseCase
 {
+    /**
+     * @var NodeTypeInterface
+     */
     private static $base;
+
+    /**
+     * @var NodeTypeInterface
+     */
     private static $address;
+
+    /**
+     * @var NodeTypeInterface
+     */
     private static $mix_created;
+
+    /**
+     * @var NodeTypeInterface
+     */
     private static $resource;
 
-    /** nt:base property */
-    private $primaryType; // (NAME) mandatory autocreated protected COMPUTE
-    private $mixinTypes; // (NAME) protected multiple COMPUTE
+    // properties of nt:base
+    /**
+     * (NAME) mandatory autocreated protected COMPUTE
+     * @var PropertyDefinitionInterface
+     */
+    private $primaryType;
+
+    /**
+     * (NAME) protected multiple COMPUTE
+     * @var PropertyDefinitionInterface
+     */
+    private $mixinTypes;
+
     /** properties of nt:address */
-    private $workspace; // (STRING)
-    private $pathprop; // (PATH)
-    private $id; // (WEAKREFERENCE)
-    /** property of mix:created */
-    private $created; // (DATE) autocreated protected
-    /** property of nt:resource */
-    private $data; // (BINARY) mandatory
+
+    /**
+     * (STRING)
+     * @var PropertyDefinitionInterface
+     */
+    private $workspace;
+
+    /**
+     * (PATH)
+     * @var PropertyDefinitionInterface
+     */
+    private $pathprop;
+
+    /**
+     * (WEAKREFERENCE)
+     * @var PropertyDefinitionInterface
+     */
+    private $id;
+
+    /**
+     * (DATE) autocreated protected
+     * property of mix:created
+     * @var PropertyDefinitionInterface
+     */
+    private $created; //
+
+    /**
+     * (BINARY) mandatory
+     * property of nt:resource
+     * @var PropertyDefinitionInterface
+     */
+    private $data; //
 
     public static function setupBeforeClass($fixtures = false)
     {
         parent::setupBeforeClass(); // load default fixtures
+        /** @var NodeTypeManagerInterface $ntm */
         $ntm = self::$staticSharedFixture['session']->getWorkspace()->getNodeTypeManager();
         self::$base = $ntm->getNodeType('nt:base');
         self::$address = $ntm->getNodeType('nt:address');
@@ -238,7 +292,7 @@ class PropertyDefinitionTest extends \PHPCR\Test\BaseCase
         $this->assertEquals('jcr:created', $propDef->getName());
     }
 
-    public function estGetPropertyDefinitionWildcard()
+    public function testGetPropertyDefinitionWildcard()
     {
         $node = $this->rootNode->getNode('tests_general_base/numberPropertyNode/jcr:content');
         $valProperty = $node->getProperty('foo');
