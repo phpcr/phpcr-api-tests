@@ -2,7 +2,7 @@ phpcr-api-tests is dual licensed under the MIT license and the Apache License Ve
 
     The MIT License (MIT)
 
-    Copyright (c) 2013 Liip and others
+    Copyright (c) 2015 Liip and others
 
     Permission is hereby granted, free of charge, to any person obtaining a copy of
     this software and associated documentation files (the "Software"), to deal in

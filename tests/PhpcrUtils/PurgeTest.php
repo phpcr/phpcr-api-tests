@@ -1,12 +1,18 @@
 <?php
 
-namespace PHPCR\Tests\PhpcrUtils;
+/*
+ * This file is part of the PHPCR API Tests package
+ *
+ * Copyright (c) 2015 Liip and others
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
-require_once(__DIR__ . '/../../inc/BaseCase.php');
+namespace PHPCR\Tests\PhpcrUtils;
 
 use PHPCR\PropertyType;
 use PHPCR\Util\NodeHelper;
-
 use PHPCR\Test\BaseCase;
 
 class PurgeTest extends BaseCase
@@ -18,7 +24,7 @@ class PurgeTest extends BaseCase
 
     protected function setUp()
     {
-        if (! class_exists('PHPCR\Util\NodeHelper')) {
+        if (!class_exists('PHPCR\Util\NodeHelper')) {
             $this->markTestSkipped('This testbed does not have phpcr-utils available');
         }
         parent::setUp();

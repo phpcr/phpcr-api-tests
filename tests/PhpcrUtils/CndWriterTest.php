@@ -1,12 +1,18 @@
 <?php
 
-namespace PHPCR\Tests\PhpcrUtils;
+/*
+ * This file is part of the PHPCR API Tests package
+ *
+ * Copyright (c) 2015 Liip and others
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
-require_once(__DIR__ . '/../../inc/BaseCase.php');
+namespace PHPCR\Tests\PhpcrUtils;
 
 use PHPCR\NamespaceRegistryInterface;
 use PHPCR\PropertyType;
-
 use PHPCR\Util\CND\Writer\CndWriter;
 use PHPCR\Version\OnParentVersionAction;
 use PHPCR\WorkspaceInterface;
@@ -14,7 +20,7 @@ use PHPCR\WorkspaceInterface;
 class CndWriterTest extends \PHPCR\Test\BaseCase
 {
     /**
-     * the "worst case" example from http://jackrabbit.apache.org/node-type-notation.html
+     * the "worst case" example from http://jackrabbit.apache.org/node-type-notation.html.
      */
     public function testWorstCaseExample()
     {
@@ -73,7 +79,7 @@ EOT;
         $ns->expects($this->any())
             ->method('getUri')
             ->will($this->returnCallback(
-                function($prefix) {
+                function ($prefix) {
                     switch ($prefix) {
                         case 'ns':
                             return 'http://namespace.com/ns';
@@ -93,4 +99,5 @@ EOT;
 }
 
 abstract class MockNamespaceRegistry implements \Iterator, NamespaceRegistryInterface
-{}
+{
+}

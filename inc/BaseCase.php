@@ -1,9 +1,19 @@
 <?php
+
+/*
+ * This file is part of the PHPCR API Tests package
+ *
+ * Copyright (c) 2015 Liip and others
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace PHPCR\Test;
 
 use PHPCR\SessionInterface;
 use PHPCR\NodeInterface;
-use \DateTime;
+use DateTime;
 
 // PHPUnit 3.4 compat
 if (method_exists('PHPUnit_Util_Filter', 'addDirectoryToFilter')) {
@@ -11,39 +21,38 @@ if (method_exists('PHPUnit_Util_Filter', 'addDirectoryToFilter')) {
 }
 
 /**
- * Base class for all phpcr api tests
+ * Base class for all phpcr api tests.
  */
 abstract class BaseCase extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Describes the path to the node for this test, used with writing tests
+     * Describes the path to the node for this test, used with writing tests.
      *
      * @var string
      */
     protected $path = '';
 
     /**
-     *
      * @var SessionInterface
      */
     protected $session;
 
     /**
-     * The root node of the fixture, initialized for each test
+     * The root node of the fixture, initialized for each test.
      *
      * @var \PHPCR\NodeInterface
      */
     protected $rootNode = null;
 
     /**
-     * The node in the current fixture at /test_class_name/testMethod
+     * The node in the current fixture at /test_class_name/testMethod.
      *
      * @var \PHPCR\NodeInterface
      */
     protected $node = null;
 
     /**
-     * Instance of the implementation specific loader
+     * Instance of the implementation specific loader.
      *
      * The BaseCase offers some utility methods, but tests can access the
      * loader directly to get implementation instances.
@@ -64,14 +73,14 @@ abstract class BaseCase extends \PHPUnit_Framework_TestCase
     protected static $staticSharedFixture = null;
 
     /**
-     * Same as staticSharedFixture, loaded in setUp for your convenience
+     * Same as staticSharedFixture, loaded in setUp for your convenience.
      */
     protected $sharedFixture = array();
 
     /**
      * the loader can throw a PHPCR\RepositoryException
      * with this message to tell assertSession when getSession has been called
-     * with parameters not supported by this implementation (like credentials null)
+     * with parameters not supported by this implementation (like credentials null).
      */
     const NOTSUPPORTEDLOGIN = 'Not supported login';
 
@@ -93,7 +102,7 @@ abstract class BaseCase extends \PHPUnit_Framework_TestCase
         $fqn = get_called_class();
         list($phpcr, $tests, $chapter, $case) = explode('\\', $fqn);
         $case = "$chapter\\$case";
-        if (! self::$loader->getTestSupported($chapter, $case, null)) {
+        if (!self::$loader->getTestSupported($chapter, $case, null)) {
             throw new \PHPUnit_Framework_SkippedTestSuiteError('Test case not supported by this implementation');
         }
 
@@ -114,19 +123,19 @@ abstract class BaseCase extends \PHPUnit_Framework_TestCase
     {
         $fqn = get_called_class();
         $parts = explode('\\', $fqn);
-        $case_n = count($parts)-1;
+        $case_n = count($parts) - 1;
         $case = $parts[$case_n];
         $chapter = '';
 
         for ($i = 2; $i < $case_n; $i++) {
-            $chapter .= $parts[$i] . '\\';
+            $chapter .= $parts[$i].'\\';
         }
 
-        $case = $chapter . $case;
+        $case = $chapter.$case;
         $test = "$case::".$this->getName();
 
-        if (! self::$loader->getTestSupported($chapter, $case, $test)) {
-            $this->markTestSkipped('Test ' . $this->getName() . ' not supported by this implementation');
+        if (!self::$loader->getTestSupported($chapter, $case, $test)) {
+            $this->markTestSkipped('Test '.$this->getName().' not supported by this implementation');
         }
 
         $this->sharedFixture = self::$staticSharedFixture;
@@ -143,7 +152,7 @@ abstract class BaseCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Utility method for tests to get a new session
+     * Utility method for tests to get a new session.
      *
      * Logout from the old session but does *NOT* save the session
      *
@@ -163,7 +172,7 @@ abstract class BaseCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Utility method for tests to save the session and get a new one
+     * Utility method for tests to save the session and get a new one.
      *
      * Saves the old session and logs it out.
      *
@@ -173,6 +182,7 @@ abstract class BaseCase extends \PHPUnit_Framework_TestCase
     {
         $this->session->save();
         $this->renewSession();
+
         return $this->sharedFixture['session'];
     }
 
@@ -190,7 +200,7 @@ abstract class BaseCase extends \PHPUnit_Framework_TestCase
 
         $this->rootNode = $this->session->getRootNode();
 
-        $children = $this->rootNode->getNodes("tests_*");
+        $children = $this->rootNode->getNodes('tests_*');
         $child = $children->current();
         if ($child && $child->hasNode($this->getName())) {
             $this->node = $child->getNode($this->getName());
@@ -202,7 +212,7 @@ abstract class BaseCase extends \PHPUnit_Framework_TestCase
      *************************************************************************/
 
     /**
-     * create a session with the given credentials and assert this is a session
+     * create a session with the given credentials and assert this is a session.
      *
      * this is similar to doing self::$loader->getSession($credentials) but
      * does error handling and asserts the session is a valid SessionInterface
@@ -213,7 +223,7 @@ abstract class BaseCase extends \PHPUnit_Framework_TestCase
     {
         try {
             $ses = self::$loader->getSession($credentials);
-        } catch(\PHPCR\RepositoryException $e) {
+        } catch (\PHPCR\RepositoryException $e) {
             if ($e->getMessage() == self::NOTSUPPORTEDLOGIN) {
                 $this->markTestSkipped('This implementation does not support this type of login.');
             } else {
@@ -221,6 +231,7 @@ abstract class BaseCase extends \PHPUnit_Framework_TestCase
             }
         }
         $this->assertInstanceOf('PHPCR\SessionInterface', $ses);
+
         return $ses;
     }
 
@@ -266,7 +277,7 @@ abstract class BaseCase extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('\DateTime', $expected);
         $this->assertInstanceOf('\DateTime', $data);
         $this->assertTrue(abs($expected->getTimestamp() - $data->getTimestamp()) <= 3,
-            $data->format('c') . ' is not close to the expected ' . $expected->format('c')
+            $data->format('c').' is not close to the expected '.$expected->format('c')
         );
     }
 
@@ -275,12 +286,12 @@ abstract class BaseCase extends \PHPUnit_Framework_TestCase
      *
      * @param string $descriptor
      *
-     * @return boolean True if the test can be done. Otherwise the test is skipped.
+     * @return bool True if the test can be done. Otherwise the test is skipped.
      */
     protected function skipIfNotSupported($descriptor)
     {
         if (false === $this->session->getRepository()->getDescriptor($descriptor)) {
-            $this->markTestSkipped('Descriptor "' . $descriptor . '" not supported');
+            $this->markTestSkipped('Descriptor "'.$descriptor.'" not supported');
         }
 
         return true;
