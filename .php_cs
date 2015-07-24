@@ -9,6 +9,9 @@ For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
 EOF;
 
+// Run the phpcsfixer from this directory to fix all code style issues
+// https://github.com/FriendsOfPHP/PHP-CS-Fixer
+
 Symfony\CS\Fixer\Contrib\HeaderCommentFixer::setHeader($header);
 
 return Symfony\CS\Config\Config::create()
@@ -26,4 +29,4 @@ return Symfony\CS\Config\Config::create()
             ->exclude('vendor')
             ->in(__DIR__)
     )
-; 
+;
