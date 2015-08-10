@@ -204,4 +204,17 @@ class MixinReferenceableTest extends \PHPCR\Test\BaseCase
     {
         $this->node->setProperty('jcr:uuid', 'dddd61c0-09ab-42a9-87c0-308ccc93aaaa');
     }
+
+    public function testCreateReferenceInSingleTransaction()
+    {
+        $session = $this->renewSession();
+
+        $rootNode = $session->getNode('/');
+        $child1 = $rootNode->addNode('child1');
+        $child2 = $rootNode->addNode('child2');
+        $child2->addMixin('mix:referenceable');
+        $child1->setProperty('someref', $child2, PropertyType::REFERENCE);
+
+        $this->session->save();
+    }
 }
