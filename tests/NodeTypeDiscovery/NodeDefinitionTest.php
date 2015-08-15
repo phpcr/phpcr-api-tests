@@ -11,24 +11,52 @@
 
 namespace PHPCR\Tests\NodeTypeDiscovery;
 
+use PHPCR\NodeType\NodeDefinitionInterface;
+use PHPCR\NodeType\NodeTypeInterface;
+use PHPCR\NodeType\NodeTypeManagerInterface;
+
 /**
- * Test the NoteDefinition §8.
+ * Test NodeDefinition behaviour and reading NodeDefinition from NodeTypeDefinition §8.
  *
  * Requires that NodeTypeManager->getNodeType and NodeTypeDefinition->getChildNodeDefinitions() works correctly
  */
 class NodeDefinitionTest extends \PHPCR\Test\BaseCase
 {
     private static $base;
+
+    /**
+     * @var NodeTypeInterface
+     */
     private static $file;
+
+    /**
+     * @var NodeTypeInterface
+     */
     private static $folder;
+
+    /**
+     * @var NodeTypeInterface
+     */
     private static $hierarchyNodeType;
-    /** jcr:content of nt:file */
+
+    /**
+     * Node definition of the jcr:content in an nt:file type.
+     *
+     * @var NodeDefinitionInterface
+     */
     private $content;
+
+    /**
+     * Node definition of a hierarchy node.
+     *
+     * @var NodeDefinitionInterface
+     */
     private $hierarchyNodeDef;
 
     public static function setupBeforeClass($fixtures = false)
     {
         parent::setupBeforeClass($fixtures);
+        /** @var NodeTypeManagerInterface $ntm */
         $ntm = self::$staticSharedFixture['session']->getWorkspace()->getNodeTypeManager();
         self::$file = $ntm->getNodeType('nt:file');
         self::$folder = $ntm->getNodeType('nt:folder');
@@ -37,6 +65,7 @@ class NodeDefinitionTest extends \PHPCR\Test\BaseCase
 
     public function setUp()
     {
+        parent::setUp();
         try {
             $defs = self::$file->getChildNodeDefinitions();
             $this->assertInternalType('array', $defs);
@@ -55,6 +84,7 @@ class NodeDefinitionTest extends \PHPCR\Test\BaseCase
             $this->markTestSkipped('getChildNodeDefinitions not working as it should, skipping tests about NodeDefinitionInterface: '.$e->getMessage());
         }
     }
+
     public function testAllowsSameNameSiblings()
     {
         $this->assertFalse($this->content->allowsSameNameSiblings());
@@ -64,10 +94,12 @@ class NodeDefinitionTest extends \PHPCR\Test\BaseCase
     {
         $this->assertNull($this->content->getDefaultPrimaryType());
     }
+
     public function testDefaultPrimaryTypeName()
     {
         $this->assertNull($this->content->getDefaultPrimaryTypeName());
     }
+
     public function getRequiredPrimaryTypeNames()
     {
         $names = $this->content->getRequiredPrimaryTypeNames();
@@ -102,26 +134,31 @@ class NodeDefinitionTest extends \PHPCR\Test\BaseCase
         $nt = $this->hierarchyNodeDef->getDeclaringNodeType();
         $this->assertSame(self::$folder, $nt);
     }
+
     public function testName()
     {
         $this->assertEquals('jcr:content', $this->content->getName());
         $this->assertEquals('*', $this->hierarchyNodeDef->getName());
     }
+
     public function testGetOnParentVersion()
     {
         $this->assertEquals(\PHPCR\Version\OnParentVersionAction::COPY, $this->content->getOnParentVersion());
         $this->assertEquals(\PHPCR\Version\OnParentVersionAction::VERSION, $this->hierarchyNodeDef->getOnParentVersion());
     }
+
     public function testIsAutoCreated()
     {
         $this->assertFalse($this->content->isAutoCreated());
         $this->assertFalse($this->hierarchyNodeDef->isAutoCreated());
     }
+
     public function testIsMandatory()
     {
         $this->assertTrue($this->content->isMandatory());
         $this->assertFalse($this->hierarchyNodeDef->isMandatory());
     }
+
     public function testIsProtected()
     {
         $this->assertFalse($this->content->isProtected());
