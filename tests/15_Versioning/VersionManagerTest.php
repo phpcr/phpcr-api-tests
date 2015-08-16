@@ -347,11 +347,13 @@ class VersionManagerTest extends \PHPCR\Test\BaseCase
 
         $node = $this->session->getNode($nodePath);
         $this->assertContains('mix:created', $node->getPropertyValue('jcr:mixinTypes'));
+        $this->assertTrue($node->hasProperty('jcr:created'));
 
         $this->vm->restore(true, $version);
 
         $node = $this->session->getNode($nodePath);
         $this->assertEquals(array('mix:versionable'), $node->getPropertyValue('jcr:mixinTypes'));
+        $this->assertFalse($node->hasProperty('jcr:created'));
     }
 
     public function testRestoreWithChildren()
