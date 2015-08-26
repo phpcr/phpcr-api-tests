@@ -257,12 +257,8 @@ class CopyMethodsTest extends \PHPCR\Test\BaseCase
         $srcProp = $srcChild->getProperty('jcr:data');
         $dstProp = $dstChild->getProperty('jcr:data');
 
-        $this->assertThat(true,
-            $this->logicalAnd(
-                $this->equalTo(\PHPCR\PropertyType::BINARY, $srcProp->getType()),
-                $this->equalTo(\PHPCR\PropertyType::BINARY, $dstProp->getType())
-            )
-        );
+        $this->assertEquals(\PHPCR\PropertyType::BINARY, $srcProp->getType());
+        $this->assertEquals(\PHPCR\PropertyType::BINARY, $dstProp->getType());
 
         $srcBin = $srcProp->getBinary();
         $dstBin = $dstProp->getBinary();
