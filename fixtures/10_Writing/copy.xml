@@ -484,4 +484,22 @@
             </sv:node>
         </sv:node>
     </sv:node>
+
+    <sv:node sv:name="testCopyChildrenBinaryData">
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+            <sv:value>nt:unstructured</sv:value>
+        </sv:property>
+        <sv:node sv:name="srcNode">
+            <sv:property sv:name="jcr:primaryType" sv:type="Name">
+                <sv:value>nt:unstructured</sv:value>
+            </sv:property>
+            <sv:node sv:name="data.bin">
+                <sv:property sv:name="jcr:primaryType" sv:type="Name">
+                    <sv:value>nt:unstructured</sv:value>
+                </sv:property>
+                <sv:property sv:name="jcr:data" sv:type="Binary"><sv:value>RnVzY2UgZmVybWVudHVtLiBBbGlxdWFtIGxvYm9ydGlzLiBNYXVyaXMgdHVycGlzIG51bmMsIGJsYW5kaXQgZXQsIHZvbHV0cGF0IG1vbGVzdGllLCBwb3J0YSB1dCwgbGlndWxhLiBQZWxsZW50ZXNxdWUgYXVjdG9yIG5lcXVlIG5lYyB1cm5hLiBQcm9pbiBtYWduYS4gQ3VyYWJpdHVyIHVsbGFtY29ycGVyIHVsdHJpY2llcyBuaXNpLiBQcmFlc2VudCBjb25ndWUgZXJhdCBhdCBtYXNzYS4gTmFtIGFkaXBpc2NpbmcuIE51bGxhIHBvcnRhIGRvbG9yLiBGdXNjZSBjb21tb2RvIGFsaXF1YW0gYXJjdS4=</sv:value>
+                </sv:property>
+            </sv:node>
+        </sv:node>
+    </sv:node>
 </sv:node>

@@ -239,4 +239,32 @@ class CopyMethodsTest extends \PHPCR\Test\BaseCase
 
         $this->assertCount(2, $references);
     }
+
+    /**
+     * Verifies that transport::copy actually copies binary data of children nodes
+     */
+    public function testCopyChildrenBinaryData()
+    {
+        $src = '/tests_write_manipulation_copy/testCopyChildrenBinaryData/srcNode';
+        $dst = '/tests_write_manipulation_copy/testCopyChildrenBinaryData/dstNode';
+
+        $this->ws->copy($src, $dst);
+        $this->session->refresh(true);
+        $srcChild = $this->session->getNode($src.'/data.bin');
+        $dstChild = $this->session->getNode($dst.'/data.bin');
+
+        $srcProp = $srcChild->getProperty('jcr:data');
+        $dstProp = $dstChild->getProperty('jcr:data');
+
+        $this->assertEquals(\PHPCR\PropertyType::BINARY, $srcProp->getType());
+        $this->assertEquals(\PHPCR\PropertyType::BINARY, $dstProp->getType());
+
+        $srcBin = $srcProp->getBinary();
+        $dstBin = $dstProp->getBinary();
+
+        $this->assertTrue(is_resource($srcBin), 'Failed to get src binary stream');
+        $this->assertTrue(is_resource($dstBin), 'Failed to get dst binary stream');
+
+        $this->assertEquals(stream_get_contents($srcBin), stream_get_contents($dstBin));
+    }
 }
