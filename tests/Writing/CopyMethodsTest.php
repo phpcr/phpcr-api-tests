@@ -248,7 +248,6 @@ class CopyMethodsTest extends \PHPCR\Test\BaseCase
         $src = '/tests_write_manipulation_copy/testCopyChildrenBinaryData/srcNode';
         $dst = '/tests_write_manipulation_copy/testCopyChildrenBinaryData/dstNode';
 
-
         $this->ws->copy($src, $dst);
         $this->session->refresh(true);
         $srcChild = $this->session->getNode($src.'/data.bin');
@@ -263,9 +262,8 @@ class CopyMethodsTest extends \PHPCR\Test\BaseCase
         $srcBin = $srcProp->getBinary();
         $dstBin = $dstProp->getBinary();
 
-        if (!is_resource($srcBin) || !is_resource($dstBin)) {
-            $this->fail();
-        }
+        $this->assertTrue(is_resource($srcBin), 'Failed to get src binary stream');
+        $this->assertTrue(is_resource($dstBin), 'Failed to get dst binary stream');
 
         $this->assertEquals(stream_get_contents($srcBin), stream_get_contents($dstBin));
     }
