@@ -272,6 +272,5 @@ class CopyMethodsTest extends \PHPCR\Test\BaseCase
         }
 
         $this->assertEquals(stream_get_contents($srcBin), stream_get_contents($dstBin));
-
     }
 }
