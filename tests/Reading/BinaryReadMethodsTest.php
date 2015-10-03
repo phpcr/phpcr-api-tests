@@ -173,6 +173,6 @@ hello world
         $this->assertTrue(is_array($singleValue));
         $this->assertTrue(is_resource($singleValue[0]));
         $contents = stream_get_contents($singleValue[0]);
-        $this->assertEquals('', $contents);
+        $this->assertEquals($this->decodedstring, $contents);
     }
 }

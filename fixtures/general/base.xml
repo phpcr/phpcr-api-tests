@@ -54,7 +54,7 @@
                 <sv:value>aDEuIENoYXB0ZXIgMSBUaXRsZQoKKiBmb28KKiBiYXIKKiogZm9vMgoqKiBmb28zCiogZm9vMAoKfHwgaGVhZGVyIHx8IGJhciB8fAp8IGggfCBqIHwKCntjb2RlfQpoZWxsbyB3b3JsZAp7Y29kZX0KCiMgZm9vCg==</sv:value>
             </sv:property>
             <sv:property sv:name="single_multidata" sv:type="Binary" sv:multiple="true">
-                <sv:value></sv:value>
+                <sv:value>aDEuIENoYXB0ZXIgMSBUaXRsZQoKKiBmb28KKiBiYXIKKiogZm9vMgoqKiBmb28zCiogZm9vMAoKfHwgaGVhZGVyIHx8IGJhciB8fAp8IGggfCBqIHwKCntjb2RlfQpoZWxsbyB3b3JsZAp7Y29kZX0KCiMgZm9vCg==</sv:value>
             </sv:property>
             <sv:property sv:name="empty_multidata" sv:type="Binary" sv:multiple="true">
             </sv:property>
