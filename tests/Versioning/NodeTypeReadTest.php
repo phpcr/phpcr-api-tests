@@ -19,7 +19,7 @@ use PHPCR\NodeInterface;
  *
  * the only case for that in the default types is with mix:versionable
  */
-class NodeNodeTypeReadMethodsTest extends \PHPCR\Test\BaseCase
+class NodeTypeReadTest extends \PHPCR\Test\BaseCase
 {
     /**
      * @var NodeInterface
