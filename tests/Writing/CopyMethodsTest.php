@@ -250,21 +250,54 @@ class CopyMethodsTest extends \PHPCR\Test\BaseCase
 
         $this->ws->copy($src, $dst);
         $this->session->refresh(true);
-        $srcChild = $this->session->getNode($src.'/data.bin');
-        $dstChild = $this->session->getNode($dst.'/data.bin');
 
-        $srcProp = $srcChild->getProperty('jcr:data');
-        $dstProp = $dstChild->getProperty('jcr:data');
+        //Single value
+        $srcProp = $this->session->getNode($src . '/single')->getProperty('jcr:data');
+        $dstProp = $this->session->getNode($dst . '/single')->getProperty('jcr:data');
 
         $this->assertEquals(\PHPCR\PropertyType::BINARY, $srcProp->getType());
         $this->assertEquals(\PHPCR\PropertyType::BINARY, $dstProp->getType());
 
-        $srcBin = $srcProp->getBinary();
-        $dstBin = $dstProp->getBinary();
+        $srcVal = $srcProp->getBinary();
+        $dstVal = $dstProp->getBinary();
 
-        $this->assertTrue(is_resource($srcBin), 'Failed to get src binary stream');
-        $this->assertTrue(is_resource($dstBin), 'Failed to get dst binary stream');
+        $this->assertTrue(is_resource($srcVal), 'Failed to get src binary stream');
+        $this->assertTrue(is_resource($dstVal), 'Failed to get dst binary stream');
 
-        $this->assertEquals(stream_get_contents($srcBin), stream_get_contents($dstBin));
+        $this->assertEquals(stream_get_contents($srcVal), stream_get_contents($dstVal));
+    }
+
+    /**
+     * Verifies that transport::copy actually copies binary data of children nodes
+     * Multivalue test
+     */
+    public function testCopyChildrenBinaryDataMultivalue()
+    {
+        $src = '/tests_write_manipulation_copy/testCopyChildrenBinaryDataMultivalue/srcNode';
+        $dst = '/tests_write_manipulation_copy/testCopyChildrenBinaryDataMultivalue/dstNode';
+
+        $this->ws->copy($src, $dst);
+        $this->session->refresh(true);
+
+        //Multivalue
+        $srcProp = $this->session->getNode($src.'/multiple')->getProperty('jcr:data');
+        $dstProp = $this->session->getNode($dst.'/multiple')->getProperty('jcr:data');
+
+        $this->assertEquals(\PHPCR\PropertyType::BINARY, $srcProp->getType());
+        $this->assertEquals(\PHPCR\PropertyType::BINARY, $dstProp->getType());
+
+        $srcVal = $srcProp->getValue();
+        $dstVal = $dstProp->getValue();
+
+        $this->assertTrue(is_array($srcVal), 'Failed to get src value');
+        $this->assertTrue(is_array($dstVal), 'Failed to get dst value');
+
+        $this->assertTrue(is_resource($srcVal[0]));
+        $this->assertTrue(is_resource($srcVal[1]));
+        $this->assertTrue(is_resource($dstVal[0]));
+        $this->assertTrue(is_resource($dstVal[1]));
+
+        $this->assertEquals(stream_get_contents($srcVal[0]), stream_get_contents($dstVal[0]));
+        $this->assertEquals(stream_get_contents($srcVal[1]), stream_get_contents($dstVal[1]));
     }
 }
