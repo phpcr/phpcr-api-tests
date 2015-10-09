@@ -32,9 +32,18 @@ class Sql2TestQueries
         /*
         * 6.7.8. EquiJoinCondition
         */
-        $queries['6.7.8.EquiJoin.Inner'] = 'SELECT * FROM [nt:file] AS file INNER JOIN [nt:folder] AS folder ON file.prop1=folder.prop2';
-        $queries['6.7.8.EquiJoin.Left'] = 'SELECT * FROM [nt:file] AS file LEFT OUTER JOIN [nt:folder] AS folder ON file.prop1=folder.prop2';
-        $queries['6.7.8.EquiJoin.Right'] = 'SELECT * FROM [nt:file] AS file RIGHT OUTER JOIN [nt:folder] AS folder ON file.prop1=folder.prop2';
+        $queries['6.7.8.EquiJoin.Inner'] = array(
+            'SELECT * FROM [nt:file] AS file INNER JOIN [nt:folder] AS folder ON file.prop1=folder.prop2',
+            'SELECT * FROM [nt:file] AS file INNER JOIN [nt:folder] AS folder ON file.[prop1]=folder.[prop2]',
+        );
+        $queries['6.7.8.EquiJoin.Left'] = array(
+            'SELECT * FROM [nt:file] AS file LEFT OUTER JOIN [nt:folder] AS folder ON file.prop1=folder.prop2',
+            'SELECT * FROM [nt:file] AS file LEFT OUTER JOIN [nt:folder] AS folder ON file.[prop1]=folder.[prop2]',
+        );
+        $queries['6.7.8.EquiJoin.Right'] = array(
+            'SELECT * FROM [nt:file] AS file RIGHT OUTER JOIN [nt:folder] AS folder ON file.prop1=folder.prop2',
+            'SELECT * FROM [nt:file] AS file RIGHT OUTER JOIN [nt:folder] AS folder ON file.[prop1]=folder.[prop2]',
+        );
 
         /*
         * 6.7.9. SameNodeJoinCondition
@@ -62,16 +71,19 @@ class Sql2TestQueries
         $queries['6.7.12.Constraint.Precedence.1'] = array(
             'SELECT * FROM [nt:file] AS file WHERE file.prop1 = \'1\' OR file.prop2 = \'2\' AND file.prop3 = \'3\'',
             'SELECT * FROM [nt:file] AS file WHERE (file.prop1 = \'1\' OR (file.prop2 = \'2\' AND file.prop3 = \'3\'))',
+            'SELECT * FROM [nt:file] AS file WHERE (file.[prop1] = \'1\' OR (file.[prop2] = \'2\' AND file.[prop3] = \'3\'))',
         );
         $queries['6.7.12.Constraint.Precedence.2'] = array(
             'SELECT * FROM [nt:file] AS file WHERE file.prop1 = \'1\' AND file.prop2 = \'2\' OR file.prop3 = \'3\'',
             'SELECT * FROM [nt:file] AS file WHERE ((file.prop1 = \'1\' AND file.prop2 = \'2\') OR file.prop3 = \'3\')',
+            'SELECT * FROM [nt:file] AS file WHERE ((file.[prop1] = \'1\' AND file.[prop2] = \'2\') OR file.[prop3] = \'3\')',
         );
 
         $queries['6.7.12.Constraint.Precedence.3'] = array(
             'SELECT * FROM [nt:file] AS file WHERE NOT file.prop1 = \'1\' OR file.prop2 = \'2\' AND NOT file.prop3 = \'3\'',
             'SELECT * FROM [nt:file] AS file WHERE (NOT file.prop1 = \'1\' OR (file.prop2 = \'2\' AND NOT file.prop3 = \'3\'))',
             'SELECT * FROM [nt:file] AS file WHERE ((NOT file.prop1 = \'1\') OR (file.prop2 = \'2\' AND (NOT file.prop3 = \'3\')))',
+            'SELECT * FROM [nt:file] AS file WHERE ((NOT file.[prop1] = \'1\') OR (file.[prop2] = \'2\' AND (NOT file.[prop3] = \'3\')))',
         );
 
         $queries['6.7.12.Constraint.Precedence.4'] = array(
@@ -82,6 +94,7 @@ class Sql2TestQueries
                 AND file.prop6 IS NOT NULL AND file.prop7 IS NOT NULL',
 
             'SELECT * FROM [nt:file] AS file WHERE (((file.prop1 IS NOT NULL AND file.prop2 IS NOT NULL) AND file.prop3 IS NOT NULL) OR (((file.prop4 IS NOT NULL AND file.prop5 IS NOT NULL) AND file.prop6 IS NOT NULL) AND file.prop7 IS NOT NULL))',
+            'SELECT * FROM [nt:file] AS file WHERE (((file.[prop1] IS NOT NULL AND file.[prop2] IS NOT NULL) AND file.[prop3] IS NOT NULL) OR (((file.[prop4] IS NOT NULL AND file.[prop5] IS NOT NULL) AND file.[prop6] IS NOT NULL) AND file.[prop7] IS NOT NULL))',
         );
 
         $queries['6.7.12.Constraint.Precedence.5'] = array(
@@ -90,6 +103,7 @@ class Sql2TestQueries
                 OR NOT file.prop3 = \'hello\' AND file.prop4 <> \'hello\'',
             'SELECT * FROM [nt:file] AS file WHERE ((NOT file.prop1 IS NOT NULL AND NOT NOT file.prop2 IS NOT NULL) OR (NOT file.prop3 = \'hello\' AND file.prop4 <> \'hello\'))',
             'SELECT * FROM [nt:file] AS file WHERE (((NOT file.prop1 IS NOT NULL) AND (NOT (NOT file.prop2 IS NOT NULL))) OR ((NOT file.prop3 = \'hello\') AND file.prop4 <> \'hello\'))',
+            'SELECT * FROM [nt:file] AS file WHERE (((NOT file.[prop1] IS NOT NULL) AND (NOT (NOT file.[prop2] IS NOT NULL))) OR ((NOT file.[prop3] = \'hello\') AND file.[prop4] <> \'hello\'))',
         );
 
         /*
@@ -98,6 +112,7 @@ class Sql2TestQueries
         $queries['6.7.13.And'] = array(
             'SELECT * FROM [nt:file] AS file WHERE file.prop1 IS NOT NULL AND file.prop2 IS NOT NULL',
             'SELECT * FROM [nt:file] AS file WHERE (file.prop1 IS NOT NULL AND file.prop2 IS NOT NULL)',
+            'SELECT * FROM [nt:file] AS file WHERE (file.[prop1] IS NOT NULL AND file.[prop2] IS NOT NULL)',
         );
 
         /*
@@ -106,6 +121,7 @@ class Sql2TestQueries
         $queries['6.7.14.Or'] = array(
             'SELECT * FROM [nt:file] AS file WHERE file.prop1 IS NOT NULL OR file.prop2 IS NOT NULL',
             'SELECT * FROM [nt:file] AS file WHERE (file.prop1 IS NOT NULL OR file.prop2 IS NOT NULL)',
+            'SELECT * FROM [nt:file] AS file WHERE (file.[prop1] IS NOT NULL OR file.[prop2] IS NOT NULL)',
          );
 
         /*
@@ -114,6 +130,7 @@ class Sql2TestQueries
         $queries['6.7.15.Not'] = array(
             'SELECT * FROM [nt:file] AS file WHERE NOT file.prop1 IS NOT NULL',
             'SELECT * FROM [nt:file] AS file WHERE (NOT file.prop1 IS NOT NULL)',
+            'SELECT * FROM [nt:file] AS file WHERE (NOT file.[prop1] IS NOT NULL)',
         );
 
         /*
@@ -124,13 +141,22 @@ class Sql2TestQueries
         /*
         * 6.7.18. PropertyExistence
         */
-        $queries['6.7.18.PropertyExistence'] = 'SELECT * FROM [nt:file] AS file WHERE file.prop1 IS NOT NULL';
+        $queries['6.7.18.PropertyExistence'] = array(
+            'SELECT * FROM [nt:file] AS file WHERE file.prop1 IS NOT NULL',
+            'SELECT * FROM [nt:file] AS file WHERE file.[prop1] IS NOT NULL',
+        );
 
         /*
         * 6.7.19. FullTextSearch
         */
-        $queries['6.7.19.FullTextSearch'] = 'SELECT * FROM [nt:file] AS file WHERE CONTAINS(file.prop, \'expr\')';
-        $queries['6.7.19.FullTextSearch_With_Single_Quote'] = "SELECT * FROM [nt:file] AS file WHERE CONTAINS(file.prop, 'expr''')";
+        $queries['6.7.19.FullTextSearch'] = array(
+            'SELECT * FROM [nt:file] AS file WHERE CONTAINS(file.prop, \'expr\')',
+            'SELECT * FROM [nt:file] AS file WHERE CONTAINS(file.[prop], \'expr\')',
+        );
+        $queries['6.7.19.FullTextSearch_With_Single_Quote'] = array(
+            "SELECT * FROM [nt:file] AS file WHERE CONTAINS(file.prop, 'expr''')",
+            "SELECT * FROM [nt:file] AS file WHERE CONTAINS(file.[prop], 'expr''')",
+        );
 
         /*
         * 6.7.20. SameNode
@@ -162,13 +188,22 @@ class Sql2TestQueries
         /*
         * 6.7.27. PropertyValue
         */
-        $queries['6.7.27.PropertyValue'] = 'SELECT * FROM [nt:file] AS file WHERE file.prop LIKE \'literal\'';
-        $queries['6.7.27.1.PropertyValue'] = 'SELECT * FROM [nt:unstructured] AS sel WHERE sel.prop > CAST(\'2013-04-15T00:00:00.000+02:00\' AS DATE)';
+        $queries['6.7.27.PropertyValue'] = array(
+            'SELECT * FROM [nt:file] AS file WHERE file.prop LIKE \'literal\'',
+            'SELECT * FROM [nt:file] AS file WHERE file.[prop] LIKE \'literal\'',
+        );
+        $queries['6.7.27.1.PropertyValue'] = array(
+            'SELECT * FROM [nt:unstructured] AS sel WHERE sel.prop > CAST(\'2013-04-15T00:00:00.000+02:00\' AS DATE)',
+            'SELECT * FROM [nt:unstructured] AS sel WHERE sel.[prop] > CAST(\'2013-04-15T00:00:00.000+02:00\' AS DATE)',
+        );
 
         /*
         * 6.7.28. Length
         */
-        $queries['6.7.28.Length'] = 'SELECT * FROM [nt:file] AS file WHERE LENGTH(file.prop) LIKE \'literal\'';
+        $queries['6.7.28.Length'] = array(
+            'SELECT * FROM [nt:file] AS file WHERE LENGTH(file.prop) LIKE \'literal\'',
+            'SELECT * FROM [nt:file] AS file WHERE LENGTH(file.[prop]) LIKE \'literal\'',
+        );
 
         /*
         * 6.7.29. NodeName
@@ -204,16 +239,31 @@ class Sql2TestQueries
         * 6.7.38 Order
         */
         $queries['6.7.38.Order.None'] = 'SELECT * FROM [nt:unstructured] AS u';
-        $queries['6.7.38.Order.Asc'] = 'SELECT * FROM [nt:unstructured] AS u ORDER BY u.prop1 ASC';
-        $queries['6.7.38.Order.Desc'] = 'SELECT * FROM [nt:unstructured] AS u ORDER BY u.prop1 DESC';
-        $queries['6.7.38.Order.Mixed'] = 'SELECT * FROM [nt:unstructured] AS u ORDER BY u.prop1 ASC, u.prop2 DESC';
+        $queries['6.7.38.Order.Asc'] = array(
+            'SELECT * FROM [nt:unstructured] AS u ORDER BY u.prop1 ASC',
+            'SELECT * FROM [nt:unstructured] AS u ORDER BY u.[prop1] ASC',
+        );
+        $queries['6.7.38.Order.Desc'] = array(
+            'SELECT * FROM [nt:unstructured] AS u ORDER BY u.prop1 DESC',
+            'SELECT * FROM [nt:unstructured] AS u ORDER BY u.[prop1] DESC',
+        );
+        $queries['6.7.38.Order.Mixed'] = array(
+            'SELECT * FROM [nt:unstructured] AS u ORDER BY u.prop1 ASC, u.prop2 DESC',
+            'SELECT * FROM [nt:unstructured] AS u ORDER BY u.[prop1] ASC, u.[prop2] DESC',
+        );
 
         /*
         * 6.7.39 Column
         */
         $queries['6.7.39.Colum.Wildcard'] = 'SELECT * FROM [nt:unstructured] AS u';
-        $queries['6.7.39.Colum.Selector'] = 'SELECT u.prop1 AS col1 FROM [nt:unstructured] AS u';
-        $queries['6.7.39.Colum.Mixed'] = 'SELECT u.prop1 AS col1, u.prop2 FROM [nt:unstructured] AS u';
+        $queries['6.7.39.Colum.Selector'] = array(
+            'SELECT u.prop1 AS col1 FROM [nt:unstructured] AS u',
+            'SELECT u.[prop1] AS col1 FROM [nt:unstructured] AS u',
+        );
+        $queries['6.7.39.Colum.Mixed'] = array(
+            'SELECT u.prop1 AS col1, u.prop2 FROM [nt:unstructured] AS u',
+            'SELECT u.[prop1] AS col1, u.[prop2] FROM [nt:unstructured] AS u',
+        );
 
         return $queries;
     }

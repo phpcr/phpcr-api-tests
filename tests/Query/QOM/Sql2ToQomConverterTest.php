@@ -39,7 +39,7 @@ class Sql2ToQomConverterTest extends \PHPCR\Test\BaseCase
 
     public function testColumnsAndSelector()
     {
-        $sql2 = $this->sql2Queries['6.7.39.Colum.Mixed'];
+        $sql2 = reset($this->sql2Queries['6.7.39.Colum.Mixed']);
         $query = $this->parser->parse($sql2);
 
         $this->assertInstanceOf('\PHPCR\Query\QOM\QueryObjectModelInterface', $query);
