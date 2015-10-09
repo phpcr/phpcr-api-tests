@@ -146,4 +146,33 @@ hello world
         $this->assertInternalType('string', $value);
         $this->assertEquals($this->decodedstring, $value);
     }
+
+    /**
+     * Verifies that we still can read empty data from multivalue binary properties
+     * @group multitest
+     */
+    public function testReadEmptyBinaryMultivalue()
+    {
+        $node = $this->session->getRootNode()->getNode('tests_general_base/index.txt/jcr:content');
+        $empty = $node->getProperty('empty_multidata');
+        $this->assertEquals(\PHPCR\PropertyType::BINARY, $empty->getType());
+        $emptyValue = $empty->getBinary();
+        $this->assertTrue(is_array($emptyValue));
+        $this->assertTrue(count($emptyValue) === 0);
+    }
+
+    /**
+     * Verifies that we still can read empty data from multivalue binary properties
+     */
+    public function testReadSingleBinaryMultivalue()
+    {
+        $node = $this->session->getRootNode()->getNode('tests_general_base/index.txt/jcr:content');
+        $single = $node->getProperty('single_multidata');
+        $this->assertEquals(\PHPCR\PropertyType::BINARY, $single->getType());
+        $singleValue = $single->getBinary();
+        $this->assertTrue(is_array($singleValue));
+        $this->assertTrue(is_resource($singleValue[0]));
+        $contents = stream_get_contents($singleValue[0]);
+        $this->assertEquals($this->decodedstring, $contents);
+    }
 }
