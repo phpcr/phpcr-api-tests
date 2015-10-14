@@ -12,6 +12,7 @@
 namespace PHPCR\Tests\Writing;
 
 use PHPCR\ItemNotFoundException;
+use PHPCR\ReferentialIntegrityException;
 
 /**
  * Covering jcr-2.8.3 spec $10.9.
@@ -426,6 +427,25 @@ class DeleteMethodsTest extends \PHPCR\Test\BaseCase
         $destnode = $this->node->getNode('idExample');
         $destnode->remove();
         $this->session->save();
+    }
+
+    /**
+     * The session should be able to refresh after some referential integrity has failed.
+     */
+    public function testDeleteReferencedNodeWithClearingSession()
+    {
+        $this->assertInstanceOf('PHPCR\NodeInterface', $this->node);
+
+        try {
+            $destnode = $this->node->getNode('idExample');
+            $destnode->remove();
+            $this->session->save();
+        } catch (ReferentialIntegrityException $e) {
+        }
+
+        $this->session->refresh(false);
+
+        $this->assertInstanceOf('PHPCR\NodeInterface', $this->node->getNode('idExample'));
     }
 
     /**
