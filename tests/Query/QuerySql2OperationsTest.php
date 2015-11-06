@@ -12,6 +12,7 @@
 namespace PHPCR\Tests\Query;
 
 use PHPCR\Query\QueryInterface;
+use PHPCR\Query\RowInterface;
 
 /**
  * Run non-trivial queries to try out where, the join features and such.
@@ -198,6 +199,32 @@ class QuerySql2OperationsTest extends QueryBaseCase
             'NumberPropertyNodeToCompare1'  => 2,
             'NumberPropertyNodeToCompare2'  => 10,
         ), $vals);
+    }
+
+    public function testQueryLeftJoinNull()
+    {
+        /** @var $query QueryInterface */
+        $query = $this->sharedFixture['qm']->createQuery(
+            'SELECT *
+             FROM [nt:folder] AS folder
+               LEFT OUTER JOIN [nt:file] AS file
+               ON ISDESCENDANTNODE(file, folder)
+             WHERE NAME(folder) = "emptyExample"
+             ',
+            QueryInterface::JCR_SQL2
+        );
+
+        $this->assertInstanceOf('\PHPCR\Query\QueryInterface', $query);
+        $result = $query->execute();
+        $this->assertInstanceOf('\PHPCR\Query\QueryResultInterface', $result);
+        $this->assertCount(1, $result);
+
+        /** @var RowInterface $row */
+        $row = $result->getRows()->current();
+        $this->assertInstanceOf('\PHPCR\Query\RowInterface', $row);
+        $this->assertEquals('/tests_general_base/emptyExample', $row->getPath('folder'));
+        $this->assertNull($row->getPath('file'));
+        $this->assertNull($row->getNode('file'));
     }
 
     public function testQueryRightJoin()
