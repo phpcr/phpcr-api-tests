@@ -348,7 +348,6 @@ class VersionHistoryTest extends \PHPCR\Test\BaseCase
         $node = $history->getNode('jcr:versionLabels');
         try {
             $property = $node->getProperty('stable');
-
         } catch (PathNotFoundException $e) {
             $this->fail('the path "stable" should be found');
         }
@@ -375,7 +374,6 @@ class VersionHistoryTest extends \PHPCR\Test\BaseCase
 
         $this->assertFalse($history->hasVersionLabel('anotherlabelname', $version));
         $this->assertFalse($history->hasVersionLabel('unsetlabel', $version));
-
     }
 
     /**
