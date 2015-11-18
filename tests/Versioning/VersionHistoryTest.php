@@ -318,7 +318,7 @@ class VersionHistoryTest extends \PHPCR\Test\BaseCase
     public function testGetVersionByLabel()
     {
         $history = $this->vm->getVersionHistory('/tests_version_base/versioned');
-        $history->addVersionLabel('1.0','stable',false);
+        $history->addVersionLabel('1.0', 'stable', false);
 
         $expectedVersion = $history->getVersion('1.0');
         $actualVersion = $history->getVersionByLabel('stable');
@@ -345,7 +345,7 @@ class VersionHistoryTest extends \PHPCR\Test\BaseCase
     public function testAddLabel()
     {
         $history = $this->vm->getVersionHistory('/tests_version_base/versioned');
-        $history->addVersionLabel('1.0','stable',false);
+        $history->addVersionLabel('1.0', 'stable', false);
         $node = $history->getNode('jcr:versionLabels');
         try {
             $property = $node->getProperty('stable');
@@ -361,9 +361,9 @@ class VersionHistoryTest extends \PHPCR\Test\BaseCase
     public function testHasVersionLabel()
     {
         $history = $this->vm->getVersionHistory('/tests_version_base/versioned');
-        $history->addVersionLabel('1.0','stable',false);
-        $history->addVersionLabel('1.0','labelname',false);
-        $history->addVersionLabel('1.1','anotherlabelname',false);
+        $history->addVersionLabel('1.0', 'stable', false);
+        $history->addVersionLabel('1.0', 'labelname', false);
+        $history->addVersionLabel('1.1', 'anotherlabelname', false);
 
         $version = $history->getVersion('1.0');
 
@@ -385,9 +385,9 @@ class VersionHistoryTest extends \PHPCR\Test\BaseCase
     public function testGetVersionLabels()
     {
         $history = $this->vm->getVersionHistory('/tests_version_base/versioned');
-        $history->addVersionLabel('1.0','stable',false);
-        $history->addVersionLabel('1.0','labelname',false);
-        $history->addVersionLabel('1.1','anotherlabelname',false);
+        $history->addVersionLabel('1.0', 'stable', false);
+        $history->addVersionLabel('1.0', 'labelname', false);
+        $history->addVersionLabel('1.1', 'anotherlabelname', false);
 
         $version = $history->getVersion('1.0');
 
@@ -409,7 +409,7 @@ class VersionHistoryTest extends \PHPCR\Test\BaseCase
     public function testRemoveLabel()
     {
         $history = $this->vm->getVersionHistory('/tests_version_base/versioned');
-        $history->addVersionLabel('1.0','toremove',false);
+        $history->addVersionLabel('1.0', 'toremove', false);
 
         $history->removeVersionLabel('toremove');
 
@@ -450,5 +450,4 @@ class VersionHistoryTest extends \PHPCR\Test\BaseCase
         return false;
     }
 
-    // TODO: missing addVersionlabel, getVersionByLabel, getVersionLabels, hasVersionLabel, removeVersionLabel
 }
