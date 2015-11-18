@@ -336,7 +336,6 @@ class VersionHistoryTest extends \PHPCR\Test\BaseCase
         $history = $this->vm->getVersionHistory('/tests_version_base/versioned');
 
         $history->getVersionByLabel('definitlyNotSetLabel');
-
     }
 
     /**
@@ -350,7 +349,7 @@ class VersionHistoryTest extends \PHPCR\Test\BaseCase
         try {
             $property = $node->getProperty('stable');
 
-        } catch(PathNotFoundException $e) {
+        } catch (PathNotFoundException $e) {
             $this->fail('the path "stable" should be found');
         }
     }
@@ -369,13 +368,13 @@ class VersionHistoryTest extends \PHPCR\Test\BaseCase
 
 
         $this->assertFalse($history->hasVersionLabel('unsetlabel'));
-        $this->assertFalse($history->hasVersionLabel('unsetlabel',$version));
+        $this->assertFalse($history->hasVersionLabel('unsetlabel', $version));
 
         $this->assertTrue($history->hasVersionLabel('stable'));
-        $this->assertTrue($history->hasVersionLabel('stable',$version));
+        $this->assertTrue($history->hasVersionLabel('stable', $version));
 
-        $this->assertFalse($history->hasVersionLabel('anotherlabelname',$version));
-        $this->assertFalse($history->hasVersionLabel('unsetlabel',$version));
+        $this->assertFalse($history->hasVersionLabel('anotherlabelname', $version));
+        $this->assertFalse($history->hasVersionLabel('unsetlabel', $version));
 
     }
 
@@ -393,14 +392,14 @@ class VersionHistoryTest extends \PHPCR\Test\BaseCase
 
         $labels = $history->getVersionLabels($version);
         $this->assertEquals(2, count($labels));
-        $this->assertTrue(in_array('stable',$labels));
-        $this->assertTrue(in_array('labelname',$labels));
+        $this->assertTrue(in_array('stable', $labels));
+        $this->assertTrue(in_array('labelname', $labels));
 
         $labels = $history->getVersionLabels();
         $this->assertEquals(3, count($labels));
-        $this->assertTrue(in_array('stable',$labels));
-        $this->assertTrue(in_array('labelname',$labels));
-        $this->assertTrue(in_array('anotherlabelname',$labels));
+        $this->assertTrue(in_array('stable', $labels));
+        $this->assertTrue(in_array('labelname', $labels));
+        $this->assertTrue(in_array('anotherlabelname', $labels));
     }
 
     /**
@@ -414,9 +413,6 @@ class VersionHistoryTest extends \PHPCR\Test\BaseCase
         $history->removeVersionLabel('toremove');
 
         $this->assertFalse($history->hasVersionLabel('toremove'));
-
-
-
     }
 
 
