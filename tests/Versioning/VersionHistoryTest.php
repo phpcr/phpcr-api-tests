@@ -443,5 +443,4 @@ class VersionHistoryTest extends \PHPCR\Test\BaseCase
 
         return false;
     }
-
 }
