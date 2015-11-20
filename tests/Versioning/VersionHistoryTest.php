@@ -125,7 +125,6 @@ class VersionHistoryTest extends \PHPCR\Test\BaseCase
         $this->assertCount(1, $lastVersion->getPredecessors());
         $this->assertCount(0, $lastVersion->getSuccessors());
     }
-
     public function testGetAllVersions()
     {
         // TODO: have non linear version history
@@ -150,7 +149,6 @@ class VersionHistoryTest extends \PHPCR\Test\BaseCase
         $this->assertCount(1, $lastVersion->getPredecessors());
         $this->assertCount(0, $lastVersion->getSuccessors());
     }
-
     /**
      * Check version history (allVersions), add more versions, then check the history updates correctly.
      */
@@ -313,23 +311,8 @@ class VersionHistoryTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * Load Version by label
-     */
-    public function testGetVersionByLabel()
-    {
-        $history = $this->vm->getVersionHistory('/tests_version_base/versioned');
-        $history->addVersionLabel('1.0', 'stable', false);
-
-        $expectedVersion = $history->getVersion('1.0');
-        $actualVersion = $history->getVersionByLabel('stable');
-
-        $this->assertEquals($expectedVersion->getIdentifier(), $actualVersion->getIdentifier());
-    }
-
-
-    /**
      * Try to load  Version by unexisting label
-     * @expectedException PHPCR\Version\VersionException
+     * @expectedException \PHPCR\Version\VersionException
      */
     public function testUnexistingGetVersionByLabel()
     {
@@ -345,6 +328,8 @@ class VersionHistoryTest extends \PHPCR\Test\BaseCase
     {
         $history = $this->vm->getVersionHistory('/tests_version_base/versioned');
         $history->addVersionLabel('1.0', 'stable', false);
+        $history->setChildrenDirty();
+
         $node = $history->getNode('jcr:versionLabels');
         try {
             $property = $node->getProperty('stable');
@@ -354,7 +339,25 @@ class VersionHistoryTest extends \PHPCR\Test\BaseCase
     }
 
     /**
+     * Load Version by label
+     *
+     * @depends testAddLabel
+     */
+    public function testGetVersionByLabel()
+    {
+        $history = $this->vm->getVersionHistory('/tests_version_base/versioned');
+        $history->addVersionLabel('1.0', 'stable', false);
+
+        $expectedVersion = $history->getVersion('1.0');
+        $actualVersion = $history->getVersionByLabel('stable');
+
+        $this->assertEquals($expectedVersion->getIdentifier(), $actualVersion->getIdentifier());
+    }
+
+    /**
      * Try to check, if version has label
+     *
+     * @depends testAddLabel
      */
     public function testHasVersionLabel()
     {
@@ -364,7 +367,6 @@ class VersionHistoryTest extends \PHPCR\Test\BaseCase
         $history->addVersionLabel('1.1', 'anotherlabelname', false);
 
         $version = $history->getVersion('1.0');
-
 
         $this->assertFalse($history->hasVersionLabel('unsetlabel'));
         $this->assertFalse($history->hasVersionLabel('unsetlabel', $version));
@@ -378,6 +380,8 @@ class VersionHistoryTest extends \PHPCR\Test\BaseCase
 
     /**
      * Try to get labels from version history
+     *
+     * @depends testAddLabel
      */
     public function testGetVersionLabels()
     {
@@ -402,6 +406,8 @@ class VersionHistoryTest extends \PHPCR\Test\BaseCase
 
     /**
      * removes label from a version
+     *
+     * @depends testAddLabel
      */
     public function testRemoveLabel()
     {
@@ -413,7 +419,6 @@ class VersionHistoryTest extends \PHPCR\Test\BaseCase
         $this->assertFalse($history->hasVersionLabel('toremove'));
     }
 
-
     /**
      * Try to remove unset label from a version.
      * @expectedException \PHPCR\Version\VersionException
@@ -423,7 +428,6 @@ class VersionHistoryTest extends \PHPCR\Test\BaseCase
         $history = $this->vm->getVersionHistory('/tests_version_base/versioned');
         $history->removeVersionLabel('unsetLabel');
     }
-
 
     /**
      * Check if a version node with the given name exists in the version history.
