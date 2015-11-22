@@ -11,6 +11,8 @@
 
 namespace PHPCR\Tests\Versioning;
 
+use Jackalope\Property;
+use PHPCR\PathNotFoundException;
 use PHPCR\Util\PathHelper;
 use PHPCR\Version\VersionHistoryInterface;
 use PHPCR\Version\VersionManagerInterface;
@@ -123,7 +125,6 @@ class VersionHistoryTest extends \PHPCR\Test\BaseCase
         $this->assertCount(1, $lastVersion->getPredecessors());
         $this->assertCount(0, $lastVersion->getSuccessors());
     }
-
     public function testGetAllVersions()
     {
         // TODO: have non linear version history
@@ -148,7 +149,6 @@ class VersionHistoryTest extends \PHPCR\Test\BaseCase
         $this->assertCount(1, $lastVersion->getPredecessors());
         $this->assertCount(0, $lastVersion->getSuccessors());
     }
-
     /**
      * Check version history (allVersions), add more versions, then check the history updates correctly.
      */
@@ -311,6 +311,125 @@ class VersionHistoryTest extends \PHPCR\Test\BaseCase
     }
 
     /**
+     * Try to load  Version by unexisting label
+     * @expectedException \PHPCR\Version\VersionException
+     */
+    public function testUnexistingGetVersionByLabel()
+    {
+        $history = $this->vm->getVersionHistory('/tests_version_base/versioned');
+
+        $history->getVersionByLabel('definitlyNotSetLabel');
+    }
+
+    /**
+     * Try to add label to a version
+     */
+    public function testAddLabel()
+    {
+        $history = $this->vm->getVersionHistory('/tests_version_base/versioned');
+        $history->addVersionLabel('1.0', 'stable', false);
+        $history->setChildrenDirty();
+
+        $node = $history->getNode('jcr:versionLabels');
+        try {
+            $property = $node->getProperty('stable');
+        } catch (PathNotFoundException $e) {
+            $this->fail('the path "stable" should be found');
+        }
+    }
+
+    /**
+     * Load Version by label
+     *
+     * @depends testAddLabel
+     */
+    public function testGetVersionByLabel()
+    {
+        $history = $this->vm->getVersionHistory('/tests_version_base/versioned');
+        $history->addVersionLabel('1.0', 'stable', false);
+
+        $expectedVersion = $history->getVersion('1.0');
+        $actualVersion = $history->getVersionByLabel('stable');
+
+        $this->assertEquals($expectedVersion->getIdentifier(), $actualVersion->getIdentifier());
+    }
+
+    /**
+     * Try to check, if version has label
+     *
+     * @depends testAddLabel
+     */
+    public function testHasVersionLabel()
+    {
+        $history = $this->vm->getVersionHistory('/tests_version_base/versioned');
+        $history->addVersionLabel('1.0', 'stable', false);
+        $history->addVersionLabel('1.0', 'labelname', false);
+        $history->addVersionLabel('1.1', 'anotherlabelname', false);
+
+        $version = $history->getVersion('1.0');
+
+        $this->assertFalse($history->hasVersionLabel('unsetlabel'));
+        $this->assertFalse($history->hasVersionLabel('unsetlabel', $version));
+
+        $this->assertTrue($history->hasVersionLabel('stable'));
+        $this->assertTrue($history->hasVersionLabel('stable', $version));
+
+        $this->assertFalse($history->hasVersionLabel('anotherlabelname', $version));
+        $this->assertFalse($history->hasVersionLabel('unsetlabel', $version));
+    }
+
+    /**
+     * Try to get labels from version history
+     *
+     * @depends testAddLabel
+     */
+    public function testGetVersionLabels()
+    {
+        $history = $this->vm->getVersionHistory('/tests_version_base/versioned');
+        $history->addVersionLabel('1.0', 'stable', false);
+        $history->addVersionLabel('1.0', 'labelname', false);
+        $history->addVersionLabel('1.1', 'anotherlabelname', false);
+
+        $version = $history->getVersion('1.0');
+
+        $labels = $history->getVersionLabels($version);
+        $this->assertEquals(2, count($labels));
+        $this->assertTrue(in_array('stable', $labels));
+        $this->assertTrue(in_array('labelname', $labels));
+
+        $labels = $history->getVersionLabels();
+        $this->assertEquals(3, count($labels));
+        $this->assertTrue(in_array('stable', $labels));
+        $this->assertTrue(in_array('labelname', $labels));
+        $this->assertTrue(in_array('anotherlabelname', $labels));
+    }
+
+    /**
+     * removes label from a version
+     *
+     * @depends testAddLabel
+     */
+    public function testRemoveLabel()
+    {
+        $history = $this->vm->getVersionHistory('/tests_version_base/versioned');
+        $history->addVersionLabel('1.0', 'toremove', false);
+
+        $history->removeVersionLabel('toremove');
+
+        $this->assertFalse($history->hasVersionLabel('toremove'));
+    }
+
+    /**
+     * Try to remove unset label from a version.
+     * @expectedException \PHPCR\Version\VersionException
+     */
+    public function testRemoveUnsetLabel()
+    {
+        $history = $this->vm->getVersionHistory('/tests_version_base/versioned');
+        $history->removeVersionLabel('unsetLabel');
+    }
+
+    /**
      * Check if a version node with the given name exists in the version history.
      *
      * @param VersionHistoryInterface $history     The version history node
@@ -328,6 +447,4 @@ class VersionHistoryTest extends \PHPCR\Test\BaseCase
 
         return false;
     }
-
-    // TODO: missing addVersionlabel, getVersionByLabel, getVersionLabels, hasVersionLabel, removeVersionLabel
 }
