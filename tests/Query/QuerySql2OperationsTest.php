@@ -12,6 +12,7 @@
 namespace PHPCR\Tests\Query;
 
 use PHPCR\Query\QueryInterface;
+use PHPCR\Query\RowInterface;
 
 /**
  * Run non-trivial queries to try out where, the join features and such.
@@ -44,6 +45,26 @@ class QuerySql2OperationsTest extends QueryBaseCase
             $vals[] = $row->getValue('foo');
         }
         $this->assertEquals(array('bar'), $vals);
+    }
+
+    public function testQueryFieldDate()
+    {
+        /** @var $query QueryInterface */
+        $query = $this->sharedFixture['qm']->createQuery("
+            SELECT *
+            FROM [nt:base]
+            WHERE [mydateprop] <= CAST('2011-04-27T13:01:07.472+02:00' AS DATE)
+              AND [mydateprop] >= CAST('2011-04-01T13:01:07.472+02:00' AS DATE)
+              AND (ISSAMENODE([/tests_general_base]) OR ISDESCENDANTNODE([/tests_general_base]))
+            ",
+            QueryInterface::JCR_SQL2
+        );
+
+        $result = $query->execute();
+        $this->assertCount(1, $result->getRows());
+        /** @var RowInterface $row */
+        $row = $result->getRows()->current();
+        $this->assertEquals('/tests_general_base/index.txt/jcr:content', $row->getPath());
     }
 
     public function testQueryFieldSomeNull()
