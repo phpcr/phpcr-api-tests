@@ -44,6 +44,10 @@ class Sql2TestQueries
             'SELECT * FROM [nt:file] AS file RIGHT OUTER JOIN [nt:folder] AS folder ON file.prop1=folder.prop2',
             'SELECT * FROM [nt:file] AS file RIGHT OUTER JOIN [nt:folder] AS folder ON file.[prop1]=folder.[prop2]',
         );
+        $queries['6.7.8.EquiJoin.NestedJoin'] = array(
+            'SELECT * FROM [nt:folder] AS folder INNER JOIN [nt:file] AS file ON folder.[prop2]=file.[prop1] INNER JOIN [nt:folder] AS folder2 ON file.[prop1]=folder.[prop2]',
+            'SELECT * FROM [nt:folder] AS folder INNER JOIN [nt:file] AS file ON folder.[prop2]=file.[prop1] INNER JOIN [nt:folder] AS folder2 ON file.[prop1]=folder.[prop2]',
+        );
 
         /*
         * 6.7.9. SameNodeJoinCondition
@@ -268,3 +272,4 @@ class Sql2TestQueries
         return $queries;
     }
 }
+

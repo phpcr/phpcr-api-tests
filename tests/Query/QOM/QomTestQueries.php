@@ -78,6 +78,23 @@ class QomTestQueries
                 array(),
                 array());
 
+        // SELECT * FROM [nt:folder] AS folder INNER JOIN [nt:file] AS file ON folder.[prop2]=file.[prop1] INNER JOIN [nt:folder] AS folder2 ON file.[prop1]=folder.[prop2]
+        $queries['6.7.8.EquiJoin.NestedJoin'] =
+            $factory->createQuery(
+                $factory->join(
+                    $factory->join(
+                        $factory->selector('folder', 'nt:folder'),
+                        $factory->selector('file', 'nt:file'),
+                        Constants::JCR_JOIN_TYPE_INNER,
+                        $factory->equiJoinCondition('folder', 'prop2', 'file', 'prop1')
+                    ),
+                    $factory->selector('folder2', 'nt:folder'),
+                    Constants::JCR_JOIN_TYPE_INNER,
+                    $factory->equiJoinCondition('file', 'prop1', 'folder', 'prop2')),
+                null,
+                array(),
+                array());
+
         /*
         * 6.7.9. SameNodeJoinCondition
         */
@@ -611,3 +628,4 @@ class QomTestQueries
         return $queries;
     }
 }
+
