@@ -190,6 +190,33 @@ class QuerySql2OperationsTest extends QueryBaseCase
         $this->assertEquals(array(999), $vals);
     }
 
+    public function testQueryJoinNested()
+    {
+        /** @var $query QueryInterface */
+        $query = $this->sharedFixture['qm']->createQuery('
+            SELECT content.longNumber
+            FROM [nt:folder] AS folder
+              INNER JOIN [nt:file] AS file
+                ON ISDESCENDANTNODE(file, folder)
+              INNER JOIN [nt:unstructured] AS content
+                ON ISDESCENDANTNODE(content, file)
+            WHERE content.longNumber = 999
+              AND ISDESCENDANTNODE(folder, [/])
+            ',
+            QueryInterface::JCR_SQL2
+        );
+
+        $this->assertInstanceOf('\PHPCR\Query\QueryInterface', $query);
+        $result = $query->execute();
+        $this->assertInstanceOf('\PHPCR\Query\QueryResultInterface', $result);
+        $vals = array();
+
+        foreach ($result->getRows() as $row) {
+            $vals[] = $row->getValue('content.longNumber');
+        }
+        $this->assertEquals(array(999), $vals);
+    }
+
     public function testQueryLeftJoin()
     {
         /** @var $query QueryInterface */
