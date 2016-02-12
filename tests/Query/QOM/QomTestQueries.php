@@ -628,4 +628,3 @@ class QomTestQueries
         return $queries;
     }
 }
-

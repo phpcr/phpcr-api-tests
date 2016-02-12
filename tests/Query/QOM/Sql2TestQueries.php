@@ -272,4 +272,3 @@ class Sql2TestQueries
         return $queries;
     }
 }
-
