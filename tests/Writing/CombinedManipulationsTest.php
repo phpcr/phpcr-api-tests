@@ -618,6 +618,56 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
         $this->assertEquals('Value', $node->getPropertyValue('newprop'));
     }
 
+    /**
+     * It should throw an exception when accessing a property of a node created
+     * and persisted earlier in the session, but which has since been deleted
+     * by a different session. (refresh should not throw an exception).
+     */
+    public function testRemoveNewNodeInOtherSessionDiscardChanges()
+    {
+        $this->setExpectedException(
+            'PHPCR\PathNotFoundException', 
+            'Property bar'
+        );
+
+        $node = $this->node;
+        $fooNode = $node->addNode('foo');
+        $fooNode->setProperty('bar', 'boo');
+        $this->session->save();
+
+        $othersession = self::$loader->getSession();
+        $othersession->getNode($node->getPath())->remove();
+        $othersession->save();
+
+        $this->session->refresh(false);
+
+        $fooNode->getProperty('bar');
+    }
+
+    /**
+     * Same as above but keep changes when refreshing -- what should happen here?
+     *
+     * Currently jackalope-doctrine-dbal throws:
+     *
+     *   PHPCR\RepositoryException:
+     *   Setting item /tests_write_combined_manipulation/testRemoveNewNodeInOtherSessionDiscardChanges/foo dirty in state 4 is not expected
+     */
+    public function testRemoveNewNodeInOtherSessionKeepChanges()
+    {
+        $node = $this->node;
+        $fooNode = $node->addNode('foo');
+        $fooNode->setProperty('bar', 'boo');
+        $this->session->save();
+
+        $othersession = self::$loader->getSession();
+        $othersession->getNode($node->getPath())->remove();
+        $othersession->save();
+
+        $this->session->refresh(true);
+
+        $fooNode->getProperty('bar');
+    }
+
     public function testMoveSessionRefresh()
     {
         $node = $this->node;
