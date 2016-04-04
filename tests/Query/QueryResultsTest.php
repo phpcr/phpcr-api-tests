@@ -172,6 +172,30 @@ class QueryResultsTest extends QueryBaseCase
         $this->assertEquals(10, $rows[0]->getValue('data.longNumberToCompare'));
     }
 
+    public function testCompareNumberFieldsMulti()
+    {
+        $query = $this->sharedFixture['qm']->createQuery('
+            SELECT data.longNumberToCompareMulti
+            FROM [nt:unstructured] AS data
+            WHERE data.longNumberToCompareMulti = 2
+              AND ISDESCENDANTNODE([/tests_general_base])
+            ',
+            \PHPCR\Query\QueryInterface::JCR_SQL2
+        );
+        $result = $query->execute();
+
+        $rows = array();
+        foreach ($result->getRows() as $row) {
+            $rows[] = $row;
+        }
+
+        $this->assertCount(1, $rows);
+        
+        // returning a string value is, perhaps suprisingly, the correct behavior.
+        $this->assertEquals('4 2 8', $rows[0]->getValue('data.longNumberToCompareMulti'));
+    }
+
+
     public function testCompareStringFields()
     {
         $query = $this->sharedFixture['qm']->createQuery(
