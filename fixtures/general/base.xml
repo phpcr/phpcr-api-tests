@@ -360,6 +360,12 @@
                 <sv:value>2</sv:value>
             </sv:property>
 
+            <sv:property sv:name="longNumberToCompareMulti" sv:type="Long" sv:multiple="true">
+                <sv:value>4</sv:value>
+                <sv:value>2</sv:value>
+                <sv:value>8</sv:value>
+            </sv:property>
+
             <sv:property sv:name="stringToCompare" sv:type="String">
                 <sv:value>2</sv:value>
             </sv:property>
