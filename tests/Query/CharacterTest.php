@@ -138,4 +138,22 @@ class CharacterTest extends \PHPCR\Test\BaseCase
         $this->assertCount(1, $rows);
         $this->assertEquals('foo & bar&baz', $rows->current()->getValue('ampersand'));
     }
+
+    public function testNodeNameWithMinus()
+    {
+        /** @var QueryManagerInterface $queryManager */
+        $queryManager = $this->sharedFixture['qm'];
+        $query = $queryManager->createQuery('
+            SELECT node.[jcr:uuid] AS uuid
+            FROM [nt:unstructured] AS node
+            WHERE ISCHILDNODE(node, [/tests_query_encoding/test-2e])',
+            QueryInterface::JCR_SQL2
+        );
+
+        $result = $query->execute();
+
+        $rows = $result->getRows();
+        $this->assertCount(1, $rows);
+        $this->assertEquals('PHPCR\Query\QueryInterface', $rows->current()->getValue('class'));
+    }
 }
