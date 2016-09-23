@@ -15,7 +15,7 @@ use PHPCR\Query\QueryInterface;
 use PHPCR\Query\RowInterface;
 
 /**
- * Run non-trivial queries to try out where, the join features and such.
+ * Run non-trivial queries to run against the repository, with join features and such.
  */
 class QuerySql2OperationsTest extends QueryBaseCase
 {
