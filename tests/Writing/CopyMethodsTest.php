@@ -79,6 +79,24 @@ class CopyMethodsTest extends \PHPCR\Test\BaseCase
         $this->assertNotEquals($sfile->getPropertyValue('jcr:data'), $dfile->getPropertyValue('jcr:data'));
     }
 
+    public function testCopyPreserveChildOrder()
+    {
+        $expected = [ 'three', 'one', 'two' ];
+
+        $src = '/tests_write_manipulation_copy/testCopyPreserveChildOrder/srcNode';
+        $dst = '/tests_write_manipulation_copy/testCopyPreserveChildOrder/dstNode/srcNode';
+
+        $node = $this->session->getNode($src);
+        $node->orderBefore('three', 'one');
+        $this->session->save();
+        $this->assertEquals($expected, iterator_to_array($node->getNodeNames()));
+
+        $this->ws->copy($src, $dst);
+
+        $node = $this->session->getNode($dst);
+        $this->assertEquals($expected, iterator_to_array($node->getNodeNames()));
+    }
+
     public function testWorkspaceCopyReference()
     {
         $src = '/tests_write_manipulation_copy/testWorkspaceCopy/referencedNodeSet';

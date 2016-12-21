@@ -523,4 +523,36 @@
             </sv:node>
         </sv:node>
     </sv:node>
+
+    <sv:node sv:name="testCopyPreserveChildOrder">
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+            <sv:value>nt:unstructured</sv:value>
+        </sv:property>
+
+        <sv:node sv:name="srcNode">
+            <sv:property sv:name="jcr:primaryType" sv:type="Name">
+                <sv:value>nt:unstructured</sv:value>
+            </sv:property>
+            <sv:node sv:name="one">
+                <sv:property sv:name="jcr:primaryType" sv:type="Name">
+                    <sv:value>nt:unstructured</sv:value>
+                </sv:property>
+            </sv:node>
+            <sv:node sv:name="two">
+                <sv:property sv:name="jcr:primaryType" sv:type="Name">
+                    <sv:value>nt:unstructured</sv:value>
+                </sv:property>
+            </sv:node>
+            <sv:node sv:name="three">
+                <sv:property sv:name="jcr:primaryType" sv:type="Name">
+                    <sv:value>nt:unstructured</sv:value>
+                </sv:property>
+            </sv:node>
+        </sv:node>
+        <sv:node sv:name="dstNode">
+            <sv:property sv:name="jcr:primaryType" sv:type="Name">
+                <sv:value>nt:unstructured</sv:value>
+            </sv:property>
+        </sv:node>
+    </sv:node>
 </sv:node>
