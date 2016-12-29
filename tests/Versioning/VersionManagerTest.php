@@ -11,6 +11,7 @@
 
 namespace PHPCR\Tests\Versioning;
 
+use PHPCR\Version\OnParentVersionAction;
 use PHPCR\Version\VersionManagerInterface;
 
 /**
@@ -363,6 +364,34 @@ class VersionManagerTest extends \PHPCR\Test\BaseCase
         $this->assertFalse($node->hasProperty('jcr:created'));
     }
 
+    public function testRestorePropertyWithInitialize()
+    {
+        $nodeTypeManager = $this->session->getWorkspace()->getNodeTypeManager();
+
+        $nodeType = $nodeTypeManager->createNodeTypeTemplate();
+        $nodeType->setName('nt:test-initialize-properties');
+
+        $propertyDefinition = $nodeTypeManager->createPropertyDefinitionTemplate();
+        $propertyDefinition->setName('test');
+        $propertyDefinition->setDefaultValues(['test']);
+        $propertyDefinition->setOnParentVersion(OnParentVersionAction::INITIALIZE);
+
+        $nodeType->getPropertyDefinitionTemplates()->append($propertyDefinition);
+
+        $nodeTypeManager->registerNodeType($nodeType, true);
+
+        $node = $this->session->getRootNode()->addNode('test_version_initialize_property', 'nt:test-initialize-properties');
+        $node->addMixin('mix:versionable');
+        $node->setProperty('test', 'asdf');
+
+        $this->session->save();
+        $version = $this->vm->checkin($node->getPath());
+
+        $this->vm->restore(true, $version);
+
+        $this->assertEquals('test', $node->getPropertyValue('test'));
+    }
+
     public function testRestoreWithChildren()
     {
         $nodePath = '/tests_version_base/versioned';
@@ -418,6 +447,55 @@ class VersionManagerTest extends \PHPCR\Test\BaseCase
         $node = $this->session->getNode($nodePath);
 
         $this->assertFalse($node->hasNode('newChildNode'));
+    }
+
+    public function testRestoreWithChildrenInitialize()
+    {
+        $nodeTypeManager = $this->session->getWorkspace()->getNodeTypeManager();
+
+        $wildcardPropertyDefinition = $nodeTypeManager->createPropertyDefinitionTemplate();
+        $wildcardPropertyDefinition->setName('*');
+
+        $testNodeType = $nodeTypeManager->createNodeTypeTemplate();
+        $testNodeType->setName('nt:test-initialize-children');
+        $testNodeType->getPropertyDefinitionTemplates()->append($wildcardPropertyDefinition);
+
+        $testChildNodeType = $nodeTypeManager->createNodeTypeTemplate();
+        $testChildNodeType->setName('nt:child');
+        $testChildNodeType->getPropertyDefinitionTemplates()->append($wildcardPropertyDefinition);
+
+        $childNodeDefinition = $nodeTypeManager->createNodeDefinitionTemplate();
+        $childNodeDefinition->setName('child');
+        $childNodeDefinition->setDefaultPrimaryTypeName('nt:child');
+        $childNodeDefinition->setRequiredPrimaryTypeNames(['nt:child']);
+        $childNodeDefinition->setAutoCreated(true);
+        $childNodeDefinition->setOnParentVersion(OnParentVersionAction::INITIALIZE);
+        $testNodeType->getNodeDefinitionTemplates()->append($childNodeDefinition);
+
+        $nodeTypeManager->registerNodeType($testChildNodeType, true);
+        $nodeTypeManager->registerNodeType($testNodeType, true);
+
+        $node = $this->session->getRootNode()->addNode('test_version_child', 'nt:test-initialize-children');
+        $node->addMixin('mix:versionable');
+        $this->session->save();
+
+        $childNode = $node->getNode('child');
+        $childNode->setProperty('test', 'foo');
+
+        $this->session->save();
+        $version = $this->vm->checkin($node->getPath());
+
+        $node->setProperty('test', 'foo');
+
+        $this->session->save();
+        $this->vm->checkin($node->getPath());
+
+        $this->vm->restore(true, $version);
+
+        $node = $this->session->getNode('/test_version_child');
+        $childNode = $node->getNode('child');
+        $this->assertFalse($node->hasProperty('test'));
+        $this->assertFalse($childNode->hasProperty('test'));
     }
 
     // TODO: test restore with removeExisting false and having an id clash
