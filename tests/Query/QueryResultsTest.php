@@ -11,7 +11,11 @@
 
 namespace PHPCR\Tests\Query;
 
+use PHPCR\NodeInterface;
+use PHPCR\PropertyInterface;
+use PHPCR\Query\QueryInterface;
 use PHPCR\Query\QueryResultInterface;
+use PHPCR\Query\RowInterface;
 
 /**
  * $ 6.11 QueryResult - Test the query result object.
@@ -21,15 +25,21 @@ class QueryResultsTest extends QueryBaseCase
     /** @var QueryResultInterface */
     protected $qr;
 
-    public static $expect = array('jcr:createdBy','jcr:created','jcr:primaryType','jcr:path','jcr:score');
+    public static $expect = [
+        'jcr:createdBy',
+        'jcr:created',
+        'jcr:primaryType',
+        'jcr:path',
+        'jcr:score'
+    ];
 
     public function setUp()
     {
         parent::setUp();
 
         $this->qr = $this->query->execute();
-        //sanity check
-        $this->assertInstanceOf('PHPCR\Query\QueryResultInterface', $this->qr);
+        // Sanity check
+        $this->assertInstanceOf(QueryResultInterface::class, $this->qr);
     }
 
     public function testBindValue()
@@ -51,7 +61,7 @@ class QueryResultsTest extends QueryBaseCase
     {
         $columnNames = $this->qr->getColumnNames();
         sort($columnNames); //order is not determined
-        $columnNamesExpected = array('nt:folder.jcr:created', 'nt:folder.jcr:createdBy', 'nt:folder.jcr:primaryType');
+        $columnNamesExpected = ['nt:folder.jcr:created', 'nt:folder.jcr:createdBy', 'nt:folder.jcr:primaryType'];
 
         $this->assertEquals($columnNamesExpected, $columnNames);
     }
@@ -63,7 +73,7 @@ class QueryResultsTest extends QueryBaseCase
             FROM [nt:unstructured]
             WHERE stringToCompare IS NOT NULL
             ',
-            \PHPCR\Query\QueryInterface::JCR_SQL2
+            QueryInterface::JCR_SQL2
         );
         $qr = $query->execute();
 
@@ -86,7 +96,7 @@ class QueryResultsTest extends QueryBaseCase
         $count = 0;
 
         foreach ($nodes as $node) {
-            $this->assertInstanceOf('PHPCR\NodeInterface', $node);
+            $this->assertInstanceOf(NodeInterface::class, $node);
             $count++;
         }
         $this->assertEquals(5, $count);
@@ -96,11 +106,11 @@ class QueryResultsTest extends QueryBaseCase
     {
         // This test gets the nodes in one burst (parallel) instead serial like testGetNodes()
         $nodeIterator = $this->qr->getNodes();
-        $keys = array();
+        $keys = [];
         $this->markTestSkipped('TODO: this is not part of the api, update test when we decided what should happen');
         $nodes = $nodeIterator->getNodes();
         foreach ($nodes as $path => $node) {
-            $this->assertInstanceOf('PHPCR\NodeInterface', $node);
+            $this->assertInstanceOf(NodeInterface::class, $node);
             $this->assertEquals($path, $node->getPath());
 
             $keys[] = $path;
@@ -123,7 +133,7 @@ class QueryResultsTest extends QueryBaseCase
         $count = 0;
 
         foreach ($this->qr as $key => $row) {
-            $this->assertInstanceOf('PHPCR\Query\RowInterface', $row); // Test if the return element is an instance of row
+            $this->assertInstanceOf(RowInterface::class, $row); // Test if the return element is an instance of row
 
             foreach ($row as $columnName => $value) { // Test if we can iterate over the columns inside a row
                 $count++;
@@ -143,10 +153,10 @@ class QueryResultsTest extends QueryBaseCase
             }
         }
 
-        $this->assertInstanceOf('PHPCR\NodeInterface', $node);
+        $this->assertInstanceOf(NodeInterface::class, $node);
 
         $prop = $node->getProperty('jcr:uuid');
-        $this->assertInstanceOf('PHPCR\PropertyInterface', $prop);
+        $this->assertInstanceOf(PropertyInterface::class, $prop);
         $this->assertEquals('jcr:uuid', $prop->getName());
         $this->assertEquals('14e18ef3-be20-4985-bee9-7bb4763b31de', $prop->getString());
     }
@@ -159,11 +169,12 @@ class QueryResultsTest extends QueryBaseCase
             WHERE data.longNumberToCompare > 2
               AND ISDESCENDANTNODE([/tests_general_base])
             ',
-            \PHPCR\Query\QueryInterface::JCR_SQL2
+            QueryInterface::JCR_SQL2
         );
         $result = $query->execute();
 
-        $rows = array();
+        $rows = [];
+
         foreach ($result->getRows() as $row) {
             $rows[] = $row;
         }
@@ -180,11 +191,12 @@ class QueryResultsTest extends QueryBaseCase
             WHERE data.longNumberToCompareMulti = 2
               AND ISDESCENDANTNODE([/tests_general_base])
             ',
-            \PHPCR\Query\QueryInterface::JCR_SQL2
+            QueryInterface::JCR_SQL2
         );
         $result = $query->execute();
 
-        $rows = array();
+        $rows = [];
+
         foreach ($result->getRows() as $row) {
             $rows[] = $row;
         }
@@ -200,11 +212,12 @@ class QueryResultsTest extends QueryBaseCase
     {
         $query = $this->sharedFixture['qm']->createQuery(
             'SELECT data.stringToCompare FROM [nt:unstructured] AS data WHERE data.stringToCompare > "10"',
-            \PHPCR\Query\QueryInterface::JCR_SQL2
+            QueryInterface::JCR_SQL2
         );
         $result = $query->execute();
 
-        $rows = array();
+        $rows = [];
+
         foreach ($result->getRows() as $row) {
             $rows[] = $row;
         }
@@ -217,7 +230,7 @@ class QueryResultsTest extends QueryBaseCase
     {
         $query = $this->sharedFixture['qm']->createQuery(
             'SELECT data.thisIsNo FROM [nt:unstructured] as data WHERE data.thisIsNo = false',
-             \PHPCR\Query\QueryInterface::JCR_SQL2
+             QueryInterface::JCR_SQL2
         );
         $result = $query->execute();
 
@@ -231,11 +244,12 @@ class QueryResultsTest extends QueryBaseCase
 
         $query = $this->sharedFixture['qm']->createQuery(
             'SELECT data.thisIsYes FROM [nt:unstructured] as data WHERE data.thisIsYes = true',
-             \PHPCR\Query\QueryInterface::JCR_SQL2
+             QueryInterface::JCR_SQL2
         );
         $result = $query->execute();
 
-        $rows = array();
+        $rows = [];
+
         foreach ($result->getRows() as $row) {
             $rows[] = $row;
         }

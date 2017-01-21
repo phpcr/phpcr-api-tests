@@ -11,11 +11,18 @@
 
 namespace PHPCR\Tests\Connecting;
 
-class RepositoryTest extends \PHPCR\Test\BaseCase
+use PHPCR\LoginException;
+use PHPCR\NoSuchWorkspaceException;
+use PHPCR\RepositoryException;
+use PHPCR\RepositoryInterface;
+use PHPCR\SessionInterface;
+use PHPCR\Test\BaseCase;
+
+class RepositoryTest extends BaseCase
 {
     public static function setupBeforeClass($fixtures = null)
     {
-        //don't care about fixtures
+        // Don't care about fixtures
         parent::setupBeforeClass($fixtures);
     }
 
@@ -23,14 +30,14 @@ class RepositoryTest extends \PHPCR\Test\BaseCase
     public function testRepository()
     {
         $rep = self::$loader->getRepository();
-        $this->assertInstanceOf('PHPCR\RepositoryInterface', $rep);
+        $this->assertInstanceOf(RepositoryInterface::class, $rep);
     }
 
     public function testLoginSession()
     {
         $repository = self::$loader->getRepository();
         $session = $repository->login(self::$loader->getCredentials(), self::$loader->getWorkspaceName());
-        $this->assertInstanceOf('PHPCR\SessionInterface', $session);
+        $this->assertInstanceOf(SessionInterface::class, $session);
         $this->assertEquals(self::$loader->getWorkspaceName(), $session->getWorkspace()->getName());
     }
 
@@ -38,7 +45,7 @@ class RepositoryTest extends \PHPCR\Test\BaseCase
     {
         $repository = self::$loader->getRepository();
         $session = $repository->login(self::$loader->getCredentials());
-        $this->assertInstanceOf('PHPCR\SessionInterface', $session);
+        $this->assertInstanceOf(SessionInterface::class, $session);
         $this->assertEquals(self::$loader->getDefaultWorkspaceName(), $session->getWorkspace()->getName());
     }
 
@@ -49,10 +56,12 @@ class RepositoryTest extends \PHPCR\Test\BaseCase
     {
         $repository = self::$loader->getRepository();
         if (!self::$loader->prepareAnonymousLogin()) {
-            $this->setExpectedException('PHPCR\LoginException');
+            $this->setExpectedException(LoginException::class);
         }
+
         $session = $repository->login(null, self::$loader->getWorkspaceName());
-        $this->assertInstanceOf('PHPCR\SessionInterface', $session);
+
+        $this->assertInstanceOf(SessionInterface::class, $session);
         $this->assertEquals(self::$loader->getWorkspaceName(), $session->getWorkspace()->getName());
     }
 
@@ -63,36 +72,34 @@ class RepositoryTest extends \PHPCR\Test\BaseCase
     {
         $repository = self::$loader->getRepository();
         if (!self::$loader->prepareAnonymousLogin()) {
-            $this->setExpectedException('PHPCR\LoginException');
+            $this->setExpectedException(LoginException::class);
         }
+
         $session = $repository->login();
-        $this->assertInstanceOf('PHPCR\SessionInterface', $session);
+        $this->assertInstanceOf(SessionInterface::class, $session);
         $this->assertEquals('default', $session->getWorkspace()->getName());
     }
 
-    /**
-     * @expectedException \PHPCR\LoginException
-     */
     public function testLoginException()
     {
+        $this->expectException(LoginException::class);
+
         $repository = self::$loader->getRepository();
         $repository->login(self::$loader->getInvalidCredentials());
     }
 
-    /**
-     * @expectedException \PHPCR\NoSuchWorkspaceException
-     */
     public function testLoginNoSuchWorkspace()
     {
+        $this->expectException(NoSuchWorkspaceException::class);
+
         $repository = self::$loader->getRepository();
         $repository->login(self::$loader->getCredentials(), 'notexistingworkspace');
     }
 
-    /**
-     * @expectedException \PHPCR\RepositoryException
-     */
     public function testLoginRepositoryException()
     {
+        $this->expectException(RepositoryException::class);
+
         $repository = self::$loader->getRepository();
         $repository->login(self::$loader->getCredentials(), '//');
     }

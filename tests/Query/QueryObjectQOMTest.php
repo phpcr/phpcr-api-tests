@@ -11,8 +11,12 @@
 
 namespace PHPCR\Tests\Query;
 
+use Exception;
+use PHPCR\ItemNotFoundException;
+use PHPCR\Query\InvalidQueryException;
 use PHPCR\Query\QOM\QueryObjectModelFactoryInterface;
 use PHPCR\Query\QueryInterface;
+use PHPCR\Query\QueryResultInterface;
 
 /**
  * test the Query Factory integration.
@@ -39,7 +43,7 @@ class QueryObjectQOMTest extends QueryBaseCase
 
         try {
             $this->factory = $this->sharedFixture['qm']->getQOMFactory();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->markTestSkipped('Can not get the QOM factory, skipping tests about QOM query. '.$e->getMessage());
         }
 
@@ -48,8 +52,8 @@ class QueryObjectQOMTest extends QueryBaseCase
             $this->factory->descendantNode('data', '/tests_general_base'),
             $this->factory->sameNode('data', '/tests_general_base')
         );
-        $orderings = array();
-        $columns = array();
+        $orderings = [];
+        $columns = [];
 
         $this->query = $this->factory->createQuery($source, $constraint, $orderings, $columns);
     }
@@ -57,23 +61,23 @@ class QueryObjectQOMTest extends QueryBaseCase
     public function testExecute()
     {
         $qr = $this->query->execute();
-        $this->assertInstanceOf('PHPCR\Query\QueryResultInterface', $qr);
+        $this->assertInstanceOf(QueryResultInterface::class, $qr);
         $this->assertCount(5, $qr->getRows());
         // we assume content is the same as for sql2
     }
 
     /**
-     * @expectedException \PHPCR\Query\InvalidQueryException
-     *
      * the doc claims there would just be a PHPCR\RepositoryException
      * it makes sense that there is a InvalidQueryException
      */
     public function testExecuteInvalid()
     {
+        $this->expectException(InvalidQueryException::class);
+
         $source = $this->factory->selector('data', 'nonodetype');
         $constraint = null;
-        $orderings = array();
-        $columns = array();
+        $orderings = [];
+        $columns = [];
 
         $query = $this->factory->createQuery($source, $constraint, $orderings, $columns);
         $query->execute();
@@ -91,16 +95,16 @@ class QueryObjectQOMTest extends QueryBaseCase
      */
     public function testGetLanguage()
     {
-        $this->assertEquals(\PHPCR\Query\QueryInterface::JCR_SQL2, $this->query->getLanguage());
+        $this->assertEquals(QueryInterface::JCR_SQL2, $this->query->getLanguage());
     }
 
     /**
      * a transient query has no stored query path.
-     *
-     * @expectedException \PHPCR\ItemNotFoundException
      */
     public function testGetStoredQueryPathItemNotFound()
     {
+        $this->expectException(ItemNotFoundException::class);
+
         $this->query->getStoredQueryPath();
     }
     /* this is level 2 only */

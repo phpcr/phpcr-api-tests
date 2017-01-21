@@ -10,6 +10,15 @@
  */
 
 namespace PHPCR\Tests\Reading;
+use DateTime;
+use PHPCR\ItemNotFoundException;
+use PHPCR\ItemVisitorInterface;
+use PHPCR\NodeInterface;
+use PHPCR\PropertyInterface;
+use PHPCR\PropertyType;
+use PHPCR\SessionInterface;
+use PHPCR\Test\BaseCase;
+use PHPCR\ValueFormatException;
 
 /**
  * javax.jcr.Property read methods
@@ -20,41 +29,42 @@ namespace PHPCR\Tests\Reading;
  * Value conversions are tested according to
  * http://www.day.com/specs/jcr/2.0/3_Repository_Model.html#3.6.4%20Property%20Type%20Conversion
  */
-class PropertyReadMethodsTest extends \PHPCR\Test\BaseCase
+class PropertyReadMethodsTest extends BaseCase
 {
     /**
-     * @var \PHPCR\PropertyInterface
+     * @var PropertyInterface
      */
     protected $rootNode;
 
     /**
-     * @var \PHPCR\PropertyInterface
+     * @var PropertyInterface
      */
     protected $node;
 
     /**
-     * @var \PHPCR\PropertyInterface
+     * @var PropertyInterface
      */
     protected $createdProperty;
 
     /**
-     * @var \PHPCR\PropertyInterface
+     * @var PropertyInterface
      */
     protected $dateProperty;
 
     /**
-     * @var \PHPCR\PropertyInterface
+     * @var PropertyInterface
      */
     protected $valProperty;
 
     /**
-     * @var \PHPCR\PropertyInterface
+     * @var PropertyInterface
      */
     protected $multiValueProperty;
 
     public function setUp()
     {
         parent::setUp();
+
         $this->node = $this->rootNode->getNode('tests_general_base');
         $this->createdProperty = $this->node->getProperty('jcr:created');
         $this->dateProperty = $this->node->getProperty('index.txt/jcr:content/mydateprop');
@@ -67,46 +77,52 @@ class PropertyReadMethodsTest extends \PHPCR\Test\BaseCase
     {
         $ancestor = $this->dateProperty->getAncestor(0);
         $this->assertNotNull($ancestor);
-        $this->assertInstanceOf('PHPCR\NodeInterface', $ancestor);
+        $this->assertInstanceOf(NodeInterface::class, $ancestor);
         $this->assertTrue($this->rootNode->isSame($ancestor));
 
         $ancestor = $this->dateProperty->getAncestor(1);
         $this->assertNotNull($ancestor);
-        $this->assertInstanceOf('PHPCR\NodeInterface', $ancestor);
+        $this->assertInstanceOf(NodeInterface::class, $ancestor);
         $this->assertTrue($this->node->isSame($ancestor));
 
-        //self
+        // Self
         $ancestor = $this->dateProperty->getAncestor($this->dateProperty->getDepth());
         $this->assertNotNull($ancestor);
-        $this->assertInstanceOf('PHPCR\PropertyInterface', $ancestor);
+        $this->assertInstanceOf(PropertyInterface::class, $ancestor);
         $this->assertTrue($this->dateProperty->isSame($ancestor));
     }
+
     public function testGetDepthProperty()
     {
         $this->assertEquals(2, $this->createdProperty->getDepth());
         $this->assertEquals(4, $this->dateProperty->getDepth());
     }
+
     public function testGetParent()
     {
         $parent = $this->createdProperty->getParent();
         $this->assertNotNull($parent);
         $this->assertTrue($this->node->isSame($parent));
     }
+
     public function testGetPath()
     {
         $path = $this->createdProperty->getPath();
         $this->assertEquals('/tests_general_base/jcr:created', $path);
     }
+
     public function testGetSession()
     {
         $sess = $this->createdProperty->getSession();
-        $this->assertInstanceOf('PHPCR\SessionInterface', $sess);
+        $this->assertInstanceOf(SessionInterface::class, $sess);
         //how to further check if we got the right session?
     }
+
     public function testIsNew()
     {
         $this->assertFalse($this->createdProperty->isNew());
     }
+
     public function testIsNode()
     {
         $this->assertFalse($this->createdProperty->isNode());
@@ -115,7 +131,11 @@ class PropertyReadMethodsTest extends \PHPCR\Test\BaseCase
 
     public function testAccept()
     {
-        $mock = $this->getMock('PHPCR\ItemVisitorInterface', array('visit'));
+        $mock = $this->getMockBuilder(ItemVisitorInterface::class)
+            ->setMethods(['visit'])
+            ->getMock()
+        ;
+
         $mock->expects($this->once())
             ->method('visit')
             ->with($this->equalTo($this->createdProperty));
@@ -133,10 +153,11 @@ class PropertyReadMethodsTest extends \PHPCR\Test\BaseCase
 
     public function testGetValue()
     {
-        $this->assertEquals(\PHPCR\PropertyType::DATE, $this->dateProperty->getType(), 'Expecting date type');
+        $this->assertEquals(PropertyType::DATE, $this->dateProperty->getType(), 'Expecting date type');
         $val = $this->dateProperty->getValue();
-        $this->assertInstanceOf('DateTime', $val);
+        $this->assertInstanceOf(DateTime::class, $val);
     }
+
     public function testGetValueMulti()
     {
         $vals = $this->multiValueProperty->getValue();
@@ -166,7 +187,7 @@ class PropertyReadMethodsTest extends \PHPCR\Test\BaseCase
     public function testJcrCreated()
     {
         $date = $this->createdProperty->getDate();
-        $this->assertInstanceOf('DateTime', $date);
+        $this->assertInstanceOf(DateTime::class, $date);
         // we can not assume a specific age here, as the fixtures might be anything
     }
 
@@ -191,7 +212,7 @@ class PropertyReadMethodsTest extends \PHPCR\Test\BaseCase
         $this->assertEquals($this->valProperty->getLength(), strlen($str));
 
         $prop = $this->node->getProperty('index.txt/jcr:content/jcr:data');
-        $this->assertEquals(\PHPCR\PropertyType::BINARY, $prop->getType(), 'Expected binary type');
+        $this->assertEquals(PropertyType::BINARY, $prop->getType(), 'Expected binary type');
         $bin = $prop->getValue();
         $this->assertTrue(is_resource($bin));
         $this->assertNotNull(stream_get_contents($bin));
@@ -201,7 +222,7 @@ class PropertyReadMethodsTest extends \PHPCR\Test\BaseCase
     public function testGetBinaryMulti()
     {
         $prop = $this->node->getProperty('index.txt/jcr:content/multidata');
-        $this->assertEquals(\PHPCR\PropertyType::BINARY, $prop->getType(), 'Expected binary type');
+        $this->assertEquals(PropertyType::BINARY, $prop->getType(), 'Expected binary type');
         $arr = $prop->getValue();
         $this->assertInternalType('array', $arr);
         foreach ($arr as $bin) {
@@ -227,11 +248,11 @@ class PropertyReadMethodsTest extends \PHPCR\Test\BaseCase
     }
     /**
      * NAME can not be converted to long.
-     *
-     * @expectedException \PHPCR\ValueFormatException
      */
     public function testGetLongValueFormatException()
     {
+        $this->expectException(ValueFormatException::class);
+
         $this->node->getProperty('jcr:primaryType')->getLong();
     }
 
@@ -250,19 +271,21 @@ class PropertyReadMethodsTest extends \PHPCR\Test\BaseCase
             $this->assertInternalType('float', $v);
         }
     }
+
     /**
      * NAME can not be converted to double.
-     *
-     * @expectedException \PHPCR\ValueFormatException
      */
     public function testGetDoubleValueFormatException()
     {
+        $this->expectException(ValueFormatException::class);
+
         $this->node->getProperty('jcr:primaryType')->getDouble();
     }
 
     public function testGetDecimal()
     {
         $prop = $this->node->getNode('numberPropertyNode/jcr:content')->getProperty('longNumber');
+
         $num = $prop->getDecimal();
         //we do not have an equivalent to java.math.BigDecimal. PHPCR uses strings suitable for BC Math
         $this->assertInternalType('string', $num);
@@ -270,13 +293,14 @@ class PropertyReadMethodsTest extends \PHPCR\Test\BaseCase
     }
     /**
      * NAME can not be converted to decimal.
-     *
-     * @expectedException \PHPCR\ValueFormatException
      */
     public function testGetDecimalValueFormatException()
     {
+        $this->expectException(ValueFormatException::class);
+
         $this->node->getProperty('jcr:primaryType')->getDecimal();
     }
+
     /**
      * The PHP Implementation requires that getDouble and getDecimal return the same.
      */
@@ -292,34 +316,39 @@ class PropertyReadMethodsTest extends \PHPCR\Test\BaseCase
     public function testGetDate()
     {
         $date = $this->dateProperty->getDate();
-        $this->assertInstanceOf('DateTime', $date);
+        $this->assertInstanceOf(DateTime::class, $date);
         $this->assertEquals('1303392860', $date->format('U'));
     }
+
     public function testGetDateMulti()
     {
         $multidate = $this->node->getProperty('index.txt/jcr:content/multidate');
-        $this->assertEquals(\PHPCR\PropertyType::DATE, $multidate->getType());
+        $this->assertEquals(PropertyType::DATE, $multidate->getType());
         $arr = $multidate->getValue();
         $this->assertInternalType('array', $arr);
+
         foreach ($arr as $v) {
-            $this->assertInstanceOf('DateTime', $v);
+            $this->assertInstanceOf(DateTime::class, $v);
         }
         //check correct values and sort order
-        $expectedArray = array(
-                new \DateTime('2011-04-22T14:34:20+01:00'),
-                new \DateTime('2011-10-23T14:34:20+01:00'),
-                new \DateTime('2010-10-23T14:34:20+01:00'), );
+        $expectedArray = [
+                new DateTime('2011-04-22T14:34:20+01:00'),
+                new DateTime('2011-10-23T14:34:20+01:00'),
+                new DateTime('2010-10-23T14:34:20+01:00')
+        ];
+
         foreach ($expectedArray as $key => $expected) {
             $this->assertEqualDateTime($expected, $arr[$key]);
         }
     }
+
     /**
-     * arbitrary string can not be converted to date.
-     *
-     * @expectedException \PHPCR\ValueFormatException
+     * Arbitrary string can not be converted to date.
      */
     public function testGetDateValueFormatException()
     {
+        $this->expectException(ValueFormatException::class);
+
         $this->valProperty->getDate();
     }
 
@@ -355,11 +384,11 @@ class PropertyReadMethodsTest extends \PHPCR\Test\BaseCase
     }
     /**
      * NAME can not be converted to boolean.
-     *
-     * @expectedException \PHPCR\ValueFormatException
      */
     public function testGetBooleanValueFormatException()
     {
+        $this->expectException(ValueFormatException::class);
+
         $this->node->getProperty('jcr:primaryType')->getBoolean();
     }
 
@@ -370,9 +399,9 @@ class PropertyReadMethodsTest extends \PHPCR\Test\BaseCase
 
         //TODO: is the type wrong because we import a document view? would it work with system view?
 
-        $this->assertEquals(\PHPCR\PropertyType::REFERENCE, $property->getType(), 'Expecting REFERENCE type');
+        $this->assertEquals(PropertyType::REFERENCE, $property->getType(), 'Expecting REFERENCE type');
         $target = $property->getNode();
-        $this->assertInstanceOf('PHPCR\NodeInterface', $target);
+        $this->assertInstanceOf(NodeInterface::class, $target);
         $this->assertSame($target, $idnode);
     }
 
@@ -385,41 +414,40 @@ class PropertyReadMethodsTest extends \PHPCR\Test\BaseCase
         $arr = $multiref->getNode();
         $this->assertInternalType('array', $arr);
         foreach ($arr as $v) {
-            $this->assertInstanceOf('PHPCR\NodeInterface', $v);
+            $this->assertInstanceOf(NodeInterface::class, $v);
         }
     }
 
-    /**
-     * @expectedException \PHPCR\ValueFormatException
-     */
     public function testGetNodeValueFormatException()
     {
-        $node = $this->dateProperty->getNode();
+        $this->expectException(ValueFormatException::class);
+
+        $this->dateProperty->getNode();
     }
+
     /**
-     * only nodes but not properties can be found with getNode.
-     *
-     * @expectedException \PHPCR\ItemNotFoundException
+     * Only nodes but not properties can be found with getNode.
      */
     public function testGetNodePropertyItemNotFound()
     {
+        $this->expectException(ItemNotFoundException::class);
+
         $propertyPath = $this->node->getNode('numberPropertyNode/jcr:content')->getProperty('propertyPath');
         $propertyPath->getNode();
     }
-    /**
-     * @expectedException \PHPCR\ItemNotFoundException
-     */
+
     public function testGetNodePathItemNotFound()
     {
+        $this->expectException(ItemNotFoundException::class);
+
         $invalidPath = $this->node->getNode('numberPropertyNode/jcr:content')->getProperty('invalidPath');
         $invalidPath->getNode();
     }
 
-    /**
-     * @expectedException \PHPCR\ItemNotFoundException
-     */
     public function testGetNodeWeakItemNotFound()
     {
+        $this->expectException(ItemNotFoundException::class);
+
         $weak = $this->node->getNode('numberPropertyNode/jcr:content')->getProperty('invalidweak');
         $weak->getNode();
     }
@@ -440,9 +468,11 @@ class PropertyReadMethodsTest extends \PHPCR\Test\BaseCase
         $propertyPath = $this->node->getNode('numberPropertyNode/jcr:content')->getProperty('multiPropertyPath');
         $properties = $propertyPath->getProperty();
         $this->assertCount(2, $properties);
+
         foreach ($properties as $prop) {
-            $this->assertInstanceOf('PHPCR\PropertyInterface', $prop);
+            $this->assertInstanceOf(PropertyInterface::class, $prop);
         }
+
         $this->assertEquals('/tests_general_base/numberPropertyNode/jcr:content/foo', $properties[0]->getPath());
         $this->assertEquals('/tests_general_base/index.txt/jcr:content/mydateprop', $properties[1]->getPath());
 
@@ -450,14 +480,13 @@ class PropertyReadMethodsTest extends \PHPCR\Test\BaseCase
         $this->assertEquals($expected, $properties, '', 0, 3);
     }
 
-    /**
-     * @expectedException \PHPCR\ValueFormatException
-     */
     public function testGetPropertyNoPath()
     {
+        $this->expectException(ValueFormatException::class);
+
         $prop = $this->node->getNode('numberPropertyNode/jcr:content')->getProperty('longNumber');
-        $this->assertEquals(\PHPCR\PropertyType::LONG, $prop->getType());
-        $property = $prop->getProperty();
+        $this->assertEquals(PropertyType::LONG, $prop->getType());
+        $prop->getProperty();
     }
 
     public function testGetLength()
@@ -471,7 +500,7 @@ class PropertyReadMethodsTest extends \PHPCR\Test\BaseCase
 
     public function testGetLengthMultivalue()
     {
-        $this->assertEquals(array(3, 1, 3), $this->multiValueProperty->getLength());
+        $this->assertEquals([3, 1, 3], $this->multiValueProperty->getLength());
     }
 
     //FIXME: we most definitely should not create properties here but read existing ones!
@@ -479,71 +508,71 @@ class PropertyReadMethodsTest extends \PHPCR\Test\BaseCase
     public function testGetTypeString()
     {
         $node = $this->node->getNode('index.txt/jcr:content');
-        $node->setProperty('newString', 'foobar', \PHPCR\PropertyType::STRING);
-        $this->assertEquals(\PHPCR\PropertyType::STRING, $node->getProperty('newString')->getType(), 'Expecting string type');
+        $node->setProperty('newString', 'foobar', PropertyType::STRING);
+        $this->assertEquals(PropertyType::STRING, $node->getProperty('newString')->getType(), 'Expecting string type');
     }
 
     public function testGetTypeBinary()
     {
         $node = $this->node->getNode('index.txt/jcr:content');
-        $node->setProperty('newBin', 'foobar', \PHPCR\PropertyType::BINARY);
-        $this->assertEquals(\PHPCR\PropertyType::BINARY, $node->getProperty('newBin')->getType(), 'Expecting binary type');
+        $node->setProperty('newBin', 'foobar', PropertyType::BINARY);
+        $this->assertEquals(PropertyType::BINARY, $node->getProperty('newBin')->getType(), 'Expecting binary type');
     }
 
     public function testGetTypeLong()
     {
         $node = $this->node->getNode('index.txt/jcr:content');
-        $node->setProperty('newLong', 3, \PHPCR\PropertyType::LONG);
-        $this->assertEquals(\PHPCR\PropertyType::LONG, $node->getProperty('newLong')->getType(), 'Expecting long type');
+        $node->setProperty('newLong', 3, PropertyType::LONG);
+        $this->assertEquals(PropertyType::LONG, $node->getProperty('newLong')->getType(), 'Expecting long type');
     }
 
     public function testGetTypeDouble()
     {
         $node = $this->node->getNode('index.txt/jcr:content');
-        $node->setProperty('newDouble', 3.5, \PHPCR\PropertyType::DOUBLE);
-        $this->assertEquals(\PHPCR\PropertyType::DOUBLE, $node->getProperty('newDouble')->getType(), 'Expecting double type');
+        $node->setProperty('newDouble', 3.5, PropertyType::DOUBLE);
+        $this->assertEquals(PropertyType::DOUBLE, $node->getProperty('newDouble')->getType(), 'Expecting double type');
     }
 
     public function testGetTypeDate()
     {
         $node = $this->node->getNode('index.txt/jcr:content');
-        $node->setProperty('newDate', '2009-04-27T13:01:04.758+02:00', \PHPCR\PropertyType::DATE);
-        $this->assertEquals(\PHPCR\PropertyType::DATE, $node->getProperty('newDate')->getType(), 'Expecting date type');
+        $node->setProperty('newDate', '2009-04-27T13:01:04.758+02:00', PropertyType::DATE);
+        $this->assertEquals(PropertyType::DATE, $node->getProperty('newDate')->getType(), 'Expecting date type');
     }
 
     public function testGetTypeBoolean()
     {
         $node = $this->node->getNode('index.txt/jcr:content');
-        $node->setProperty('newBool', true, \PHPCR\PropertyType::BOOLEAN);
-        $this->assertEquals(\PHPCR\PropertyType::BOOLEAN, $node->getProperty('newBool')->getType(), 'Expecting boolean type');
+        $node->setProperty('newBool', true, PropertyType::BOOLEAN);
+        $this->assertEquals(PropertyType::BOOLEAN, $node->getProperty('newBool')->getType(), 'Expecting boolean type');
     }
 
     public function testGetTypeName()
     {
         $node = $this->node->getNode('index.txt/jcr:content');
-        $node->setProperty('newName', 'foobar', \PHPCR\PropertyType::NAME);
-        $this->assertEquals(\PHPCR\PropertyType::NAME, $node->getProperty('newName')->getType(), 'Expecting NAME type');
+        $node->setProperty('newName', 'foobar', PropertyType::NAME);
+        $this->assertEquals(PropertyType::NAME, $node->getProperty('newName')->getType(), 'Expecting NAME type');
     }
 
     public function testGetTypePath()
     {
         $node = $this->node->getNode('index.txt/jcr:content');
-        $node->setProperty('newPath', 'foobar', \PHPCR\PropertyType::PATH);
-        $this->assertEquals(\PHPCR\PropertyType::PATH, $node->getProperty('newPath')->getType(), 'Expecting PATH type');
+        $node->setProperty('newPath', 'foobar', PropertyType::PATH);
+        $this->assertEquals(PropertyType::PATH, $node->getProperty('newPath')->getType(), 'Expecting PATH type');
     }
 
     public function testGetTypeReference()
     {
         $node = $this->node->getNode('index.txt/jcr:content');
-        $node->setProperty('newRef', '842e61c0-09ab-42a9-87c0-308ccc90e6f4', \PHPCR\PropertyType::REFERENCE);
-        $this->assertEquals(\PHPCR\PropertyType::REFERENCE, $node->getProperty('newRef')->getType(), 'Expecting REFERENCE type');
+        $node->setProperty('newRef', '842e61c0-09ab-42a9-87c0-308ccc90e6f4', PropertyType::REFERENCE);
+        $this->assertEquals(PropertyType::REFERENCE, $node->getProperty('newRef')->getType(), 'Expecting REFERENCE type');
     }
 
     public function testGetTypeWeakReference()
     {
         $node = $this->node->getNode('index.txt/jcr:content');
-        $node->setProperty('newWeakRef', '842e61c0-09ab-42a9-87c0-308ccc90e6f4', \PHPCR\PropertyType::WEAKREFERENCE);
-        $this->assertEquals(\PHPCR\PropertyType::WEAKREFERENCE, $node->getProperty('newWeakRef')->getType(), 'Expecting WEAKREFERENCE type');
+        $node->setProperty('newWeakRef', '842e61c0-09ab-42a9-87c0-308ccc90e6f4', PropertyType::WEAKREFERENCE);
+        $this->assertEquals(PropertyType::WEAKREFERENCE, $node->getProperty('newWeakRef')->getType(), 'Expecting WEAKREFERENCE type');
     }
 
     public function testIterator()
@@ -563,8 +592,8 @@ class PropertyReadMethodsTest extends \PHPCR\Test\BaseCase
     public function testIteratorMulti()
     {
         $this->assertTraversableImplemented($this->multiValueProperty);
-        $expected = array(200, 0, 100);
-        $returned = array();
+        $expected = [200, 0, 100];
+        $returned = [];
         foreach ($this->multiValueProperty as $value) {
             $returned[] = $value;
         }

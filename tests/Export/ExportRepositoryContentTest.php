@@ -16,9 +16,10 @@ use DOMElement;
 use DOMNode;
 use DOMText;
 use DOMXPath;
+use PHPCR\Test\BaseCase;
 
 //7 Export Repository Content
-class ExportRepositoryContentTest extends \PHPCR\Test\BaseCase
+class ExportRepositoryContentTest extends BaseCase
 {
     public static function setupBeforeClass($fixtures = '07_Export/systemview')
     {
@@ -50,9 +51,9 @@ class ExportRepositoryContentTest extends \PHPCR\Test\BaseCase
     {
         $ret = '';
         while (!$n instanceof DOMDocument) {
-            if ($n instanceof DOMElement && in_array($n->tagName, array('sv:node', 'sv:property'))) {
+            if ($n instanceof DOMElement && in_array($n->tagName, ['sv:node', 'sv:property'])) {
                 $name = $n->attributes->getNamedItem('name');
-                if ($name == null) {
+                if ($name === null) {
                     $elem = 'sv:node(unnamed)';
                 } else {
                     $elem = $n->tagName.'('.$name->value.')';
@@ -83,15 +84,15 @@ class ExportRepositoryContentTest extends \PHPCR\Test\BaseCase
         $this->assertEquals($expected->tagName, $output->tagName);
 
         foreach ($expected->attributes as $attr) {
-            //i.e. sv:name attribute
+            // i.e. sv:name attribute
             $oattr = $output->attributes->getNamedItem($attr->name);
             $this->assertNotNull($oattr, 'missing attribute '.$attr->name);
             $this->assertEquals($attr->value, $oattr->value, 'wrong attribute value');
         }
 
-        if ($expected->tagName == 'sv:property') {
+        if ($expected->tagName === 'sv:property') {
             // properties have ordered sv:value children
-            if ($expected->attributes->getNamedItem('name')->value == 'jcr:created') {
+            if ($expected->attributes->getNamedItem('name')->value === 'jcr:created') {
                 $this->assertNotEmpty($output->textContent);
             } else {
                 foreach ($expected->childNodes as $index => $child) {
@@ -106,7 +107,7 @@ class ExportRepositoryContentTest extends \PHPCR\Test\BaseCase
                     }
                 }
             }
-        } elseif ($expected->tagName == 'sv:node') {
+        } elseif ($expected->tagName === 'sv:node') {
             // nodes have sv:node or sv:property children
             foreach ($expected->childNodes as $child) {
                 $this->assertContains($child->tagName, array('sv:property', 'sv:node'), 'unexpected child of sv:node');
@@ -147,7 +148,7 @@ class ExportRepositoryContentTest extends \PHPCR\Test\BaseCase
             $this->assertEquals($expected->tagName, $output->tagName);
 
             foreach ($expected->attributes as $attr) {
-                if ('jcr:created' == $attr->nodeName) {
+                if ('jcr:created' === $attr->nodeName) {
                     $this->assertNotEmpty($attr->value);
                 } else {
                     $oattr = $output->attributes->getNamedItem($attr->name);

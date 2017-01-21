@@ -11,18 +11,33 @@
 
 namespace PHPCR\Tests\NodeTypeDiscovery;
 
+use PHPCR\NodeInterface;
+use PHPCR\Test\BaseCase;
+
 /**
  * test NodeInterface::isNodeType (read) §8.6.
  */
-class NodeNodeTypeReadMethodsTest extends \PHPCR\Test\BaseCase
+class NodeNodeTypeReadMethodsTest extends BaseCase
 {
+    /**
+     * @var NodeInterface
+     */
     protected $rootNode;
+
+    /**
+     * @var NodeInterface
+     */
     protected $node;
+
+    /**
+     * @var NodeInterface
+     */
     protected $deepnode;
 
     public function setUp()
     {
         parent::setUp();
+
         $this->node = $this->rootNode->getNode('tests_general_base');
         $this->nodewithmixin = $this->node->getNode('multiValueProperty');
         $this->deepnode = $this->nodewithmixin->getNode('deepnode');

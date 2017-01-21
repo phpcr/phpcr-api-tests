@@ -11,13 +11,16 @@
 
 namespace PHPCR\Tests\Query;
 
+use PHPCR\Query\QueryInterface;
+use PHPCR\Test\BaseCase;
+
 /**
  * a base class for all query tests.
  */
-abstract class QueryBaseCase extends \PHPCR\Test\BaseCase
+abstract class QueryBaseCase extends BaseCase
 {
     /**
-     * @var \PHPCR\Query\QueryInterface
+     * @var QueryInterface
      */
     protected $query;
 
@@ -52,7 +55,7 @@ abstract class QueryBaseCase extends \PHPCR\Test\BaseCase
             WHERE ISDESCENDANTNODE([/tests_general_base])
               OR ISSAMENODE([/tests_general_base])
             ',
-            \PHPCR\Query\QueryInterface::JCR_SQL2
+            QueryInterface::JCR_SQL2
         );
 
         // the query result is not ordered, but these are the nodes that are to be expected in any order

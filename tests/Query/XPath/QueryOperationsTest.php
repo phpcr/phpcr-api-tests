@@ -12,6 +12,7 @@
 namespace PHPCR\Tests\Query\XPath;
 
 use PHPCR\Query\QueryInterface;
+use PHPCR\Query\QueryResultInterface;
 
 /**
  * Run non-trivial queries to try out where, the join features and such.
@@ -26,20 +27,23 @@ class QueryOperationsTest extends QueryBaseCase
             QueryInterface::XPATH
         );
 
-        $this->assertInstanceOf('\PHPCR\Query\QueryInterface', $query);
+        $this->assertInstanceOf(QueryInterface::class, $query);
         $result = $query->execute();
-        $this->assertInstanceOf('\PHPCR\Query\QueryResultInterface', $result);
-        $vals = array();
+        $this->assertInstanceOf(QueryResultInterface::class, $result);
+        $vals = [];
+
         foreach ($result->getNodes() as $node) {
             $vals[] = $node->getPropertyValue('foo');
         }
-        $this->assertEquals(array('bar'), $vals);
+        $this->assertEquals(['bar'], $vals);
 
-        $vals = array();
+        $vals = [];
+
         foreach ($result->getRows() as $row) {
             $vals[] = $row->getValue('foo');
         }
-        $this->assertEquals(array('bar'), $vals);
+
+        $this->assertEquals(['bar'], $vals);
     }
 
     public function testQueryFieldSomenull()
@@ -50,20 +54,24 @@ class QueryOperationsTest extends QueryBaseCase
             QueryInterface::XPATH
         );
 
-        $this->assertInstanceOf('\PHPCR\Query\QueryInterface', $query);
+        $this->assertInstanceOf(QueryInterface::class, $query);
         $result = $query->execute();
-        $this->assertInstanceOf('\PHPCR\Query\QueryResultInterface', $result);
-        $vals = array();
+        $this->assertInstanceOf(QueryResultInterface::class, $result);
+        $vals = [];
+
         foreach ($result->getNodes() as $node) {
             $vals[] = ($node->hasProperty('foo') ? $node->getPropertyValue('foo') : null);
         }
+
         $this->assertContains('bar', $vals);
         $this->assertCount(10, $vals);
 
-        $vals = array();
+        $vals = [];
+
         foreach ($result->getRows() as $row) {
             $vals[] = $row->getValue('foo');
         }
+
         $this->assertContains('bar', $vals);
         $this->assertCount(10, $vals);
     }
@@ -76,14 +84,17 @@ class QueryOperationsTest extends QueryBaseCase
             QueryInterface::XPATH
         );
 
-        $this->assertInstanceOf('\PHPCR\Query\QueryInterface', $query);
+        $this->assertInstanceOf(QueryInterface::class, $query);
         $result = $query->execute();
-        $this->assertInstanceOf('\PHPCR\Query\QueryResultInterface', $result);
-        $vals = array();
+        $this->assertInstanceOf(QueryResultInterface::class, $result);
+
+        $vals = [];
+
         foreach ($result->getRows() as $row) {
             $vals[] = $row->getValue('zeronumber');
         }
+
         // rows that do not have that field are null. empty is before fields with values
-        $this->assertEquals(array(null, null, null, null, null, null, null, null, null, 0), $vals);
+        $this->assertEquals([null, null, null, null, null, null, null, null, null, 0], $vals);
     }
 }

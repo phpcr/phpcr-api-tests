@@ -12,6 +12,7 @@
 namespace PHPCR\Tests\Versioning;
 
 use PHPCR\NodeInterface;
+use PHPCR\Test\BaseCase;
 
 /**
  * test some more NodeInterface::isNodeType (read) §8.6 things that can only
@@ -19,7 +20,7 @@ use PHPCR\NodeInterface;
  *
  * the only case for that in the default types is with mix:versionable
  */
-class NodeTypeReadTest extends \PHPCR\Test\BaseCase
+class NodeTypeReadTest extends BaseCase
 {
     /**
      * @var NodeInterface

@@ -11,14 +11,18 @@
 
 namespace PHPCR\Tests\Writing;
 
+use PHPCR\NodeInterface;
+use PHPCR\NodeType\ConstraintViolationException;
 use PHPCR\PropertyType;
+use PHPCR\Test\BaseCase;
+use PHPCR\ValueFormatException;
 
 /**
  * Testing that mix:referenceable nodes references work correctly.
  *
  * Covering jcr-2.8.3 spec $10.10.3
  */
-class MixinReferenceableTest extends \PHPCR\Test\BaseCase
+class MixinReferenceableTest extends BaseCase
 {
     public static function setupBeforeClass($fixtures = '10_Writing/mixinreferenceable')
     {
@@ -32,17 +36,17 @@ class MixinReferenceableTest extends \PHPCR\Test\BaseCase
 
     /**
      * Test that a node without mix:referenceable type cannot be referenced.
-     *
-     * @expectedException \PHPCR\ValueFormatException
      */
     public function testReferenceOnNonReferenceableNode()
     {
+        $this->expectException(ValueFormatException::class);
+
         // Load a non-referenceable node
         $nonReferenceableNode = $this->node->getNode('non-referenceable');
 
         // Try to reference it
         $sourceNode = $this->node->getNode('node');
-        $sourceNode->setProperty('reference', $nonReferenceableNode, \PHPCR\PropertyType::WEAKREFERENCE);
+        $sourceNode->setProperty('reference', $nonReferenceableNode, PropertyType::WEAKREFERENCE);
         $this->session->save();
     }
 
@@ -61,11 +65,11 @@ class MixinReferenceableTest extends \PHPCR\Test\BaseCase
 
         // Reference it from another node
         $sourceNode = $this->node->getNode('other-node');
-        $sourceNode->setProperty('reference', $referencedNode, \PHPCR\PropertyType::WEAKREFERENCE);
+        $sourceNode->setProperty('reference', $referencedNode, PropertyType::WEAKREFERENCE);
 
         $this->session->save();
 
-        $this->assertInstanceOf('PHPCR\NodeInterface', $sourceNode->getPropertyValue('reference'));
+        $this->assertInstanceOf(NodeInterface::class, $sourceNode->getPropertyValue('reference'));
 
         // referrers only required to work once save happened
         $this->assertCount(0, $referencedNode->getReferences());
@@ -82,10 +86,10 @@ class MixinReferenceableTest extends \PHPCR\Test\BaseCase
 
         // Reference it from another node
         $sourceNode = $this->node->getNode('node');
-        $sourceNode->setProperty('oreference', $referencedNode, \PHPCR\PropertyType::WEAKREFERENCE);
+        $sourceNode->setProperty('oreference', $referencedNode, PropertyType::WEAKREFERENCE);
         $this->session->save();
 
-        $this->assertInstanceOf('PHPCR\NodeInterface', $sourceNode->getPropertyValue('oreference'));
+        $this->assertInstanceOf(NodeInterface::class, $sourceNode->getPropertyValue('oreference'));
     }
 
     /**
@@ -103,9 +107,9 @@ class MixinReferenceableTest extends \PHPCR\Test\BaseCase
         // Reference it from another node
         $sourceNode = $this->node->getNode('other-node');
 
-        $sourceNode->setProperty('reference', $referenced1, \PHPCR\PropertyType::WEAKREFERENCE);
+        $sourceNode->setProperty('reference', $referenced1, PropertyType::WEAKREFERENCE);
         $this->session->save();
-        $sourceNode->setProperty('reference', $referenced2, \PHPCR\PropertyType::WEAKREFERENCE);
+        $sourceNode->setProperty('reference', $referenced2, PropertyType::WEAKREFERENCE);
         $this->session->save();
         $this->assertSame($referenced2, $sourceNode->getPropertyValue('reference'));
 
@@ -117,8 +121,8 @@ class MixinReferenceableTest extends \PHPCR\Test\BaseCase
     public function testMultiValueReference()
     {
         $this->doTestMultiValueReference(
-            array('one', 'two', 'three'),
-            array('one', 'two', 'one', 'one', 'two', 'three'),
+            ['one', 'two', 'three'],
+            ['one', 'two', 'one', 'one', 'two', 'three'],
             PropertyType::REFERENCE
         );
     }
@@ -126,8 +130,8 @@ class MixinReferenceableTest extends \PHPCR\Test\BaseCase
     public function testMultiValueWeakReference()
     {
         $this->doTestMultiValueReference(
-            array('one', 'two', 'three'),
-            array('one', 'two', 'one', 'one', 'two', 'three'),
+            ['one', 'two', 'three'],
+            ['one', 'two', 'one', 'one', 'two', 'three'],
             PropertyType::WEAKREFERENCE
         );
     }
@@ -135,7 +139,8 @@ class MixinReferenceableTest extends \PHPCR\Test\BaseCase
     private function doTestMultiValueReference($nodeNames, $nodeCollectionNames, $referenceType)
     {
         $baseNode = $this->node;
-        $nodes = array();
+        $nodes = [];
+
         foreach ($nodeNames as $nodeName) {
             $node = $baseNode->addNode($nodeName);
             $node->addMixin('mix:referenceable');
@@ -146,11 +151,12 @@ class MixinReferenceableTest extends \PHPCR\Test\BaseCase
 
         $referrer = $baseNode->addNode('referrer');
 
-        $nodeCollection = array();
+        $nodeCollection = [];
 
         foreach ($nodeCollectionNames as $nodeCollectionName) {
             $nodeCollection[] = $nodes[$nodeCollectionName];
         }
+
         $referrer->setProperty('references', $nodeCollection, $referenceType);
 
         $this->session->save();
@@ -174,34 +180,31 @@ class MixinReferenceableTest extends \PHPCR\Test\BaseCase
         $this->session->save();
         $this->assertSame($uuid, $node->getIdentifier());
 
-        $session = $this->renewSession();
+        $this->renewSession();
 
         $node = $this->node->getNode('newId');
         $this->assertSame($uuid, $node->getIdentifier());
     }
 
-    /**
-     * @expectedException \PHPCR\NodeType\ConstraintViolationException
-     */
     public function testSetUuidNewButNonreferenceable()
     {
+        $this->expectException(ConstraintViolationException::class);
+
         $node = $this->node->addNode('newNonref', 'nt:unstructured');
         $node->setProperty('jcr:uuid', 'bbbb61c0-09ab-42a9-87c0-308ccc93aaaa');
     }
 
-    /**
-     * @expectedException \PHPCR\NodeType\ConstraintViolationException
-     */
     public function testSetUuidReferenceableButExisting()
     {
+        $this->expectException(ConstraintViolationException::class);
+
         $this->node->setProperty('jcr:uuid', 'cccc61c0-09ab-42a9-87c0-308ccc93aaaa');
     }
 
-    /**
-     * @expectedException \PHPCR\NodeType\ConstraintViolationException
-     */
     public function testSetUuidButNotReferenceableExisting()
     {
+        $this->expectException(ConstraintViolationException::class);
+
         $this->node->setProperty('jcr:uuid', 'dddd61c0-09ab-42a9-87c0-308ccc93aaaa');
     }
 

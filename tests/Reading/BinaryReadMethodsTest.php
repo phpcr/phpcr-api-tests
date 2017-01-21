@@ -12,13 +12,15 @@
 namespace PHPCR\Tests\Reading;
 
 use PHPCR\PropertyInterface;
+use PHPCR\PropertyType;
+use PHPCR\Test\BaseCase;
 
 // According to PHPCR\BinaryInterface
 
 /**
  * §5.10.5.
  */
-class BinaryReadMethodsTest extends \PHPCR\Test\BaseCase
+class BinaryReadMethodsTest extends BaseCase
 {
     /** @var PropertyInterface */
     private $binaryProperty;
@@ -43,9 +45,11 @@ hello world
     public function setUp()
     {
         parent::setUp();
+
         $this->node = $this->session->getRootNode()->getNode('tests_general_base/numberPropertyNode/jcr:content');
         $this->binaryProperty = $this->node->getProperty('jcr:data');
-        $this->assertEquals(\PHPCR\PropertyType::BINARY, $this->binaryProperty->getType());
+
+        $this->assertEquals(PropertyType::BINARY, $this->binaryProperty->getType());
     }
 
     public function testReadBinaryValue()
@@ -92,7 +96,7 @@ hello world
         $node = $this->session->getRootNode()->getNode('tests_general_base/index.txt/jcr:content');
         $binaryMulti = $node->getProperty('multidata');
         $this->assertTrue($binaryMulti->isMultiple());
-        $this->assertEquals(\PHPCR\PropertyType::BINARY, $binaryMulti->getType());
+        $this->assertEquals(PropertyType::BINARY, $binaryMulti->getType());
         $vals = $binaryMulti->getValue();
         $this->assertInternalType('array', $vals);
         foreach ($vals as $value) {
@@ -106,7 +110,7 @@ hello world
         $node = $this->session->getRootNode()->getNode('tests_general_base/index.txt/jcr:content');
         $binaryMulti = $node->getProperty('multidata');
         $this->assertTrue($binaryMulti->isMultiple());
-        $this->assertEquals(\PHPCR\PropertyType::BINARY, $binaryMulti->getType());
+        $this->assertEquals(PropertyType::BINARY, $binaryMulti->getType());
         $vals = $binaryMulti->getString();
         $this->assertInternalType('array', $vals);
         foreach ($vals as $value) {
@@ -131,7 +135,7 @@ hello world
     {
         $node = $this->session->getRootNode()->getNode('tests_general_base/index.txt/jcr:content');
         $binary = $node->getProperty('encoding?%$-test');
-        $this->assertEquals(\PHPCR\PropertyType::BINARY, $binary->getType());
+        $this->assertEquals(PropertyType::BINARY, $binary->getType());
         $value = $binary->getString();
         $this->assertInternalType('string', $value);
         $this->assertEquals($this->decodedstring, $value);
@@ -141,7 +145,7 @@ hello world
     {
         $node = $this->session->getRootNode()->getNode('tests_general_base/index.txt/jcr:content');
         $binary = $node->getProperty('encoding?');
-        $this->assertEquals(\PHPCR\PropertyType::BINARY, $binary->getType());
+        $this->assertEquals(PropertyType::BINARY, $binary->getType());
         $value = $binary->getString();
         $this->assertInternalType('string', $value);
         $this->assertEquals($this->decodedstring, $value);
@@ -155,7 +159,7 @@ hello world
     {
         $node = $this->session->getRootNode()->getNode('tests_general_base/index.txt/jcr:content');
         $empty = $node->getProperty('empty_multidata');
-        $this->assertEquals(\PHPCR\PropertyType::BINARY, $empty->getType());
+        $this->assertEquals(PropertyType::BINARY, $empty->getType());
         $emptyValue = $empty->getBinary();
         $this->assertTrue(is_array($emptyValue));
         $this->assertTrue(count($emptyValue) === 0);
@@ -168,7 +172,7 @@ hello world
     {
         $node = $this->session->getRootNode()->getNode('tests_general_base/index.txt/jcr:content');
         $single = $node->getProperty('single_multidata');
-        $this->assertEquals(\PHPCR\PropertyType::BINARY, $single->getType());
+        $this->assertEquals(PropertyType::BINARY, $single->getType());
         $singleValue = $single->getBinary();
         $this->assertTrue(is_array($singleValue));
         $this->assertTrue(is_resource($singleValue[0]));

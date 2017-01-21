@@ -11,12 +11,18 @@
 
 namespace PHPCR\Tests\Writing;
 
+use PHPCR\InvalidItemStateException;
 use PHPCR\ItemNotFoundException;
+use PHPCR\NodeInterface;
+use PHPCR\NodeType\ConstraintViolationException;
+use PHPCR\PathNotFoundException;
+use PHPCR\ReferentialIntegrityException;
+use PHPCR\Test\BaseCase;
 
 /**
  * Covering jcr-2.8.3 spec $10.9.
  */
-class DeleteMethodsTest extends \PHPCR\Test\BaseCase
+class DeleteMethodsTest extends BaseCase
 {
     public static function setupBeforeClass($fixtures = '10_Writing/delete')
     {
@@ -35,7 +41,7 @@ class DeleteMethodsTest extends \PHPCR\Test\BaseCase
     public function testRemoveItemNode()
     {
         //relies on the base class setup trick to have the node populated from the fixtures
-        $this->assertInstanceOf('PHPCR\NodeInterface', $this->node);
+        $this->assertInstanceOf(NodeInterface::class, $this->node);
 
         $parent = $this->node->getParent();
         $this->assertTrue($parent->hasNode('testRemoveItemNode'));
@@ -51,12 +57,12 @@ class DeleteMethodsTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * \PHPCR\SessionInterface::removeItem.
+     * @see SessionInterface::removeItem.
      */
     public function testRemoveItemProperty()
     {
         //relies on the base class setup trick to have the node populated from the fixtures
-        $this->assertInstanceOf('PHPCR\NodeInterface', $this->node);
+        $this->assertInstanceOf(NodeInterface::class, $this->node);
 
         $property = $this->node->getProperty('longNumber');
         $this->assertTrue($this->node->hasProperty('longNumber'));
@@ -65,32 +71,32 @@ class DeleteMethodsTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * \PHPCR\SessionInterface::removeItem.
-     *
-     * @expectedException \PHPCR\NodeType\ConstraintViolationException
+     * @see SessionInterface::removeItem.
      */
     public function testRemoveNodeConstraintViolation()
     {
-        //relies on the base class setup trick to have the node populated from the fixtures
+        $this->expectException(ConstraintViolationException::class);
+
+        // Relies on the base class setup trick to have the node populated from the fixtures
         $this->assertInstanceOf('PHPCR\NodeInterface', $this->node);
         $this->session->removeItem('/tests_write_manipulation_delete/testRemoveNodeConstraintViolation/jcr:content');
         $this->session->save();
     }
 
     /**
-     * \PHPCR\SessionInterface::removeItem.
-     *
-     * @expectedException \PHPCR\PathNotFoundException
+     * @see SessionInterface::removeItem.
      */
     public function testRemoveItemNotExisting()
     {
+        $this->expectException(PathNotFoundException::class);
+
         $this->session->removeItem('/not/existing');
     }
 
     /**
      * Check if state of cached parent node is updated correctly.
      *
-     * \PHPCR\ItemInterface::remove
+     * @see ItemInterface::remove
      */
     public function testRemoveNode()
     {
@@ -114,9 +120,9 @@ class DeleteMethodsTest extends \PHPCR\Test\BaseCase
     public function testRemoveNodeWhitespace()
     {
         //relies on the base class setup trick to have the node populated from the fixtures
-        $this->assertInstanceOf('PHPCR\NodeInterface', $this->node);
+        $this->assertInstanceOf(NodeInterface::class, $this->node);
         $node = $this->node->getNode('child whitespace');
-        $this->assertInstanceOf('PHPCR\NodeInterface', $node);
+        $this->assertInstanceOf(NodeInterface::class, $node);
 
         $path = $node->getPath();
 
@@ -129,12 +135,12 @@ class DeleteMethodsTest extends \PHPCR\Test\BaseCase
     /**
      * Check if state of parent that was not cached when delete was executed is correct.
      *
-     * \PHPCR\ItemInterface::remove
+     * @see ItemInterface::remove
      */
     public function testRemoveNodeParentState()
     {
         //relies on the base class setup trick to have the node populated from the fixtures
-        $this->assertInstanceOf('PHPCR\NodeInterface', $this->node);
+        $this->assertInstanceOf(NodeInterface::class, $this->node);
         $path = $this->node->getPath().'/parent/child';
 
         $child = $this->session->getNode($path);
@@ -170,7 +176,7 @@ class DeleteMethodsTest extends \PHPCR\Test\BaseCase
 
         $this->renewSession();
 
-        $this->setExpectedException('\PHPCR\PathNotFoundException');
+        $this->expectException(PathNotFoundException::class);
         $this->session->getNode('/toBeDeleted');
     }
 
@@ -189,18 +195,18 @@ class DeleteMethodsTest extends \PHPCR\Test\BaseCase
         $node->getProperty('toBeDeletedProperty')->remove();
         $this->saveAndRenewSession();
 
-        $this->setExpectedException('\PHPCR\PathNotFoundException');
+        $this->expectException(PathNotFoundException::class);
         $this->session->getNode('/')->getProperty('toBeDeletedProperty');
     }
 
     /**
-     * \PHPCR\PropertyInterface::remove
-     * \PHPCR\PropertyInterface::setValue.
+     * @see PropertyInterface::remove
+     * @see PropertyInterface::setValue.
      */
     public function testRemoveProperty()
     {
         //relies on the base class setup trick to have the node populated from the fixtures
-        $this->assertInstanceOf('PHPCR\NodeInterface', $this->node);
+        $this->assertInstanceOf(NodeInterface::class, $this->node);
         $path = $this->node->getPath();
 
         $property = $this->node->getProperty('longNumber');
@@ -212,18 +218,18 @@ class DeleteMethodsTest extends \PHPCR\Test\BaseCase
         $this->assertFalse($this->node->hasProperty('otherprop'));
 
         $session = $this->saveAndRenewSession();
-        $node = $session->getNode($path);
+        $session->getNode($path);
         $this->assertFalse($this->node->hasProperty('longNumber'));
         $this->assertFalse($this->node->hasProperty('otherprop'));
     }
 
     /**
-     * \PHPCR\NodeInterface::setProperty.
+     * @see NodeInterface::setProperty.
      */
     public function testNodeRemoveProperty()
     {
         //relies on the base class setup trick to have the node populated from the fixtures
-        $this->assertInstanceOf('PHPCR\NodeInterface', $this->node);
+        $this->assertInstanceOf(NodeInterface::class, $this->node);
 
         $this->assertTrue($this->node->hasProperty('longNumber'));
         $this->node->setProperty('longNumber', null);
@@ -232,53 +238,53 @@ class DeleteMethodsTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * \PHPCR\NodeInterface::setProperty.
+     * @see NodeInterface::setProperty.
      */
     public function testNodeRemovePropertyNotExisting()
     {
-        //        $this->node->setProperty('inexistent', null);
+        // $this->node->setProperty('inexistent', null);
         $this->markTestIncomplete('TODO: figure out what should happen when inexistant property is removed');
 
-        //relies on the base class setup trick to have the node populated from the fixtures
+        // relies on the base class setup trick to have the node populated from the fixtures
         $this->assertInstanceOf('PHPCR\NodeInterface', $this->node);
     }
 
     /**
-     * \PHPCR\NodeInterface::setProperty.
-     *
-     * @expectedException \PHPCR\NodeType\ConstraintViolationException
+     * @see NodeInterface::setProperty.
      */
     public function testNodeRemovePropertyConstraintViolation()
     {
+        $this->expectException(ConstraintViolationException::class);
+
         //relies on the base class setup trick to have the node populated from the fixtures
-        $this->assertInstanceOf('PHPCR\NodeInterface', $this->node);
+        $this->assertInstanceOf(NodeInterface::class, $this->node);
         $this->node->setProperty('jcr:created', null); //removes the property
         $this->session->save();
     }
 
     /**
-     * \PHPCR\NodeInterface::setProperty.
-     *
-     * @expectedException \PHPCR\NodeType\ConstraintViolationException
+     * @see NodeInterface::setProperty.
      */
     public function testRemovePropertyConstraintViolation()
     {
+        $this->expectException(ConstraintViolationException::class);
+
         //relies on the base class setup trick to have the node populated from the fixtures
-        $this->assertInstanceOf('PHPCR\NodeInterface', $this->node);
+        $this->assertInstanceOf(NodeInterface::class, $this->node);
         $this->node->setProperty('jcr:primaryType', null); //removes the property
         $this->session->save();
     }
 
     /**
-     * \PHPCR\NodeInterface::remove
-     * \PHPCR\SessionInterface::getNode.
-     *
-     * @expectedException \PHPCR\PathNotFoundException
+     * @see NodeInterface::remove
+     * @see SessionInterface::getNode.
      */
     public function testGetRemovedNodeSession()
     {
+        $this->expectException(PathNotFoundException::class);
+
         //relies on the base class setup trick to have the node populated from the fixtures
-        $this->assertInstanceOf('PHPCR\NodeInterface', $this->node);
+        $this->assertInstanceOf(NodeInterface::class, $this->node);
 
         $path = $this->node->getPath();
         $this->node->remove();
@@ -286,15 +292,15 @@ class DeleteMethodsTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * \PHPCR\NodeInterface::remove
-     * \PHPCR\NodeInterface::getNode.
-     *
-     * @expectedException \PHPCR\PathNotFoundException
+     * @see NodeInterface::remove
+     * @see NodeInterface::getNode.
      */
     public function testGetRemovedNodeNode()
     {
+        $this->expectException(PathNotFoundException::class);
+
         //relies on the base class setup trick to have the node populated from the fixtures
-        $this->assertInstanceOf('PHPCR\NodeInterface', $this->node);
+        $this->assertInstanceOf(NodeInterface::class, $this->node);
 
         $parent = $this->node->getParent();
         $name = $this->node->getName();
@@ -303,15 +309,15 @@ class DeleteMethodsTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * \PHPCR\NodeInterface::remove
-     * \PHPCR\SessionInterface::getNode.
-     *
-     * @expectedException \PHPCR\PathNotFoundException
+     * @see NodeInterface::remove
+     * @see SessionInterface::getNode.
      */
     public function testGetRemovedPropertySession()
     {
+        $this->expectException(PathNotFoundException::class);
+
         //relies on the base class setup trick to have the node populated from the fixtures
-        $this->assertInstanceOf('PHPCR\NodeInterface', $this->node);
+        $this->assertInstanceOf(NodeInterface::class, $this->node);
 
         $property = $this->node->getProperty('prop');
         $path = $property->getPath();
@@ -320,15 +326,15 @@ class DeleteMethodsTest extends \PHPCR\Test\BaseCase
     }
 
     /**
-     * \PHPCR\NodeInterface::remove
-     * \PHPCR\NodeInterface::getNode.
-     *
-     * @expectedException \PHPCR\PathNotFoundException
+     * @see NodeInterface::remove
+     * @see NodeInterface::getNode.
      */
     public function testGetRemovedPropertyNode()
     {
+        $this->expectException(PathNotFoundException::class);
+
         //relies on the base class setup trick to have the node populated from the fixtures
-        $this->assertInstanceOf('PHPCR\NodeInterface', $this->node);
+        $this->assertInstanceOf(NodeInterface::class, $this->node);
 
         $property = $this->node->getProperty('prop');
         $name = $property->getName();
@@ -338,13 +344,13 @@ class DeleteMethodsTest extends \PHPCR\Test\BaseCase
 
     /**
      * try to remove a node that has already been removed in this session.
-     *
-     * @expectedException \PHPCR\PathNotFoundException
      */
     public function testRemoveRemovedNode()
     {
+        $this->expectException(PathNotFoundException::class);
+
         //relies on the base class setup trick to have the node populated from the fixtures
-        $this->assertInstanceOf('PHPCR\NodeInterface', $this->node);
+        $this->assertInstanceOf(NodeInterface::class, $this->node);
 
         $path = $this->node->getPath();
         $this->node->remove();
@@ -353,13 +359,13 @@ class DeleteMethodsTest extends \PHPCR\Test\BaseCase
 
     /**
      * Try to call revert on a property that has been removed in this session.
-     *
-     * @expectedException \PHPCR\InvalidItemStateException
      */
     public function testRevertRemovedProperty()
     {
+        $this->expectException(InvalidItemStateException::class);
+
         //relies on the base class setup trick to have the node populated from the fixtures
-        $this->assertInstanceOf('PHPCR\NodeInterface', $this->node);
+        $this->assertInstanceOf(NodeInterface::class, $this->node);
         $property = $this->node->getProperty('longNumber');
         $this->node->setProperty('longNumber', null);
         $property->revert();
@@ -371,7 +377,7 @@ class DeleteMethodsTest extends \PHPCR\Test\BaseCase
     public function testDeleteCascade()
     {
         //relies on the base class setup trick to have the node populated from the fixtures
-        $this->assertInstanceOf('PHPCR\NodeInterface', $this->node);
+        $this->assertInstanceOf(NodeInterface::class, $this->node);
 
         $path = $this->node->getPath();
 
@@ -389,7 +395,7 @@ class DeleteMethodsTest extends \PHPCR\Test\BaseCase
         foreach ($items as $item) {
             try {
                 $this->fail('Should not be able to get path of deleted item '.$item->getPath()); // this should explode
-            } catch (\PHPCR\InvalidItemStateException $e) {
+            } catch (InvalidItemStateException $e) {
                 // the exception is expected
             }
         }
@@ -407,7 +413,7 @@ class DeleteMethodsTest extends \PHPCR\Test\BaseCase
         foreach ($items as $item) {
             try {
                 $this->fail('Should not be able to get path of deleted item '.$item->getPath()); // this should explode
-            } catch (\PHPCR\InvalidItemStateException $e) {
+            } catch (InvalidItemStateException $e) {
                 // the exception is expected
             }
         }
@@ -415,13 +421,13 @@ class DeleteMethodsTest extends \PHPCR\Test\BaseCase
 
     /**
      * It is not allowed to delete a referenced node.
-     *
-     * @expectedException \PHPCR\ReferentialIntegrityException
      */
     public function testDeleteReferencedNodeException()
     {
+        $this->expectException(ReferentialIntegrityException::class);
+
         //relies on the base class setup trick to have the node populated from the fixtures
-        $this->assertInstanceOf('PHPCR\NodeInterface', $this->node);
+        $this->assertInstanceOf(NodeInterface::class, $this->node);
 
         $destnode = $this->node->getNode('idExample');
         $destnode->remove();
@@ -435,7 +441,7 @@ class DeleteMethodsTest extends \PHPCR\Test\BaseCase
     public function testDeletePreviouslyReferencedNode()
     {
         //relies on the base class setup trick to have the node populated from the fixtures
-        $this->assertInstanceOf('PHPCR\NodeInterface', $this->node);
+        $this->assertInstanceOf(NodeInterface::class, $this->node);
 
         // 2) Get the referencing property and delete it
         $sourceprop = $this->node->getProperty('reference');
@@ -457,11 +463,11 @@ class DeleteMethodsTest extends \PHPCR\Test\BaseCase
     public function testDeletePreviouslyReferencedNodeInMultipleProperty()
     {
         //relies on the base class setup trick to have the node populated from the fixtures
-        $this->assertInstanceOf('PHPCR\NodeInterface', $this->node);
+        $this->assertInstanceOf(NodeInterface::class, $this->node);
 
         // 2) Get the referencing property and delete it
         $sourceprop = $this->node->getProperty('reference');
-        $sourceprop->setValue(array());
+        $sourceprop->setValue([]);
 
         // 4) Load the previously referenced node and remove it
         $destnode = $this->node->getNode('idExample');
@@ -478,7 +484,7 @@ class DeleteMethodsTest extends \PHPCR\Test\BaseCase
     public function testDeleteWeakReferencedNode()
     {
         //relies on the base class setup trick to have the node populated from the fixtures
-        $this->assertInstanceOf('PHPCR\NodeInterface', $this->node);
+        $this->assertInstanceOf(NodeInterface::class, $this->node);
 
         $destnode = $this->node->getNode('idExample');
         $destnode->remove();
@@ -494,7 +500,7 @@ class DeleteMethodsTest extends \PHPCR\Test\BaseCase
     public function testDeleteNodeAndReusePathWithReference()
     {
         //relies on the base class setup trick to have the node populated from the fixtures
-        $this->assertInstanceOf('PHPCR\NodeInterface', $this->node);
+        $this->assertInstanceOf(NodeInterface::class, $this->node);
 
         // 1. remove the idExample node with UUID cbc172b2-c317-44ac-a73b-1df61c35fb1a
         $referencedNode = $this->node->getNode('idExample');
@@ -543,7 +549,7 @@ class DeleteMethodsTest extends \PHPCR\Test\BaseCase
         // 5. Throws an PHPCR\ReferentialIntegrityException when above UUID is not a valid reference
         $this->saveAndRenewSession();
 
-        $this->assertInstanceOf('PHPCR\NodeInterface', $this->node);
+        $this->assertInstanceOf(NodeInterface::class, $this->node);
         $this->assertEquals('54378257-ca4d-4b9f-9383-f30dfb280977', $this->node->getProperty('reference')->getString(), 'Reference property should contain "54378257-ca4d-4b9f-9383-f30dfb280977" as string value');
         $this->assertEquals('eee78257-ca4d-4b9f-9383-f30dfb280977', $this->node->getProperty('referenceChild')->getString(), 'Reference property should contain "eee78257-ca4d-4b9f-9383-f30dfb280977" as string value');
         $this->assertEquals('54378257-ca4d-4b9f-9383-f30dfb280977', $this->node->getNode('idExample')->getIdentifier(), 'idExample node should have "54378257-ca4d-4b9f-9383-f30dfb280977" as UUID');
@@ -552,7 +558,7 @@ class DeleteMethodsTest extends \PHPCR\Test\BaseCase
     public function testWorkspaceDelete()
     {
         //relies on the base class setup trick to have the node populated from the fixtures
-        $this->assertInstanceOf('PHPCR\NodeInterface', $this->node);
+        $this->assertInstanceOf(NodeInterface::class, $this->node);
 
         $workspace = $this->session->getWorkspace();
         $path = $this->node->getPath();
@@ -567,13 +573,13 @@ class DeleteMethodsTest extends \PHPCR\Test\BaseCase
         try {
             $this->node->getPath();
             $this->fail('Node was not notified that it is deleted');
-        } catch (\PHPCR\InvalidItemStateException $e) {
+        } catch (InvalidItemStateException $e) {
             // success
         }
         try {
             $property->getValue();
             $this->fail('Property was not notified that it is deleted');
-        } catch (\PHPCR\InvalidItemStateException $e) {
+        } catch (InvalidItemStateException $e) {
             // success
         }
 
@@ -586,7 +592,7 @@ class DeleteMethodsTest extends \PHPCR\Test\BaseCase
     public function testWorkspaceDeleteProperty()
     {
         //relies on the base class setup trick to have the node populated from the fixtures
-        $this->assertInstanceOf('PHPCR\NodeInterface', $this->node);
+        $this->assertInstanceOf(NodeInterface::class, $this->node);
 
         $workspace = $this->session->getWorkspace();
         $path = $this->node->getPath();
@@ -600,11 +606,10 @@ class DeleteMethodsTest extends \PHPCR\Test\BaseCase
         $this->assertFalse($session->propertyExists("$path/prop"));
     }
 
-    /**
-     * @expectedException \PHPCR\PathNotFoundException
-     */
     public function testWorkspaceDeleteNonExisting()
     {
+        $this->expectException(PathNotFoundException::class);
+
         $workspace = $this->session->getWorkspace();
         $workspace->removeItem('/not/existing');
     }

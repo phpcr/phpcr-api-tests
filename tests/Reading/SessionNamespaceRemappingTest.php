@@ -11,20 +11,25 @@
 
 namespace PHPCR\Tests\Reading;
 
-//6.3.3 Session Namespace Remapping
-class SessionNamespaceRemappingTest extends \PHPCR\Test\BaseCase
+use PHPCR\NamespaceException;
+use PHPCR\Test\BaseCase;
+
+// 6.3.3 Session Namespace Remapping
+class SessionNamespaceRemappingTest extends BaseCase
 {
     public static function setupBeforeClass($fixtures = false)
     {
-        // do not care about the fixtures
+        // Do not care about the fixtures
         parent::setupBeforeClass($fixtures);
     }
 
-    protected $nsBuiltIn = array('jcr' => 'http://www.jcp.org/jcr/1.0',
-                                 'nt'  => 'http://www.jcp.org/jcr/nt/1.0',
-                                 'mix' => 'http://www.jcp.org/jcr/mix/1.0',
-                                 'xml' => 'http://www.w3.org/XML/1998/namespace',
-                                 ''    => '', );
+    protected $nsBuiltIn = [
+        'jcr' => 'http://www.jcp.org/jcr/1.0',
+        'nt'  => 'http://www.jcp.org/jcr/nt/1.0',
+        'mix' => 'http://www.jcp.org/jcr/mix/1.0',
+        'xml' => 'http://www.w3.org/XML/1998/namespace',
+        ''    => ''
+    ];
 
     public function testSetNamespacePrefix()
     {
@@ -39,11 +44,10 @@ class SessionNamespaceRemappingTest extends \PHPCR\Test\BaseCase
         $session->logout();
     }
 
-    /**
-     * @expectedException \PHPCR\NamespaceException
-     */
     public function testSetNamespacePrefixXml()
     {
+        $this->expectException(NamespaceException::class);
+
         $this->session->setNamespacePrefix('xmlwhatever', 'http://www.jcp.org/jcr/mix/1.0');
     }
 
@@ -62,11 +66,10 @@ class SessionNamespaceRemappingTest extends \PHPCR\Test\BaseCase
         $this->assertEquals($this->nsBuiltIn['jcr'], $ret);
     }
 
-    /**
-     * @expectedException \PHPCR\NamespaceException
-     */
     public function testGetNamespaceURINonExistent()
     {
+        $this->expectException(NamespaceException::class);
+
         $this->session->getNamespaceURI('http://nonexistent/2.0');
     }
 
@@ -76,11 +79,10 @@ class SessionNamespaceRemappingTest extends \PHPCR\Test\BaseCase
         $this->assertEquals('jcr', $ret);
     }
 
-    /**
-     * @expectedException \PHPCR\NamespaceException
-     */
     public function testGetNamespacePrefixNonExistent()
     {
+        $this->expectException(NamespaceException::class);
+
         $this->session->getNamespacePrefix('nonexistent');
     }
 }

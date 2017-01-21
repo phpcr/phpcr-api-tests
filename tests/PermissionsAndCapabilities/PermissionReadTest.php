@@ -11,10 +11,13 @@
 
 namespace PHPCR\Tests\PermissionsAndCapabilities;
 
+use PHPCR\Security\AccessControlException;
+use PHPCR\Test\BaseCase;
+
 /**
  * Test Permission read methods.
  */
-class PermissionReadTest extends \PHPCR\Test\BaseCase
+class PermissionReadTest extends BaseCase
 {
     public function testCheckPermission()
     {
@@ -23,7 +26,7 @@ class PermissionReadTest extends \PHPCR\Test\BaseCase
         $flag = false;
         try {
             $this->session->checkPermission('/tests_general_base', 'read');
-        } catch (\PHPCR\Security\AccessControlException $ex) {
+        } catch (AccessControlException $ex) {
             $flag = true;
         }
         $this->assertFalse($flag);
@@ -31,7 +34,7 @@ class PermissionReadTest extends \PHPCR\Test\BaseCase
         $flag = false;
         try {
             $this->session->checkPermission('/tests_general_base/numberPropertyNode/jcr:content/foo', 'read');
-        } catch (\PHPCR\Security\AccessControlException $ex) {
+        } catch (AccessControlException $ex) {
             $flag = true;
         }
         $this->assertFalse($flag);
@@ -46,11 +49,10 @@ class PermissionReadTest extends \PHPCR\Test\BaseCase
         $this->assertTrue($this->session->hasPermission('/tests_general_base/numberPropertyNode/jcr:content/foo', 'add_node')); //we have permission, but this node is not capable of the operation
     }
 
-    /**
-     * @expectedException \PHPCR\Security\AccessControlException
-     */
     public function testCheckPermissionAccessControlException()
     {
+        $this->expectException(AccessControlException::class);
+
         // Login with restricted credentials
         $session = self::$loader->getSession(self::$loader->getRestrictedCredentials());
 

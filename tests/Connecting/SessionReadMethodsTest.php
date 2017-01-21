@@ -11,6 +11,11 @@
 
 namespace PHPCR\Tests\Connecting;
 
+use PHPCR\RepositoryInterface;
+use PHPCR\SimpleCredentials;
+use PHPCR\Test\BaseCase;
+use PHPCR\WorkspaceInterface;
+
 /** test javax.cr.Session read methods (level 1)
  *  most of the pdf specification is in section 4.4 and 5.1.
  *
@@ -21,19 +26,19 @@ namespace PHPCR\Tests\Connecting;
  *  Retention: getRetentionManager
  *  Access Control: getAccessControlManager
  */
-class SessionReadMethodsTest extends \PHPCR\Test\BaseCase
+class SessionReadMethodsTest extends BaseCase
 {
-    //4.4.3
+    // 4.4.3
     public function testGetRepository()
     {
-        $rep = $this->session->getRepository();
-        $this->assertInstanceOf('PHPCR\RepositoryInterface', $rep);
+        $repository = $this->session->getRepository();
+        $this->assertInstanceOf(RepositoryInterface::class, $repository);
     }
 
-    //4.4.1
+    // 4.4.1
     public function testGetUserId()
     {
-        $user = $this->session->getUserId();
+        $user = $this->session->getUserID();
         $this->assertEquals(self::$loader->getUserId(), $user);
     }
 
@@ -41,9 +46,11 @@ class SessionReadMethodsTest extends \PHPCR\Test\BaseCase
     public function testGetAttributeNames()
     {
         $cr = self::$loader->getCredentials();
-        if (!$cr instanceof \PHPCR\SimpleCredentials) {
+
+        if (!$cr instanceof SimpleCredentials) {
             $this->markTestSkipped('This implementation is not using the SimpleCredentials. We can not know if there is anything about attributes. You need to test getAttributeNames in your implementation specific tests');
         }
+
         $cr->setAttribute('foo', 'bar');
         $session = $this->assertSession($cr);
         $attrs = $session->getAttributeNames();
@@ -54,9 +61,11 @@ class SessionReadMethodsTest extends \PHPCR\Test\BaseCase
     public function testGetAttribute()
     {
         $cr = self::$loader->getCredentials();
-        if (!$cr instanceof \PHPCR\SimpleCredentials) {
+
+        if (!$cr instanceof SimpleCredentials) {
             $this->markTestSkipped('This implementation is not using the SimpleCredentials. We can not know if there is anything about attributes. You need to test getAttribute in your implementation specific tests');
         }
+
         $cr->setAttribute('foo', 'bar');
         $session = $this->assertSession($cr);
         $val = $session->getAttribute('foo');
@@ -67,6 +76,6 @@ class SessionReadMethodsTest extends \PHPCR\Test\BaseCase
     public function testGetWorkspace()
     {
         $workspace = $this->session->getWorkspace();
-        $this->assertInstanceOf('PHPCR\WorkspaceInterface', $workspace);
+        $this->assertInstanceOf(WorkspaceInterface::class, $workspace);
     }
 }

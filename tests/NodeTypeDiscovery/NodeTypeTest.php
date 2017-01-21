@@ -11,15 +11,19 @@
 
 namespace PHPCR\Tests\NodeTypeDiscovery;
 
+use PHPCR\NodeType\NodeDefinitionInterface;
 use PHPCR\NodeType\NodeTypeInterface;
+use PHPCR\NodeType\PropertyDefinitionInterface;
 use PHPCR\RepositoryInterface;
+use PHPCR\Test\BaseCase;
+use SeekableIterator;
 
 /**
  * Test the NoteType §8.
  *
  * Requires that NodeTypeManager->getNodeType works correctly
  */
-class NodeTypeTest extends \PHPCR\Test\BaseCase
+class NodeTypeTest extends BaseCase
 {
     /**
      * @var NodeTypeInterface
@@ -61,12 +65,14 @@ class NodeTypeTest extends \PHPCR\Test\BaseCase
     {
         $types = self::$file->getSupertypes();
         $this->assertInternalType('array', $types);
-        $typenames = array();
+        $typenames = [];
+
         foreach ($types as $type) {
-            $this->assertInstanceOf('\PHPCR\NodeType\NodeTypeInterface', $type);
+            $this->assertInstanceOf(NodeTypeInterface::class, $type);
             $typenames[] = $type->getName();
         }
-        $this->assertEquals(array('nt:hierarchyNode', 'mix:created', 'nt:base'), $typenames);
+
+        $this->assertEquals(['nt:hierarchyNode', 'mix:created', 'nt:base'], $typenames);
     }
     public function testGetSupertypesNone()
     {
@@ -79,25 +85,30 @@ class NodeTypeTest extends \PHPCR\Test\BaseCase
     {
         $types = self::$file->getDeclaredSupertypes();
         $this->assertInternalType('array', $types);
-        $typenames = array();
+        $typenames = [];
+
         foreach ($types as $type) {
-            $this->assertInstanceOf('\PHPCR\NodeType\NodeTypeInterface', $type);
+            $this->assertInstanceOf(NodeTypeInterface::class, $type);
             $typenames[] = $type->getName();
         }
+
         $this->assertContains('nt:hierarchyNode', $typenames);
         $this->assertNotContains('nt:base', $typenames);
 
         $types = self::$resource->getDeclaredSupertypes();
         $this->assertInternalType('array', $types);
-        $typenames = array();
+        $typenames = [];
+
         foreach ($types as $type) {
-            $this->assertInstanceOf('\PHPCR\NodeType\NodeTypeInterface', $type);
+            $this->assertInstanceOf(NodeTypeInterface::class, $type);
             $typenames[] = $type->getName();
         }
+
         $this->assertContains('mix:lastModified', $typenames);
         $this->assertContains('mix:mimeType', $typenames);
         $this->assertContains('nt:base', $typenames);
     }
+
     public function testGetDeclaredSupertypesNone()
     {
         $types = self::$base->getDeclaredSupertypes();
@@ -108,10 +119,10 @@ class NodeTypeTest extends \PHPCR\Test\BaseCase
     public function testGetSubtypes()
     {
         $types = self::$created->getSubtypes();
-        $this->assertInstanceOf('SeekableIterator', $types);
+        $this->assertInstanceOf(SeekableIterator::class, $types);
         $names = array();
         foreach ($types as $name => $type) {
-            $this->assertInstanceOf('\PHPCR\NodeType\NodeTypeInterface', $type);
+            $this->assertInstanceOf(NodeTypeInterface::class, $type);
             $this->assertEquals($name, $type->getName());
             $names[$name] = true;
         }
@@ -125,10 +136,10 @@ class NodeTypeTest extends \PHPCR\Test\BaseCase
     public function testGetDeclaredSubtypes()
     {
         $types = self::$created->getDeclaredSubtypes();
-        $this->assertInstanceOf('SeekableIterator', $types);
+        $this->assertInstanceOf(SeekableIterator::class, $types);
         $names = array();
         foreach ($types as $name => $type) {
-            $this->assertInstanceOf('\PHPCR\NodeType\NodeTypeInterface', $type);
+            $this->assertInstanceOf(NodeTypeInterface::class, $type);
             $this->assertEquals($name, $type->getName());
             $names[$name] = true;
         }
@@ -145,7 +156,7 @@ class NodeTypeTest extends \PHPCR\Test\BaseCase
         $this->assertInternalType('array', $children);
         $this->assertCount(1, $children);
         list($key, $child) = each($children);
-        $this->assertInstanceOf('\PHPCR\NodeType\NodeDefinitionInterface', $child);
+        $this->assertInstanceOf(NodeDefinitionInterface::class, $child);
         $this->assertEquals('jcr:content', $child->getName());
         // the rest is tested in NodeDefinitionTest
     }
@@ -157,11 +168,11 @@ class NodeTypeTest extends \PHPCR\Test\BaseCase
         $this->assertCount(4, $properties);
         $names = array();
         foreach ($properties as $prop) {
-            $this->assertInstanceOf('\PHPCR\NodeType\PropertyDefinitionInterface', $prop);
+            $this->assertInstanceOf(PropertyDefinitionInterface::class, $prop);
             $names[] = $prop->getName();
         }
         sort($names);
-        $this->assertEquals(array('jcr:created', 'jcr:createdBy', 'jcr:mixinTypes', 'jcr:primaryType'), $names);
+        $this->assertEquals(['jcr:created', 'jcr:createdBy', 'jcr:mixinTypes', 'jcr:primaryType'], $names);
     }
 
     public function testIsNodeTypePrimary()

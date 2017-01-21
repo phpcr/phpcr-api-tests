@@ -11,13 +11,16 @@
 
 namespace PHPCR\Tests\SameNameSiblings;
 
+use PHPCR\NodeInterface;
+use PHPCR\Test\BaseCase;
+
 /**
  * Test for deleting same name siblings (SNS).
  *
  * At this point, we are only testing for the ability to delete existing SNS;
  * creating or manipulating them is not supported.
  */
-class DeleteMethodsTest extends \PHPCR\Test\BaseCase
+class DeleteMethodsTest extends BaseCase
 {
     public static function setupBeforeClass($fixtures = '22_SameNameSiblings/delete')
     {
@@ -27,6 +30,7 @@ class DeleteMethodsTest extends \PHPCR\Test\BaseCase
     public function setUp()
     {
         $this->renewSession(); // get rid of cache from previous tests
+
         parent::setUp();
     }
 
@@ -36,7 +40,7 @@ class DeleteMethodsTest extends \PHPCR\Test\BaseCase
     public function testRemoveItemMultiple()
     {
         $parentPath = '/tests_write_manipulation_delete_sns/testRemoveSnsBySession';
-        $childNames = array('child', 'child[2]', 'child[3]');
+        $childNames = ['child', 'child[2]', 'child[3]'];
 
         $parent = $this->getParentNode($this->session, $parentPath);
 
@@ -56,7 +60,7 @@ class DeleteMethodsTest extends \PHPCR\Test\BaseCase
     /**
      * Call node->remove() with multiple items before session->save().
      *
-     * \PHPCR\ItemInterface::remove
+     * @see ItemInterface::remove
      */
     public function testRemoveNode()
     {
@@ -87,7 +91,7 @@ class DeleteMethodsTest extends \PHPCR\Test\BaseCase
     public function testDeleteManyNodes()
     {
         $parentPath = '/tests_write_manipulation_delete_sns/testRemoveManyNodes';
-        $childrenAtStart = array(
+        $childrenAtStart = [
             'child'     => '1',
             'child[2]'  => '2',
             'child[3]'  => '3',
@@ -100,23 +104,25 @@ class DeleteMethodsTest extends \PHPCR\Test\BaseCase
             'child[10]' => '10',
             'child[11]' => '11',
             'child[12]' => '12',
-        );
-        $childrenToDelete = array(
+        ];
+
+        $childrenToDelete = [
             'child',
             'child[2]',
             'child[3]',
             'child[6]',
             'child[10]',
             'child[11]',
-        );
-        $childrenAtEnd = array(
+        ];
+
+        $childrenAtEnd = [
             'child'     => '4',
             'child[2]'  => '5',
             'child[3]'  => '7',
             'child[4]'  => '8',
             'child[5]'  => '9',
             'child[6]'  => '12',
-        );
+        ];
 
         $parent = $this->getParentNode($this->session, $parentPath);
 
@@ -150,7 +156,7 @@ class DeleteMethodsTest extends \PHPCR\Test\BaseCase
     private function getParentNode($session, $parentPath)
     {
         $parent = $session->getNode($parentPath);
-        $this->assertInstanceOf('PHPCR\NodeInterface', $parent);
+        $this->assertInstanceOf(NodeInterface::class, $parent);
 
         return $parent;
     }

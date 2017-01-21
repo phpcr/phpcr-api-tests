@@ -25,7 +25,7 @@ class QomTestQueries
 {
     public static function getQueries(QueryObjectModelFactoryInterface $factory)
     {
-        $queries = array();
+        $queries = [];
 
         /*
         * 6.7.3. Selector
@@ -35,8 +35,10 @@ class QomTestQueries
             $factory->createQuery(
                 $factory->selector('test', 'nt:unstructured'),
                 null,
-                array(),
-                array());
+                [],
+                []
+            )
+        ;
 
         /*
         * 6.7.8. EquiJoinCondition
@@ -51,8 +53,10 @@ class QomTestQueries
                     Constants::JCR_JOIN_TYPE_INNER,
                     $factory->equiJoinCondition('file', 'prop1', 'folder', 'prop2')),
                 null,
-                array(),
-                array());
+                [],
+                []
+            )
+        ;
 
         // SELECT * FROM nt:file LEFT OUTER JOIN nt:folder ON sel1.prop1=sel2.prop2
         $queries['6.7.8.EquiJoin.Left'] =
@@ -63,8 +67,10 @@ class QomTestQueries
                     Constants::JCR_JOIN_TYPE_LEFT_OUTER,
                     $factory->equiJoinCondition('file', 'prop1', 'folder', 'prop2')),
                 null,
-                array(),
-                array());
+                [],
+                []
+            )
+        ;
 
         // SELECT * FROM nt:file RIGHT OUTER JOIN nt:folder ON sel1.prop1=sel2.prop2
         $queries['6.7.8.EquiJoin.Right'] =
@@ -75,8 +81,10 @@ class QomTestQueries
                     Constants::JCR_JOIN_TYPE_RIGHT_OUTER,
                     $factory->equiJoinCondition('file', 'prop1', 'folder', 'prop2')),
                 null,
-                array(),
-                array());
+                [],
+                []
+            )
+        ;
 
         // SELECT * FROM [nt:folder] AS folder INNER JOIN [nt:file] AS file ON folder.[prop2]=file.[prop1] INNER JOIN [nt:folder] AS folder2 ON file.[prop1]=folder.[prop2]
         $queries['6.7.8.EquiJoin.NestedJoin'] =
@@ -92,8 +100,10 @@ class QomTestQueries
                     Constants::JCR_JOIN_TYPE_INNER,
                     $factory->equiJoinCondition('file', 'prop1', 'folder', 'prop2')),
                 null,
-                array(),
-                array());
+                [],
+                []
+            )
+        ;
 
         /*
         * 6.7.9. SameNodeJoinCondition
@@ -108,8 +118,10 @@ class QomTestQueries
                     Constants::JCR_JOIN_TYPE_INNER,
                     $factory->sameNodeJoinCondition('file', 'folder')),
                 null,
-                array(),
-                array());
+                [],
+                []
+            )
+        ;
 
         // SELECT * FROM nt:file INNER JOIN nt:folder ON ISSAMENODE(sel1, sel2, /home)
         $queries['6.7.9.SameNodeJoinCondition.Path'] =
@@ -120,8 +132,10 @@ class QomTestQueries
                     Constants::JCR_JOIN_TYPE_INNER,
                     $factory->sameNodeJoinCondition('file', 'folder', '/home')),
                 null,
-                array(),
-                array());
+                [],
+                []
+            )
+        ;
 
        /*
         * 6.7.10 ChildNodeJoinCondition
@@ -136,8 +150,10 @@ class QomTestQueries
                     Constants::JCR_JOIN_TYPE_INNER,
                     $factory->childNodeJoinCondition('child', 'parent')),
                 null,
-                array(),
-                array());
+                [],
+                []
+            )
+        ;
 
         /*
         * 6.7.11 DescendantNodeJoinCondition
@@ -152,8 +168,10 @@ class QomTestQueries
                     Constants::JCR_JOIN_TYPE_INNER,
                     $factory->descendantNodeJoinCondition('descendant', 'ancestor')),
                 null,
-                array(),
-                array());
+                [],
+                []
+            )
+        ;
 
         /*
         * 6.7.12. Constraint (operator precedence)
@@ -179,8 +197,8 @@ class QomTestQueries
                     )
                 )
             ),
-            array(),
-            array()
+            [],
+            []
         );
 
         $queries['6.7.12.Constraint.Precedence.2'] = $factory->createQuery(
@@ -204,8 +222,8 @@ class QomTestQueries
                     $factory->literal('3')
                 )
             ),
-            array(),
-            array()
+            [],
+            []
         );
 
         $queries['6.7.12.Constraint.Precedence.3'] = $factory->createQuery(
@@ -233,8 +251,8 @@ class QomTestQueries
                     )
                 )
             ),
-            array(),
-            array()
+            [],
+            []
         );
 
         $queries['6.7.12.Constraint.Precedence.4'] = $factory->createQuery(
@@ -258,8 +276,8 @@ class QomTestQueries
                     $factory->propertyExistence('file', 'prop7')
                 )
             ),
-            array(),
-            array()
+            [],
+            []
         );
 
         $queries['6.7.12.Constraint.Precedence.5'] = $factory->createQuery(
@@ -290,8 +308,8 @@ class QomTestQueries
                     )
                 )
             ),
-            array(),
-            array()
+            [],
+            []
         );
 
         /*
@@ -305,8 +323,10 @@ class QomTestQueries
                 $factory->andConstraint(
                     $factory->propertyExistence('file', 'prop1'),
                     $factory->propertyExistence('file', 'prop2')),
-                array(),
-                array());
+                [],
+                []
+            )
+        ;
 
         /*
         * 6.7.14. OrConstraint
@@ -319,8 +339,10 @@ class QomTestQueries
                 $factory->orConstraint(
                     $factory->propertyExistence('file', 'prop1'),
                     $factory->propertyExistence('file', 'prop2')),
-                array(),
-                array());
+                [],
+                []
+            )
+        ;
 
         /*
         * 6.7.15. NotConstraint
@@ -332,8 +354,10 @@ class QomTestQueries
                 $factory->selector('file', 'nt:file'),
                 $factory->notConstraint(
                     $factory->propertyExistence('file', 'prop1')),
-                array(),
-                array());
+                [],
+                []
+            )
+        ;
 
         /*
         * 6.7.16. Comparison
@@ -347,8 +371,10 @@ class QomTestQueries
                     $factory->nodeName('file'),
                     Constants::JCR_OPERATOR_LIKE,
                     $factory->literal('literal2')),
-                array(),
-                array());
+                [],
+                []
+            )
+        ;
 
         /*
         * 6.7.18. PropertyExistence
@@ -359,8 +385,10 @@ class QomTestQueries
             $factory->createQuery(
                 $factory->selector('file', 'nt:file'),
                 $factory->propertyExistence('file', 'prop1'),
-                array(),
-                array());
+                [],
+                []
+            )
+        ;
 
         /*
         * 6.7.19. FullTextSearch
@@ -371,14 +399,19 @@ class QomTestQueries
             $factory->createQuery(
                 $factory->selector('file', 'nt:file'),
                 $factory->fullTextSearch('file', 'prop', 'expr'),
-                array(),
-                array());
+                [],
+                []
+            )
+        ;
+
         $queries['6.7.19.FullTextSearch_With_Single_Quote'] =
             $factory->createQuery(
                 $factory->selector('file', 'nt:file'),
                 $factory->fullTextSearch('file', 'prop', "expr'"),
-                array(),
-                array());
+                [],
+                []
+            )
+        ;
 
         /*
         * 6.7.20. SameNode
@@ -388,8 +421,11 @@ class QomTestQueries
             $factory->createQuery(
                 $factory->selector('file', 'nt:file'),
                 $factory->sameNode('file', '/home'),
-                array(),
-                array());
+                [],
+                []
+            )
+        ;
+
         /* TODO
         $queries['6.7.20.SameNode.Selector_Space'] =
             $factory->createQuery(
@@ -407,8 +443,10 @@ class QomTestQueries
             $factory->createQuery(
                 $factory->selector('file', 'nt:file'),
                 $factory->childNode('file', '/home'),
-                array(),
-                array());
+                [],
+                []
+            )
+        ;
 
         /*
         * 6.7.22. DescendantNode
@@ -418,8 +456,10 @@ class QomTestQueries
             $factory->createQuery(
                 $factory->selector('file', 'nt:file'),
                 $factory->descendantNode('file', '/home'),
-                array(),
-                array());
+                [],
+                []
+            )
+        ;
 
         /*
         * 6.7.27. ProperyValue
@@ -433,8 +473,10 @@ class QomTestQueries
                     $factory->propertyValue('file', 'prop'),
                     Constants::JCR_OPERATOR_LIKE,
                     $factory->literal('literal')),
-                array(),
-                array());
+                [],
+                []
+            )
+        ;
 
         // SELECT * FROM nt:unstructured WHERE sel.prop > '2013-04-15'
         $queries['6.7.27.1.PropertyValue'] =
@@ -444,8 +486,10 @@ class QomTestQueries
                     $factory->propertyValue('sel', 'prop'),
                     Constants::JCR_OPERATOR_GREATER_THAN,
                     $factory->literal(new \DateTime('2013-04-15 +02:00'))),
-                array(),
-                array());
+                [],
+                []
+            )
+        ;
 
         /*
         * 6.7.28. Length
@@ -459,8 +503,10 @@ class QomTestQueries
                     $factory->length($factory->propertyValue('file', 'prop')),
                     Constants::JCR_OPERATOR_LIKE,
                     $factory->literal('literal')),
-                array(),
-                array());
+                [],
+                []
+            )
+        ;
 
          /*
         * 6.7.29. NodeName
@@ -474,8 +520,10 @@ class QomTestQueries
                     $factory->nodeName('file'),
                     Constants::JCR_OPERATOR_LIKE,
                     $factory->literal('literal')),
-                array(),
-                array());
+                [],
+                []
+            )
+        ;
 
         /*
         * 6.7.30. NodeLocalName
@@ -489,8 +537,10 @@ class QomTestQueries
                     $factory->nodeLocalName('file'),
                     Constants::JCR_OPERATOR_LIKE,
                     $factory->literal('literal')),
-                array(),
-                array());
+                [],
+                []
+            )
+        ;
 
         /*
         * 6.7.31. FullTextSearchScore
@@ -504,8 +554,10 @@ class QomTestQueries
                     $factory->fullTextSearchScore('file'),
                     Constants::JCR_OPERATOR_LIKE,
                     $factory->literal('literal')),
-                array(),
-                array());
+                [],
+                []
+            )
+        ;
 
         /*
         * 6.7.32. LowerCase
@@ -519,8 +571,10 @@ class QomTestQueries
                     $factory->lowerCase($factory->nodeName('file')),
                     Constants::JCR_OPERATOR_LIKE,
                     $factory->literal('literal')),
-                array(),
-                array());
+                [],
+                []
+            )
+        ;
 
         /*
         * 6.7.33. UpperCase
@@ -534,8 +588,10 @@ class QomTestQueries
                     $factory->upperCase($factory->nodeName('file')),
                     Constants::JCR_OPERATOR_LIKE,
                     $factory->literal('literal')),
-                array(),
-                array());
+                [],
+                []
+            )
+        ;
 
         /*
         * 6.7.35. BindVariable
@@ -549,8 +605,10 @@ class QomTestQueries
                     $factory->upperCase($factory->nodeName('file')),
                     Constants::JCR_OPERATOR_LIKE,
                     $factory->bindVariable('var')),
-                array(),
-                array());
+                [],
+                []
+            )
+        ;
 
         /*
         * 6.7.38 Order
@@ -561,36 +619,43 @@ class QomTestQueries
             $factory->createQuery(
                 $factory->selector('u', 'nt:unstructured'),
                 null,
-                array(),
-                array());
+                [],
+                []
+            )
+        ;
 
         // SELECT * FROM nt:unstructured ORDER BY prop1 ASC
         $queries['6.7.38.Order.Asc'] =
             $factory->createQuery(
                 $factory->selector('u', 'nt:unstructured'),
                 null,
-                array(
-                    $factory->ascending($factory->propertyValue('u', 'prop1')), ),
-                array());
+                [$factory->ascending($factory->propertyValue('u', 'prop1'))],
+                []
+            )
+        ;
 
         // SELECT * FROM nt:unstructured ORDER BY prop1 DESC
         $queries['6.7.38.Order.Desc'] =
             $factory->createQuery(
                 $factory->selector('u', 'nt:unstructured'),
                 null,
-                array(
-                    $factory->descending($factory->propertyValue('u', 'prop1')), ),
-                array());
+                [$factory->descending($factory->propertyValue('u', 'prop1'))],
+                []
+            )
+        ;
 
         // SELECT * FROM nt:unstructured ORDER BY prop1 ASC, prop2 DESC
         $queries['6.7.38.Order.Mixed'] =
             $factory->createQuery(
                 $factory->selector('u', 'nt:unstructured'),
                 null,
-                array(
+                [
                     $factory->ascending($factory->propertyValue('u', 'prop1')),
-                    $factory->descending($factory->propertyValue('u', 'prop2')), ),
-                array());
+                    $factory->descending($factory->propertyValue('u', 'prop2'))
+                ],
+                []
+            )
+        ;
 
         /*
         * 6.7.39 Column
@@ -601,28 +666,31 @@ class QomTestQueries
             $factory->createQuery(
                 $factory->selector('u', 'nt:unstructured'),
                 null,
-                array(),
-                array());
+                [],
+                []
+            )
+        ;
 
         // SELECT u.prop1 AS prop1 FROM [nt:unstructured] AS u
         $queries['6.7.39.Colum.Selector'] =
             $factory->createQuery(
                 $factory->selector('u', 'nt:unstructured'),
                 null,
-                array(),
-                array(
-                    $factory->column('u', 'prop1', 'col1'), ));
+                [],
+                [$factory->column('u', 'prop1', 'col1')]
+            )
+        ;
 
         // SELECT u.prop1, u.prop2 AS col2 FROM nt:unstructured
         $queries['6.7.39.Colum.Mixed'] =
             $factory->createQuery(
                 $factory->selector('u', 'nt:unstructured'),
                 null,
-                array(),
-                array(
+                [],
+                [
                     $factory->column('u', 'prop1', 'col1'),
                     $factory->column('u', 'prop2', 'prop2'),
-                )
+                ]
             );
 
         return $queries;

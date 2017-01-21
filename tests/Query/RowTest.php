@@ -10,6 +10,9 @@
  */
 
 namespace PHPCR\Tests\Query;
+use PHPCR\ItemNotFoundException;
+use PHPCR\NodeInterface;
+use PHPCR\Query\RowInterface;
 
 /**
  * $ 6.11.1 Table View - Row part.
@@ -27,8 +30,9 @@ class RowTest extends QueryBaseCase
         $rows->rewind();
         $this->row = $rows->current();
 
-        $this->assertInstanceOf('PHPCR\Query\RowInterface', $this->row);
+        $this->assertInstanceOf(RowInterface::class, $this->row);
     }
+
     public function testIterator()
     {
         $count = 0;
@@ -56,7 +60,7 @@ class RowTest extends QueryBaseCase
 
         $keys = array_keys($values);
         sort($keys);
-        $this->assertEquals(array('nt:folder.jcr:created', 'nt:folder.jcr:createdBy', 'nt:folder.jcr:primaryType'), $keys);
+        $this->assertEquals(['nt:folder.jcr:created', 'nt:folder.jcr:createdBy', 'nt:folder.jcr:primaryType'], $keys);
     }
 
     public function testGetValue()
@@ -66,11 +70,10 @@ class RowTest extends QueryBaseCase
         $this->assertEquals('admin', $path);
     }
 
-    /**
-     * @expectedException \PHPCR\ItemNotFoundException
-     */
     public function testGetValueItemNotFound()
     {
+        $this->expectException(ItemNotFoundException::class);
+
         $columnName = 'foobar';
 
         $this->row->getValue($columnName);
@@ -78,7 +81,7 @@ class RowTest extends QueryBaseCase
 
     public function testGetNode()
     {
-        $this->assertInstanceOf('PHPCR\NodeInterface', $this->row->getNode());
+        $this->assertInstanceOf(NodeInterface::class, $this->row->getNode());
     }
 
     public function testGetPath()

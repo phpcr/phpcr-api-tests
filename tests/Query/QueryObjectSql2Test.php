@@ -11,6 +11,13 @@
 
 namespace PHPCR\Tests\Query;
 
+use Exception;
+use PHPCR\ItemNotFoundException;
+use PHPCR\NodeInterface;
+use PHPCR\Query\InvalidQueryException;
+use PHPCR\Query\QueryInterface;
+use PHPCR\Query\QueryResultInterface;
+
 /**
  * test the Query interface. $ 6.9.
  *
@@ -28,7 +35,7 @@ class QueryObjectSql2Test extends QueryBaseCase
     {
         $query = $this->sharedFixture['qm']->createQuery($this->simpleQuery, \PHPCR\Query\QueryInterface::JCR_SQL2);
         $qr = $query->execute();
-        $this->assertInstanceOf('PHPCR\Query\QueryResultInterface', $qr);
+        $this->assertInstanceOf(QueryResultInterface::class, $qr);
         //content of result is tested in QueryResults
     }
 
@@ -36,7 +43,7 @@ class QueryObjectSql2Test extends QueryBaseCase
     {
         $this->query->setLimit(2);
         $qr = $this->query->execute();
-        $this->assertInstanceOf('PHPCR\Query\QueryResultInterface', $qr);
+        $this->assertInstanceOf(QueryResultInterface::class, $qr);
         $this->assertCount(2, $qr->getRows());
     }
 
@@ -44,7 +51,7 @@ class QueryObjectSql2Test extends QueryBaseCase
     {
         $this->query->setOffset(2);
         $qr = $this->query->execute();
-        $this->assertInstanceOf('PHPCR\Query\QueryResultInterface', $qr);
+        $this->assertInstanceOf(QueryResultInterface::class, $qr);
         $this->assertCount(3, $qr->getRows());
     }
 
@@ -53,44 +60,45 @@ class QueryObjectSql2Test extends QueryBaseCase
         $this->query->setOffset(2);
         $this->query->setLimit(1);
         $qr = $this->query->execute();
-        $this->assertInstanceOf('PHPCR\Query\QueryResultInterface', $qr);
+        $this->assertInstanceOf(QueryResultInterface::class, $qr);
         $this->assertCount(1, $qr->getRows());
     }
 
     /**
-     * @expectedException \PHPCR\Query\InvalidQueryException
-     *
      * the doc claims there would just be a PHPCR\RepositoryException
      * it makes sense that there is a InvalidQueryException
      */
     public function testExecuteInvalid()
     {
-        $query = $this->sharedFixture['qm']->createQuery('this is no sql2 statement', \PHPCR\Query\QueryInterface::JCR_SQL2);
+        $this->expectException(InvalidQueryException::class);
+
+        $query = $this->sharedFixture['qm']->createQuery('this is no sql2 statement', QueryInterface::JCR_SQL2);
         $query->execute();
     }
 
     public function testGetStatement()
     {
-        $query = $this->sharedFixture['qm']->createQuery($this->simpleQuery, \PHPCR\Query\QueryInterface::JCR_SQL2);
+        $query = $this->sharedFixture['qm']->createQuery($this->simpleQuery, QueryInterface::JCR_SQL2);
         $this->assertEquals($this->simpleQuery, $query->getStatement());
     }
 
     public function testGetLanguage()
     {
-        $query = $this->sharedFixture['qm']->createQuery($this->simpleQuery, \PHPCR\Query\QueryInterface::JCR_SQL2);
-        $this->assertEquals(\PHPCR\Query\QueryInterface::JCR_SQL2, $query->getLanguage());
+        $query = $this->sharedFixture['qm']->createQuery($this->simpleQuery, QueryInterface::JCR_SQL2);
+        $this->assertEquals(QueryInterface::JCR_SQL2, $query->getLanguage());
     }
 
     /**
      * a transient query has no stored query path.
-     *
-     * @expectedException \PHPCR\ItemNotFoundException
      */
     public function testGetStoredQueryPathItemNotFound()
     {
-        $query = $this->sharedFixture['qm']->createQuery($this->simpleQuery, \PHPCR\Query\QueryInterface::JCR_SQL2);
+        $this->expectException(ItemNotFoundException::class);
+
+        $query = $this->sharedFixture['qm']->createQuery($this->simpleQuery, QueryInterface::JCR_SQL2);
         $query->getStoredQueryPath();
     }
+
     /* this is only with write support only */
     /*
     public function testStoreAsNode()
@@ -109,17 +117,18 @@ class QueryObjectSql2Test extends QueryBaseCase
     public function testGetStoredQueryPath()
     {
         $this->sharedFixture['ie']->import('general/query');
+
         try {
             $qnode = $this->session->getRootNode()->getNode('queryNode');
-            $this->assertInstanceOf('PHPCR\NodeInterface', $qnode);
+            $this->assertInstanceOf(NodeInterface::class, $qnode);
 
             $query = $this->sharedFixture['qm']->getQuery($qnode);
-            $this->assertInstanceOf('PHPCR\Query\QueryInterface', $query);
+            $this->assertInstanceOf(QueryInterface::class, $query);
             //same as QueryManager::testGetQuery
 
             $p = $query->getStoredQueryPath();
             $this->assertEquals('/tests_general_query/queryNode', $p);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             //FIXME: finally?
             $this->sharedFixture['ie']->import('general/base');
             throw $e;

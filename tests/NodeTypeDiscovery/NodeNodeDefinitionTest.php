@@ -12,8 +12,6 @@
 namespace PHPCR\Tests\NodeTypeDiscovery;
 
 use PHPCR\NodeType\NodeDefinitionInterface;
-use PHPCR\NodeType\NodeTypeInterface;
-use PHPCR\NodeType\NodeTypeManagerInterface;
 use PHPCR\Test\BaseCase;
 
 /**
@@ -28,7 +26,7 @@ class NodeNodeDefinitionTest extends BaseCase
         // an nt:file must have a jcr:content property
         $node = $this->rootNode->getNode('tests_general_base/numberPropertyNode/jcr:content');
         $nodeDef = $node->getDefinition();
-        $this->assertInstanceOf('PHPCR\\NodeType\\NodeDefinitionInterface', $nodeDef);
+        $this->assertInstanceOf(NodeDefinitionInterface::class, $nodeDef);
         $this->assertEquals('jcr:content', $nodeDef->getName());
         $this->assertTrue($nodeDef->isMandatory());
     }
@@ -38,7 +36,7 @@ class NodeNodeDefinitionTest extends BaseCase
         // defines a child of nt:folder
         $node = $this->rootNode->getNode('tests_general_base/index.txt');
         $nodeDef = $node->getDefinition();
-        $this->assertInstanceOf('PHPCR\\NodeType\\NodeDefinitionInterface', $nodeDef);
+        $this->assertInstanceOf(NodeDefinitionInterface::class, $nodeDef);
         $this->assertEquals('*', $nodeDef->getName());
     }
 }

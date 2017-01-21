@@ -11,6 +11,14 @@
 
 namespace PHPCR\Tests\Locking;
 
+use PHPCR\InvalidItemStateException;
+use PHPCR\Lock\LockException;
+use PHPCR\Lock\LockInterface;
+use PHPCR\Lock\LockManagerInterface;
+use PHPCR\NodeInterface;
+use PHPCR\PathNotFoundException;
+use PHPCR\Test\BaseCase;
+
 /**
  * Tests for the LockManager.
  *
@@ -19,9 +27,9 @@ namespace PHPCR\Tests\Locking;
  *
  * Covering jcr-2.8.3 spec $17.1
  */
-class LockManagerTest extends \PHPCR\Test\BaseCase
+class LockManagerTest extends BaseCase
 {
-    /** @var \PHPCR\Lock\LockManagerInterface */
+    /** @var LockManagerInterface */
     private $lm;
 
     public function setUp()
@@ -45,17 +53,17 @@ class LockManagerTest extends \PHPCR\Test\BaseCase
 
     /**
      * Try to lock an already locked node.
-     *
-     * @expectedException \PHPCR\Lock\LockException
      */
     public function testLockAlreadyLocked()
     {
+        $this->expectException(LockException::class);
+
         $this->recreateTestNode('lockable-node', true);
 
         // The first lock should work
         try {
             $this->lm->lock('/lockable-node', true, true, 3, '');
-        } catch (\PHPCR\Lock\LockException $ex) {
+        } catch (LockException $ex) {
             // The lock didn't work, Huston, there is a problem...
             $this->fail('An error occurred while trying to lock a valid node: '.$ex->getMessage());
         }
@@ -66,18 +74,18 @@ class LockManagerTest extends \PHPCR\Test\BaseCase
 
     /**
      * Try to deep lock a node which subtree contains a locked node.
-     *
-     * @expectedException \PHPCR\Lock\LockException
      */
     public function testLockDeepOnAlreadyLocked()
     {
+        $this->expectException(LockException::class);
+
         $this->recreateTestNode('lockable-parent', true);
         $this->recreateTestNode('lockable-parent/lockable-child', true);
 
         // The lock on the child should work
         try {
             $this->lm->lock('/lockable-parent/lockable-child', true, true, 3, '');
-        } catch (\PHPCR\Lock\LockException $ex) {
+        } catch (LockException $ex) {
             $this->fail('An error occurred while trying to lock a valid node: '.$ex->getMessage());
         }
 
@@ -87,11 +95,11 @@ class LockManagerTest extends \PHPCR\Test\BaseCase
 
     /**
      * Try to lock a node with non-saved pending changes.
-     *
-     * @expectedException \PHPCR\InvalidItemStateException
      */
     public function testLockNonSavedNode()
     {
+        $this->expectException(InvalidItemStateException::class);
+
         $node = $this->recreateTestNode('unsaved', true);
         $node->setProperty('testprop', 'foobar');
         $this->lm->lock('/unsaved', true, true, 3, '');
@@ -99,11 +107,11 @@ class LockManagerTest extends \PHPCR\Test\BaseCase
 
     /**
      * Try to lock an unexisting node.
-     *
-     * @expectedException \PHPCR\PathNotFoundException
      */
     public function testLockNonExistingNode()
     {
+        $this->expectException(PathNotFoundException::class);
+
         $this->lm->lock('/some-unexisting-node', true, true, 3);
     }
 
@@ -251,11 +259,11 @@ class LockManagerTest extends \PHPCR\Test\BaseCase
 
     /**
      * Try to test the lock on an unexisting node.
-     *
-     * @expectedException \PHPCR\PathNotFoundException
      */
     public function testHoldsLockUnexistingNode()
     {
+        $this->expectException(PathNotFoundException::class);
+
         $this->lm->holdsLock('/some-unexisting-node');
     }
 
@@ -293,20 +301,21 @@ class LockManagerTest extends \PHPCR\Test\BaseCase
      * Try to unlock a non-lockable node.
      *
      * @depends testIsLockedOnUnlocked
-     * @expectedException \PHPCR\Lock\LockException
      */
     public function testUnlockOnNonLocked()
     {
+        $this->expectException(LockException::class);
+
         $this->lm->unlock('/non-lockable');
     }
 
     /**
      * Try to unlock a unsaved node.
-     *
-     * @expectedException \PHPCR\InvalidItemStateException
      */
     public function testUnlockInvalidState()
     {
+        $this->expectException(InvalidItemStateException::class);
+
         $node = $this->recreateTestNode('locked-unsaved', true);
         $this->lm->lock('/locked-unsaved', true, true, 3, '');
         $node->setProperty('testprop', 'foobar');
@@ -315,11 +324,11 @@ class LockManagerTest extends \PHPCR\Test\BaseCase
 
     /**
      * Try to unlock an unexisting node.
-     *
-     * @expectedException \PHPCR\PathNotFoundException
      */
     public function testUnlockUnexistingNode()
     {
+        $this->expectException(PathNotFoundException::class);
+
         $this->lm->unlock('/some-unexisting-node');
     }
 
@@ -328,8 +337,8 @@ class LockManagerTest extends \PHPCR\Test\BaseCase
     /**
      * Helper function to simplify the test of valid Lock objects.
      *
-     * @param \PHPCR\Lock\LockInterface $lock The lock to check
-     * @param NodeInterface the expected node of this lock
+     * @param LockInterface $lock The lock to check
+     * @param NodeInterface $expectedNode the expected node of this lock
      * @param string  $expectedOwner
      * @param bool $expectedIsDeep
      * @param bool $expectedIsSessionScoped
@@ -337,16 +346,17 @@ class LockManagerTest extends \PHPCR\Test\BaseCase
      */
     protected function assertLockEquals($lock, $expectedNode, $expectedOwner, $expectedIsDeep, $expectedIsSessionScoped, $timeout)
     {
-        $this->assertInstanceOf('\PHPCR\Lock\LockInterface', $lock);
+        $this->assertInstanceOf(LockInterface::class, $lock);
         $this->assertSame($expectedNode, $lock->getNode());
         $this->assertEquals($expectedOwner, $lock->getLockOwner());
         $this->assertEquals($expectedIsDeep, $lock->isDeep());
         $this->assertEquals($expectedIsSessionScoped, $lock->isSessionScoped());
-        if (PHP_INT_MAX == $timeout) {
+
+        if (PHP_INT_MAX === $timeout) {
             $this->assertEquals(PHP_INT_MAX, $lock->getSecondsRemaining(), 'Expected infinite timeout');
         } else {
             $remaining = $lock->getSecondsRemaining();
-            $this->assertTrue($timeout == $remaining || $timeout - 1 == $remaining, "Timeout does not match, expected $timeout but got $remaining");
+            $this->assertTrue($timeout === $remaining || $timeout - 1 === $remaining, "Timeout does not match, expected $timeout but got $remaining");
         }
     }
 
@@ -357,10 +367,12 @@ class LockManagerTest extends \PHPCR\Test\BaseCase
      *
      * @param $relPath
      * @param bool $lockable
+     *
+     * @return NodeInterface
      */
     protected function recreateTestNode($relPath, $lockable = true, $session = null)
     {
-        if (null == $session) {
+        if (null === $session) {
             $session = $this->session;
         }
 

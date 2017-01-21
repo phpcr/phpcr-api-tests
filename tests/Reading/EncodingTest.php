@@ -11,11 +11,14 @@
 
 namespace PHPCR\Tests\Reading;
 
+use PHPCR\NodeInterface;
+use PHPCR\Test\BaseCase;
+
 /**
  * Test javax.jcr.Node read methods (read) §5.6
  * With special characters.
  */
-class EncodingTest extends \PHPCR\Test\BaseCase
+class EncodingTest extends BaseCase
 {
     public static function setupBeforeClass($fixtures = '05_Reading/encoding')
     {
@@ -37,23 +40,23 @@ class EncodingTest extends \PHPCR\Test\BaseCase
     {
         $this->assertTrue($this->node->hasNode($name));
         $node = $this->node->getNode($name);
-        $this->assertInstanceOf('PHPCR\NodeInterface', $node);
+        $this->assertInstanceOf(NodeInterface::class, $node);
     }
 
     public static function getNodeNames()
     {
-        return array(
-            array('node-ä-x'),
-            array('node-è-x'),
-            array('node-ï-x'),
-            array('node-%-x'),
-            array('node-%2F-x'),
-            array('node-;-x'),
-            array('node- -x'),
-            array('node-ç-x'),
-            array('node-&-x'),
-            array('node?'),
-            array('node-¢'),
-        );
+        return [
+            ['node-ä-x'],
+            ['node-è-x'],
+            ['node-ï-x'],
+            ['node-%-x'],
+            ['node-%2F-x'],
+            ['node-;-x'],
+            ['node- -x'],
+            ['node-ç-x'],
+            ['node-&-x'],
+            ['node?'],
+            ['node-¢'],
+        ];
     }
 }

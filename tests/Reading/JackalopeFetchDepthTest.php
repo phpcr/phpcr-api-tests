@@ -11,10 +11,13 @@
 
 namespace PHPCR\Tests\Reading;
 
+use Jackalope\Session;
+use PHPCR\Test\BaseCase;
+
 /**
  * functional tests for Jackalope fetch depth.
  */
-class JackalopeFetchDepthTest extends \PHPCR\Test\BaseCase
+class JackalopeFetchDepthTest extends BaseCase
 {
     public static function setupBeforeClass($fixtures = '05_Reading/jackalopeFetchDepth')
     {
@@ -24,54 +27,55 @@ class JackalopeFetchDepthTest extends \PHPCR\Test\BaseCase
     public function setUp()
     {
         parent::setUp();
+
         $this->renewSession();
     }
 
     public function testGetNodeWithFetchDepth()
     {
-        if (!$this->session instanceof \Jackalope\Session) {
+        if (!$this->session instanceof Session) {
             return;
         }
 
         $node = $this->rootNode->getNode('tests_read_jackalope_fetch_depth');
 
-        $this->session->setSessionOption(\Jackalope\Session::OPTION_FETCH_DEPTH, 5);
+        $this->session->setSessionOption(Session::OPTION_FETCH_DEPTH, 5);
         $deepExample = $node->getNode('deepExample');
-        $this->assertEquals(array('deepExample'), (array) $deepExample->getNodeNames());
+        $this->assertEquals(['deepExample'], (array) $deepExample->getNodeNames());
 
         $deepExample = $deepExample->getNode('deepExample');
-        $this->assertEquals(array('deepExample'), (array) $deepExample->getNodeNames());
+        $this->assertEquals(['deepExample'], (array) $deepExample->getNodeNames());
 
         $deepExample = $deepExample->getNode('deepExample');
-        $this->assertEquals(array('deepExample'), (array) $deepExample->getNodeNames());
+        $this->assertEquals(['deepExample'], (array) $deepExample->getNodeNames());
 
         $deepExample = $deepExample->getNode('deepExample');
-        $this->assertEquals(array('deepExample'), (array) $deepExample->getNodeNames());
+        $this->assertEquals(['deepExample'], (array) $deepExample->getNodeNames());
     }
 
     public function testGetNodesWithFetchDepth()
     {
-        if (!$this->session instanceof \Jackalope\Session) {
+        if (!$this->session instanceof Session) {
             return;
         }
 
         $node = $this->rootNode->getNode('tests_read_jackalope_fetch_depth');
 
-        $this->session->setSessionOption(\Jackalope\Session::OPTION_FETCH_DEPTH, 5);
+        $this->session->setSessionOption(Session::OPTION_FETCH_DEPTH, 5);
         $deepExamples = $node->getNodes('deepExample');
         $deepExample = $deepExamples->current();
-        $this->assertEquals(array('deepExample'), (array) $deepExample->getNodeNames());
+        $this->assertEquals(['deepExample'], (array) $deepExample->getNodeNames());
 
         $deepExamples = $node->getNodes('deepExample');
         $deepExample = $deepExamples->current();
-        $this->assertEquals(array('deepExample'), (array) $deepExample->getNodeNames());
+        $this->assertEquals(['deepExample'], (array) $deepExample->getNodeNames());
 
         $deepExamples = $node->getNodes('deepExample');
         $deepExample = $deepExamples->current();
-        $this->assertEquals(array('deepExample'), (array) $deepExample->getNodeNames());
+        $this->assertEquals(['deepExample'], (array) $deepExample->getNodeNames());
 
         $deepExamples = $node->getNodes('deepExample');
         $deepExample = $deepExamples->current();
-        $this->assertEquals(array('deepExample'), (array) $deepExample->getNodeNames());
+        $this->assertEquals(['deepExample'], (array) $deepExample->getNodeNames());
     }
 }

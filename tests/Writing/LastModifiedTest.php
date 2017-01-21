@@ -11,13 +11,15 @@
 
 namespace PHPCR\Tests\Writing;
 
+use DateTime;
 use Jackalope\Session;
+use PHPCR\Test\BaseCase;
 
 /**
  * Testing the mix:lastModified support when the values are never updated
  * automatically.
  */
-class LastModifiedTest extends \PHPCR\Test\BaseCase
+class LastModifiedTest extends BaseCase
 {
     public static function setupBeforeClass($fixtures = '10_Writing/lastmodified')
     {
@@ -45,7 +47,7 @@ class LastModifiedTest extends \PHPCR\Test\BaseCase
 
         $this->assertTrue($this->node->hasProperty('jcr:lastModifiedBy'));
         $this->assertTrue($this->node->hasProperty('jcr:lastModified'));
-        $this->assertSimilarDateTime(new \DateTime(), $this->node->getPropertyValue('jcr:lastModified'));
+        $this->assertSimilarDateTime(new DateTime(), $this->node->getPropertyValue('jcr:lastModified'));
 
         $node = $this->node->addNode('child');
         $node->addMixin('mix:lastModified');
@@ -54,7 +56,7 @@ class LastModifiedTest extends \PHPCR\Test\BaseCase
 
         $this->assertTrue($node->hasProperty('jcr:lastModifiedBy'));
         $this->assertTrue($node->hasProperty('jcr:lastModified'));
-        $this->assertSimilarDateTime(new \DateTime(), $node->getPropertyValue('jcr:lastModified'));
+        $this->assertSimilarDateTime(new DateTime(), $node->getPropertyValue('jcr:lastModified'));
     }
 
     /**
@@ -72,11 +74,11 @@ class LastModifiedTest extends \PHPCR\Test\BaseCase
         $this->assertTrue($this->node->hasProperty('jcr:lastModifiedBy'));
         $this->assertEquals('me', $this->node->getPropertyValue('jcr:lastModifiedBy'));
         $this->assertTrue($this->node->hasProperty('jcr:lastModified'));
-        $this->assertSimilarDateTime(new \DateTime(), $this->node->getPropertyValue('jcr:lastModified'));
+        $this->assertSimilarDateTime(new DateTime(), $this->node->getPropertyValue('jcr:lastModified'));
 
         $node = $this->node->addNode('child');
         $node->addMixin('mix:lastModified');
-        $date = new \DateTime('2012-01-02');
+        $date = new DateTime('2012-01-02');
         $node->setProperty('jcr:lastModified', $date);
 
         $this->session->save();
@@ -98,7 +100,7 @@ class LastModifiedTest extends \PHPCR\Test\BaseCase
 
     public function testUpdateManual()
     {
-        $date = new \DateTime('2013-10-10');
+        $date = new DateTime('2013-10-10');
         $this->node->setProperty('jcr:lastModified', $date);
         $this->node->setProperty('text', 'new');
 

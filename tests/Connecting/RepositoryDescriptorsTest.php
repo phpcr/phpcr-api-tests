@@ -11,16 +11,18 @@
 
 namespace PHPCR\Tests\Connecting;
 
-class RepositoryDescriptorsTest extends \PHPCR\Test\BaseCase
+use PHPCR\Test\BaseCase;
+
+class RepositoryDescriptorsTest extends BaseCase
 {
     public static function setupBeforeClass($fixtures = false)
     {
-        //don't care about fixtures
+        // Don't care about fixtures
         parent::setupBeforeClass($fixtures);
     }
 
-    //Those constants need to be defined in the bootstrap file
-    protected $expectedDescriptors = array(
+    // Those constants need to be defined in the bootstrap file
+    protected $expectedDescriptors = [
         SPEC_VERSION_DESC,
         SPEC_NAME_DESC,
         REP_VENDOR_DESC,
@@ -32,7 +34,7 @@ class RepositoryDescriptorsTest extends \PHPCR\Test\BaseCase
         OPTION_OBSERVATION_SUPPORTED,
         OPTION_LOCKING_SUPPORTED,
         // TODO: complete with the list from jcr 2
-    );
+    ];
 
     // 24.2 Repository Descriptors
     public function testDescriptorKeys()

@@ -11,6 +11,12 @@
 
 namespace PHPCR\Tests\Query\QOM;
 
+use PHPCR\Query\QOM\ComparisonInterface;
+use PHPCR\Query\QOM\LiteralInterface;
+use PHPCR\Query\QOM\PropertyValueInterface;
+use PHPCR\Query\QOM\QueryObjectModelInterface;
+use PHPCR\Query\QOM\SelectorInterface;
+use PHPCR\UnsupportedRepositoryOperationException;
 use PHPCR\Util\QOM\Sql2ToQomQueryConverter;
 
 class Sql2ToQomConverterTest extends \PHPCR\Test\BaseCase
@@ -32,7 +38,7 @@ class Sql2ToQomConverterTest extends \PHPCR\Test\BaseCase
 
         try {
             $this->parser = new Sql2ToQomQueryConverter($factory);
-        } catch (\PHPCR\UnsupportedRepositoryOperationException $e) {
+        } catch (UnsupportedRepositoryOperationException $e) {
             $this->markTestSkipped('Repository does not support the QOM factory');
         }
     }
@@ -42,10 +48,10 @@ class Sql2ToQomConverterTest extends \PHPCR\Test\BaseCase
         $sql2 = reset($this->sql2Queries['6.7.39.Colum.Mixed']);
         $query = $this->parser->parse($sql2);
 
-        $this->assertInstanceOf('\PHPCR\Query\QOM\QueryObjectModelInterface', $query);
+        $this->assertInstanceOf(QueryObjectModelInterface::class, $query);
         $this->assertNull($query->getConstraint());
         $this->assertEmpty($query->getOrderings());
-        $this->assertInstanceOf('\PHPCR\Query\QOM\SelectorInterface', $query->getSource());
+        $this->assertInstanceOf(SelectorInterface::class, $query->getSource());
         $this->assertEquals('nt:unstructured', $query->getSource()->getNodeTypeName());
 
         $cols = $query->getColumns();
@@ -95,9 +101,9 @@ class Sql2ToQomConverterTest extends \PHPCR\Test\BaseCase
     {
         $qom = $this->parser->parse($sql2);
 
-        $this->assertInstanceOf('PHPCR\Query\QOM\ComparisonInterface', $qom->getConstraint());
-        $this->assertInstanceOf('PHPCR\Query\QOM\PropertyValueInterface', $qom->getConstraint()->getOperand1());
-        $this->assertInstanceOf('PHPCR\Query\QOM\LiteralInterface', $qom->getConstraint()->getOperand2());
+        $this->assertInstanceOf(ComparisonInterface::class, $qom->getConstraint());
+        $this->assertInstanceOf(PropertyValueInterface::class, $qom->getConstraint()->getOperand1());
+        $this->assertInstanceOf(LiteralInterface::class, $qom->getConstraint()->getOperand2());
 
         $this->assertEquals('prop1', $qom->getConstraint()->getOperand1()->getPropertyName());
         $this->assertEquals($literal, $qom->getConstraint()->getOperand2()->getLiteralValue());

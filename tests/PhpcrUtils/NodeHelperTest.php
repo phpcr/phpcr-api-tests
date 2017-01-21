@@ -11,7 +11,7 @@
 
 namespace PHPCR\Tests\PhpcrUtils;
 
-use PHPCR\PropertyType;
+use PHPCR\NodeInterface;
 use PHPCR\Util\NodeHelper;
 use PHPCR\Test\BaseCase;
 
@@ -22,7 +22,7 @@ class NodeHelperTest extends BaseCase
 {
     protected function setUp()
     {
-        if (!class_exists('PHPCR\Util\NodeHelper')) {
+        if (!class_exists(NodeHelper::class)) {
             $this->markTestSkipped('This testbed does not have phpcr-utils available');
         }
         parent::setUp();
@@ -31,21 +31,21 @@ class NodeHelperTest extends BaseCase
     public function testCreatePartialPath()
     {
         $node = NodeHelper::createPath($this->session, '/tests_general_base/index.txt/jcr:content/test/node');
-        $this->assertInstanceOf('PHPCR\NodeInterface', $node);
+        $this->assertInstanceOf(NodeInterface::class, $node);
         $this->session->save();
     }
 
     public function testCreateNewPath()
     {
         $node = NodeHelper::createPath($this->session, '/tests_nodehelper/test/node');
-        $this->assertInstanceOf('PHPCR\NodeInterface', $node);
+        $this->assertInstanceOf(NodeInterface::class, $node);
         $this->session->save();
     }
 
     public function testCreateExistingPath()
     {
         $node = NodeHelper::createPath($this->session, '/tests_general_base/index.txt');
-        $this->assertInstanceOf('PHPCR\NodeInterface', $node);
+        $this->assertInstanceOf(NodeInterface::class, $node);
         $this->assertFalse($this->session->hasPendingChanges());
     }
 }

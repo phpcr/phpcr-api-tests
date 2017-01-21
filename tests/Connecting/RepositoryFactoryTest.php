@@ -12,12 +12,14 @@
 namespace PHPCR\Tests\Connecting;
 
 use PHPCR\RepositoryFactoryInterface;
+use PHPCR\RepositoryInterface;
+use PHPCR\Test\BaseCase;
 
-class RepositoryFactoryTest extends \PHPCR\Test\BaseCase
+class RepositoryFactoryTest extends BaseCase
 {
     public static function setupBeforeClass($fixtures = false)
     {
-        //don't care about fixtures
+        // Don't care about fixtures
         parent::setupBeforeClass($fixtures);
     }
 
@@ -28,6 +30,6 @@ class RepositoryFactoryTest extends \PHPCR\Test\BaseCase
         /** @var $factory RepositoryFactoryInterface */
         $factory = new $class();
         $repo = $factory->getRepository(self::$loader->getRepositoryFactoryParameters());
-        $this->assertInstanceOf('PHPCR\RepositoryInterface', $repo);
+        $this->assertInstanceOf(RepositoryInterface::class, $repo);
     }
 }

@@ -11,14 +11,18 @@
 
 namespace PHPCR\Tests\Connecting;
 
+use PHPCR\CredentialsInterface;
+use PHPCR\SimpleCredentials;
+use PHPCR\Test\BaseCase;
+
 /**
  * Test the simple credentials PHPCR class.
  */
-class SimpleCredentialsTest extends \PHPCR\Test\BaseCase
+class SimpleCredentialsTest extends BaseCase
 {
     public static function setupBeforeClass($fixtures = false)
     {
-        //don't care about fixtures
+        // Don't care about fixtures
         parent::setupBeforeClass($fixtures);
     }
 
@@ -28,8 +32,8 @@ class SimpleCredentialsTest extends \PHPCR\Test\BaseCase
     /** try to create credentials from this user/password */
     protected function assertSimpleCredentials($user, $password)
     {
-        $cr = new \PHPCR\SimpleCredentials($user, $password);
-        $this->assertInstanceOf('PHPCR\CredentialsInterface', $cr);
+        $cr = new SimpleCredentials($user, $password);
+        $this->assertInstanceOf(CredentialsInterface::class, $cr);
 
         return $cr;
     }
@@ -37,17 +41,17 @@ class SimpleCredentialsTest extends \PHPCR\Test\BaseCase
     // 6.1.2 Credentials
     public function testSimpleCredentials()
     {
-        $cr = $this->assertSimpleCredentials(self::CR_USER, self::CR_PASS);
+        $this->assertSimpleCredentials(self::CR_USER, self::CR_PASS);
     }
 
     public function testGetUser()
     {
         $cr = $this->assertSimpleCredentials(self::CR_USER, self::CR_PASS);
-        $user = $cr->getUserId();
+        $user = $cr->getUserID();
         $this->assertEquals($user, self::CR_USER);
     }
 
-    //The password gets currently cleared for safety
+    // The password gets currently cleared for safety
     public function testGetPassword()
     {
         $cr = $this->assertSimpleCredentials(self::CR_USER, self::CR_PASS);
@@ -67,6 +71,6 @@ class SimpleCredentialsTest extends \PHPCR\Test\BaseCase
         $this->assertContains($attrName, $attrs);
         $cr->removeAttribute($attrName);
         $this->assertNull($cr->getAttribute($attrName));
-        $cr->removeAttribute('nonexistent'); //removing nonexistent attribute should not cause an error
+        $cr->removeAttribute('nonexistent'); // Removing nonexistent attribute should not cause an error
     }
 }
