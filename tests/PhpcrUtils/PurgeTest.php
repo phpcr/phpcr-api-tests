@@ -24,7 +24,7 @@ class PurgeTest extends BaseCase
 
     protected function setUp()
     {
-        if (!class_exists('PHPCR\Util\NodeHelper')) {
+        if (!class_exists(NodeHelper::class)) {
             $this->markTestSkipped('This testbed does not have phpcr-utils available');
         }
         parent::setUp();

@@ -11,8 +11,12 @@
 
 namespace PHPCR\Tests\WorkspaceManagement;
 
-//6.5 Import Repository Content
-class WorkspaceManagementTest extends \PHPCR\Test\BaseCase
+use PHPCR\NodeType\NoSuchNodeTypeException;
+use PHPCR\RepositoryException;
+use PHPCR\Test\BaseCase;
+
+// 6.5 Import Repository Content
+class WorkspaceManagementTest extends BaseCase
 {
     public function testCreateWorkspace()
     {
@@ -28,10 +32,11 @@ class WorkspaceManagementTest extends \PHPCR\Test\BaseCase
 
     /**
      * @depends testCreateWorkspace
-     * @expectedException \PHPCR\RepositoryException
      */
     public function testCreateWorkspaceExisting($workspacename)
     {
+        $this->expectException(RepositoryException::class);
+
         $workspace = $this->session->getWorkspace();
         $workspace->createWorkspace($workspacename);
     }
@@ -47,11 +52,10 @@ class WorkspaceManagementTest extends \PHPCR\Test\BaseCase
         $this->assertTrue($session->nodeExists('/tests_general_base/index.txt'));
     }
 
-    /**
-     * @expectedException \PHPCR\NoSuchWorkspaceException
-     */
     public function testCreateWorkspaceWithInvalidSource()
     {
+        $this->expectException(NoSuchNodeTypeException::class);
+
         $workspacename = 'testWithSource'.time();
         $workspace = $this->session->getWorkspace();
         $workspace->createWorkspace($workspacename, 'thisworkspaceisnotexisting');

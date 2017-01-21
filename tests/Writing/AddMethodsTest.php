@@ -11,15 +11,23 @@
 
 namespace PHPCR\Tests\Writing;
 
+use DateTime;
+use InvalidArgumentException;
+use PHPCR\ItemExistsException;
+use PHPCR\NodeInterface;
 use PHPCR\NodeType\ConstraintViolationException;
+use PHPCR\NodeType\NoSuchNodeTypeException;
+use PHPCR\PathNotFoundException;
 use PHPCR\PropertyType;
+use PHPCR\RepositoryException;
 use PHPCR\RepositoryInterface;
+use PHPCR\Test\BaseCase;
 use PHPCR\ValueFormatException;
 
 /**
  * Covering jcr-283 spec $10.4.
  */
-class AddMethodsTest extends \PHPCR\Test\BaseCase
+class AddMethodsTest extends BaseCase
 {
     public static function setupBeforeClass($fixtures = '10_Writing/add')
     {
@@ -31,7 +39,7 @@ class AddMethodsTest extends \PHPCR\Test\BaseCase
         $this->renewSession();
         parent::setUp();
         //all tests in this suite rely on the trick to have the node populated from the fixtures
-        $this->assertInstanceOf('PHPCR\NodeInterface', $this->node, 'Something went wrong with fixture loading');
+        $this->assertInstanceOf(NodeInterface::class, $this->node, 'Something went wrong with fixture loading');
     }
 
     public function testAddNode()
@@ -68,7 +76,7 @@ class AddMethodsTest extends \PHPCR\Test\BaseCase
         $contentNode = $newNode->addNode('jcr:content', 'nt:resource');
         $contentNode->setProperty('jcr:mimeType', 'text/plain', PropertyType::STRING);
         $contentNode->setProperty('jcr:data', 'Hello', PropertyType::BINARY);
-        $contentNode->setProperty('jcr:lastModified', new \DateTime('2010-12-12'), PropertyType::DATE);
+        $contentNode->setProperty('jcr:lastModified', new DateTime('2010-12-12'), PropertyType::DATE);
 
         $this->assertNotNull($newNode, 'Node newFileNode was not created');
         $this->assertTrue($newNode->isNew(), 'Node newFileNode is not marked dirty');
@@ -81,7 +89,7 @@ class AddMethodsTest extends \PHPCR\Test\BaseCase
         $this->assertNotNull($newNode, 'Node newFileNode was not created');
         $this->assertEquals('nt:file', $newNode->getPrimaryNodeType()->getName(), 'Node newFileNode was not created');
         $lastModified = $newNode->getNode('jcr:content')->getPropertyValue('jcr:lastModified');
-        $this->assertInstanceOf('\DateTime', $lastModified);
+        $this->assertInstanceOf(DateTime::class, $lastModified);
         $this->assertEquals('2010-12-12', $lastModified->format('Y-m-d'));
     }
 
@@ -97,11 +105,10 @@ class AddMethodsTest extends \PHPCR\Test\BaseCase
         $this->assertNotNull($this->session->getNode($this->node->getPath().'/newUnstructuredNode'), 'Node newUnstructuredNode was not created');
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testAddNodeNoNameException()
     {
+        $this->expectException(InvalidArgumentException::class);
+
         $this->node->addNode(null, 'nt:folder');
     }
 
@@ -109,7 +116,7 @@ class AddMethodsTest extends \PHPCR\Test\BaseCase
     {
         $node = $this->node->getNode('jcr:content');
         $new = $node->addNodeAutoNamed('', 'nt:unstructured');
-        $this->assertInstanceOf('PHPCR\\NodeInterface', $new);
+        $this->assertInstanceOf(NodeInterface::class, $new);
         $nodes = $node->getNodes();
         $this->assertCount(1, $nodes);
         $newnode = $nodes->current();
@@ -128,7 +135,7 @@ class AddMethodsTest extends \PHPCR\Test\BaseCase
     {
         $node = $this->node->getNode('jcr:content');
         $new = $node->addNodeAutoNamed(null, 'nt:unstructured');
-        $this->assertInstanceOf('PHPCR\\NodeInterface', $new);
+        $this->assertInstanceOf(NodeInterface::class, $new);
         $nodes = $node->getNodes();
         $this->assertCount(1, $nodes);
         $newnode = $nodes->current();
@@ -146,7 +153,7 @@ class AddMethodsTest extends \PHPCR\Test\BaseCase
     {
         $node = $this->node->getNode('jcr:content');
         $new = $node->addNodeAutoNamed('jcr:', 'nt:unstructured');
-        $this->assertInstanceOf('PHPCR\\NodeInterface', $new);
+        $this->assertInstanceOf(NodeInterface::class, $new);
         $nodes = $node->getNodes();
         $this->assertCount(1, $nodes);
         $newnode = $nodes->current();
@@ -193,7 +200,7 @@ class AddMethodsTest extends \PHPCR\Test\BaseCase
         $path = $this->node->getPath();
 
         $node = $this->node->addNode('unstructuredNode2', 'nt:unstructured');
-        $node->setProperty('test', array('val', 'val2'));
+        $node->setProperty('test', ['val', 'val2']);
 
         $this->session->save();
         $this->assertFalse($node->isNew(), 'Node was not saved');
@@ -202,9 +209,9 @@ class AddMethodsTest extends \PHPCR\Test\BaseCase
         $node = $this->session->getNode($path.'/unstructuredNode2');
 
         $this->assertNotNull($node, 'Node was not created');
-        $this->assertEquals(array('val', 'val2'), $node->getPropertyValue('test'), 'Property was not saved correctly');
+        $this->assertEquals(['val', 'val2'], $node->getPropertyValue('test'), 'Property was not saved correctly');
 
-        $node->setProperty('test2', array('val3', 'val4'));
+        $node->setProperty('test2', ['val3', 'val4']);
 
         $this->session->save();
         $this->assertFalse($node->isNew(), 'Node was not saved');
@@ -212,31 +219,29 @@ class AddMethodsTest extends \PHPCR\Test\BaseCase
         $this->renewSession();
         $node = $this->session->getNode($path.'/unstructuredNode2');
 
-        $this->assertEquals(array('val3', 'val4'), $node->getPropertyValue('test2'), 'Property was not added correctly');
+        $this->assertEquals(['val3', 'val4'], $node->getPropertyValue('test2'), 'Property was not added correctly');
     }
 
-    /**
-     * @expectedException \PHPCR\NodeType\ConstraintViolationException
-     */
     public function testAddNodeMissingType()
     {
+        $this->expectException(ConstraintViolationException::class);
+
         $this->node->addNode('newNode');
     }
 
-    /**
-     * @expectedException \PHPCR\NodeType\ConstraintViolationException
-     */
+
     public function testAddNodeIllegalType()
     {
+        $this->expectException(ConstraintViolationException::class);
+
         $this->node->addNode('newNode', 'nt:unstructured');
         $this->saveAndRenewSession();
     }
 
-    /**
-     * @expectedException \PHPCR\NodeType\NoSuchNodeTypeException
-     */
     public function testAddNodeWithInexistingType()
     {
+        $this->expectException(NoSuchNodeTypeException::class);
+
         $this->node->addNode('newFileNode', 'inexistenttype');
     }
 
@@ -244,21 +249,21 @@ class AddMethodsTest extends \PHPCR\Test\BaseCase
      * Test adding an already existing child.
      *
      * nt:folder do not allow same-name siblings
-     *
-     * @expectedException \PHPCR\ItemExistsException
      */
     public function testAddNodeExisting()
     {
+        $this->expectException(ItemExistsException::class);
+
         $this->node->addNode('child', 'nt:file');
     }
 
     /**
      * Tests adding the same child to the same node in 2 different sessions.
-     *
-     * @expectedException \PHPCR\ItemExistsException
      */
     public function testAddNodeInParallel()
     {
+        $this->expectException(ItemExistsException::class);
+
         $path = $this->node->getPath();
 
         $session1 = $this->session;
@@ -277,21 +282,21 @@ class AddMethodsTest extends \PHPCR\Test\BaseCase
 
     /**
      * try to add a node below a not existing node.
-     *
-     * @expectedException \PHPCR\PathNotFoundException
      */
     public function testAddNodePathNotFound()
     {
+        $this->expectException(PathNotFoundException::class);
+
         $this->node->addNode('nonExistent/newNode', 'nt:unstructured');
     }
 
     /**
      * try to add a node below a property.
-     *
-     * @expectedException \PHPCR\NodeType\ConstraintViolationException
      */
     public function testAddNodeToProperty()
     {
+        $this->expectException(ConstraintViolationException::class);
+
         $this->node->addNode('prop/failNode', 'nt:unstructured');
     }
 
@@ -315,11 +320,10 @@ class AddMethodsTest extends \PHPCR\Test\BaseCase
         $this->fail('Expected PHPCR\\NodeType\\ConstraintViolationException or PHPCR\\ValueFormatException');
     }
 
-    /**
-     * @expectedException \PHPCR\RepositoryException
-     */
     public function testAddNodeWithIndex()
     {
+        $this->expectException(RepositoryException::class);
+
         $this->node->addNode('name[3]', 'nt:unstructured');
     }
 
@@ -340,7 +344,7 @@ class AddMethodsTest extends \PHPCR\Test\BaseCase
         // dispatch to backend
         $session = $this->saveAndRenewSession();
         $this->assertTrue($session->nodeExists($path));
-        $this->assertInstanceOf('PHPCR\\NodeInterface', $session->getNode($path));
+        $this->assertInstanceOf(NodeInterface::class, $session->getNode($path));
     }
 
     /**
@@ -357,16 +361,16 @@ class AddMethodsTest extends \PHPCR\Test\BaseCase
         $this->saveAndRenewSession();
 
         $child = $this->session->getNode($path);
-        $this->assertInstanceOf('PHPCR\NodeInterface', $child);
+        $this->assertInstanceOf(NodeInterface::class, $child);
     }
 
     /**
      * try to add a node with an unregistered namespace.
-     *
-     * @expectedException \PHPCR\RepositoryException
      */
     public function testAddNodeWithUnregisteredNamespace()
     {
+        $this->expectException(RepositoryException::class);
+
         $namespace = 'testUnregisteredNamespace';
         $nodeName =  'child';
 
@@ -379,11 +383,11 @@ class AddMethodsTest extends \PHPCR\Test\BaseCase
 
     /**
      * try to add a property with an unregistered namespace.
-     *
-     * @expectedException \PHPCR\RepositoryException
      */
     public function testAddPropertyWithUnregisteredNamespace()
     {
+        $this->expectException(RepositoryException::class);
+
         $namespace = 'testUnregisteredNamespace';
         $propertyName =  'prop';
 

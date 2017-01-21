@@ -11,6 +11,8 @@
 
 namespace PHPCR\Tests\Query\Sql1;
 
+use PHPCR\Query\QueryInterface;
+
 /**
  * a base class for all query tests.
  */
@@ -23,6 +25,6 @@ abstract class QueryBaseCase extends \PHPCR\Tests\Query\QueryBaseCase
     {
         parent::setUp();
 
-        $this->query = $this->sharedFixture['qm']->createQuery('SELECT * FROM nt:folder', \PHPCR\Query\QueryInterface::JCR_SQL2);
+        $this->query = $this->sharedFixture['qm']->createQuery('SELECT * FROM nt:folder', QueryInterface::JCR_SQL2);
     }
 }

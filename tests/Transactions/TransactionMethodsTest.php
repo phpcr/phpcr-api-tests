@@ -11,12 +11,16 @@
 
 namespace PHPCR\Tests\Transactions;
 
+use PHPCR\InvalidItemStateException;
+use PHPCR\NodeInterface;
 use PHPCR\RepositoryInterface;
+use PHPCR\Test\BaseCase;
+use PHPCR\Transaction\UserTransactionInterface;
 
 /**
  * Covering jcr-283 spec $10.4.
  */
-class TransactionMethodsTest extends \PHPCR\Test\BaseCase
+class TransactionMethodsTest extends BaseCase
 {
     public static function setupBeforeClass($fixtures = '21_Transactions/transactions')
     {
@@ -26,15 +30,17 @@ class TransactionMethodsTest extends \PHPCR\Test\BaseCase
     public function setUp()
     {
         $this->renewSession();
+
         parent::setUp();
-        $this->assertInstanceOf('PHPCR\NodeInterface', $this->node, 'Something went wrong with fixture loading');
+
+        $this->assertInstanceOf(NodeInterface::class, $this->node, 'Something went wrong with fixture loading');
     }
 
     public function testGetTransactionManager()
     {
         $utx = $this->session->getWorkspace()->getTransactionManager();
 
-        $this->assertInstanceOf('\PHPCR\Transaction\UserTransactionInterface', $utx);
+        $this->assertInstanceOf(UserTransactionInterface::class, $utx);
     }
 
     public function testTransactionCommit()
@@ -111,11 +117,11 @@ class TransactionMethodsTest extends \PHPCR\Test\BaseCase
 
     /**
      * Testing interaction of transactions and versioning.
-     *
-     * @expectedException \PHPCR\InvalidItemStateException
      */
     public function testIllegalCheckin()
     {
+        $this->expectException(InvalidItemStateException::class);
+
         $this->skipIfNotSupported(RepositoryInterface::OPTION_VERSIONING_SUPPORTED);
 
         $vm = $this->session->getWorkspace()->getVersionManager();

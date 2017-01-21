@@ -11,10 +11,14 @@
 
 namespace PHPCR\Tests\Writing;
 
+use PHPCR\NodeType\ConstraintViolationException;
+use PHPCR\NodeType\NoSuchNodeTypeException;
+use PHPCR\Test\BaseCase;
+
 /**
  * Test setting node types on nodes.
  */
-class NodeTypeAssignementTest extends \PHPCR\Test\BaseCase
+class NodeTypeAssignementTest extends BaseCase
 {
     public static function setupBeforeClass($fixtures = '10_Writing/nodetype')
     {
@@ -39,16 +43,22 @@ class NodeTypeAssignementTest extends \PHPCR\Test\BaseCase
     /**
      * the predefined mixin types that do not depend on optional features.
      */
-    public static $mixins = array(
-    'mix:etag', 'mix:language', 'mix:lastModified', 'mix:mimeType',
-    'mix:referenceable', 'mix:shareable', 'mix:title',
-    );
+    public static $mixins = [
+        'mix:etag',
+        'mix:language',
+        'mix:lastModified',
+        'mix:mimeType',
+        'mix:referenceable',
+        'mix:shareable',
+        'mix:title',
+    ];
 
     public static function mixinTypes()
     {
-        $ret = array();
+        $ret = [];
+
         foreach (self::$mixins as $mixin) {
-            $ret[] = array($mixin);
+            $ret[] = [$mixin];
         }
 
         return $ret;
@@ -64,7 +74,8 @@ class NodeTypeAssignementTest extends \PHPCR\Test\BaseCase
         $path = $newNode->getPath();
         $session = $this->saveAndRenewSession();
         $savedNode = $session->getNode($path);
-        $resultTypes = array();
+        $resultTypes = [];
+
         foreach ($savedNode->getMixinNodeTypes() as $type) {
             $resultTypes[] = $type->getName();
         }
@@ -81,7 +92,7 @@ class NodeTypeAssignementTest extends \PHPCR\Test\BaseCase
         $node->addMixin($mixin);
         $session = $this->saveAndRenewSession();
         $savedNode = $session->getNode($path);
-        $resultTypes = array();
+        $resultTypes = [];
         foreach ($savedNode->getMixinNodeTypes() as $type) {
             $resultTypes[] = $type->getName();
         }
@@ -121,22 +132,21 @@ class NodeTypeAssignementTest extends \PHPCR\Test\BaseCase
         $this->assertTrue($this->node->isNodeType('mix:referenceable'));
     }
 
-    /**
-     * @expectedException \PHPCR\NodeType\ConstraintViolationException
-     */
     public function testAddMixinPrimaryType()
     {
+        $this->expectException(ConstraintViolationException::class);
+
         $this->node->addMixin('nt:unstructured');
         $this->saveAndRenewSession();
     }
 
     /**
      * Test that assigning an unexisting mixin type to a node will fail.
-     *
-     * @expectedException \PHPCR\NodeType\NoSuchNodeTypeException
      */
     public function testAddMixinNonexisting()
     {
+        $this->expectException(NoSuchNodeTypeException::class);
+
         $this->node->addMixin('mix:nonexisting');
         $this->saveAndRenewSession();
     }
@@ -167,27 +177,25 @@ class NodeTypeAssignementTest extends \PHPCR\Test\BaseCase
         $this->assertFalse($this->node->isNodeType('mix:mimeType'));
     }
 
-    /**
-     * @expectedException \PHPCR\NodeType\NoSuchNodeTypeException
-     */
     public function testRemoveMixinNotSet()
     {
+        $this->expectException(NoSuchNodeTypeException::class);
+
         $this->node->removeMixin('mix:referenceable');
         $this->saveAndRenewSession();
     }
 
-    /**
-     * @expectedException \PHPCR\NodeType\NoSuchNodeTypeException
-     */
     public function testRemoveMixinNone()
     {
+        $this->expectException(NoSuchNodeTypeException::class);
+
         $this->node->removeMixin('mix:mimeType');
         $this->saveAndRenewSession();
     }
 
     public function testSetMixins()
     {
-        $this->node->setMixins(array('mix:referenceable', 'mix:mimeType'));
+        $this->node->setMixins(['mix:referenceable', 'mix:mimeType']);
         $this->assertTrue($this->node->isModified());
 
         $this->assertTrue($this->node->isNodeType('mix:mimeType'));
@@ -202,7 +210,7 @@ class NodeTypeAssignementTest extends \PHPCR\Test\BaseCase
     public function testSetMixinsReplace()
     {
         $this->assertTrue($this->node->isNodeType('mix:referenceable'));
-        $this->node->setMixins(array('mix:mimeType'));
+        $this->node->setMixins(['mix:mimeType']);
         $this->assertTrue($this->node->isModified());
 
         $this->assertTrue($this->node->isNodeType('mix:mimeType'));
@@ -212,21 +220,19 @@ class NodeTypeAssignementTest extends \PHPCR\Test\BaseCase
         $this->assertFalse($this->node->isNodeType('mix:referenceable'));
     }
 
-    /**
-     * @expectedException \PHPCR\NodeType\NoSuchNodeTypeException
-     */
     public function testSetMixinsNotFound()
     {
-        $this->node->setMixins(array('mix:referenceable', 'mix:nonexisting'));
+        $this->expectException(NoSuchNodeTypeException::class);
+
+        $this->node->setMixins(['mix:referenceable', 'mix:nonexisting']);
         $this->saveAndRenewSession();
     }
 
-    /**
-     * @expectedException \PHPCR\NodeType\ConstraintViolationException
-     */
     public function testSetMixinsConstraintViolation()
     {
-        $this->node->setMixins(array('mix:referenceable', 'nt:folder'));
+        $this->expectException(ConstraintViolationException::class);
+
+        $this->node->setMixins(['mix:referenceable', 'nt:folder']);
         $this->saveAndRenewSession();
     }
 }

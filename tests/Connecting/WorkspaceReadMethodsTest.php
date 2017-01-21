@@ -11,6 +11,11 @@
 
 namespace PHPCR\Tests\Connecting;
 
+use PHPCR\NamespaceRegistryInterface;
+use PHPCR\NodeType\NodeTypeManagerInterface;
+use PHPCR\Query\QueryManagerInterface;
+use PHPCR\RepositoryException;
+use PHPCR\Test\BaseCase;
 use PHPCR\WorkspaceInterface;
 
 /** test javax.jcr.Workspace read methods (read)
@@ -20,7 +25,7 @@ use PHPCR\WorkspaceInterface;
  *  Versioning: getVersionManager
  *  level2: WorkspaceWriteMethods: clone, copy, createWorkspace, deleteWorkspace, getImportContentHandler, importXML, move
  */
-class WorkspaceReadMethodsTest extends \PHPCR\Test\BaseCase
+class WorkspaceReadMethodsTest extends BaseCase
 {
     protected $path = 'read/read';
     /**
@@ -33,6 +38,7 @@ class WorkspaceReadMethodsTest extends \PHPCR\Test\BaseCase
     public function setUp()
     {
         parent::setUp();
+
         $this->workspace = $this->session->getWorkspace();
     }
 
@@ -51,58 +57,55 @@ class WorkspaceReadMethodsTest extends \PHPCR\Test\BaseCase
     public function testGetQueryManager()
     {
         $qm = $this->workspace->getQueryManager();
-        $this->assertInstanceOf('PHPCR\Query\QueryManagerInterface', $qm);
+        $this->assertInstanceOf(QueryManagerInterface::class, $qm);
     }
 
-    /**
-     * @expectedException \PHPCR\RepositoryException
-     */
     public function testGetQueryManagerRepositoryException()
     {
+        $this->expectException(RepositoryException::class);
+
         $this->markTestIncomplete('TODO: Figure how to produce this exception.');
     }
 
     public function testGetNamespaceRegistry()
     {
         $nr = $this->workspace->getNamespaceRegistry();
-        $this->assertInstanceOf('PHPCR\NamespaceRegistryInterface', $nr);
+        $this->assertInstanceOf(NamespaceRegistryInterface::class, $nr);
     }
 
-    /**
-     * @expectedException \PHPCR\RepositoryException
-     */
     public function testGetNamespaceRegistryRepositoryException()
     {
+        $this->expectException(RepositoryException::class);
+
         $this->markTestIncomplete('TODO: Figure how to produce this exception.');
     }
 
     public function testGetNodeTypeManager()
     {
         $ntm = $this->workspace->getNodeTypeManager();
-        $this->assertInstanceOf('PHPCR\NodeType\NodeTypeManagerInterface', $ntm);
+        $this->assertInstanceOf(NodeTypeManagerInterface::class, $ntm);
     }
 
-    /**
-     * @expectedException \PHPCR\RepositoryException
-     */
     public function testGetNodeTypeManagerRepositoryException()
     {
+        $this->expectException(RepositoryException::class);
+
         $this->markTestIncomplete('TODO: Figure how to produce this exception.');
     }
 
-    //4.5.4
+    // 4.5.4
     public function testGetAccessibleWorkspaceNames()
     {
         $names = $this->workspace->getAccessibleWorkspaceNames();
+
         $this->assertInternalType('array', $names);
         $this->assertContains(self::$loader->getWorkspaceName(), $names);
     }
 
-    /**
-     * @expectedException \PHPCR\RepositoryException
-     */
     public function testGetAccessibleWorkspaceNamesRepositoryException()
     {
+        $this->expectException(RepositoryException::class);
+
         $this->markTestIncomplete('TODO: Figure how to produce this exception.');
     }
 }

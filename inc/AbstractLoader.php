@@ -11,8 +11,13 @@
 
 namespace PHPCR\Test;
 
+use Exception;
+use PHPCR\CredentialsInterface;
 use PHPCR\NoSuchWorkspaceException;
 use PHPCR\RepositoryFactoryInterface;
+use PHPCR\RepositoryInterface;
+use PHPCR\SessionInterface;
+use PHPUnit_Framework_SkippedTestSuiteError;
 
 /**
  * Base class for the bootstrapping to load your phpcr implementation for the
@@ -22,22 +27,35 @@ use PHPCR\RepositoryFactoryInterface;
  */
 abstract class AbstractLoader
 {
+    /**
+     * @var string
+     */
     protected $factoryclass;
+
+    /**
+     * @var string
+     */
     protected $workspacename;
+
+    /**
+     * @var string
+     */
     protected $otherWorkspacename;
 
     /**
      * array with chapter names to skip all test cases in (without the numbers).
      */
-    protected $unsupportedChapters = array();
+    protected $unsupportedChapters = [];
+
     /**
      * array in the format Chapter\FeatureTest with all cases to skip.
      */
-    protected $unsupportedCases = array();
+    protected $unsupportedCases = [];
+
     /**
      * array in the format Chapter\FeatureTest::testName with all single tests to skip.
      */
-    protected $unsupportedTests = array();
+    protected $unsupportedTests = [];
 
     /**
      * Create the loader.
@@ -63,10 +81,12 @@ abstract class AbstractLoader
      * configured to provide things from your implementation.
      *
      * @return AbstractLoader loader for your implementation
+     *
+     * @throws Exception
      */
     public static function getInstance()
     {
-        throw new \Exception('You need to overwrite this method, but php does not allow to declare it abstract.');
+        throw new Exception('You need to overwrite this method, but php does not allow to declare it abstract.');
     }
 
     /**
@@ -89,26 +109,28 @@ abstract class AbstractLoader
      * The default implementation uses the factory, but if the factory has an
      * error, you will get failing tests all over.
      *
-     * @return \PHPCR\RepositoryInterface the repository instance
+     * @return RepositoryInterface the repository instance
      */
     public function getRepository()
     {
         $factoryclass = $this->getRepositoryFactoryClass();
         $factory = new $factoryclass();
+
         if (!$factory instanceof RepositoryFactoryInterface) {
-            throw new \Exception("$factoryclass is not of type RepositoryFactoryInterface");
+            throw new Exception("$factoryclass is not of type RepositoryFactoryInterface");
         }
+
         /* @var $factory RepositoryFactoryInterface */
         return $factory->getRepository($this->getRepositoryFactoryParameters());
     }
 
     /**
-     * @return \PHPCR\CredentialsInterface the login credentials that lead to successful login into the repository
+     * @return CredentialsInterface the login credentials that lead to successful login into the repository
      */
     abstract public function getCredentials();
 
     /**
-     * @return \PHPCR\CredentialsInterface the login credentials that lead to login failure
+     * @return CredentialsInterface the login credentials that lead to login failure
      */
     abstract public function getInvalidCredentials();
 
@@ -118,7 +140,7 @@ abstract class AbstractLoader
      *
      * The user may not have write access to /tests_general_base/numberPropertyNode/jcr:content/foo
      *
-     * @return \PHPCR\CredentialsInterface the login credentials with limited permissions for testing impersonate and access control
+     * @return CredentialsInterface the login credentials with limited permissions for testing impersonate and access control
      */
     abstract public function getRestrictedCredentials();
 
@@ -165,9 +187,9 @@ abstract class AbstractLoader
     /**
      * Get a session for this implementation.
      *
-     * @param \PHPCR\CredentialsInterface $credentials The credentials to log into the repository. If omitted, self::getCredentials should be used
+     * @param CredentialsInterface $credentials The credentials to log into the repository. If omitted, self::getCredentials should be used
      *
-     * @return \PHPCR\SessionInterface the session resulting from logging into the repository with the provided credentials
+     * @return SessionInterface the session resulting from logging into the repository with the provided credentials
      */
     public function getSession($credentials = false)
     {
@@ -177,9 +199,9 @@ abstract class AbstractLoader
     /**
      * Get a session corresponding to the additional workspace for this implementation.
      *
-     * @param \PHPCR\CredentialsInterface $credentials The credentials to log into the repository. If omitted, self::getCredentials should be used
+     * @param CredentialsInterface $credentials The credentials to log into the repository. If omitted, self::getCredentials should be used
      *
-     * @return \PHPCR\SessionInterface the session resulting from logging into the repository with the provided credentials
+     * @return SessionInterface the session resulting from logging into the repository with the provided credentials
      */
     public function getAdditionalSession($credentials = false)
     {
@@ -192,9 +214,9 @@ abstract class AbstractLoader
      *
      * Otherwise, the test regarding this feature is skipped.
      *
-     * @return \PHPCR\SessionInterface
+     * @return SessionInterface
      *
-     * @throws \PHPUnit_Framework_SkippedTestSuiteError to make whole test
+     * @throws PHPUnit_Framework_SkippedTestSuiteError to make whole test
      *      suite skip if implementation does not support updating the
      *      properties automatically.
      */
@@ -204,7 +226,7 @@ abstract class AbstractLoader
             return $this->getSession();
         }
 
-        throw new \PHPUnit_Framework_SkippedTestSuiteError('Not supported');
+        throw new PHPUnit_Framework_SkippedTestSuiteError('Not supported');
     }
 
     /**
@@ -240,7 +262,7 @@ abstract class AbstractLoader
     }
 
     /**
-     * @return \PHPCR\Test\FixtureLoaderInterface implementation that is used to load test fixtures
+     * @return FixtureLoaderInterface implementation that is used to load test fixtures
      */
     abstract public function getFixtureLoader();
 
@@ -249,6 +271,8 @@ abstract class AbstractLoader
      * @param $workspaceName
      *
      * @return mixed
+     *
+     * @throws Exception
      */
     private function getSessionForWorkspace($credentials, $workspaceName)
     {
@@ -263,8 +287,9 @@ abstract class AbstractLoader
             $adminRepository = $this->getRepository(); // get a new repository to log into
             $session = $adminRepository->login($this->getCredentials(), 'default');
             $workspace = $session->getWorkspace();
+
             if (in_array($workspaceName, $workspace->getAccessibleWorkspaceNames())) {
-                throw new \Exception(sprintf('Workspace "%s" already exists but could not login to it', $workspaceName), null, $e);
+                throw new Exception(sprintf('Workspace "%s" already exists but could not login to it', $workspaceName), null, $e);
             }
             $workspace->createWorkspace($workspaceName);
 

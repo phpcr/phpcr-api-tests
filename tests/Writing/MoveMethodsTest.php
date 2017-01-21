@@ -11,10 +11,16 @@
 
 namespace PHPCR\Tests\Writing;
 
+use PHPCR\ItemExistsException;
+use PHPCR\NodeInterface;
+use PHPCR\PathNotFoundException;
+use PHPCR\RepositoryException;
+use PHPCR\Test\BaseCase;
+
 /**
  * Covering jcr-2.8.3 spec $10.6.
  */
-class MoveMethodsTest extends \PHPCR\Test\BaseCase
+class MoveMethodsTest extends BaseCase
 {
     public static function setupBeforeClass($fixtures = '10_Writing/move')
     {
@@ -52,7 +58,7 @@ class MoveMethodsTest extends \PHPCR\Test\BaseCase
         $this->assertTrue($session->nodeExists('/tests_write_manipulation_move/testNodeRename/otherName'));
 
         $parent = $session->getNode('/tests_write_manipulation_move/testNodeRename');
-        $this->assertEquals(array('otherName', 'secondNode'), (array) $parent->getNodeNames(), 'Rename may not change position of nodes');
+        $this->assertEquals(['otherName', 'secondNode'], (array) $parent->getNodeNames(), 'Rename may not change position of nodes');
     }
 
     public function testSessionMove()
@@ -68,7 +74,7 @@ class MoveMethodsTest extends \PHPCR\Test\BaseCase
         $this->assertTrue($this->session->nodeExists($dst.'/srcFile/jcr:content'), 'Destination child node not found [S]');
 
         $dstNode = $this->session->getNode($dst);
-        $this->assertInstanceOf('PHPCR\NodeInterface', $dstNode);
+        $this->assertInstanceOf(NodeInterface::class, $dstNode);
 
         $this->session->save();
         $this->assertTrue($this->session->nodeExists($dst), 'Destination node not found [B]');
@@ -284,7 +290,7 @@ class MoveMethodsTest extends \PHPCR\Test\BaseCase
     /** Verifies the parent of a moved node no longer has the node as child */
     public function testSessionMoveHasNodeParent()
     {
-        $this->assertInstanceOf('PHPCR\NodeInterface', $this->node);
+        $this->assertInstanceOf(NodeInterface::class, $this->node);
 
         $src = '/tests_write_manipulation_move/testSessionMoveHasNodeParent/srcNode';
         $dst = '/tests_write_manipulation_move/testSessionMoveHasNodeParent/dstNode/srcNode';
@@ -365,7 +371,7 @@ class MoveMethodsTest extends \PHPCR\Test\BaseCase
     public function testSessionMoveAdded()
     {
         //relies on the base class setup trick to have the node populated from the fixtures
-        $this->assertInstanceOf('PHPCR\NodeInterface', $this->node);
+        $this->assertInstanceOf(NodeInterface::class, $this->node);
 
         $this->node->addNode('newNode', 'nt:unstructured');
         $src = '/tests_write_manipulation_move/testSessionMoveAdded/newNode';
@@ -393,7 +399,7 @@ class MoveMethodsTest extends \PHPCR\Test\BaseCase
     public function testSessionMoveChildAdded()
     {
         //relies on the base class setup trick to have the node populated from the fixtures
-        $this->assertInstanceOf('PHPCR\NodeInterface', $this->node);
+        $this->assertInstanceOf(NodeInterface::class, $this->node);
 
         $newNode = $this->node->addNode('newNode', 'nt:unstructured');
         $newNode->addNode('newChild', 'nt:unstructured');
@@ -448,55 +454,50 @@ class MoveMethodsTest extends \PHPCR\Test\BaseCase
         $this->session->save();
     }
 
-    /**
-     * @expectedException   \PHPCR\PathNotFoundException
-     */
     public function testSessionMoveToProperty()
     {
+        $this->expectException(PathNotFoundException::class);
+
         $src = '/tests_write_manipulation_move/testSessionMoveToProperty/srcNode';
         $dst = '/tests_write_manipulation_move/testSessionMoveToProperty/dstNode/prop/fail';
         $this->session->move($src, $dst);
         $this->session->save();
     }
 
-    /**
-     * @expectedException   \PHPCR\RepositoryException
-     */
     public function testSessionMoveInvalidDstPath()
     {
+        $this->expectException(RepositoryException::class);
+
         $src = '/tests_write_manipulation_move/testSessionMoveInvalidDstPath/srcNode';
         $dst = '/tests_write_manipulation_move/testSessionMoveInvalidDstPath/dstNode/srcNode[3]';
         $this->session->move($src, $dst);
         $this->session->save();
     }
 
-    /**
-     * @expectedException   \PHPCR\PathNotFoundException
-     */
     public function testSessionMoveSrcNotFound()
     {
+        $this->expectException(PathNotFoundException::class);
+
         $src = '/tests_write_manipulation_move/testSessionMoveSrcNotFound/notFound';
         $dst = '/tests_write_manipulation_move/testSessionMoveSrcNotFound/dstNode/notFound';
         $this->session->move($src, $dst);
         $this->session->save();
     }
 
-    /**
-     * @expectedException   \PHPCR\PathNotFoundException
-     */
     public function testSessionMoveDstNotFound()
     {
+        $this->expectException(PathNotFoundException::class);
+
         $src = '/tests_write_manipulation_move/testSessionMoveDstNotFound/srcNode';
         $dst = '/tests_write_manipulation_move/testSessionMoveDstNotFound/notFound/srcNode';
         $this->session->move($src, $dst);
         $this->session->save();
     }
 
-    /**
-     * @expectedException \PHPCR\ItemExistsException
-     */
     public function testSessionMoveDstExists()
     {
+        $this->expectException(ItemExistsException::class);
+
         $src = '/tests_write_manipulation_move/testSessionMoveDstExists/srcNode/srcChild';
         $dst = '/tests_write_manipulation_move/testSessionMoveDstExists/dstNode/srcChild';
 

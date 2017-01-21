@@ -11,12 +11,16 @@
 
 namespace PHPCR\Tests\NodeTypeDiscovery;
 
+use PHPCR\NodeType\NodeTypeInterface;
 use PHPCR\NodeType\NodeTypeManagerInterface;
+use PHPCR\NodeType\NoSuchNodeTypeException;
+use PHPCR\Test\BaseCase;
+use SeekableIterator;
 
 /**
  * Test the NoteTypeManager §8.
  */
-class NodeTypeDiscoveryTest extends \PHPCR\Test\BaseCase
+class NodeTypeDiscoveryTest extends BaseCase
 {
     /**
      * @var NodeTypeManagerInterface
@@ -26,42 +30,53 @@ class NodeTypeDiscoveryTest extends \PHPCR\Test\BaseCase
     /**
      * the predefined primary types that do not depend on optional features.
      */
-    public static $primary = array('nt:hierarchyNode', 'nt:file',
-        'nt:linkedFile', 'nt:folder', 'nt:resource', 'nt:address', );
+    public static $primary = [
+        'nt:hierarchyNode',
+        'nt:file',
+        'nt:linkedFile',
+        'nt:folder',
+        'nt:resource',
+        'nt:address'
+    ];
 
     /**
      * the predefined mixin types that do not depend on optional features.
      */
-    public static $mixins = array(
-            'mix:etag', 'mix:language', 'mix:lastModified', 'mix:mimeType',
-            'mix:referenceable', 'mix:shareable', 'mix:title',
-            );
+    public static $mixins = [
+        'mix:etag',
+        'mix:language',
+        'mix:lastModified',
+        'mix:mimeType',
+        'mix:referenceable',
+        'mix:shareable',
+        'mix:title',
+    ];
 
     public function setUp()
     {
         parent::setUp(false);
+
         $this->nodeTypeManager = $this->session->getWorkspace()->getNodeTypeManager();
     }
 
     public function testGetNodeType()
     {
         $type = $this->nodeTypeManager->getNodeType('nt:folder');
-        $this->assertInstanceOf('\PHPCR\NodeType\NodeTypeInterface', $type);
+        $this->assertInstanceOf(NodeTypeInterface::class, $type);
         // if this makes sense is tested in NodeTypeTest
     }
 
     public function testGetMixinNodeType()
     {
         $type = $this->nodeTypeManager->getNodeType('mix:language');
-        $this->assertInstanceOf('\PHPCR\NodeType\NodeTypeInterface', $type);
+        $this->assertInstanceOf(NodeTypeInterface::class, $type);
         // if this makes sense is tested in NodeTypeTest
     }
 
-    /**
-     * @expectedException \PHPCR\NodeType\NoSuchNodeTypeException
-     */
     public function testGetNodeTypeNoSuch()
     {
+        $this->expectException(NoSuchNodeTypeException::class);
+
         $this->nodeTypeManager->getNodeType('no-such-type');
     }
 
@@ -77,16 +92,19 @@ class NodeTypeDiscoveryTest extends \PHPCR\Test\BaseCase
     public function testGetAllNodeTypes()
     {
         $types = $this->nodeTypeManager->getAllNodeTypes();
-        $this->assertInstanceOf('SeekableIterator', $types);
-        $names = array();
+        $this->assertInstanceOf(SeekableIterator::class, $types);
+        $names = [];
+
         foreach ($types as $name => $type) {
-            $this->assertInstanceOf('\PHPCR\NodeType\NodeTypeInterface', $type);
+            $this->assertInstanceOf(NodeTypeInterface::class, $type);
             $this->assertEquals($name, $type->getName());
             $names[$name] = true;
         }
+
         foreach (self::$primary as $key) {
             $this->assertArrayHasKey($key, $names);
         }
+
         foreach (self::$mixins as $key) {
             $this->assertArrayHasKey($key, $names);
         }
@@ -95,16 +113,19 @@ class NodeTypeDiscoveryTest extends \PHPCR\Test\BaseCase
     public function testGetPrimaryNodeTypes()
     {
         $types = $this->nodeTypeManager->getPrimaryNodeTypes();
-        $this->assertInstanceOf('SeekableIterator', $types);
-        $names = array();
+        $this->assertInstanceOf(SeekableIterator::class, $types);
+        $names = [];
+
         foreach ($types as $name => $type) {
-            $this->assertInstanceOf('\PHPCR\NodeType\NodeTypeInterface', $type);
+            $this->assertInstanceOf(NodeTypeInterface::class, $type);
             $this->assertEquals($name, $type->getName());
             $names[$name] = true;
         }
+
         foreach (self::$primary as $key) {
             $this->assertArrayHasKey($key, $names);
         }
+
         foreach (self::$mixins as $key) {
             $this->assertArrayNotHasKey($key, $names);
         }
@@ -113,10 +134,11 @@ class NodeTypeDiscoveryTest extends \PHPCR\Test\BaseCase
     public function testGetMixinNodeTypes()
     {
         $types = $this->nodeTypeManager->getMixinNodeTypes();
-        $this->assertInstanceOf('SeekableIterator', $types);
-        $names = array();
+        $this->assertInstanceOf(SeekableIterator::class, $types);
+        $names = [];
+
         foreach ($types as $name => $type) {
-            $this->assertInstanceOf('\PHPCR\NodeType\NodeTypeInterface', $type);
+            $this->assertInstanceOf(NodeTypeInterface::class, $type);
             $this->assertEquals($name, $type->getName());
             $names[$name] = true;
         }

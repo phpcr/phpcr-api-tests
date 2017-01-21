@@ -11,17 +11,21 @@
 
 namespace PHPCR\Tests\NodeTypeDiscovery;
 
+use Exception;
 use PHPCR\NodeType\NodeTypeInterface;
 use PHPCR\NodeType\NodeTypeManagerInterface;
 use PHPCR\NodeType\PropertyDefinitionInterface;
+use PHPCR\PropertyType;
 use PHPCR\Query\QOM\QueryObjectModelConstantsInterface;
+use PHPCR\Test\BaseCase;
+use PHPCR\Version\OnParentVersionAction;
 
 /**
  * Test the PropertyDefinition §8.
  *
  * Requires that NodeTypeManager->getNodeType and NodeTypeDefinition->getPropertyDefinitions() works correctly
  */
-class PropertyDefinitionTest extends \PHPCR\Test\BaseCase
+class PropertyDefinitionTest extends BaseCase
 {
     /**
      * @var NodeTypeInterface
@@ -108,7 +112,7 @@ class PropertyDefinitionTest extends \PHPCR\Test\BaseCase
             $defs = self::$base->getPropertyDefinitions();
             $this->assertInternalType('array', $defs);
             foreach ($defs as $def) {
-                $this->assertInstanceOf('\PHPCR\NodeType\PropertyDefinitionInterface', $def);
+                $this->assertInstanceOf(PropertyDefinitionInterface::class, $def);
                 switch ($def->getName()) {
                     case 'jcr:primaryType':
                         $this->primaryType = $def;
@@ -124,7 +128,7 @@ class PropertyDefinitionTest extends \PHPCR\Test\BaseCase
             $defs = self::$address->getPropertyDefinitions();
             $this->assertInternalType('array', $defs);
             foreach ($defs as $def) {
-                $this->assertInstanceOf('\PHPCR\NodeType\PropertyDefinitionInterface', $def);
+                $this->assertInstanceOf(PropertyDefinitionInterface::class, $def);
                 switch ($def->getName()) {
                     case 'jcr:workspace':
                         $this->workspace = $def;
@@ -137,30 +141,33 @@ class PropertyDefinitionTest extends \PHPCR\Test\BaseCase
                         break;
                 }
             }
+
             $this->assertNotNull($this->workspace);
             $this->assertNotNull($this->pathprop);
             $this->assertNotNull($this->id);
 
             $defs = self::$mix_created->getPropertyDefinitions();
             $this->assertInternalType('array', $defs);
+
             foreach ($defs as $def) {
-                $this->assertInstanceOf('\PHPCR\NodeType\PropertyDefinitionInterface', $def);
-                if ('jcr:created' == $def->getName()) {
+                $this->assertInstanceOf(PropertyDefinitionInterface::class, $def);
+                if ('jcr:created' === $def->getName()) {
                     $this->created = $def;
                 }
             }
+
             $this->assertNotNull($this->created);
 
             $defs = self::$resource->getPropertyDefinitions();
             $this->assertInternalType('array', $defs);
             foreach ($defs as $def) {
-                $this->assertInstanceOf('\PHPCR\NodeType\PropertyDefinitionInterface', $def);
-                if ('jcr:data' == $def->getName()) {
+                $this->assertInstanceOf(PropertyDefinitionInterface::class, $def);
+                if ('jcr:data' === $def->getName()) {
                     $this->data = $def;
                 }
             }
             $this->assertNotNull($this->data);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->markTestSkipped('getChildNodeDefinitions not working as it should, skipping tests about NodeDefinitionInterface: '.$e->getMessage());
         }
     }
@@ -168,14 +175,15 @@ class PropertyDefinitionTest extends \PHPCR\Test\BaseCase
     public function testGetAvailableQueryOperators()
     {
         $ops = $this->primaryType->getAvailableQueryOperators();
-        $expected = array(QueryObjectModelConstantsInterface::JCR_OPERATOR_EQUAL_TO,
-                          QueryObjectModelConstantsInterface::JCR_OPERATOR_NOT_EQUAL_TO,
-                          QueryObjectModelConstantsInterface::JCR_OPERATOR_LESS_THAN,
-                          QueryObjectModelConstantsInterface::JCR_OPERATOR_LESS_THAN_OR_EQUAL_TO,
-                          QueryObjectModelConstantsInterface::JCR_OPERATOR_GREATER_THAN,
-                          QueryObjectModelConstantsInterface::JCR_OPERATOR_GREATER_THAN_OR_EQUAL_TO,
-                          QueryObjectModelConstantsInterface::JCR_OPERATOR_LIKE,
-                          );
+        $expected = [
+            QueryObjectModelConstantsInterface::JCR_OPERATOR_EQUAL_TO,
+            QueryObjectModelConstantsInterface::JCR_OPERATOR_NOT_EQUAL_TO,
+            QueryObjectModelConstantsInterface::JCR_OPERATOR_LESS_THAN,
+            QueryObjectModelConstantsInterface::JCR_OPERATOR_LESS_THAN_OR_EQUAL_TO,
+            QueryObjectModelConstantsInterface::JCR_OPERATOR_GREATER_THAN,
+            QueryObjectModelConstantsInterface::JCR_OPERATOR_GREATER_THAN_OR_EQUAL_TO,
+            QueryObjectModelConstantsInterface::JCR_OPERATOR_LIKE,
+        ];
 
         asort($ops);
         asort($expected);
@@ -196,17 +204,17 @@ class PropertyDefinitionTest extends \PHPCR\Test\BaseCase
     public function testGetRequiredType()
     {
         $tid = $this->primaryType->getRequiredType();
-        $this->assertEquals(\PHPCR\PropertyType::NAME, $tid);
+        $this->assertEquals(PropertyType::NAME, $tid);
         $tid = $this->workspace->getRequiredType();
-        $this->assertEquals(\PHPCR\PropertyType::STRING, $tid);
+        $this->assertEquals(PropertyType::STRING, $tid);
         $tid = $this->pathprop->getRequiredType();
-        $this->assertEquals(\PHPCR\PropertyType::PATH, $tid);
+        $this->assertEquals(PropertyType::PATH, $tid);
         $tid = $this->id->getRequiredType();
-        $this->assertEquals(\PHPCR\PropertyType::WEAKREFERENCE, $tid);
+        $this->assertEquals(PropertyType::WEAKREFERENCE, $tid);
         $tid = $this->created->getRequiredType();
-        $this->assertEquals(\PHPCR\PropertyType::DATE, $tid);
+        $this->assertEquals(PropertyType::DATE, $tid);
         $tid = $this->data->getRequiredType();
-        $this->assertEquals(\PHPCR\PropertyType::BINARY, $tid);
+        $this->assertEquals(PropertyType::BINARY, $tid);
     }
 
     public function testGetValueConstraints()
@@ -250,15 +258,18 @@ class PropertyDefinitionTest extends \PHPCR\Test\BaseCase
         $nt = $this->created->getDeclaringNodeType();
         $this->assertSame(self::$mix_created, $nt);
     }
+
     public function testName()
     {
         $this->assertEquals('jcr:primaryType', $this->primaryType->getName());
     }
+
     public function testGetOnParentVersion()
     {
-        $this->assertEquals(\PHPCR\Version\OnParentVersionAction::COMPUTE, $this->primaryType->getOnParentVersion());
-        $this->assertEquals(\PHPCR\Version\OnParentVersionAction::COPY, $this->created->getOnParentVersion());
+        $this->assertEquals(OnParentVersionAction::COMPUTE, $this->primaryType->getOnParentVersion());
+        $this->assertEquals(OnParentVersionAction::COPY, $this->created->getOnParentVersion());
     }
+
     public function testIsAutoCreated()
     {
         $this->assertTrue($this->primaryType->isAutoCreated());
@@ -266,6 +277,7 @@ class PropertyDefinitionTest extends \PHPCR\Test\BaseCase
         $this->assertTrue($this->created->isAutoCreated());
         $this->assertFalse($this->data->isAutoCreated());
     }
+
     public function testIsMandatory()
     {
         $this->assertTrue($this->primaryType->isMandatory());
@@ -273,6 +285,7 @@ class PropertyDefinitionTest extends \PHPCR\Test\BaseCase
         $this->assertFalse($this->created->isMandatory());
         $this->assertTrue($this->data->isMandatory());
     }
+
     public function testIsProtected()
     {
         $this->assertTrue($this->primaryType->isProtected());
@@ -288,7 +301,7 @@ class PropertyDefinitionTest extends \PHPCR\Test\BaseCase
         $node = $this->rootNode->getNode('tests_general_base');
         $createdProperty = $node->getProperty('jcr:created');
         $propDef = $createdProperty->getDefinition();
-        $this->assertInstanceOf('PHPCR\\NodeType\\PropertyDefinitionInterface', $propDef);
+        $this->assertInstanceOf(PropertyDefinitionInterface::class, $propDef);
         $this->assertEquals('jcr:created', $propDef->getName());
     }
 
@@ -297,7 +310,7 @@ class PropertyDefinitionTest extends \PHPCR\Test\BaseCase
         $node = $this->rootNode->getNode('tests_general_base/numberPropertyNode/jcr:content');
         $valProperty = $node->getProperty('foo');
         $propDef = $valProperty->getDefinition();
-        $this->assertInstanceOf('PHPCR\\NodeType\\PropertyDefinitionInterface', $propDef);
+        $this->assertInstanceOf(PropertyDefinitionInterface::class, $propDef);
         $this->assertEquals('*', $propDef->getName());
     }
 }

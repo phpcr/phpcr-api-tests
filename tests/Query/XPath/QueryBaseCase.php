@@ -11,6 +11,8 @@
 
 namespace PHPCR\Tests\Query\XPath;
 
+use PHPCR\Query\QueryInterface;
+
 /**
  * a base class for all query tests.
  */
@@ -23,6 +25,6 @@ abstract class QueryBaseCase extends \PHPCR\Tests\Query\QueryBaseCase
     {
         parent::setUp();
 
-        $this->query = $this->sharedFixture['qm']->createQuery('//element(*,nt:folder)', \PHPCR\Query\QueryInterface::XPATH);
+        $this->query = $this->sharedFixture['qm']->createQuery('//element(*,nt:folder)', QueryInterface::XPATH);
     }
 }

@@ -11,7 +11,9 @@
 
 namespace PHPCR\Tests\Writing;
 
+use DateTime;
 use Jackalope\Session;
+use PHPCR\Test\BaseCase;
 
 /**
  * Testing the mix:lastModified support when properties should be updated
@@ -22,7 +24,7 @@ use Jackalope\Session;
  * may update the date, but it is not forced to, as this is potentially quite
  * expensive.
  */
-class LastModifiedUpdateTest extends \PHPCR\Test\BaseCase
+class LastModifiedUpdateTest extends BaseCase
 {
     public static function setupBeforeClass($fixtures = '10_Writing/lastmodified')
     {
@@ -43,7 +45,7 @@ class LastModifiedUpdateTest extends \PHPCR\Test\BaseCase
 
         $this->assertTrue($this->node->hasProperty('jcr:lastModifiedBy'));
         $this->assertTrue($this->node->hasProperty('jcr:lastModified'));
-        $this->assertSimilarDateTime(new \DateTime(), $this->node->getPropertyValue('jcr:lastModified'));
+        $this->assertSimilarDateTime(new DateTime(), $this->node->getPropertyValue('jcr:lastModified'));
 
         $node = $this->node->addNode('child');
         $node->addMixin('mix:lastModified');
@@ -52,7 +54,7 @@ class LastModifiedUpdateTest extends \PHPCR\Test\BaseCase
 
         $this->assertTrue($node->hasProperty('jcr:lastModifiedBy'));
         $this->assertTrue($node->hasProperty('jcr:lastModified'));
-        $this->assertSimilarDateTime(new \DateTime(), $node->getPropertyValue('jcr:lastModified'));
+        $this->assertSimilarDateTime(new DateTime(), $node->getPropertyValue('jcr:lastModified'));
     }
 
     /**
@@ -70,11 +72,11 @@ class LastModifiedUpdateTest extends \PHPCR\Test\BaseCase
         $this->assertTrue($this->node->hasProperty('jcr:lastModifiedBy'));
         $this->assertEquals('me', $this->node->getPropertyValue('jcr:lastModifiedBy'));
         $this->assertTrue($this->node->hasProperty('jcr:lastModified'));
-        $this->assertSimilarDateTime(new \DateTime(), $this->node->getPropertyValue('jcr:lastModified'));
+        $this->assertSimilarDateTime(new DateTime(), $this->node->getPropertyValue('jcr:lastModified'));
 
         $node = $this->node->addNode('child');
         $node->addMixin('mix:lastModified');
-        $date = new \DateTime('2012-01-02');
+        $date = new DateTime('2012-01-02');
         $node->setProperty('jcr:lastModified', $date);
 
         $this->session->save();
@@ -90,12 +92,12 @@ class LastModifiedUpdateTest extends \PHPCR\Test\BaseCase
 
         $this->session->save();
 
-        $this->assertSimilarDateTime(new \DateTime(), $this->node->getPropertyValue('jcr:lastModified'));
+        $this->assertSimilarDateTime(new DateTime(), $this->node->getPropertyValue('jcr:lastModified'));
     }
 
     public function testUpdateManual()
     {
-        $date = new \DateTime('2013-10-10');
+        $date = new DateTime('2013-10-10');
         $this->node->setProperty('jcr:lastModified', $date);
         $this->node->setProperty('text', 'new');
 
@@ -113,7 +115,7 @@ class LastModifiedUpdateTest extends \PHPCR\Test\BaseCase
 
         $this->session->save();
 
-        $this->assertSimilarDateTime(new \DateTime(), $this->node->getPropertyValue('jcr:lastModified'));
+        $this->assertSimilarDateTime(new DateTime(), $this->node->getPropertyValue('jcr:lastModified'));
     }
 
     public function testRemoveProperty()
@@ -122,6 +124,6 @@ class LastModifiedUpdateTest extends \PHPCR\Test\BaseCase
 
         $this->session->save();
 
-        $this->assertSimilarDateTime(new \DateTime(), $this->node->getPropertyValue('jcr:lastModified'));
+        $this->assertSimilarDateTime(new DateTime(), $this->node->getPropertyValue('jcr:lastModified'));
     }
 }

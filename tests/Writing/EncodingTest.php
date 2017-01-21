@@ -11,11 +11,14 @@
 
 namespace PHPCR\Tests\Writing;
 
+use PHPCR\NodeInterface;
+use PHPCR\Test\BaseCase;
+
 /**
  * Test javax.jcr.Node read methods (read) §5.6
  * With special characters.
  */
-class EncodingTest extends \PHPCR\Test\BaseCase
+class EncodingTest extends BaseCase
 {
     public static function setupBeforeClass($fixtures = '10_Writing/encoding')
     {
@@ -36,27 +39,27 @@ class EncodingTest extends \PHPCR\Test\BaseCase
     public function testEncoding($name)
     {
         $node = $this->node->addNode($name);
-        $this->assertInstanceOf('PHPCR\NodeInterface', $node);
+        $this->assertInstanceOf(NodeInterface::class, $node);
 
         $session = $this->saveAndRenewSession();
         $node = $session->getNode('/tests_write_encoding/testEncoding');
         $this->assertTrue($node->hasNode($name));
-        $this->assertInstanceOf('PHPCR\NodeInterface', $node->getNode($name));
+        $this->assertInstanceOf(NodeInterface::class, $node->getNode($name));
     }
 
     public static function getNodeNames()
     {
-        return array(
-            array('node-ä-x'),
-            array('node-è-x'),
-            array('node-ï-x'),
-            array('node-%-x'),
-            array('node-%2F-x'),
-            array('node-;-x'),
-            array('node- -x'),
-            array('node-ç-x'),
-            array('node-&-x'),
-        );
+        return [
+            ['node-ä-x'],
+            ['node-è-x'],
+            ['node-ï-x'],
+            ['node-%-x'],
+            ['node-%2F-x'],
+            ['node-;-x'],
+            ['node- -x'],
+            ['node-ç-x'],
+            ['node-&-x'],
+        ];
     }
 
     /**
@@ -71,12 +74,12 @@ class EncodingTest extends \PHPCR\Test\BaseCase
 
     public static function getPropertyValues()
     {
-        return array(
-            array('PHPCR\Query\QueryInterface', 'backslash'),
-            array('PHPCR\\\\Query\\\\QueryInterface', 'doublebackslash'),
-            array('"\'', 'quotes'),
-            array('a\\\'\\\'b\\\'\\\'c', 'quotesandbackslash'),
-            array('foo & bar&baz', 'ampersand'),
-        );
+        return [
+            ['PHPCR\Query\QueryInterface', 'backslash'],
+            ['PHPCR\\\\Query\\\\QueryInterface', 'doublebackslash'],
+            ['"\'', 'quotes'],
+            ['a\\\'\\\'b\\\'\\\'c', 'quotesandbackslash'],
+            ['foo & bar&baz', 'ampersand'],
+        ];
     }
 }

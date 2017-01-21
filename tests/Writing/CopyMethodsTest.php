@@ -11,12 +11,18 @@
 
 namespace PHPCR\Tests\Writing;
 
+use PHPCR\ItemExistsException;
+use PHPCR\NoSuchWorkspaceException;
+use PHPCR\PathNotFoundException;
+use PHPCR\PropertyType;
+use PHPCR\RepositoryException;
+use PHPCR\Test\BaseCase;
 use PHPCR\WorkspaceInterface;
 
 /**
  * Covering jcr-283 spec $10.7.
  */
-class CopyMethodsTest extends \PHPCR\Test\BaseCase
+class CopyMethodsTest extends BaseCase
 {
     /** @var WorkspaceInterface */
     protected $ws;
@@ -81,18 +87,14 @@ class CopyMethodsTest extends \PHPCR\Test\BaseCase
 
     public function testCopyPreserveChildOrder()
     {
-        $expected = [ 'three', 'one', 'two' ];
-
+        $expected = ['three', 'one', 'two'];
         $src = '/tests_write_manipulation_copy/testCopyPreserveChildOrder/srcNode';
         $dst = '/tests_write_manipulation_copy/testCopyPreserveChildOrder/dstNode/srcNode';
-
         $node = $this->session->getNode($src);
         $node->orderBefore('three', 'one');
         $this->session->save();
         $this->assertEquals($expected, iterator_to_array($node->getNodeNames()));
-
         $this->ws->copy($src, $dst);
-
         $node = $this->session->getNode($dst);
         $this->assertEquals($expected, iterator_to_array($node->getNodeNames()));
     }
@@ -141,59 +143,53 @@ class CopyMethodsTest extends \PHPCR\Test\BaseCase
         $this->assertEquals('y', $node->getPropertyValue('x'));
     }
 
-    /**
-     * @expectedException \PHPCR\NoSuchWorkspaceException
-     */
     public function testCopyNoSuchWorkspace()
     {
+        $this->expectException(NoSuchWorkspaceException::class);
+
         $src = '/somewhere/foo';
         $dst = '/here/foo';
         $this->ws->copy($src, $dst, 'inexistentworkspace');
     }
 
-    /**
-     * @expectedException \PHPCR\RepositoryException
-     */
     public function testCopyRelativePaths()
     {
+        $this->expectException(RepositoryException::class);
+
         $this->ws->copy('foo/moo', 'bar/mar');
     }
 
-    /**
-     * @expectedException \PHPCR\RepositoryException
-     */
     public function testCopyInvalidDstPath()
     {
+        $this->expectException(RepositoryException::class);
+
         $src = '/tests_write_manipulation_copy/testCopyInvalidDstPath/srcNode';
         $dst = '/tests_write_manipulation_copy/testCopyInvalidDstPath/dstNode/srcNode[3]';
         $this->ws->copy($src, $dst);
     }
 
-    /**
-     * @expectedException \PHPCR\RepositoryException
-     */
     public function testCopyProperty()
     {
+        $this->expectException(RepositoryException::class);
+
         $src = '/tests_write_manipulation_copy/testCopyProperty/srcFile/jcr:content/someProperty';
         $dst = '/tests_write_manipulation_copy/testCopyProperty/dstFile/jcr:content/someProperty';
         $this->ws->copy($src, $dst);
     }
 
-    /**
-     * @expectedException \PHPCR\PathNotFoundException
-     */
     public function testCopySrcNotFound()
     {
+        $this->expectException(PathNotFoundException::class);
+
         $src = '/tests_write_manipulation_copy/testCopySrcNotFound/notFound';
         $dst = '/tests_write_manipulation_copy/testCopySrcNotFound/dstNode/notFound';
         $this->ws->copy($src, $dst);
     }
 
-    /**
-     * @expectedException \PHPCR\PathNotFoundException
-     */
     public function testCopyDstParentNotFound()
     {
+        $this->expectException(PathNotFoundException::class);
+
         $src = '/tests_write_manipulation_copy/testCopyDstParentNotFound/srcNode';
         $dst = '/tests_write_manipulation_copy/testCopyDstParentNotFound/dstNode/notFound/srcNode';
         $this->ws->copy($src, $dst);
@@ -201,11 +197,11 @@ class CopyMethodsTest extends \PHPCR\Test\BaseCase
 
     /**
      * Verifies that there is no update-on-copy if the target node already exists.
-     *
-     * @expectedException \PHPCR\ItemExistsException
      */
     public function testCopyNoUpdateOnCopy()
     {
+        $this->expectException(ItemExistsException::class);
+
         $src = '/tests_write_manipulation_copy/testCopyNoUpdateOnCopy/srcNode';
         $dst = '/tests_write_manipulation_copy/testCopyNoUpdateOnCopy/dstNode/srcNode';
 
@@ -273,8 +269,8 @@ class CopyMethodsTest extends \PHPCR\Test\BaseCase
         $srcProp = $this->session->getNode($src . '/single')->getProperty('jcr:data');
         $dstProp = $this->session->getNode($dst . '/single')->getProperty('jcr:data');
 
-        $this->assertEquals(\PHPCR\PropertyType::BINARY, $srcProp->getType());
-        $this->assertEquals(\PHPCR\PropertyType::BINARY, $dstProp->getType());
+        $this->assertEquals(PropertyType::BINARY, $srcProp->getType());
+        $this->assertEquals(PropertyType::BINARY, $dstProp->getType());
 
         $srcVal = $srcProp->getBinary();
         $dstVal = $dstProp->getBinary();
@@ -301,8 +297,8 @@ class CopyMethodsTest extends \PHPCR\Test\BaseCase
         $srcProp = $this->session->getNode($src.'/multiple')->getProperty('jcr:data');
         $dstProp = $this->session->getNode($dst.'/multiple')->getProperty('jcr:data');
 
-        $this->assertEquals(\PHPCR\PropertyType::BINARY, $srcProp->getType());
-        $this->assertEquals(\PHPCR\PropertyType::BINARY, $dstProp->getType());
+        $this->assertEquals(PropertyType::BINARY, $srcProp->getType());
+        $this->assertEquals(PropertyType::BINARY, $dstProp->getType());
 
         $srcVal = $srcProp->getValue();
         $dstVal = $dstProp->getValue();

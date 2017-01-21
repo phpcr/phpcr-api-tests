@@ -11,19 +11,20 @@
 
 namespace PHPCR\Test;
 
+use ImplementationLoader;
+use Iterator;
+use IteratorAggregate;
+use PHPCR\RepositoryException;
 use PHPCR\SessionInterface;
 use PHPCR\NodeInterface;
 use DateTime;
-
-// PHPUnit 3.4 compat
-if (method_exists('PHPUnit_Util_Filter', 'addDirectoryToFilter')) {
-    require_once 'PHPUnit/Framework.php';
-}
+use PHPUnit_Framework_SkippedTestSuiteError;
+use PHPUnit_Framework_TestCase;
 
 /**
  * Base class for all phpcr api tests.
  */
-abstract class BaseCase extends \PHPUnit_Framework_TestCase
+abstract class BaseCase extends PHPUnit_Framework_TestCase
 {
     /**
      * Describes the path to the node for this test, used with writing tests.
@@ -40,14 +41,14 @@ abstract class BaseCase extends \PHPUnit_Framework_TestCase
     /**
      * The root node of the fixture, initialized for each test.
      *
-     * @var \PHPCR\NodeInterface
+     * @var NodeInterface
      */
     protected $rootNode = null;
 
     /**
      * The node in the current fixture at /test_class_name/testMethod.
      *
-     * @var \PHPCR\NodeInterface
+     * @var NodeInterface
      */
     protected $node = null;
 
@@ -75,7 +76,7 @@ abstract class BaseCase extends \PHPUnit_Framework_TestCase
     /**
      * Same as staticSharedFixture, loaded in setUp for your convenience.
      */
-    protected $sharedFixture = array();
+    protected $sharedFixture = [];
 
     /**
      * the loader can throw a PHPCR\RepositoryException
@@ -97,16 +98,16 @@ abstract class BaseCase extends \PHPUnit_Framework_TestCase
      */
     public static function setupBeforeClass($fixtures = 'general/base')
     {
-        self::$loader = \ImplementationLoader::getInstance();
+        self::$loader = ImplementationLoader::getInstance();
 
         $fqn = get_called_class();
         list($phpcr, $tests, $chapter, $case) = explode('\\', $fqn);
         $case = "$chapter\\$case";
         if (!self::$loader->getTestSupported($chapter, $case, null)) {
-            throw new \PHPUnit_Framework_SkippedTestSuiteError('Test case not supported by this implementation');
+            throw new PHPUnit_Framework_SkippedTestSuiteError('Test case not supported by this implementation');
         }
 
-        self::$staticSharedFixture = array();
+        self::$staticSharedFixture = [];
         date_default_timezone_set('Europe/Zurich'); //TODO put this here?
 
         self::$staticSharedFixture['ie'] = self::$loader->getFixtureLoader();
@@ -156,7 +157,7 @@ abstract class BaseCase extends \PHPUnit_Framework_TestCase
      *
      * Logout from the old session but does *NOT* save the session
      *
-     * @return \PHPCR\SessionInterface   The new session
+     * @return SessionInterface   The new session
      */
     protected function renewSession()
     {
@@ -176,7 +177,7 @@ abstract class BaseCase extends \PHPUnit_Framework_TestCase
      *
      * Saves the old session and logs it out.
      *
-     * @return \PHPCR\SessionInterface   The new session
+     * @return SessionInterface   The new session
      */
     protected function saveAndRenewSession()
     {
@@ -217,28 +218,29 @@ abstract class BaseCase extends \PHPUnit_Framework_TestCase
      * this is similar to doing self::$loader->getSession($credentials) but
      * does error handling and asserts the session is a valid SessionInterface
      *
-     * @return \PHPCR\SessionInterface the session from the login
+     * @return SessionInterface the session from the login
      */
     protected function assertSession($credentials = false)
     {
         try {
-            $ses = self::$loader->getSession($credentials);
-        } catch (\PHPCR\RepositoryException $e) {
-            if ($e->getMessage() == self::NOTSUPPORTEDLOGIN) {
+            $session = self::$loader->getSession($credentials);
+        } catch (RepositoryException $e) {
+            if ($e->getMessage() === self::NOTSUPPORTEDLOGIN) {
                 $this->markTestSkipped('This implementation does not support this type of login.');
             } else {
                 throw $e;
             }
         }
-        $this->assertInstanceOf('PHPCR\SessionInterface', $ses);
 
-        return $ses;
+        $this->assertInstanceOf(SessionInterface::class, $session);
+
+        return $session;
     }
 
     /** assert that this is an object that is traversable */
     protected function assertTraversableImplemented($obj)
     {
-        $this->assertTrue($obj instanceof \Iterator || $obj instanceof \IteratorAggregate, 'To provide Traversable, you have to either implement Iterator or IteratorAggregate');
+        $this->assertTrue($obj instanceof Iterator || $obj instanceof IteratorAggregate, 'To provide Traversable, you have to either implement Iterator or IteratorAggregate');
     }
 
     /**
@@ -269,13 +271,13 @@ abstract class BaseCase extends \PHPUnit_Framework_TestCase
      * other. Use this rather than plain "Equal" when checking application
      * generated dates.
      *
-     * @param \DateTime $expected
-     * @param \DateTime $data
+     * @param DateTime $expected
+     * @param DateTime $data
      */
     protected function assertSimilarDateTime($expected, $data)
     {
-        $this->assertInstanceOf('\DateTime', $expected);
-        $this->assertInstanceOf('\DateTime', $data);
+        $this->assertInstanceOf(DateTime::class, $expected);
+        $this->assertInstanceOf(DateTime::class, $data);
         $this->assertTrue(abs($expected->getTimestamp() - $data->getTimestamp()) <= 3,
             $data->format('c').' is not close to the expected '.$expected->format('c')
         );

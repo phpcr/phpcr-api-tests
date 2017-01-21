@@ -11,6 +11,14 @@
 
 namespace PHPCR\Tests\Versioning;
 
+use Exception;
+use PHPCR\InvalidItemStateException;
+use PHPCR\RepositoryException;
+use PHPCR\Test\BaseCase;
+use PHPCR\UnsupportedRepositoryOperationException;
+use PHPCR\Version\VersionException;
+use PHPCR\Version\VersionHistoryInterface;
+use PHPCR\Version\VersionInterface;
 use PHPCR\Version\VersionManagerInterface;
 
 /**
@@ -18,7 +26,7 @@ use PHPCR\Version\VersionManagerInterface;
  *
  * Covering jcr-2.8.3 spec $15.1
  */
-class VersionManagerTest extends \PHPCR\Test\BaseCase
+class VersionManagerTest extends BaseCase
 {
     /**
      * @var VersionManagerInterface
@@ -33,6 +41,7 @@ class VersionManagerTest extends \PHPCR\Test\BaseCase
     public function setUp()
     {
         parent::setUp();
+
         $this->renewSession();
         $this->node = $this->session->getNode('/tests_version_base/versionable');
         $this->vm = $this->session->getWorkspace()->getVersionManager();
@@ -41,7 +50,7 @@ class VersionManagerTest extends \PHPCR\Test\BaseCase
     public function testCheckinCheckoutVersion()
     {
         $history = $this->vm->getVersionHistory('/tests_version_base/versioned');
-        $this->assertInstanceOf('PHPCR\Version\VersionHistoryInterface', $history);
+        $this->assertInstanceOf(VersionHistoryInterface::class, $history);
         $this->assertCount(1, $history->getAllVersions());
 
         $this->vm->checkout('/tests_version_base/versioned');
@@ -68,16 +77,15 @@ class VersionManagerTest extends \PHPCR\Test\BaseCase
         $this->vm->checkin('/tests_version_base/versioned');
 
         // all this should have worked, now we try something that should fail
-        $this->setExpectedException('PHPCR\Version\VersionException');
+        $this->expectException(VersionException::class);
         $node->setProperty('foo', 'bar2');
         $this->session->save();
     }
 
-    /**
-     * @expectedException \PHPCR\InvalidItemStateException
-     */
     public function testCheckinModifiedNode()
     {
+        $this->expectException(InvalidItemStateException::class);
+
         $this->vm->checkout('/tests_version_base/versioned');
         $node = $this->session->getNode('/tests_version_base/versioned');
         $node->setProperty('foo', 'modified');
@@ -95,7 +103,7 @@ class VersionManagerTest extends \PHPCR\Test\BaseCase
         $this->session->save();
         $newNode = $this->vm->checkin('/tests_version_base/versioned');
 
-        $this->assertInstanceOf('\PHPCR\Version\VersionInterface', $newNode);
+        $this->assertInstanceOf(VersionInterface::class, $newNode);
     }
 
     public function testCheckinTwice()
@@ -118,23 +126,21 @@ class VersionManagerTest extends \PHPCR\Test\BaseCase
     public function testGetBaseVersion()
     {
         $version = $this->vm->getBaseVersion('/tests_version_base/versioned');
-        $this->assertInstanceOf('PHPCR\\Version\\VersionInterface', $version);
+        $this->assertInstanceOf(VersionInterface::class, $version);
     }
 
-    /**
-     * @expectedException \PHPCR\UnsupportedRepositoryOperationException
-     */
     public function testGetBaseVersionNonversionable()
     {
-        $version = $this->vm->getBaseVersion('/tests_version_base/unversionable');
+        $this->expectException(UnsupportedRepositoryOperationException::class);
+
+        $this->vm->getBaseVersion('/tests_version_base/unversionable');
     }
 
-    /**
-     * @expectedException \PHPCR\RepositoryException
-     */
     public function testGetBaseVersionNotfound()
     {
-        $version = $this->vm->getBaseVersion('/tests_version_base/not_existing');
+        $this->expectException(RepositoryException::class);
+
+        $this->vm->getBaseVersion('/tests_version_base/not_existing');
     }
 
     public function testGetVersionHistory()
@@ -145,19 +151,17 @@ class VersionManagerTest extends \PHPCR\Test\BaseCase
         $this->assertSame($history, $this->vm->getVersionHistory($nodePath));
     }
 
-    /**
-     * @expectedException \PHPCR\UnsupportedRepositoryOperationException
-     */
     public function testGetVersionHistoryNonversionable()
     {
+        $this->expectException(UnsupportedRepositoryOperationException::class);
+
         $this->vm->getVersionHistory('/tests_version_base/unversionable');
     }
 
-    /**
-     * @expectedException \PHPCR\RepositoryException
-     */
     public function testGetVersionHistoryNotfound()
     {
+        $this->expectException(RepositoryException::class);
+
         $this->vm->getVersionHistory('/tests_version_base/not_existing');
     }
 
@@ -173,18 +177,17 @@ class VersionManagerTest extends \PHPCR\Test\BaseCase
         $this->assertTrue($this->vm->isCheckedOut($nodePath));
     }
 
-    /**
-     * @expectedException \PHPCR\UnsupportedRepositoryOperationException
-     */
     public function testIsCheckedOutNonversionable()
     {
+        $this->expectException(UnsupportedRepositoryOperationException::class);
+
         $this->vm->isCheckedOut('/tests_version_base/unversionable');
     }
-    /**
-     * @expectedException \PHPCR\RepositoryException
-     */
+
     public function testIsCheckedOutNotExisting()
     {
+        $this->expectException(RepositoryException::class);
+
         $this->vm->isCheckedOut('/tests_version_base/not_existing');
     }
 
@@ -215,7 +218,7 @@ class VersionManagerTest extends \PHPCR\Test\BaseCase
         // Read the OLD value out of the var and fill the cache
         $this->assertEquals('bar3', $node->getProperty('foo')->getValue());
 
-        $history = $this->vm->getVersionHistory($nodePath);
+        $this->vm->getVersionHistory($nodePath);
 
         // Restore the first version aka 'bar'
         $this->vm->restore(true, $version->getName(), $nodePath);
@@ -269,11 +272,10 @@ class VersionManagerTest extends \PHPCR\Test\BaseCase
         $this->assertEquals('bar', $node->getProperty('foo')->getValue());
     }
 
-    /**
-     * @expectedException \PHPCR\InvalidItemStateException
-     */
     public function testRestorePendingChanges()
     {
+        $this->expectException(InvalidItemStateException::class);
+
         $nodePath = '/tests_version_base/versioned';
         $this->vm->checkout($nodePath);
         $node = $this->session->getNode($nodePath);
@@ -359,7 +361,7 @@ class VersionManagerTest extends \PHPCR\Test\BaseCase
         $this->vm->restore(true, $version);
 
         $node = $this->session->getNode($nodePath);
-        $this->assertEquals(array('mix:versionable'), $node->getPropertyValue('jcr:mixinTypes'));
+        $this->assertEquals(['mix:versionable'], $node->getPropertyValue('jcr:mixinTypes'));
         $this->assertFalse($node->hasProperty('jcr:created'));
     }
 
@@ -424,47 +426,47 @@ class VersionManagerTest extends \PHPCR\Test\BaseCase
 
     // TODO: testRestoreByVersionArray, testRestoreVersionToPath, testRestoreVersionToExistingPath (expect exception)
 
-    /**
-     * @expectedException \PHPCR\UnsupportedRepositoryOperationException
-     */
     public function testRestoreNonversionablePath()
     {
+        $this->expectException(UnsupportedRepositoryOperationException::class);
+
         $this->vm->restore(true, 'something', '/tests_version_base/unversionable');
     }
-    /**
-     * @expectedException \PHPCR\RepositoryException
-     */
+
     public function testRestoreNonexistingPath()
     {
+        $this->expectException(RepositoryException::class);
+
         $this->vm->restore(true, 'something', '/tests_version_base/not_existing');
     }
-    /**
-     * @expectedException \PHPCR\Version\VersionException
-     */
+
     public function testRestoreNonexistingName()
     {
+        $this->expectException(VersionException::class);
+
         $this->vm->restore(true, 'not-existing', '/tests_version_base/versioned');
     }
+
     public function testRestoreNonsenseArguments()
     {
         try {
             $this->vm->restore(true, 'something');
             $this->fail('restoring with version name and no path should throw an exception');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             // we expect something to be thrown
         }
         try {
             $this->vm->restore(true, $this);
             $this->fail('restoring with non-version object');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             // we expect something to be thrown
         }
     }
-    /**
-     * @expectedException \PHPCR\Version\VersionException
-     */
+
     public function testRestoreRootVersion()
     {
+        $this->expectException(VersionException::class);
+
         $rootVersion = $this->vm->getVersionHistory('/tests_version_base/versioned')->getRootVersion();
         $this->vm->restore(true, $rootVersion);
     }

@@ -12,10 +12,11 @@
 namespace PHPCR\Tests\Query;
 
 use PHPCR\Query\QueryInterface;
+use PHPCR\Query\QueryResultInterface;
 use PHPCR\Query\RowInterface;
 
 /**
- * Run non-trivial queries to run against the repository, with join features and such.
+ * Run non-trivial queries to try out where, the join features and such.
  */
 class QuerySql2OperationsTest extends QueryBaseCase
 {
@@ -31,20 +32,22 @@ class QuerySql2OperationsTest extends QueryBaseCase
             QueryInterface::JCR_SQL2
         );
 
-        $this->assertInstanceOf('\PHPCR\Query\QueryInterface', $query);
+        $this->assertInstanceOf(QueryInterface::class, $query);
         $result = $query->execute();
-        $this->assertInstanceOf('\PHPCR\Query\QueryResultInterface', $result);
-        $vals = array();
+        $this->assertInstanceOf(QueryResultInterface::class, $result);
+        $vals = [];
+
         foreach ($result->getNodes() as $node) {
             $vals[] = $node->getPropertyValue('foo');
         }
-        $this->assertEquals(array('bar'), $vals);
 
-        $vals = array();
+        $this->assertEquals(['bar'], $vals);
+
+        $vals = [];
         foreach ($result->getRows() as $row) {
             $vals[] = $row->getValue('foo');
         }
-        $this->assertEquals(array('bar'), $vals);
+        $this->assertEquals(['bar'], $vals);
     }
 
     public function testQueryFieldDate()
@@ -78,20 +81,24 @@ class QuerySql2OperationsTest extends QueryBaseCase
             QueryInterface::JCR_SQL2
         );
 
-        $this->assertInstanceOf('\PHPCR\Query\QueryInterface', $query);
+        $this->assertInstanceOf(QueryInterface::class, $query);
         $result = $query->execute();
-        $this->assertInstanceOf('\PHPCR\Query\QueryResultInterface', $result);
-        $vals = array();
+        $this->assertInstanceOf(QueryResultInterface::class, $result);
+        $vals = [];
+
         foreach ($result->getNodes() as $node) {
             $vals[] = ($node->hasProperty('foo') ? $node->getPropertyValue('foo') : null);
         }
+
         $this->assertContains('bar', $vals);
         $this->assertCount(10, $vals);
 
-        $vals = array();
+        $vals = [];
+
         foreach ($result->getRows() as $row) {
             $vals[] = $row->getValue('foo');
         }
+
         $this->assertContains('bar', $vals);
         $this->assertCount(10, $vals);
     }
@@ -108,14 +115,16 @@ class QuerySql2OperationsTest extends QueryBaseCase
             QueryInterface::JCR_SQL2
         );
 
-        $this->assertInstanceOf('\PHPCR\Query\QueryInterface', $query);
+        $this->assertInstanceOf(QueryInterface::class, $query);
         $result = $query->execute();
-        $this->assertInstanceOf('\PHPCR\Query\QueryResultInterface', $result);
-        $vals = array();
+        $this->assertInstanceOf(QueryResultInterface::class, $result);
+
+        $vals = [];
         foreach ($result->getRows() as $row) {
             $vals[] = $row->getValue('foo');
         }
-        $this->assertEquals(array('bar'), $vals);
+
+        $this->assertEquals(['bar'], $vals);
     }
 
     public function testQueryFieldSelectorWithAlias()
@@ -130,14 +139,15 @@ class QuerySql2OperationsTest extends QueryBaseCase
             QueryInterface::JCR_SQL2
         );
 
-        $this->assertInstanceOf('\PHPCR\Query\QueryInterface', $query);
+        $this->assertInstanceOf(QueryInterface::class, $query);
         $result = $query->execute();
-        $this->assertInstanceOf('\PHPCR\Query\QueryResultInterface', $result);
-        $vals = array();
+        $this->assertInstanceOf(QueryResultInterface::class, $result);
+        $vals = [];
+
         foreach ($result->getRows() as $row) {
             $vals[] = $row->getValue('data.foo');
         }
-        $this->assertEquals(array('bar'), $vals);
+        $this->assertEquals(['bar'], $vals);
     }
 
     public function testQueryJoin()
@@ -154,15 +164,15 @@ class QuerySql2OperationsTest extends QueryBaseCase
             QueryInterface::JCR_SQL2
         );
 
-        $this->assertInstanceOf('\PHPCR\Query\QueryInterface', $query);
+        $this->assertInstanceOf(QueryInterface::class, $query);
         $result = $query->execute();
-        $this->assertInstanceOf('\PHPCR\Query\QueryResultInterface', $result);
-        $vals = array();
+        $this->assertInstanceOf(QueryResultInterface::class, $result);
+        $vals = [];
 
         foreach ($result->getRows() as $row) {
             $vals[] = $row->getValue('nt:unstructured.longNumber');
         }
-        $this->assertEquals(array(999), $vals);
+        $this->assertEquals([999], $vals);
     }
 
     public function testQueryJoinWithAlias()
@@ -179,15 +189,15 @@ class QuerySql2OperationsTest extends QueryBaseCase
             QueryInterface::JCR_SQL2
         );
 
-        $this->assertInstanceOf('\PHPCR\Query\QueryInterface', $query);
+        $this->assertInstanceOf(QueryInterface::class, $query);
         $result = $query->execute();
-        $this->assertInstanceOf('\PHPCR\Query\QueryResultInterface', $result);
-        $vals = array();
+        $this->assertInstanceOf(QueryResultInterface::class, $result);
+        $vals = [];
 
         foreach ($result->getRows() as $row) {
             $vals[] = $row->getValue('content.longNumber');
         }
-        $this->assertEquals(array(999), $vals);
+        $this->assertEquals([999], $vals);
     }
 
     public function testQueryJoinNested()
@@ -206,15 +216,16 @@ class QuerySql2OperationsTest extends QueryBaseCase
             QueryInterface::JCR_SQL2
         );
 
-        $this->assertInstanceOf('\PHPCR\Query\QueryInterface', $query);
+        $this->assertInstanceOf(QueryInterface::class, $query);
         $result = $query->execute();
-        $this->assertInstanceOf('\PHPCR\Query\QueryResultInterface', $result);
-        $vals = array();
+        $this->assertInstanceOf(QueryResultInterface::class, $result);
+        $vals = [];
 
         foreach ($result->getRows() as $row) {
             $vals[] = $row->getValue('content.longNumber');
         }
-        $this->assertEquals(array(999), $vals);
+
+        $this->assertEquals([999], $vals);
     }
 
     public function testQueryLeftJoin()
@@ -229,23 +240,24 @@ class QuerySql2OperationsTest extends QueryBaseCase
             QueryInterface::JCR_SQL2
         );
 
-        $this->assertInstanceOf('\PHPCR\Query\QueryInterface', $query);
+        $this->assertInstanceOf(QueryInterface::class, $query);
         $result = $query->execute();
-        $this->assertInstanceOf('\PHPCR\Query\QueryResultInterface', $result);
-        $vals = array();
+        $this->assertInstanceOf(QueryResultInterface::class, $result);
+        $vals = [];
+
         foreach ($result->getRows() as $row) {
             $vals[basename($row->getPath('file'))] = $row->getValue('target.longNumberToCompare');
         }
 
         // We get 9 results (idExample comes back multiple times because of the join)
         $this->assertCount(10, $result->getRows());
-        $this->assertEquals(array(
+        $this->assertEquals([
             'index.txt'                     => null,
             'idExample'                     => null,
             'numberPropertyNode'            => null,
             'NumberPropertyNodeToCompare1'  => 2,
             'NumberPropertyNodeToCompare2'  => 10,
-        ), $vals);
+        ], $vals);
     }
 
     public function testQueryLeftJoinNull()
@@ -261,14 +273,14 @@ class QuerySql2OperationsTest extends QueryBaseCase
             QueryInterface::JCR_SQL2
         );
 
-        $this->assertInstanceOf('\PHPCR\Query\QueryInterface', $query);
+        $this->assertInstanceOf(QueryInterface::class, $query);
         $result = $query->execute();
-        $this->assertInstanceOf('\PHPCR\Query\QueryResultInterface', $result);
+        $this->assertInstanceOf(QueryResultInterface::class, $result);
         $this->assertCount(1, $result);
 
         /** @var RowInterface $row */
         $row = $result->getRows()->current();
-        $this->assertInstanceOf('\PHPCR\Query\RowInterface', $row);
+        $this->assertInstanceOf(RowInterface::class, $row);
         $this->assertEquals('/tests_general_base/emptyExample', $row->getPath('folder'));
         $this->assertNull($row->getPath('file'));
         $this->assertNull($row->getNode('file'));
@@ -286,23 +298,23 @@ class QuerySql2OperationsTest extends QueryBaseCase
             QueryInterface::JCR_SQL2
         );
 
-        $this->assertInstanceOf('\PHPCR\Query\QueryInterface', $query);
+        $this->assertInstanceOf(QueryInterface::class, $query);
         $result = $query->execute();
-        $this->assertInstanceOf('\PHPCR\Query\QueryResultInterface', $result);
-        $vals = array();
+        $this->assertInstanceOf(QueryResultInterface::class, $result);
+        $vals = [];
         foreach ($result->getRows() as $row) {
             $vals[basename($row->getPath('file'))] = $row->getValue('target.stringToCompare');
         }
 
         // We get 10 results (idExample comes back multiple times because of the join)
         $this->assertCount(10, $result->getRows());
-        $this->assertEquals(array(
+        $this->assertEquals([
             'index.txt'                     => null,
             'idExample'                     => null,
             'numberPropertyNode'            => null,
             'NumberPropertyNodeToCompare1'  => '2',
             'NumberPropertyNodeToCompare2'  => '10',
-        ), $vals);
+        ], $vals);
     }
 
     public function testQueryJoinReference()
@@ -318,14 +330,14 @@ class QuerySql2OperationsTest extends QueryBaseCase
             QueryInterface::JCR_SQL2
         );
 
-        $this->assertInstanceOf('\PHPCR\Query\QueryInterface', $query);
+        $this->assertInstanceOf(QueryInterface::class, $query);
         $result = $query->execute();
-        $this->assertInstanceOf('\PHPCR\Query\QueryResultInterface', $result);
-        $vals = array();
+        $this->assertInstanceOf(QueryResultInterface::class, $result);
+        $vals = [];
         foreach ($result->getRows() as $row) {
             $vals[$row->getValue('source.ref1')] = $row->getValue('target.jcr:uuid');
         }
-        $this->assertEquals(array('13543fc6-1abf-4708-bfcc-e49511754b40' => '13543fc6-1abf-4708-bfcc-e49511754b40'), $vals);
+        $this->assertEquals(['13543fc6-1abf-4708-bfcc-e49511754b40' => '13543fc6-1abf-4708-bfcc-e49511754b40'], $vals);
     }
 
     public function testQueryJoinChildnode()
@@ -342,15 +354,16 @@ class QuerySql2OperationsTest extends QueryBaseCase
             QueryInterface::JCR_SQL2
         );
 
-        $this->assertInstanceOf('\PHPCR\Query\QueryInterface', $query);
+        $this->assertInstanceOf(QueryInterface::class, $query);
         $result = $query->execute();
-        $this->assertInstanceOf('\PHPCR\Query\QueryResultInterface', $result);
-        $vals = array();
+        $this->assertInstanceOf(QueryResultInterface::class, $result);
+        $vals = [];
 
         foreach ($result->getRows() as $row) {
             $vals[] = $row->getValue('nt:unstructured.longNumber');
         }
-        $this->assertEquals(array(999), $vals);
+
+        $this->assertEquals([999], $vals);
     }
 
     public function testQueryOrder()
@@ -365,16 +378,16 @@ class QuerySql2OperationsTest extends QueryBaseCase
             QueryInterface::JCR_SQL2
         );
 
-        $this->assertInstanceOf('\PHPCR\Query\QueryInterface', $query);
+        $this->assertInstanceOf(QueryInterface::class, $query);
         $result = $query->execute();
-        $this->assertInstanceOf('\PHPCR\Query\QueryResultInterface', $result);
-        $vals = array();
+        $this->assertInstanceOf(QueryResultInterface::class, $result);
+        $vals = [];
         foreach ($result->getRows() as $row) {
             $vals[] = $row->getValue('data.foo');
         }
 
         // rows that do not have that field are empty string. empty is before fields with values
-        $this->assertEquals(array('bar', 'bar2'), $vals);
+        $this->assertEquals(['bar', 'bar2'], $vals);
     }
 
     public function testQueryOrderWithMissingProperty()
@@ -389,15 +402,15 @@ class QuerySql2OperationsTest extends QueryBaseCase
             QueryInterface::JCR_SQL2
         );
 
-        $this->assertInstanceOf('\PHPCR\Query\QueryInterface', $query);
+        $this->assertInstanceOf(QueryInterface::class, $query);
         $result = $query->execute();
-        $this->assertInstanceOf('\PHPCR\Query\QueryResultInterface', $result);
-        $vals = array();
+        $this->assertInstanceOf(QueryResultInterface::class, $result);
+        $vals = [];
         foreach ($result->getRows() as $row) {
             $vals[] = $row->getValue('data.zeronumber');
         }
         // rows that do not have that field are empty string. empty is before fields with values
-        $this->assertEquals(array('', '', '', '', '', '', '', '', '', 0), $vals);
+        $this->assertEquals(['', '', '', '', '', '', '', '', '', 0], $vals);
     }
 
     public function testQueryMultiValuedProperty()
@@ -413,9 +426,9 @@ class QuerySql2OperationsTest extends QueryBaseCase
             QueryInterface::JCR_SQL2
         );
 
-        $this->assertInstanceOf('\PHPCR\Query\QueryInterface', $query);
+        $this->assertInstanceOf(QueryInterface::class, $query);
         $result = $query->execute();
-        $this->assertInstanceOf('\PHPCR\Query\QueryResultInterface', $result);
+        $this->assertInstanceOf(QueryResultInterface::class, $result);
 
         $rows = $result->getRows();
 
@@ -437,9 +450,9 @@ class QuerySql2OperationsTest extends QueryBaseCase
             QueryInterface::JCR_SQL2
         );
 
-        $this->assertInstanceOf('\PHPCR\Query\QueryInterface', $query);
+        $this->assertInstanceOf(QueryInterface::class, $query);
         $result = $query->execute();
-        $this->assertInstanceOf('\PHPCR\Query\QueryResultInterface', $result);
+        $this->assertInstanceOf(QueryResultInterface::class, $result);
 
         $rows = $result->getRows();
 
@@ -457,9 +470,9 @@ class QuerySql2OperationsTest extends QueryBaseCase
             QueryInterface::JCR_SQL2
         );
 
-        $this->assertInstanceOf('\PHPCR\Query\QueryInterface', $query);
+        $this->assertInstanceOf(QueryInterface::class, $query);
         $result = $query->execute();
-        $this->assertInstanceOf('\PHPCR\Query\QueryResultInterface', $result);
+        $this->assertInstanceOf(QueryResultInterface::class, $result);
 
         $rows = $result->getRows();
 
@@ -477,9 +490,9 @@ class QuerySql2OperationsTest extends QueryBaseCase
             QueryInterface::JCR_SQL2
         );
 
-        $this->assertInstanceOf('\PHPCR\Query\QueryInterface', $query);
+        $this->assertInstanceOf(QueryInterface::class, $query);
         $result = $query->execute();
-        $this->assertInstanceOf('\PHPCR\Query\QueryResultInterface', $result);
+        $this->assertInstanceOf(QueryResultInterface::class, $result);
 
         $rows = $result->getRows();
 
@@ -500,9 +513,9 @@ class QuerySql2OperationsTest extends QueryBaseCase
             QueryInterface::JCR_SQL2
         );
 
-        $this->assertInstanceOf('\PHPCR\Query\QueryInterface', $query);
+        $this->assertInstanceOf(QueryInterface::class, $query);
         $result = $query->execute();
-        $this->assertInstanceOf('\PHPCR\Query\QueryResultInterface', $result);
+        $this->assertInstanceOf(QueryResultInterface::class, $result);
 
         $rows = $result->getRows();
 
@@ -520,9 +533,9 @@ class QuerySql2OperationsTest extends QueryBaseCase
             QueryInterface::JCR_SQL2
         );
 
-        $this->assertInstanceOf('\PHPCR\Query\QueryInterface', $query);
+        $this->assertInstanceOf(QueryInterface::class, $query);
         $result = $query->execute();
-        $this->assertInstanceOf('\PHPCR\Query\QueryResultInterface', $result);
+        $this->assertInstanceOf(QueryResultInterface::class, $result);
 
         $rows = $result->getRows();
 
@@ -540,9 +553,9 @@ class QuerySql2OperationsTest extends QueryBaseCase
             QueryInterface::JCR_SQL2
         );
 
-        $this->assertInstanceOf('\PHPCR\Query\QueryInterface', $query);
+        $this->assertInstanceOf(QueryInterface::class, $query);
         $result = $query->execute();
-        $this->assertInstanceOf('\PHPCR\Query\QueryResultInterface', $result);
+        $this->assertInstanceOf(QueryResultInterface::class, $result);
 
         $rows = $result->getRows();
 
@@ -561,9 +574,9 @@ class QuerySql2OperationsTest extends QueryBaseCase
             QueryInterface::JCR_SQL2
         );
 
-        $this->assertInstanceOf('\PHPCR\Query\QueryInterface', $query);
+        $this->assertInstanceOf(QueryInterface::class, $query);
         $result = $query->execute();
-        $this->assertInstanceOf('\PHPCR\Query\QueryResultInterface', $result);
+        $this->assertInstanceOf(QueryResultInterface::class, $result);
 
         $rows = $result->getRows();
 

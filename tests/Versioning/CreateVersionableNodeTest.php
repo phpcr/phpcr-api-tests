@@ -11,12 +11,14 @@
 
 namespace PHPCR\Tests\Versioning;
 
+use PHPCR\Test\BaseCase;
+
 /**
 * Testing whether mix:versionable node type is properly handled.
 *
 * Covering jcr-2.8.3 spec $15.1
 */
-class CreateVersionableNodeTest extends \PHPCR\Test\BaseCase
+class CreateVersionableNodeTest extends BaseCase
 {
     public static function setupBeforeClass($fixtures = '15_Versioning/base')
     {
@@ -26,6 +28,7 @@ class CreateVersionableNodeTest extends \PHPCR\Test\BaseCase
     public function setUp()
     {
         parent::setUp();
+
         $this->node = $this->session->getNode('/tests_version_base/versionable');
         $this->vm = $this->session->getWorkspace()->getVersionManager();
     }
@@ -33,7 +36,8 @@ class CreateVersionableNodeTest extends \PHPCR\Test\BaseCase
     public function testAddVersionableMixin()
     {
         $this->node->addMixin('mix:versionable');
-        $mixins = array();
+        $mixins = [];
+
         foreach ($this->node->getMixinNodeTypes() as $mix) {
             $mixins[] = $mix->getName();
         }

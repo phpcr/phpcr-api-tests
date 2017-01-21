@@ -11,6 +11,16 @@
 
 namespace PHPCR\Tests\Reading;
 
+use ArrayIterator;
+use InvalidArgumentException;
+use JavaException;
+use PHPCR\ItemNotFoundException;
+use PHPCR\NodeInterface;
+use PHPCR\PathNotFoundException;
+use PHPCR\PropertyInterface;
+use PHPCR\RepositoryException;
+use PHPCR\Test\BaseCase;
+
 /**
  * Test Session read methods.
  *
@@ -23,70 +33,71 @@ namespace PHPCR\Tests\Reading;
  * Retention: getRetentionManager
  * Access Control: getAccessControlManager
  */
-class SessionReadMethodsTest extends \PHPCR\Test\BaseCase
+class SessionReadMethodsTest extends BaseCase
 {
-    //5.1.1
+    // 5.1.1
     public function testGetRootNode()
     {
         $node = $this->session->getRootNode();
-        $this->assertInstanceOf('PHPCR\NodeInterface', $node);
+        $this->assertInstanceOf(NodeInterface::class, $node);
         $this->assertEquals('/', $node->getPath());
     }
 
-    /**
-     * @expectedException \PHPCR\RepositoryException
-     */
     public function testGetRootNodeRepositoryException()
     {
+        $this->expectException(RepositoryException::class);
+
         $this->markTestIncomplete('TODO: Figure out how to test this');
     }
 
-    //5.1.3, 5.1.6
+    // 5.1.3, 5.1.6
     public function testGetItem()
     {
         $node = $this->session->getItem('/tests_general_base');
-        $this->assertInstanceOf('PHPCR\NodeInterface', $node);
+        $this->assertInstanceOf(NodeInterface::class, $node);
         $this->assertEquals('tests_general_base', $node->getName());
 
         $node = $this->session->getItem('/tests_general_base/index.txt');
-        $this->assertInstanceOf('PHPCR\NodeInterface', $node);
+        $this->assertInstanceOf(NodeInterface::class, $node);
         $this->assertEquals('index.txt', $node->getName());
 
         $prop = $this->session->getItem('/tests_general_base/numberPropertyNode/jcr:content/foo');
-        $this->assertInstanceOf('PHPCR\PropertyInterface', $prop);
+        $this->assertInstanceOf(PropertyInterface::class, $prop);
         $this->assertEquals('foo', $prop->getName());
         $this->assertEquals('bar', $prop->getString());
         $prop = $this->session->getItem('/tests_general_base/numberPropertyNode/jcr:content/specialChars');
-        $this->assertInstanceOf('PHPCR\PropertyInterface', $prop);
+        $this->assertInstanceOf(PropertyInterface::class, $prop);
         $this->assertEquals('specialChars', $prop->getName());
         $this->assertEquals('üöäøéáñâêèàçæëìíîïþ', $prop->getString());
     }
 
-    //5.1.3, 5.1.6
+    // 5.1.3, 5.1.6
     public function testGetNode()
     {
         $node = $this->session->getNode('/tests_general_base/numberPropertyNode');
-        $this->assertInstanceOf('PHPCR\NodeInterface', $node);
+        $this->assertInstanceOf(NodeInterface::class, $node);
         $this->assertEquals('numberPropertyNode', $node->getName());
 
         $node = $this->session->getNode('/tests_general_base/index.txt');
-        $this->assertInstanceOf('PHPCR\NodeInterface', $node);
+        $this->assertInstanceOf(NodeInterface::class, $node);
         $this->assertEquals('index.txt', $node->getName());
     }
 
     public function testGetNodes()
     {
-        $nodes = $this->session->getNodes(array(
+        $nodes = $this->session->getNodes([
             '/tests_general_base',
             '/tests_general_base/numberPropertyNode',
             '/not_existing',
             '/tests_general_base/../not_existing',
-        ));
+        ]);
+
         $this->assertCount(2, $nodes);
         $this->assertTrue(isset($nodes['/tests_general_base']));
         $this->assertTrue(isset($nodes['/tests_general_base/numberPropertyNode']));
+
         foreach ($nodes as $key => $node) {
-            $this->assertInstanceOf('PHPCR\NodeInterface', $node);
+            $this->assertInstanceOf(NodeInterface::class, $node);
             $this->assertEquals($key, $node->getPath());
         }
     }
@@ -96,45 +107,47 @@ class SessionReadMethodsTest extends \PHPCR\Test\BaseCase
      */
     public function testGetNodesTraversable()
     {
-        $nodes = $this->session->getNodes(new \ArrayIterator(array(
+        $nodes = $this->session->getNodes(new ArrayIterator([
             '/tests_general_base',
             '/tests_general_base/numberPropertyNode',
             '/not_existing',
             '/tests_general_base/../not_existing',
-        )));
+        ]));
+
         $this->assertCount(2, $nodes);
         $this->assertTrue(isset($nodes['/tests_general_base']));
         $this->assertTrue(isset($nodes['/tests_general_base/numberPropertyNode']));
+
         foreach ($nodes as $key => $node) {
-            $this->assertInstanceOf('PHPCR\NodeInterface', $node);
+            $this->assertInstanceOf(NodeInterface::class, $node);
             $this->assertEquals($key, $node->getPath());
         }
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testGetNodesInvalidArgument()
     {
+        $this->expectException(InvalidArgumentException::class);
+
         $this->session->getNodes('no iterable thing');
     }
 
     /**
      * Get something that is a property and not a node.
-     *
-     * @expectedException \PHPCR\PathNotFoundException
      */
     public function testGetNodeInvalid()
     {
+        $this->expectException(PathNotFoundException::class);
+
         $this->session->getNode('/tests_general_base/idExample/jcr:primaryType');
     }
+
     /**
      * Get something that is a node and not a property.
-     *
-     * @expectedException \PHPCR\PathNotFoundException
      */
     public function testGetPropertyInvalid()
     {
+        $this->expectException(PathNotFoundException::class);
+
         $this->session->getProperty('/tests_general_base/idExample');
     }
 
@@ -142,78 +155,74 @@ class SessionReadMethodsTest extends \PHPCR\Test\BaseCase
     public function testGetProperty()
     {
         $prop = $this->session->getProperty('/tests_general_base/idExample/jcr:primaryType');
-        $this->assertInstanceOf('PHPCR\PropertyInterface', $prop);
+        $this->assertInstanceOf(PropertyInterface::class, $prop);
         $this->assertEquals('jcr:primaryType', $prop->getName());
         $this->assertEquals('nt:file', $prop->getString());
     }
 
     public function testGetProperties()
     {
-        $properties = $this->session->getProperties(array(
+        $properties = $this->session->getProperties([
             '/tests_general_base/jcr:primaryType',
             '/tests_general_base/numberPropertyNode/jcr:primaryType',
             '/not_existing/jcr:primaryType',
             '/tests_general_base/../not_existing/jcr:primaryType',
-        ));
+        ]);
         $this->assertCount(2, $properties);
         $this->assertTrue(isset($properties['/tests_general_base/jcr:primaryType']));
         $this->assertTrue(isset($properties['/tests_general_base/numberPropertyNode/jcr:primaryType']));
         foreach ($properties as $key => $property) {
-            $this->assertInstanceOf('PHPCR\PropertyInterface', $property);
+            $this->assertInstanceOf(PropertyInterface::class, $property);
             $this->assertEquals($key, $property->getPath());
         }
     }
 
     public function testGetPropertiesTraversable()
     {
-        $properties = $this->session->getProperties(new \ArrayIterator(array(
+        $properties = $this->session->getProperties(new \ArrayIterator([
             '/tests_general_base/jcr:primaryType',
             '/tests_general_base/numberPropertyNode/jcr:primaryType',
             '/not_existing/jcr:primaryType',
             '/tests_general_base/../not_existing/jcr:primaryType',
-        )));
+        ]));
         $this->assertCount(2, $properties);
         $this->assertTrue(isset($properties['/tests_general_base/jcr:primaryType']));
         $this->assertTrue(isset($properties['/tests_general_base/numberPropertyNode/jcr:primaryType']));
         foreach ($properties as $key => $property) {
-            $this->assertInstanceOf('PHPCR\PropertyInterface', $property);
+            $this->assertInstanceOf(PropertyInterface::class, $property);
             $this->assertEquals($key, $property->getPath());
         }
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testGetPropertiesInvalidArgument()
     {
+        $this->expectException(InvalidArgumentException::class);
+
         $this->session->getProperties('no iterable thing');
     }
 
     /**
      * it is forbidden to call getItem on the session with a relative path.
-     *
-     * @expectedException \PHPCR\PathNotFoundException
      */
     public function testGetItemRelativePathException()
     {
-        $node = $this->session->getItem('tests_general_base');
+        $this->expectException(PathNotFoundException::class);
+
+        $this->session->getItem('tests_general_base');
     }
 
-    /**
-     * @expectedException \PHPCR\PathNotFoundException
-     */
     public function testGetItemPathNotFound()
     {
+        $this->expectException(PathNotFoundException::class);
+
         $this->session->getItem('/foobarmooh');
     }
 
-    /**
-     * @expectedException \PHPCR\RepositoryException
-     */
-     public function testGetItemRepositoryException()
-     {
-         $this->session->getItem('//');
-     }
+    public function testGetItemRepositoryException()
+    {
+        $this->expectException(RepositoryException::class);
+        $this->session->getItem('//');
+    }
 
      //5.1.2
     public function testItemExists()
@@ -222,18 +231,18 @@ class SessionReadMethodsTest extends \PHPCR\Test\BaseCase
         $this->assertTrue($this->session->itemExists('/tests_general_base'));
         $this->assertFalse($this->session->itemExists('/foobar'));
     }
-    /**
-     * @expectedException \PHPCR\RepositoryException
-     */
+
     public function testItemExistsRelativePath()
     {
+        $this->expectException(RepositoryException::class);
+
         $this->session->itemExists('tests_general_base');
     }
-    /**
-     * @expectedException \PHPCR\RepositoryException
-     */
+
     public function testItemExistsInvalidPath()
     {
+        $this->expectException(RepositoryException::class);
+
         $this->session->itemExists('//');
     }
 
@@ -245,18 +254,18 @@ class SessionReadMethodsTest extends \PHPCR\Test\BaseCase
         //a property is not a node
         $this->assertFalse($this->session->nodeExists('/tests_general_base/numberPropertyNode/jcr:content/foo'));
     }
-    /**
-     * @expectedException \PHPCR\RepositoryException
-     */
+
     public function testNodeExistsRelativePath()
     {
+        $this->expectException(RepositoryException::class);
+
         $this->session->nodeExists('tests_general_base');
     }
-    /**
-     * @expectedException \PHPCR\RepositoryException
-     */
+
     public function testNodeExistsInvalidPath()
     {
+        $this->expectException(RepositoryException::class);
+
         $this->session->nodeExists('//');
     }
 
@@ -266,99 +275,97 @@ class SessionReadMethodsTest extends \PHPCR\Test\BaseCase
         //a node is not a property
         $this->assertFalse($this->session->propertyExists('/tests_general_base'));
     }
-    /**
-     * @expectedException \PHPCR\RepositoryException
-     */
+
     public function testPropertyExistsRelativePath()
     {
+        $this->expectException(RepositoryException::class);
+
         $this->session->propertyExists('tests_general_base/numberPropertyNode/jcr:content/foo');
     }
-    /**
-     * @expectedException \PHPCR\RepositoryException
-     */
+
     public function testPropertyExistsInvalidPath()
     {
+        $this->expectException(RepositoryException::class);
         $this->session->propertyExists('//');
     }
 
     public function testGetNodeByIdentifier()
     {
         $node = $this->session->getNodeByIdentifier('842e61c0-09ab-42a9-87c0-308ccc90e6f4');
-        $this->assertInstanceOf('PHPCR\NodeInterface', $node);
+        $this->assertInstanceOf(NodeInterface::class, $node);
         $this->assertEquals('/tests_general_base/idExample', $node->getPath());
     }
 
     public function testGetNodesByIdentifier()
     {
-        $nodes = (array) $this->session->getNodesByIdentifier(array(
+        $nodes = (array) $this->session->getNodesByIdentifier([
             '842e61c0-09ab-42a9-87c0-308ccc90e6f4',
             '00000000-0000-0000-0000-000000000000',
             '13543fc6-1abf-4708-bfcc-e49511754b40',
-        ));
+        ]);
+
         $this->assertCount(2, $nodes);
         list($key, $node) = each($nodes);
-        $this->assertInstanceOf('PHPCR\NodeInterface', $node);
+        $this->assertInstanceOf(NodeInterface::class, $node);
         $this->assertEquals('/tests_general_base/idExample', $node->getPath());
         list($key, $node) = each($nodes);
-        $this->assertInstanceOf('PHPCR\NodeInterface', $node);
+        $this->assertInstanceOf(NodeInterface::class, $node);
         $this->assertEquals('/tests_general_base/idExample/jcr:content/weakreference_target', $node->getPath());
     }
 
     public function testGetNodesByIdentifierTraversable()
     {
-        $nodes = (array) $this->session->getNodesByIdentifier(new \ArrayIterator(array(
+        $nodes = (array) $this->session->getNodesByIdentifier(new ArrayIterator([
             '842e61c0-09ab-42a9-87c0-308ccc90e6f4',
             '00000000-0000-0000-0000-000000000000',
             '13543fc6-1abf-4708-bfcc-e49511754b40',
-        )));
+        ]));
+
         $this->assertCount(2, $nodes);
         list($key, $node) = each($nodes);
-        $this->assertInstanceOf('PHPCR\NodeInterface', $node);
+        $this->assertInstanceOf(NodeInterface::class, $node);
         $this->assertEquals('/tests_general_base/idExample', $node->getPath());
         list($key, $node) = each($nodes);
-        $this->assertInstanceOf('PHPCR\NodeInterface', $node);
+        $this->assertInstanceOf(NodeInterface::class, $node);
         $this->assertEquals('/tests_general_base/idExample/jcr:content/weakreference_target', $node->getPath());
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testGetNodesByIdentifierInvalidArgument()
     {
+        $this->expectException(InvalidArgumentException::class);
+
         $this->session->getNodesByIdentifier('not a traversable');
     }
 
-    /**
-     * @expectedException \PHPCR\RepositoryException
-     */
     public function testGetNodeByIdentifierRepositoryException()
     {
+        $this->expectException(RepositoryException::class);
+
         $this->session->getNodeByIdentifier('foo');
     }
 
-    /**
-     * @expectedException \PHPCR\ItemNotFoundException
-     */
     public function testGetNodeByIdentifierItemNotFoundException()
     {
+        $this->expectException(ItemNotFoundException::class);
+
         $this->session->getNodeByIdentifier('00000000-0000-0000-0000-000000000000'); //FIXME: is the identifier format defined by the repository? how to generically get a valid but inexistent id?
     }
 
     /**
      * spec 4.3.
-     *
-     * @expectedException JavaException
      */
     public function testImpersonate()
     {
+        $this->expectException(JavaException::class);
+
         $cr = self::$loader->getRestrictedCredentials();
-        $session = $this->session->impersonate($cr);
+        $this->session->impersonate($cr);
         $this->markTestIncomplete('TODO: do some tests with the impersonated session');
     }
 
     //TODO: Write tests for LoginException and RepositoryException with impersonate
 
-    //4.4.4, 4.4.5
+    // 4.4.4, 4.4.5
     public function testIsLiveLogout()
     {
         $ses = $this->assertSession();

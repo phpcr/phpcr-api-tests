@@ -11,6 +11,11 @@
 
 namespace PHPCR\Tests\Query;
 
+use PHPCR\NodeInterface;
+use PHPCR\Query\InvalidQueryException;
+use PHPCR\Query\QOM\QueryObjectModelFactoryInterface;
+use PHPCR\Query\QueryInterface;
+
 /**
  * tests for the query manager, $ 6.8.
  *
@@ -26,38 +31,36 @@ class QueryManagerTest extends QueryBaseCase
     public function testCreateQuerySql2()
     {
         $ret = $this->sharedFixture['qm']->createQuery("SELECT * FROM [nt:folder] WHERE ISCHILDNODE('/tests_general/base')", \PHPCR\Query\QueryInterface::JCR_SQL2);
-        $this->assertInstanceOf('PHPCR\Query\QueryInterface', $ret);
+        $this->assertInstanceOf(QueryInterface::class, $ret);
     }
 
-    /**
-     * @expectedException \PHPCR\Query\InvalidQueryException
-     */
     public function testCreateQueryInvalid()
     {
+        $this->expectException(InvalidQueryException::class);
+
         $this->sharedFixture['qm']->createQuery(null, 'some-not-existing-query-language');
     }
 
     public function testGetQuery()
     {
         $qnode = $this->session->getNode('/tests_general_query/queryNode');
-        $this->assertInstanceOf('PHPCR\NodeInterface', $qnode);
+        $this->assertInstanceOf(NodeInterface::class, $qnode);
 
         $query = $this->sharedFixture['qm']->getQuery($qnode);
-        $this->assertInstanceOf('PHPCR\Query\QueryInterface', $query);
+        $this->assertInstanceOf(QueryInterface::class, $query);
     }
 
-    /**
-     * @expectedException \PHPCR\Query\InvalidQueryException
-     */
     public function testGetQueryInvalid()
     {
+        $this->expectException(InvalidQueryException::class);
+
         $this->sharedFixture['qm']->getQuery($this->rootNode);
     }
 
     public function testGetQOMFactory()
     {
         $factory = $this->sharedFixture['qm']->getQOMFactory();
-        $this->assertInstanceOf('PHPCR\Query\QOM\QueryObjectModelFactoryInterface', $factory);
+        $this->assertInstanceOf(QueryObjectModelFactoryInterface::class, $factory);
     }
 
     public function testGetSupportedQueryLanguages()

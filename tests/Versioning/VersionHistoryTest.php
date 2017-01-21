@@ -12,9 +12,14 @@
 namespace PHPCR\Tests\Versioning;
 
 use Jackalope\Property;
+use PHPCR\NodeInterface;
 use PHPCR\PathNotFoundException;
+use PHPCR\ReferentialIntegrityException;
+use PHPCR\Test\BaseCase;
 use PHPCR\Util\PathHelper;
+use PHPCR\Version\VersionException;
 use PHPCR\Version\VersionHistoryInterface;
+use PHPCR\Version\VersionInterface;
 use PHPCR\Version\VersionManagerInterface;
 
 /**
@@ -22,7 +27,7 @@ use PHPCR\Version\VersionManagerInterface;
  *
  * Covering jcr-2.8.3 spec $15.1
  */
-class VersionHistoryTest extends \PHPCR\Test\BaseCase
+class VersionHistoryTest extends BaseCase
 {
     /**
      * @var VersionManagerInterface
@@ -59,7 +64,7 @@ class VersionHistoryTest extends \PHPCR\Test\BaseCase
         parent::setUp();
         $this->vm = $this->session->getWorkspace()->getVersionManager();
         $this->history = $this->vm->getVersionHistory('/tests_version_base/versioned');
-        $this->assertInstanceOf('PHPCR\\Version\\VersionHistoryInterface', $this->history);
+        $this->assertInstanceOf(VersionHistoryInterface::class, $this->history);
     }
 
     public function testGetAllLinearFrozenNodes()
@@ -71,7 +76,7 @@ class VersionHistoryTest extends \PHPCR\Test\BaseCase
 
         $lastNode = null;
         foreach ($frozenNodes as $name => $node) {
-            $this->assertInstanceOf('PHPCR\NodeInterface', $node);
+            $this->assertInstanceOf(NodeInterface::class, $node);
             $this->assertInternalType('string', $name);
             $lastNode = $node;
         }
@@ -80,6 +85,7 @@ class VersionHistoryTest extends \PHPCR\Test\BaseCase
 
         $this->assertSame($currentNode, $lastNode);
     }
+
     public function testGetAllFrozenNodes()
     {
         // TODO: have non linear version history
@@ -90,7 +96,7 @@ class VersionHistoryTest extends \PHPCR\Test\BaseCase
 
         $lastNode = null;
         foreach ($frozenNodes as $name => $node) {
-            $this->assertInstanceOf('PHPCR\NodeInterface', $node);
+            $this->assertInstanceOf(NodeInterface::class, $node);
             $this->assertInternalType('string', $name);
             $lastNode = $node;
         }
@@ -112,7 +118,7 @@ class VersionHistoryTest extends \PHPCR\Test\BaseCase
         $firstVersion = $versions->current();
         $lastVersion = null;
         foreach ($versions as $name => $version) {
-            $this->assertInstanceOf('PHPCR\Version\VersionInterface', $version);
+            $this->assertInstanceOf(VersionInterface::class, $version);
             $this->assertEquals($version->getName(), $name);
             $lastVersion = $version;
         }
@@ -125,6 +131,7 @@ class VersionHistoryTest extends \PHPCR\Test\BaseCase
         $this->assertCount(1, $lastVersion->getPredecessors());
         $this->assertCount(0, $lastVersion->getSuccessors());
     }
+
     public function testGetAllVersions()
     {
         // TODO: have non linear version history
@@ -136,7 +143,7 @@ class VersionHistoryTest extends \PHPCR\Test\BaseCase
         $firstVersion = $versions->current();
         $lastVersion = null;
         foreach ($versions as $name => $version) {
-            $this->assertInstanceOf('PHPCR\Version\VersionInterface', $version);
+            $this->assertInstanceOf(VersionInterface::class, $version);
             $this->assertEquals($version->getName(), $name);
             $lastVersion = $version;
         }
@@ -149,6 +156,7 @@ class VersionHistoryTest extends \PHPCR\Test\BaseCase
         $this->assertCount(1, $lastVersion->getPredecessors());
         $this->assertCount(0, $lastVersion->getSuccessors());
     }
+
     /**
      * Check version history (allVersions), add more versions, then check the history updates correctly.
      */
@@ -165,7 +173,7 @@ class VersionHistoryTest extends \PHPCR\Test\BaseCase
         $history = $vm->getVersionHistory('/tests_version_base/versioned_all');
         $this->assertCount(1, $history->getAllVersions());
         foreach ($history->getAllVersions() as $name => $version) {
-            $this->assertInstanceOf('PHPCR\Version\VersionInterface', $version);
+            $this->assertInstanceOf(VersionInterface::class, $version);
             $this->assertEquals($version->getName(), $name);
         }
 
@@ -181,7 +189,7 @@ class VersionHistoryTest extends \PHPCR\Test\BaseCase
         $firstVersion = $finalVersions->current();
         $lastVersion = null;
         foreach ($finalVersions as $name => $version) {
-            $this->assertInstanceOf('PHPCR\Version\VersionInterface', $version);
+            $this->assertInstanceOf(VersionInterface::class, $version);
             $this->assertEquals($version->getName(), $name);
             $lastVersion = $version;
         }
@@ -223,7 +231,7 @@ class VersionHistoryTest extends \PHPCR\Test\BaseCase
         $firstVersion = $finalVersions->current();
         $lastVersion = null;
         foreach ($finalVersions as $name => $version) {
-            $this->assertInstanceOf('PHPCR\Version\VersionInterface', $version);
+            $this->assertInstanceOf(VersionInterface::class, $version);
             $this->assertEquals($version->getName(), $name);
             $lastVersion = $version;
         }
@@ -240,7 +248,7 @@ class VersionHistoryTest extends \PHPCR\Test\BaseCase
     public function testGetRootVersion()
     {
         $rootVersion = $this->history->getRootVersion();
-        $this->assertInstanceOf('PHPCR\\Version\\VersionInterface', $rootVersion);
+        $this->assertInstanceOf(VersionInterface::class, $rootVersion);
         $this->assertEquals($this->history->getPath(), PathHelper::getParentPath($rootVersion->getPath()));
     }
 
@@ -288,11 +296,11 @@ class VersionHistoryTest extends \PHPCR\Test\BaseCase
 
     /**
      * Check the last version cannot be removed.
-     *
-     * @expectedException \PHPCR\ReferentialIntegrityException
      */
     public function testDeleteLatestVersion()
     {
+        $this->expectException(ReferentialIntegrityException::class);
+
         $version = $this->vm->checkpoint('/tests_version_base/versioned');
         $history = $this->vm->getVersionHistory('/tests_version_base/versioned');
         $history->removeVersion($version->getName());
@@ -300,11 +308,11 @@ class VersionHistoryTest extends \PHPCR\Test\BaseCase
 
     /**
      * Try removing an unexisting version.
-     *
-     * @expectedException \PHPCR\Version\VersionException
      */
     public function testDeleteUnexistingVersion()
     {
+        $this->expectException(VersionException::class);
+
         $this->vm->checkpoint('/tests_version_base/versioned');
         $history = $this->vm->getVersionHistory('/tests_version_base/versioned');
         $history->removeVersion('unexisting');
@@ -312,10 +320,11 @@ class VersionHistoryTest extends \PHPCR\Test\BaseCase
 
     /**
      * Try to load  Version by unexisting label
-     * @expectedException \PHPCR\Version\VersionException
      */
     public function testUnexistingGetVersionByLabel()
     {
+        $this->expectException(VersionException::class);
+
         $history = $this->vm->getVersionHistory('/tests_version_base/versioned');
 
         $history->getVersionByLabel('definitlyNotSetLabel');
@@ -421,10 +430,11 @@ class VersionHistoryTest extends \PHPCR\Test\BaseCase
 
     /**
      * Try to remove unset label from a version.
-     * @expectedException \PHPCR\Version\VersionException
      */
     public function testRemoveUnsetLabel()
     {
+        $this->expectException(VersionException::class);
+
         $history = $this->vm->getVersionHistory('/tests_version_base/versioned');
         $history->removeVersionLabel('unsetLabel');
     }

@@ -11,21 +11,26 @@
 
 namespace PHPCR\Tests\Writing;
 
+use PHPCR\NamespaceException;
 use PHPCR\NamespaceRegistryInterface;
+use PHPCR\RepositoryException;
+use PHPCR\Test\BaseCase;
 
 //6.3.1 Namespace Registry
-class NamespaceRegistryTest extends \PHPCR\Test\BaseCase
+class NamespaceRegistryTest extends BaseCase
 {
     protected $workspace;
     /**
      * @var NamespaceRegistryInterface
      */
     protected $nr;
-    protected $nsBuiltIn = array('jcr' => 'http://www.jcp.org/jcr/1.0',
-                                 'nt'  => 'http://www.jcp.org/jcr/nt/1.0',
-                                 'mix' => 'http://www.jcp.org/jcr/mix/1.0',
-                                 'xml' => 'http://www.w3.org/XML/1998/namespace',
-                                 ''    => '', );
+    protected $nsBuiltIn = [
+        'jcr' => 'http://www.jcp.org/jcr/1.0',
+        'nt'  => 'http://www.jcp.org/jcr/nt/1.0',
+        'mix' => 'http://www.jcp.org/jcr/mix/1.0',
+        'xml' => 'http://www.w3.org/XML/1998/namespace',
+        ''    => ''
+    ];
 
     public function setUp()
     {
@@ -57,19 +62,17 @@ class NamespaceRegistryTest extends \PHPCR\Test\BaseCase
         }
     }
 
-    /**
-     * @expectedException \PHPCR\NamespaceException
-     */
     public function testGetURINamespaceException()
     {
+        $this->expectException(NamespaceException::class);
+
         $this->nr->getURI('thisshouldnotexist');
     }
 
-    /**
-     * @expectedException \PHPCR\RepositoryException
-     */
     public function testGetURIRepositoryException()
     {
+        $this->expectException(RepositoryException::class);
+
         $this->nr->getURI('in:valid');
     }
 
@@ -81,11 +84,10 @@ class NamespaceRegistryTest extends \PHPCR\Test\BaseCase
         }
     }
 
-    /**
-     * @expectedException \PHPCR\NamespaceException
-     */
     public function testGetPrefixNamespaceException()
     {
+        $this->expectException(NamespaceException::class);
+
         $this->nr->getPrefix('http://thisshouldnotexist.org/0.0');
     }
 
@@ -117,27 +119,24 @@ class NamespaceRegistryTest extends \PHPCR\Test\BaseCase
         $this->assertNotContains($uri, $this->nr->getURIs());
     }
 
-    /**
-     * @expectedException \PHPCR\NamespaceException
-     */
     public function testRegisterNamespaceException()
     {
+        $this->expectException(NamespaceException::class);
+
         $this->nr->registerNamespace('valid', $this->nsBuiltIn['jcr']);
     }
 
-    /**
-     * @expectedException \PHPCR\RepositoryException
-     */
     public function testRegisterNamespacePrefixRepositoryException()
     {
+        $this->expectException(RepositoryException::class);
+
         $this->nr->registerNamespace('in:valid', 'http://a_new_namespace');
     }
 
-    /**
-     * @expectedException \PHPCR\NamespaceException
-     */
     public function testUnregisterNamespaceException()
     {
+        $this->expectException(NamespaceException::class);
+
         $this->nr->unregisterNamespaceByURI('http://thisshouldnotexist.org/0.0');
     }
 

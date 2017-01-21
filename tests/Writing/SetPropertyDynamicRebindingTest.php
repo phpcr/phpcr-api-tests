@@ -11,7 +11,11 @@
 
 namespace PHPCR\Tests\Writing;
 
+use DateTime;
+use PHPCR\PropertyInterface;
 use PHPCR\PropertyType;
+use PHPCR\Test\BaseCase;
+use PHPCR\UnsupportedRepositoryOperationException;
 
 /**
  * Testing whether node property dynamic re-binding (i.e. setting a new type
@@ -22,14 +26,14 @@ use PHPCR\PropertyType;
  *
  * Covering jcr-2.8.3 spec $10.4.2
  *
- * @see \PHPCR\NodeInterface::setProperty()
- * @see \PHPCR\PropertyInterface::setValue()
+ * @see NodeInterface::setProperty()
+ * @see PropertyInterface::setValue()
  */
-class SetPropertyDynamicRebindingTest extends \PHPCR\Test\BaseCase
+class SetPropertyDynamicRebindingTest extends BaseCase
 {
     protected $referenceable_node_uuid = '842e61c0-09ab-42a9-87c0-308ccc90e6f4';
 
-    protected static $created_nodes = array();
+    protected static $created_nodes = [];
 
     public static function setupBeforeClass($fixtures = '10_Writing/nodetype')
     {
@@ -58,7 +62,7 @@ class SetPropertyDynamicRebindingTest extends \PHPCR\Test\BaseCase
 
         // Create the property with the source type and value and save it
         $prop = $node->setProperty($propName, $sourcePropValue, $sourcePropType);
-        $this->assertInstanceOf('\PHPCR\PropertyInterface', $prop);
+        $this->assertInstanceOf(PropertyInterface::class, $prop);
         $this->assertEquals($sourcePropType, $prop->getType(), 'Initial property type does not match before saving');
 
         self::$created_nodes[] = $prop->getPath();
@@ -69,7 +73,7 @@ class SetPropertyDynamicRebindingTest extends \PHPCR\Test\BaseCase
         } elseif ($sourcePropType === PropertyType::DATE) {
             // To avoid problems with the representation of the TZ, we compare timestamps
             $this->assertEquals($sourcePropValue->getTimestamp(), $prop->getValue()->getTimestamp());
-        } elseif ($sourcePropType !== \PHPCR\PropertyType::BINARY) {
+        } elseif ($sourcePropType !== PropertyType::BINARY) {
             $this->assertEquals($sourcePropValue, $prop->getValue(), 'Initial property value does not match before saving');
         } else {
             // PHPUnit does not like to assertEquals on resources
@@ -79,7 +83,7 @@ class SetPropertyDynamicRebindingTest extends \PHPCR\Test\BaseCase
         // Read it from backend check it's still valid
         $this->saveAndRenewSession();
         $prop = $this->session->getProperty('/'.$propName);
-        $this->assertInstanceOf('\PHPCR\PropertyInterface', $prop);
+        $this->assertInstanceOf(PropertyInterface::class, $prop);
         $this->assertEquals($sourcePropType, $prop->getType(), 'Initial property type does not match after saving');
 
         if ($sourcePropType === PropertyType::REFERENCE
@@ -87,9 +91,9 @@ class SetPropertyDynamicRebindingTest extends \PHPCR\Test\BaseCase
             $this->assertEquals($this->referenceable_node_uuid, $prop->getString());
         } elseif ($sourcePropType === PropertyType::DATE) {
             // To avoid problems with the representation of the TZ, we compare timestamps
-            $this->assertInstanceOf('DateTime', $prop->getValue());
+            $this->assertInstanceOf(DateTime::class, $prop->getValue());
             $this->assertEquals($sourcePropValue->getTimestamp(), $prop->getValue()->getTimestamp());
-        } elseif ($sourcePropType !== \PHPCR\PropertyType::BINARY) {
+        } elseif ($sourcePropType !== PropertyType::BINARY) {
             $this->assertEquals($sourcePropValue, $prop->getValue(), 'Initial property value does not match after saving');
         } else {
             // PHPUnit does not like to assertEquals on resources
@@ -99,7 +103,7 @@ class SetPropertyDynamicRebindingTest extends \PHPCR\Test\BaseCase
         try {
             // Re-bind the property to the new type/value and save it
             $prop->setValue($destPropValue, $destPropType);
-        } catch (\PHPCR\UnsupportedRepositoryOperationException $e) {
+        } catch (UnsupportedRepositoryOperationException $e) {
             // If the implementation does not support dynamic re-binding, an
             // UnsupportedRepositoryException is thrown if the type parameter is
             // present and different from the current type.
@@ -111,9 +115,9 @@ class SetPropertyDynamicRebindingTest extends \PHPCR\Test\BaseCase
         $this->assertEquals($destPropType, $prop->getType(), 'Property type does not match after re-binding');
         // If this is DateTime object, convert to string and then compare.
         // It's done to avoid issues with timezone provided by DateTime object
-        if ($destPropValue instanceof \DateTime) {
+        if ($destPropValue instanceof DateTime) {
             $date = $prop->getValue();
-            $this->assertInstanceOf('DateTime', $date);
+            $this->assertInstanceOf(DateTime::class, $date);
             $this->assertEquals($destPropValue->getTimestamp(), $date->getTimestamp(), 'Datetime value does not match after re-binding');
         } else {
             $this->assertEquals($destPropValue, $prop->$getterFunc(), 'Property value does not match after re-binding');
@@ -122,12 +126,12 @@ class SetPropertyDynamicRebindingTest extends \PHPCR\Test\BaseCase
         // Finally re-read it from backend and check it's still ok
         $this->saveAndRenewSession();
         $prop = $this->session->getProperty('/'.$propName);
-        $this->assertInstanceOf('\PHPCR\PropertyInterface', $prop);
+        $this->assertInstanceOf(PropertyInterface::class, $prop);
         $this->assertEquals($destPropType, $prop->getType(), 'Property type does not match after re-binding and save');
 
         if ($destPropType === PropertyType::DATE) {
             // To avoid problems with the representation of the TZ, we compare timestamps
-            $this->assertInstanceOf('DateTime', $prop->getValue());
+            $this->assertInstanceOf(DateTime::class, $prop->getValue());
             $this->assertEquals($destPropValue->getTimestamp(), $prop->getValue()->getTimestamp());
         } else {
             $this->assertEquals($destPropValue, $prop->$getterFunc(), 'Property value does not match after re-binding and save');
@@ -147,7 +151,7 @@ class SetPropertyDynamicRebindingTest extends \PHPCR\Test\BaseCase
      */
     public function dynamicRebindingProvider()
     {
-        $typesAndValues = array(
+        $typesAndValues = [
             PropertyType::STRING        => 'abcdefg',
             PropertyType::URI           => 'https://github.com/jackalope/jackalope/wiki',
             PropertyType::BOOLEAN       => true,
@@ -155,14 +159,14 @@ class SetPropertyDynamicRebindingTest extends \PHPCR\Test\BaseCase
             PropertyType::DOUBLE        => 3.1415926535897,
             PropertyType::DECIMAL       => '3.14',
             PropertyType::BINARY        => 'some binary stuff',
-            PropertyType::DATE          => new \DateTime(),
+            PropertyType::DATE          => new DateTime(),
             PropertyType::NAME          => 'jcr:some_name',
             PropertyType::PATH          => '/some/valid/path',
             PropertyType::WEAKREFERENCE => $this->referenceable_node_uuid,
             PropertyType::REFERENCE     => $this->referenceable_node_uuid,
-        );
+        ];
 
-        $getters = array(
+        $getters = [
             PropertyType::STRING        => 'getString',
             PropertyType::URI           => 'getString',
             PropertyType::BOOLEAN       => 'getBoolean',
@@ -175,16 +179,17 @@ class SetPropertyDynamicRebindingTest extends \PHPCR\Test\BaseCase
             PropertyType::PATH          => 'getString',
             PropertyType::WEAKREFERENCE => 'getString',
             PropertyType::REFERENCE     => 'getString',
-        );
+        ];
 
-        $provider = array();
+        $provider = [];
+
         foreach ($typesAndValues as $sourceKey => $sourceVal) {
             foreach ($typesAndValues as $destKey => $destVal) {
                 if ($sourceKey !== $destKey) {
                     $propName =
                         'dynRebinding_'.PropertyType::nameFromValue($sourceKey).
                         '_To_'.PropertyType::nameFromValue($destKey);
-                    $provider[] = array($propName, $sourceKey, $sourceVal, $destKey, $destVal, $getters[$destKey]);
+                    $provider[] = [$propName, $sourceKey, $sourceVal, $destKey, $destVal, $getters[$destKey]];
                 }
             }
         }

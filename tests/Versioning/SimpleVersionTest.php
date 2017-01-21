@@ -12,6 +12,8 @@
 namespace PHPCR\Tests\Versioning;
 
 use PHPCR\NodeInterface;
+use PHPCR\NodeType\ConstraintViolationException;
+use PHPCR\RepositoryException;
 use PHPCR\Test\BaseCase;
 use PHPCR\Version\VersionInterface;
 use PHPCR\Version\VersionManagerInterface;
@@ -46,7 +48,7 @@ class SimpleVersionTest extends BaseCase
 
         $this->simpleVersioned = $this->vm->getBaseVersion('/tests_version_base/simpleVersioned');
 
-        $this->assertInstanceOf('PHPCR\Version\VersionInterface', $this->simpleVersioned);
+        $this->assertInstanceOf(VersionInterface::class, $this->simpleVersioned);
     }
 
     public function testGetContainingHistory()
@@ -70,20 +72,21 @@ class SimpleVersionTest extends BaseCase
         $predecessors = $this->simpleVersioned->getPredecessors();
         $this->assertInternalType('array', $predecessors);
         $firstVersion = reset($predecessors);
-        $this->assertInstanceOf('PHPCR\Version\VersionInterface', $firstVersion);
+        $this->assertInstanceOf(VersionInterface::class, $firstVersion);
         $frozen2 = $firstVersion->getFrozenNode();
-        $this->assertInstanceOf('PHPCR\NodeInterface', $firstVersion);
+        $this->assertInstanceOf(NodeInterface::class, $firstVersion);
         /* @var $frozen2 NodeInterface */
         $this->assertTrue($frozen2->hasProperty('foo'));
         $this->assertEquals('bar2', $frozen2->getPropertyValue('foo'));
     }
 
     /**
-     * @expectedException \PHPCR\NodeType\ConstraintViolationException
      * @depends testGetFrozenNode
      */
     public function testFrozenNode()
     {
+        $this->expectException(ConstraintViolationException::class);
+
         $frozen = $this->simpleVersioned->getFrozenNode();
         $frozen->setProperty('foo', 'should not work');
         self::$staticSharedFixture['session']->save();
@@ -92,7 +95,7 @@ class SimpleVersionTest extends BaseCase
     public function testGetLinearPredecessorSuccessor()
     {
         $pred = $this->simpleVersioned->getLinearPredecessor();
-        $this->assertInstanceOf('PHPCR\Version\VersionInterface', $pred);
+        $this->assertInstanceOf(VersionInterface::class, $pred);
         $succ = $pred->getLinearSuccessor();
         $this->assertSame($this->simpleVersioned, $succ);
     }
@@ -115,7 +118,7 @@ class SimpleVersionTest extends BaseCase
         $versions = $this->simpleVersioned->getPredecessors();
         $this->assertCount(1, $versions);
         $pred = $versions[0];
-        $this->assertInstanceOf('PHPCR\Version\VersionInterface', $pred);
+        $this->assertInstanceOf(VersionInterface::class, $pred);
         $versions = $pred->getSuccessors();
         $this->assertCount(1, $versions, 'expected a successor of our predecessor');
         $this->assertSame($this->simpleVersioned, $versions[0]);
@@ -129,11 +132,11 @@ class SimpleVersionTest extends BaseCase
 
     /**
      * Check $version->remove() is not possible. This must go through VersionHistory::remove.
-     *
-     * @expectedException \PHPCR\RepositoryException
      */
     public function testNodeRemoveOnVersion()
     {
+        $this->expectException(RepositoryException::class);
+
         $version = $this->vm->checkpoint('/tests_version_base/simpleVersioned');
         $version->remove();
     }

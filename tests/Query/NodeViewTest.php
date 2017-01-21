@@ -11,6 +11,9 @@
 
 namespace PHPCR\Tests\Query;
 
+use OutOfBoundsException;
+use PHPCR\NodeInterface;
+
 /**
  * test the query result node view $ 6.11.2.
  */
@@ -30,7 +33,7 @@ class NodeViewTest extends QueryBaseCase
         $count = 0;
 
         foreach ($this->nodeIterator as $node) {
-            $this->assertInstanceOf('PHPCR\NodeInterface', $node); // Test if the return element is an istance of node
+            $this->assertInstanceOf(NodeInterface::class, $node); // Test if the return element is an istance of node
             $count++;
         }
 
@@ -41,7 +44,7 @@ class NodeViewTest extends QueryBaseCase
     {
         $seekPosition = 2;
 
-        $nodes = array();
+        $nodes = [];
         $i = 0;
         foreach ($this->nodeIterator as $path => $node) {
             if ($i++ == $seekPosition) {
@@ -56,17 +59,17 @@ class NodeViewTest extends QueryBaseCase
         $this->assertEquals($seekNode, $this->nodeIterator->current());
     }
 
-    /**
-     * @expectedException \OutOfBoundsException
-     */
     public function testSeekableOutOfBounds()
     {
+        $this->expectException(OutOfBoundsException::class);
+
         $this->nodeIterator->seek(30);
     }
 
     public function testCountable()
     {
-        $nodes = array();
+        $nodes = [];
+
         foreach ($this->nodeIterator as $node) {
             $nodes[] = $node;
         }

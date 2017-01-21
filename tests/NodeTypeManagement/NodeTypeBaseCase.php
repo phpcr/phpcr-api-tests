@@ -11,7 +11,11 @@
 
 namespace PHPCR\Tests\NodeTypeManagement;
 
+use PHPCR\ItemInterface;
+use PHPCR\NodeType\ConstraintViolationException;
+use PHPCR\NodeType\NodeTypeExistsException;
 use PHPCR\NodeType\NodeTypeInterface;
+use PHPCR\RepositoryException;
 use PHPCR\WorkspaceInterface;
 use PHPCR\SessionInterface;
 use PHPCR\NodeType\NodeTypeDefinitionInterface;
@@ -26,6 +30,7 @@ abstract class NodeTypeBaseCase extends BaseCase
      * @var WorkspaceInterface
      */
     protected $workspace;
+
     /**
      * @var SessionInterface
      */
@@ -34,6 +39,7 @@ abstract class NodeTypeBaseCase extends BaseCase
     protected function setUp()
     {
         $this->renewSession(); // reset session
+
         parent::setUp();
 
         $this->workspace = $this->session->getWorkspace();
@@ -94,7 +100,7 @@ abstract class NodeTypeBaseCase extends BaseCase
         // apitest
         list($name, $type) = each($types);
         $this->assertEquals('phpcr:apitest', $name);
-        $this->assertInstanceOf('PHPCR\NodeType\NodeTypeDefinitionInterface', $type);
+        $this->assertInstanceOf(NodeTypeDefinitionInterface::class, $type);
         /* @var $type NodeTypeDefinitionInterface */
         $props = $type->getDeclaredPropertyDefinitions();
         $this->assertCount(1, $props, 'Wrong number of properties in phpcr:apitest');
@@ -104,7 +110,7 @@ abstract class NodeTypeBaseCase extends BaseCase
         // test
         list($name, $type) = each($types);
         $this->assertEquals('phpcr:test', $name);
-        $this->assertInstanceOf('PHPCR\NodeType\NodeTypeDefinitionInterface', $type);
+        $this->assertInstanceOf(NodeTypeDefinitionInterface::class, $type);
         /* @var $type NodeTypeDefinitionInterface */
         $props = $type->getDeclaredPropertyDefinitions();
         $this->assertCount(1, $props, 'Wrong number of properties in phpcr:test');
@@ -123,7 +129,7 @@ abstract class NodeTypeBaseCase extends BaseCase
             $node->setProperty('phpcr:prop', 'test');
             $this->session->save();
             $this->fail('This node should not accept the property');
-        } catch (\PHPCR\NodeType\ConstraintViolationException $e) {
+        } catch (ConstraintViolationException $e) {
             // expected
         }
         $node->addMixin('phpcr:test');
@@ -134,19 +140,18 @@ abstract class NodeTypeBaseCase extends BaseCase
             $node->setProperty('phpcr:class', 'x');
             $this->session->save();
             $this->fail('This property was multivalue');
-        } catch (\PHPCR\NodeType\ConstraintViolationException $e) {
+        } catch (ConstraintViolationException $e) {
             // expected
         }
 
-        $node->setProperty('phpcr:class', array('x', 'y'));
+        $node->setProperty('phpcr:class', ['x', 'y']);
         $this->session->save();
     }
 
-    /**
-     * @expectedException \PHPCR\NodeType\NodeTypeExistsException
-     */
     public function testRegisterNodeTypesNoUpdate()
     {
+        $this->expectException(NodeTypeExistsException::class);
+
         $this->registerNodeTypes(false); // if the node types exist from previous, this fails
         $this->registerNodeTypes(false); // otherwise it must fail here
     }
@@ -170,15 +175,14 @@ abstract class NodeTypeBaseCase extends BaseCase
 
         // Check the primary item of the new node
         $primary = $node->getPrimaryItem();
-        $this->assertInstanceOf('PHPCR\ItemInterface', $node);
+        $this->assertInstanceOf(ItemInterface::class, $node);
         $this->assertEquals('phpcr:content', $primary->getName());
     }
 
-    /**
-     * @expectedException \PHPCR\RepositoryException
-     */
     public function testOverwriteBuiltinNodeType()
     {
+        $this->expectException(RepositoryException::class);
+
         $this->registerBuiltinNodeType();
     }
 }

@@ -11,12 +11,15 @@
 
 namespace PHPCR\Tests\Query\QOM;
 
+use PHPCR\Query\QOM\QueryObjectModelInterface;
+use PHPCR\Test\BaseCase;
+use PHPCR\UnsupportedRepositoryOperationException;
 use PHPCR\Util\QOM\Sql2Generator;
 use PHPCR\Util\QOM\Sql2ToQomQueryConverter;
 use PHPCR\Util\QOM\QomToSql2QueryConverter;
 use PHPCR\Util\ValueConverter;
 
-class ConvertQueriesBackAndForthTest extends \PHPCR\Test\BaseCase
+class ConvertQueriesBackAndForthTest extends BaseCase
 {
     /**
      * @var string[]
@@ -24,7 +27,7 @@ class ConvertQueriesBackAndForthTest extends \PHPCR\Test\BaseCase
     protected $sql2Queries;
 
     /**
-     * @var \PHPCR\Query\QOM\QueryObjectModelInterface[]
+     * @var QueryObjectModelInterface[]
      */
     protected $qomQueries;
 
@@ -49,7 +52,7 @@ class ConvertQueriesBackAndForthTest extends \PHPCR\Test\BaseCase
 
         try {
             $this->sql2Parser = new Sql2ToQomQueryConverter($factory);
-        } catch (\PHPCR\UnsupportedRepositoryOperationException $e) {
+        } catch (UnsupportedRepositoryOperationException $e) {
             $this->markTestSkipped('Repository does not support the QOM factory');
         }
     }

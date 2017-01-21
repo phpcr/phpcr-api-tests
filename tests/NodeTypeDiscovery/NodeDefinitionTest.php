@@ -11,16 +11,19 @@
 
 namespace PHPCR\Tests\NodeTypeDiscovery;
 
+use Exception;
 use PHPCR\NodeType\NodeDefinitionInterface;
 use PHPCR\NodeType\NodeTypeInterface;
 use PHPCR\NodeType\NodeTypeManagerInterface;
+use PHPCR\Test\BaseCase;
+use PHPCR\Version\OnParentVersionAction;
 
 /**
  * Test NodeDefinition behaviour and reading NodeDefinition from NodeTypeDefinition §8.
  *
  * Requires that NodeTypeManager->getNodeType and NodeTypeDefinition->getChildNodeDefinitions() works correctly
  */
-class NodeDefinitionTest extends \PHPCR\Test\BaseCase
+class NodeDefinitionTest extends BaseCase
 {
     private static $base;
 
@@ -66,21 +69,22 @@ class NodeDefinitionTest extends \PHPCR\Test\BaseCase
     public function setUp()
     {
         parent::setUp();
+
         try {
             $defs = self::$file->getChildNodeDefinitions();
             $this->assertInternalType('array', $defs);
             $this->assertCount(1, $defs);
             list($key, $this->content) = each($defs);
-            $this->assertInstanceOf('\PHPCR\NodeType\NodeDefinitionInterface', $this->content);
+            $this->assertInstanceOf(NodeDefinitionInterface::class, $this->content);
             $this->assertEquals('jcr:content', $this->content->getName());
 
             $defs = self::$folder->getChildNodeDefinitions();
             $this->assertInternalType('array', $defs);
             $this->assertCount(1, $defs);
             list($key, $this->hierarchyNodeDef) = each($defs);
-            $this->assertInstanceOf('\PHPCR\NodeType\NodeDefinitionInterface', $this->hierarchyNodeDef);
+            $this->assertInstanceOf(NodeDefinitionInterface::class, $this->hierarchyNodeDef);
             $this->assertEquals('*', $this->hierarchyNodeDef->getName());
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->markTestSkipped('getChildNodeDefinitions not working as it should, skipping tests about NodeDefinitionInterface: '.$e->getMessage());
         }
     }
@@ -143,8 +147,8 @@ class NodeDefinitionTest extends \PHPCR\Test\BaseCase
 
     public function testGetOnParentVersion()
     {
-        $this->assertEquals(\PHPCR\Version\OnParentVersionAction::COPY, $this->content->getOnParentVersion());
-        $this->assertEquals(\PHPCR\Version\OnParentVersionAction::VERSION, $this->hierarchyNodeDef->getOnParentVersion());
+        $this->assertEquals(OnParentVersionAction::COPY, $this->content->getOnParentVersion());
+        $this->assertEquals(OnParentVersionAction::VERSION, $this->hierarchyNodeDef->getOnParentVersion());
     }
 
     public function testIsAutoCreated()

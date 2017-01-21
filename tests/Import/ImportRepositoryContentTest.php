@@ -12,9 +12,18 @@
 namespace PHPCR\Tests\Import;
 
 use PHPCR\ImportUUIDBehaviorInterface;
+use PHPCR\ItemExistsException;
+use PHPCR\NodeType\ConstraintViolationException;
+use PHPCR\PathNotFoundException;
+use PHPCR\PropertyInterface;
+use PHPCR\PropertyType;
+use PHPCR\SessionInterface;
+use PHPCR\Test\BaseCase;
+use PHPCR\Util\UUIDHelper;
+use RuntimeException;
 
 //6.5 Import Repository Content
-class ImportRepositoryContentTest extends \PHPCR\Test\BaseCase
+class ImportRepositoryContentTest extends BaseCase
 {
     public static function setupBeforeClass($fixtures = null)
     {
@@ -47,11 +56,11 @@ class ImportRepositoryContentTest extends \PHPCR\Test\BaseCase
         $this->assertTrue($session->nodeExists('/tests_general_base'));
         $this->assertTrue($session->propertyExists('/tests_general_base/idExample/jcr:content/weakreference_target/jcr:uuid'));
         $uuid = $session->getProperty('/tests_general_base/idExample/jcr:content/weakreference_target/jcr:uuid');
-        $this->assertInstanceOf('PHPCR\PropertyInterface', $uuid);
+        $this->assertInstanceOf(PropertyInterface::class, $uuid);
         $this->assertEquals('13543fc6-1abf-4708-bfcc-e49511754b40', $uuid->getString());
 
         $ref = $session->getProperty('/tests_general_base/idExample/jcr:content/weakreference_source1/ref1');
-        $this->assertEquals(\PHPCR\PropertyType::WEAKREFERENCE, $ref->getType());
+        $this->assertEquals(PropertyType::WEAKREFERENCE, $ref->getType());
         $this->assertEquals('13543fc6-1abf-4708-bfcc-e49511754b40', $ref->getString());
 
         $session = $this->saveAndRenewSession();
@@ -59,44 +68,41 @@ class ImportRepositoryContentTest extends \PHPCR\Test\BaseCase
         $this->assertTrue($session->nodeExists('/tests_general_base'));
         $this->assertTrue($session->propertyExists('/tests_general_base/idExample/jcr:content/weakreference_target/jcr:uuid'));
         $uuid = $session->getProperty('/tests_general_base/idExample/jcr:content/weakreference_target/jcr:uuid');
-        $this->assertInstanceOf('PHPCR\PropertyInterface', $uuid);
+        $this->assertInstanceOf(PropertyInterface::class, $uuid);
         $this->assertEquals('13543fc6-1abf-4708-bfcc-e49511754b40', $uuid->getString());
 
         $ref = $session->getProperty('/tests_general_base/idExample/jcr:content/weakreference_source1/ref1');
-        $this->assertEquals(\PHPCR\PropertyType::WEAKREFERENCE, $ref->getType());
+        $this->assertEquals(PropertyType::WEAKREFERENCE, $ref->getType());
         $this->assertEquals('13543fc6-1abf-4708-bfcc-e49511754b40', $ref->getString());
     }
 
-    /**
-     * @expectedException \PHPCR\PathNotFoundException
-     */
     public function testImportXMLSystemPathNotFoundSession()
     {
+        $this->expectException(PathNotFoundException::class);
+
         $this->session->importXML('/inexistent-path', __DIR__.'/../../fixtures/general/base.xml', ImportUUIDBehaviorInterface::IMPORT_UUID_COLLISION_THROW);
     }
-    /**
-     * @expectedException \PHPCR\PathNotFoundException
-     */
+
     public function testImportXMLSystemPathNotFoundWorkspace()
     {
+        $this->expectException(PathNotFoundException::class);
+
         $this->session->getWorkspace()->importXML('/inexistent-path', __DIR__.'/../../fixtures/general/base.xml', ImportUUIDBehaviorInterface::IMPORT_UUID_COLLISION_THROW);
     }
 
-    /**
-     * @expectedException \PHPCR\ItemExistsException
-     */
     public function testImportXMLSystemIdCollisionSession()
     {
+        $this->expectException(ItemExistsException::class);
+
         self::$staticSharedFixture['ie']->import('11_Import/idnode');
         $session = $this->renewSession();
         $session->importXML('/', __DIR__.'/../../fixtures/general/base.xml', ImportUUIDBehaviorInterface::IMPORT_UUID_COLLISION_THROW);
     }
 
-    /**
-     * @expectedException \PHPCR\ItemExistsException
-     */
     public function testImportXMLSystemIdCollisionWorkspace()
     {
+        $this->expectException(ItemExistsException::class);
+
         self::$staticSharedFixture['ie']->import('11_Import/idnode');
         $session = $this->renewSession();
         $session->getWorkspace()->importXML('/', __DIR__.'/../../fixtures/general/base.xml', ImportUUIDBehaviorInterface::IMPORT_UUID_COLLISION_THROW);
@@ -104,11 +110,11 @@ class ImportRepositoryContentTest extends \PHPCR\Test\BaseCase
 
     /**
      * try to replace the path to which we are importing atm.
-     *
-     * @expectedException \PHPCR\NodeType\ConstraintViolationException
      */
     public function testImportXMLUuidRemoveParentSession()
     {
+        $this->expectException(ConstraintViolationException::class);
+
         self::$staticSharedFixture['ie']->import('11_Import/idnode');
         $session = $this->renewSession();
         $session->importXML('/container/idExample', __DIR__.'/../../fixtures/general/base.xml', ImportUUIDBehaviorInterface::IMPORT_UUID_COLLISION_REMOVE_EXISTING);
@@ -116,11 +122,11 @@ class ImportRepositoryContentTest extends \PHPCR\Test\BaseCase
 
     /**
      * try to replace the path to which we are importing atm.
-     *
-     * @expectedException \PHPCR\NodeType\ConstraintViolationException
      */
     public function testImportXMLUuidRemoveParentWorkspace()
     {
+        $this->expectException(ConstraintViolationException::class);
+
         self::$staticSharedFixture['ie']->import('11_Import/idnode');
         $session = $this->renewSession();
         $session->getWorkspace()->importXML('/container/idExample', __DIR__.'/../../fixtures/general/base.xml', ImportUUIDBehaviorInterface::IMPORT_UUID_COLLISION_REMOVE_EXISTING);
@@ -132,13 +138,15 @@ class ImportRepositoryContentTest extends \PHPCR\Test\BaseCase
         $session = $this->renewSession();
         $this->doTestImportXMLUuidNew($session, $session);
     }
+
     public function testImportXMLUuidNewWorkspace()
     {
         self::$staticSharedFixture['ie']->import('11_Import/idnode');
         $session = $this->renewSession();
         $this->doTestImportXMLUuidNew($session->getWorkspace(), $session);
     }
-    private function doTestImportXMLUuidNew($connect, $session)
+
+    private function doTestImportXMLUuidNew($connect, SessionInterface $session)
     {
         $connect->importXML('/', __DIR__.'/../../fixtures/general/base.xml', ImportUUIDBehaviorInterface::IMPORT_UUID_CREATE_NEW);
 
@@ -151,7 +159,7 @@ class ImportRepositoryContentTest extends \PHPCR\Test\BaseCase
 
         $this->assertTrue($session->propertyExists('/tests_general_base/idExample/jcr:content/weakreference_source1/ref1'));
         $ref = $session->getProperty('/tests_general_base/idExample/jcr:content/weakreference_source1/ref1');
-        $this->assertEquals(\PHPCR\PropertyType::WEAKREFERENCE, $ref->getType());
+        $this->assertEquals(PropertyType::WEAKREFERENCE, $ref->getType());
         $this->assertEquals('13543fc6-1abf-4708-bfcc-e49511754b40', $ref->getString());
 
         $session = $this->saveAndRenewSession();
@@ -177,12 +185,12 @@ class ImportRepositoryContentTest extends \PHPCR\Test\BaseCase
         // get the uuid of an imported node that had no collision
         $this->assertTrue($session->propertyExists('/tests_general_base/idExample/jcr:content/weakreference_target/jcr:uuid'));
         $uuid = $session->getProperty('/tests_general_base/idExample/jcr:content/weakreference_target/jcr:uuid');
-        $this->assertInstanceOf('PHPCR\PropertyInterface', $uuid);
+        $this->assertInstanceOf(PropertyInterface::class, $uuid);
         $target = $uuid->getString();
 
         // the reference must still point to that node. the uuid might has changed (implementation detail if non-collision uuid change or not)
         $ref = $session->getProperty('/tests_general_base/idExample/jcr:content/weakreference_source1/ref1');
-        $this->assertEquals(\PHPCR\PropertyType::WEAKREFERENCE, $ref->getType());
+        $this->assertEquals(PropertyType::WEAKREFERENCE, $ref->getType());
         $this->assertEquals($target, $ref->getString());
     }
 
@@ -192,6 +200,7 @@ class ImportRepositoryContentTest extends \PHPCR\Test\BaseCase
         $session = $this->renewSession();
         $this->doTestImportXMLUuidRemoveExisting($session, $session);
     }
+
     public function testImportXMLUuidRemoveExistingWorkspace()
     {
         self::$staticSharedFixture['ie']->import('11_Import/idnode');
@@ -199,7 +208,7 @@ class ImportRepositoryContentTest extends \PHPCR\Test\BaseCase
         $this->doTestImportXMLUuidRemoveExisting($session->getWorkspace(), $session);
     }
 
-    private function doTestImportXMLUuidRemoveExisting($connect, $session)
+    private function doTestImportXMLUuidRemoveExisting($connect, SessionInterface $session)
     {
         $connect->importXML('/', __DIR__.'/../../fixtures/general/base.xml', ImportUUIDBehaviorInterface::IMPORT_UUID_COLLISION_REMOVE_EXISTING);
 
@@ -214,11 +223,11 @@ class ImportRepositoryContentTest extends \PHPCR\Test\BaseCase
 
         $this->assertTrue($session->propertyExists('/tests_general_base/idExample/jcr:content/weakreference_target/jcr:uuid'));
         $uuid = $session->getProperty('/tests_general_base/idExample/jcr:content/weakreference_target/jcr:uuid');
-        $this->assertInstanceOf('PHPCR\PropertyInterface', $uuid);
+        $this->assertInstanceOf(PropertyInterface::class, $uuid);
         $this->assertEquals('13543fc6-1abf-4708-bfcc-e49511754b40', $uuid->getString());
 
         $ref = $session->getProperty('/tests_general_base/idExample/jcr:content/weakreference_source1/ref1');
-        $this->assertEquals(\PHPCR\PropertyType::WEAKREFERENCE, $ref->getType());
+        $this->assertEquals(PropertyType::WEAKREFERENCE, $ref->getType());
         $this->assertEquals('13543fc6-1abf-4708-bfcc-e49511754b40', $ref->getString());
 
         $session = $this->saveAndRenewSession();
@@ -230,11 +239,11 @@ class ImportRepositoryContentTest extends \PHPCR\Test\BaseCase
         $this->assertTrue($session->nodeExists('/tests_general_base'));
         $this->assertTrue($session->propertyExists('/tests_general_base/idExample/jcr:content/weakreference_target/jcr:uuid'));
         $uuid = $session->getProperty('/tests_general_base/idExample/jcr:content/weakreference_target/jcr:uuid');
-        $this->assertInstanceOf('PHPCR\PropertyInterface', $uuid);
+        $this->assertInstanceOf(PropertyInterface::class, $uuid);
         $this->assertEquals('13543fc6-1abf-4708-bfcc-e49511754b40', $uuid->getString());
 
         $ref = $session->getProperty('/tests_general_base/idExample/jcr:content/weakreference_source1/ref1');
-        $this->assertEquals(\PHPCR\PropertyType::WEAKREFERENCE, $ref->getType());
+        $this->assertEquals(PropertyType::WEAKREFERENCE, $ref->getType());
         $this->assertEquals('13543fc6-1abf-4708-bfcc-e49511754b40', $ref->getString());
     }
 
@@ -244,13 +253,15 @@ class ImportRepositoryContentTest extends \PHPCR\Test\BaseCase
         $session = $this->renewSession();
         $this->doTestImportXMLUuidReplaceExisting($session, $session);
     }
+
     public function testImportXMLUuidReplaceExistingWorkspace()
     {
         self::$staticSharedFixture['ie']->import('11_Import/idnode');
         $session = $this->renewSession();
         $this->doTestImportXMLUuidReplaceExisting($session->getWorkspace(), $session);
     }
-    private function doTestImportXMLUuidReplaceExisting($connect, $session)
+
+    private function doTestImportXMLUuidReplaceExisting($connect, SessionInterface $session)
     {
         $session->importXML('/', __DIR__.'/../../fixtures/general/base.xml', ImportUUIDBehaviorInterface::IMPORT_UUID_COLLISION_REPLACE_EXISTING);
 
@@ -268,7 +279,7 @@ class ImportRepositoryContentTest extends \PHPCR\Test\BaseCase
         $this->assertTrue($session->nodeExists('/tests_general_base/test:namespacedNode'));
 
         $ref = $session->getProperty('/container/idExample/jcr:content/weakreference_source1/ref1');
-        $this->assertEquals(\PHPCR\PropertyType::WEAKREFERENCE, $ref->getType());
+        $this->assertEquals(PropertyType::WEAKREFERENCE, $ref->getType());
         $this->assertEquals('13543fc6-1abf-4708-bfcc-e49511754b40', $ref->getString());
 
         $session = $this->saveAndRenewSession();
@@ -287,7 +298,7 @@ class ImportRepositoryContentTest extends \PHPCR\Test\BaseCase
         $this->assertTrue($session->nodeExists('/tests_general_base/test:namespacedNode'));
 
         $ref = $session->getProperty('/container/idExample/jcr:content/weakreference_source1/ref1');
-        $this->assertEquals(\PHPCR\PropertyType::WEAKREFERENCE, $ref->getType());
+        $this->assertEquals(PropertyType::WEAKREFERENCE, $ref->getType());
         $this->assertEquals('13543fc6-1abf-4708-bfcc-e49511754b40', $ref->getString());
     }
 
@@ -298,7 +309,7 @@ class ImportRepositoryContentTest extends \PHPCR\Test\BaseCase
         $session->getRootNode()->addMixin('mix:referenceable');
         $session = $this->saveAndRenewSession();
         $id = $session->getRootNode()->getIdentifier();
-        $this->assertTrue(\PHPCR\Util\UUIDHelper::isUUID($id));
+        $this->assertTrue(UUIDHelper::isUUID($id));
         $filename = tempnam('/tmp', '');
         $file = fopen($filename, 'w+');
         fwrite($file, str_replace('XXX_ROOT_ID_XXX', $id, file_get_contents(__DIR__.'/../../fixtures/11_Import/rootnode.xml')));
@@ -322,11 +333,11 @@ class ImportRepositoryContentTest extends \PHPCR\Test\BaseCase
 
     /**
      * Provoke an io error.
-     *
-     * @expectedException \RuntimeException
      */
     public function testImportXMLNoFile()
     {
+        $this->expectException(RuntimeException::class);
+
         $this->session->importXML('/', 'nonexisting.xml', ImportUUIDBehaviorInterface::IMPORT_UUID_COLLISION_THROW);
     }
 
@@ -359,7 +370,7 @@ class ImportRepositoryContentTest extends \PHPCR\Test\BaseCase
 
         $this->assertTrue($session->propertyExists('/tests_import/idExample/jcr:content/weakreference_source1/ref1'));
         $ref = $session->getProperty('/tests_import/idExample/jcr:content/weakreference_source1/ref1');
-        $this->assertTrue(\PHPCR\Util\UUIDHelper::isUUID($ref->getString()));
+        $this->assertTrue(UUIDHelper::isUUID($ref->getString()));
 
         $session = $this->saveAndRenewSession();
 
@@ -376,7 +387,7 @@ class ImportRepositoryContentTest extends \PHPCR\Test\BaseCase
 
         $this->assertTrue($session->propertyExists('/tests_import/idExample/jcr:content/weakreference_source1/ref1'));
         $ref = $session->getProperty('/tests_import/idExample/jcr:content/weakreference_source1/ref1');
-        $this->assertTrue(\PHPCR\Util\UUIDHelper::isUUID($ref->getString()));
+        $this->assertTrue(UUIDHelper::isUUID($ref->getString()));
     }
 
     public function testImportXMLDocumentSimple()

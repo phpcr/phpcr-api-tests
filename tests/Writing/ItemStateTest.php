@@ -12,17 +12,21 @@
 namespace PHPCR\Tests\Writing;
 
 use Jackalope\Item;
+use Jackalope\Node;
+use Jackalope\Session;
+use PHPCR\InvalidItemStateException;
+use PHPCR\Test\BaseCase;
 
 /**
  * Test the workflow of Item state.
  */
-class ItemStateTest extends \PHPCR\Test\BaseCase
+class ItemStateTest extends BaseCase
 {
     public function setUp()
     {
         parent::setUp();
 
-        if (!$this->session instanceof \Jackalope\Session) {
+        if (!$this->session instanceof Session) {
             $this->markTestSkipped('This test is only meant for Jackalope'); //TODO: this is a unit test that belongs into jackalope
         }
 
@@ -47,7 +51,7 @@ class ItemStateTest extends \PHPCR\Test\BaseCase
 
         // New node --> state = NEW
         $node = $root->addNode('testNode');
-        $this->assertInstanceOf('\Jackalope\Node', $node);
+        $this->assertInstanceOf(Node::class, $node);
         $this->assertEquals(Item::STATE_NEW, $node->getState());
 
         // Modifying a new node keeps it new --> state = NEW
@@ -77,7 +81,7 @@ class ItemStateTest extends \PHPCR\Test\BaseCase
         $this->assertFalse($root->hasNode('testNode'));
 
         // Node deleted --> read access should throw an error
-        $this->setExpectedException('\PHPCR\InvalidItemStateException');
+        $this->expectException(InvalidItemStateException::class);
         $name = $node->getName();
     }
 
@@ -121,7 +125,7 @@ class ItemStateTest extends \PHPCR\Test\BaseCase
         $flag = false;
         try {
             $prop->getValue();
-        } catch (\PHPCR\InvalidItemStateException $ex) {
+        } catch (InvalidItemStateException $ex) {
             $flag = true;
         }
         $this->assertTrue($flag);

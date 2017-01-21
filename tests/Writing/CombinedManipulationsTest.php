@@ -11,10 +11,16 @@
 
 namespace PHPCR\Tests\Writing;
 
+use PHPCR\InvalidItemStateException;
+use PHPCR\NodeInterface;
+use PHPCR\NodeType\NodeTypeInterface;
+use PHPCR\PathNotFoundException;
+use PHPCR\Test\BaseCase;
+
 /**
  * test sequences of adding / moving / removing stuff inside a transaction.
  */
-class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
+class CombinedManipulationsTest extends BaseCase
 {
     public static function setupBeforeClass($fixtures = '10_Writing/combinedmanipulations')
     {
@@ -25,7 +31,7 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
     {
         $this->renewSession(); // kill cache between tests
         parent::setUp();
-        $this->assertInstanceOf('\PHPCR\NodeInterface', $this->node);
+        $this->assertInstanceOf(NodeInterface::class, $this->node);
     }
 
     /**
@@ -38,7 +44,7 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
         $node = $this->node->getNode('child');
         $path = $node->getPath();
         $parentpath = $this->node->getPath();
-        $this->assertInstanceOf('PHPCR\NodeType\NodeTypeInterface', $node->getPrimaryNodeType());
+        $this->assertInstanceOf(NodeTypeInterface::class, $node->getPrimaryNodeType());
         $this->assertSame('nt:unstructured', $node->getPrimaryNodeType()->getName());
 
         $node->remove();
@@ -57,7 +63,7 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
         $this->assertTrue($session->nodeExists($path));
         $this->assertTrue($session->getNode($parentpath)->hasNode('child'));
         $node = $session->getNode($path);
-        $this->assertInstanceOf('PHPCR\NodeInterface', $node);
+        $this->assertInstanceOf(NodeInterface::class, $node);
         $this->assertSame('nt:folder', $node->getPrimaryNodeType()->getName());
         $this->assertFalse($node->hasNodes());
     }
@@ -72,7 +78,7 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
     {
         $node = $this->node->getNode('child');
         $path = $node->getPath();
-        $this->assertInstanceOf('PHPCR\NodeType\NodeTypeInterface', $node->getPrimaryNodeType());
+        $this->assertInstanceOf(NodeTypeInterface::class, $node->getPrimaryNodeType());
         $this->assertSame('nt:unstructured', $node->getPrimaryNodeType()->getName());
 
         $node->remove();
@@ -288,7 +294,7 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
 
         $this->renewSession();
 
-        $this->setExpectedException('\PHPCR\PathNotFoundException');
+        $this->expectException(PathNotFoundException::class);
         $this->session->getNode("/$nodename");
     }
 
@@ -299,7 +305,7 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
     {
         $node = $this->session->getNode($this->node->getPath().'/parent/child');
         $path = $node->getPath();
-        $this->assertInstanceOf('PHPCR\NodeType\NodeTypeInterface', $node->getPrimaryNodeType());
+        $this->assertInstanceOf(NodeTypeInterface::class, $node->getPrimaryNodeType());
         $this->assertSame('nt:unstructured', $node->getPrimaryNodeType()->getName());
 
         $node->remove();
@@ -312,7 +318,7 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
         $session = $this->saveAndRenewSession();
 
         $node = $session->getNode($path);
-        $this->assertInstanceOf('PHPCR\NodeInterface', $node);
+        $this->assertInstanceOf(NodeInterface::class, $node);
         $this->assertSame('nt:folder', $node->getPrimaryNodeType()->getName());
         $this->assertFalse($node->hasNodes());
     }
@@ -430,7 +436,7 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
         $this->session->move("$path/src/parent", "$path/target");
         $this->assertTrue($this->session->nodeExists("$path/target/child"));
         $node = $this->session->getNode("$path/target/child");
-        $this->assertInstanceOf('\PHPCR\NodeInterface', $node);
+        $this->assertInstanceOf(NodeInterface::class, $node);
 
         $this->session->save();
 
@@ -440,7 +446,7 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
 
         $this->assertTrue($session->nodeExists("$path/target/child"));
         $node = $session->getNode("$path/target/child");
-        $this->assertInstanceOf('\PHPCR\NodeInterface', $node);
+        $this->assertInstanceOf(NodeInterface::class, $node);
     }
 
     public function testSessionHasPendingChanges()
@@ -588,7 +594,7 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
         try {
             $childprop->getValue();
             $this->fail('Should not be possible to get the value of a deleted property');
-        } catch (\PHPCR\InvalidItemStateException $e) {
+        } catch (InvalidItemStateException $e) {
             //expected
         }
 
@@ -596,7 +602,7 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
         try {
             $child->getPath();
             $this->fail('getting the path of deleted child should throw exception');
-        } catch (\PHPCR\InvalidItemStateException $e) {
+        } catch (InvalidItemStateException $e) {
             // expected
         }
         $this->assertFalse($node->hasProperty('prop'));
@@ -701,7 +707,7 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
         $this->assertFalse($this->session->nodeExists($node->getPath().'/child'));
         $this->assertFalse($this->session->propertyExists($node->getPath().'/prop'));
 
-        $this->setExpectedException('\PHPCR\PathNotFoundException');
+        $this->expectException(PathNotFoundException::class);
         $node->getNode('child');
     }
 
@@ -761,7 +767,7 @@ class CombinedManipulationsTest extends \PHPCR\Test\BaseCase
         $this->assertFalse($this->session->nodeExists($node->getPath().'/child'));
         $this->assertFalse($this->session->propertyExists($node->getPath().'/other'));
 
-        $this->setExpectedException('\PHPCR\PathNotFoundException');
+        $this->expectException(PathNotFoundException::class);
         $node->getPropertyValue('other');
     }
 }

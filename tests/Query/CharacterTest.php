@@ -13,8 +13,9 @@ namespace PHPCR\Tests\Query;
 
 use PHPCR\Query\QueryInterface;
 use PHPCR\Query\QueryManagerInterface;
+use PHPCR\Test\BaseCase;
 
-class CharacterTest extends \PHPCR\Test\BaseCase
+class CharacterTest extends BaseCase
 {
     public static function setupBeforeClass($fixtures = '06_Query/characters')
     {
@@ -40,7 +41,7 @@ class CharacterTest extends \PHPCR\Test\BaseCase
 
         $rows = $result->getRows();
         $this->assertCount(1, $rows);
-        $this->assertEquals('PHPCR\Query\QueryInterface', $rows->current()->getValue('class'));
+        $this->assertEquals(QueryInterface::class, $rows->current()->getValue('class'));
     }
 
     /**

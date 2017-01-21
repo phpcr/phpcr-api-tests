@@ -11,12 +11,16 @@
 
 namespace PHPCR\Tests\Writing;
 
+use DateTime;
+use PHPCR\NodeInterface;
+use PHPCR\Test\BaseCase;
+
 /**
  * Testing that mix:referenceable nodes references work correctly.
  *
  * Covering jcr-2.8.3 spec $10.10.3
  */
-class MixinCreatedTest extends \PHPCR\Test\BaseCase
+class MixinCreatedTest extends BaseCase
 {
     public function setUp()
     {
@@ -29,7 +33,7 @@ class MixinCreatedTest extends \PHPCR\Test\BaseCase
     public function testCreationNode()
     {
         $path = '/tests_general_base/idExample/jcr:content';
-        /** @var $node \PHPCR\NodeInterface */
+        /** @var $node NodeInterface */
         $node = $this->session->getNode($path);
         $child = $node->addNode('test');
         $path .= '/test';
@@ -41,8 +45,8 @@ class MixinCreatedTest extends \PHPCR\Test\BaseCase
         $this->assertTrue($child->isNodeType('mix:created'));
         $this->assertTrue($child->hasProperty('jcr:created'));
         $date = $child->getPropertyValue('jcr:created');
-        $this->assertInstanceOf('DateTime', $date);
-        /* @var $date \DateTime */
+        $this->assertInstanceOf(DateTime::class, $date);
+        /* @var $date DateTime */
         $diff = time() - $date->getTimestamp();
         $this->assertTrue($diff < 60 * 10, 'jcr:created should be current date as fixture was just imported: '.$date->format('c'));
 
@@ -53,7 +57,7 @@ class MixinCreatedTest extends \PHPCR\Test\BaseCase
         $this->assertTrue($child->isNodeType('mix:created'));
         $this->assertTrue($child->hasProperty('jcr:created'));
         $date = $child->getPropertyValue('jcr:created');
-        $this->assertInstanceOf('DateTime', $date);
+        $this->assertInstanceOf(DateTime::class, $date);
         $diff = time() - $date->getTimestamp();
         $this->assertTrue($diff < 60 * 10, 'jcr:created should be current date as fixture was just imported: '.$date->format('c'));
     }

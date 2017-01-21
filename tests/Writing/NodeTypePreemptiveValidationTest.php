@@ -11,13 +11,15 @@
 
 namespace PHPCR\Tests\Writing;
 
+use DateTime;
 use PHPCR\NodeType\NodeTypeInterface;
 use PHPCR\NodeType\NodeTypeManagerInterface;
+use PHPCR\Test\BaseCase;
 
 /**
  * Test pre-emptive validation (§10.10.3.2).
  */
-class NodeTypePreemptiveValidationTest extends \PHPCR\Test\BaseCase
+class NodeTypePreemptiveValidationTest extends BaseCase
 {
     // we can use general/base, as we do not actually write, just check if we could
 
@@ -25,14 +27,17 @@ class NodeTypePreemptiveValidationTest extends \PHPCR\Test\BaseCase
      * @var NodeTypeInterface
      */
     private $file;
+
     /**
      * @var NodeTypeInterface
      */
     private $folder;
+
     /**
      * @var NodeTypeInterface
      */
     private $resource;
+
     /**
      * @var NodeTypeManagerInterface
      */
@@ -74,7 +79,7 @@ class NodeTypePreemptiveValidationTest extends \PHPCR\Test\BaseCase
 
     public function testCanSetProperty()
     {
-        $this->assertTrue($this->file->canSetProperty('jcr:created', new \DateTime()));
+        $this->assertTrue($this->file->canSetProperty('jcr:created', new DateTime()));
         $this->assertTrue($this->file->canSetProperty('jcr:created', '2011-10-13'));
         $this->assertTrue($this->file->canSetProperty('jcr:created', 32388)); // timestamp
         $this->assertTrue($this->resource->canSetProperty('jcr:mimeType', 'text/plain'));
@@ -85,7 +90,7 @@ class NodeTypePreemptiveValidationTest extends \PHPCR\Test\BaseCase
         $this->assertFalse($this->file->canSetProperty('jcr:created', 'notadate'));
         $this->assertFalse($this->file->canSetProperty('jcr:created', true));
         $this->assertFalse($this->file->canSetProperty('jcr:created', $this)); // not a valid type for value
-        $this->assertFalse($this->file->canSetProperty('mix:created', new \DateTime())); // this is a type
+        $this->assertFalse($this->file->canSetProperty('mix:created', new DateTime())); // this is a type
         $this->assertFalse($this->file->canSetProperty('nt:file', 'nosense')); // this is a type
     }
 

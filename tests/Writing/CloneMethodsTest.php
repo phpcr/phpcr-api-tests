@@ -11,6 +11,13 @@
 
 namespace PHPCR\Tests\Writing;
 
+use Exception;
+use PHPCR\ItemExistsException;
+use PHPCR\ItemNotFoundException;
+use PHPCR\NodeInterface;
+use PHPCR\NoSuchWorkspaceException;
+use PHPCR\PathNotFoundException;
+use PHPCR\RepositoryException;
 use PHPCR\RepositoryInterface;
 use PHPCR\WorkspaceInterface;
 use PHPCR\Test\BaseCase;
@@ -53,6 +60,7 @@ class CloneMethodsTest extends BaseCase
     protected function setUp()
     {
         $this->renewSession(); // get rid of cache from previous tests
+
         parent::setUp();
 
         $this->srcWs = $this->session->getWorkspace();
@@ -78,20 +86,20 @@ class CloneMethodsTest extends BaseCase
         self::$destWs->cloneFrom($this->srcWsName, $srcNode, $dstNode, false);
 
         $clonedNode = $destSession->getNode($dstNode);
-        $this->assertInstanceOf('PHPCR\NodeInterface', $clonedNode);
+        $this->assertInstanceOf(NodeInterface::class, $clonedNode);
         $this->assertCount(4, $clonedNode->getProperties());
         $this->checkNodeProperty($clonedNode, 'jcr:uuid', '842e61c0-09ab-42a9-87c0-308ccc90e6f6');
         $this->checkNodeProperty($clonedNode, 'jcr:primaryType', 'nt:unstructured');
-        $this->checkNodeProperty($clonedNode, 'jcr:mixinTypes', array('mix:referenceable'));
+        $this->checkNodeProperty($clonedNode, 'jcr:mixinTypes', ['mix:referenceable']);
         $this->checkNodeProperty($clonedNode, 'foo', 'bar_1');
 
         $this->assertTrue($destSession->nodeExists($dstChildNode));
         $cloneChild = $destSession->getNode($dstChildNode);
-        $this->assertInstanceOf('PHPCR\NodeInterface', $cloneChild);
+        $this->assertInstanceOf(NodeInterface::class, $cloneChild);
         $this->assertCount(4, $cloneChild->getProperties());
         $this->checkNodeProperty($cloneChild, 'jcr:uuid', '9da62173-d674-4413-87a4-8f538e033021');
         $this->checkNodeProperty($cloneChild, 'jcr:primaryType', 'nt:unstructured');
-        $this->checkNodeProperty($cloneChild, 'jcr:mixinTypes', array('mix:referenceable'));
+        $this->checkNodeProperty($cloneChild, 'jcr:mixinTypes', ['mix:referenceable']);
         $this->checkNodeProperty($cloneChild, 'fooChild', 'barChild');
     }
 
@@ -108,11 +116,11 @@ class CloneMethodsTest extends BaseCase
         self::$destWs->cloneFrom($this->srcWsName, $srcNode, $dstNode, false);
 
         $clonedNode = $destSession->getNode($dstNode);
-        $this->assertInstanceOf('PHPCR\NodeInterface', $clonedNode);
+        $this->assertInstanceOf(NodeInterface::class, $clonedNode);
         $this->assertCount(4, $clonedNode->getProperties());
         $this->checkNodeProperty($clonedNode, 'jcr:uuid', '091d157f-dfaf-42eb-aedd-88183ff8fa3d');
         $this->checkNodeProperty($clonedNode, 'jcr:primaryType', 'nt:unstructured');
-        $this->checkNodeProperty($clonedNode, 'jcr:mixinTypes', array('mix:referenceable'));
+        $this->checkNodeProperty($clonedNode, 'jcr:mixinTypes', ['mix:referenceable']);
         $this->checkNodeProperty($clonedNode, 'foo', 'bar_2');
 
         // Update the source node after cloning it
@@ -127,11 +135,11 @@ class CloneMethodsTest extends BaseCase
         $this->renewDestinationSession();
 
         $clonedReplacedNode = self::$destWs->getSession()->getNode($dstNode);
-        $this->assertInstanceOf('PHPCR\NodeInterface', $clonedReplacedNode);
+        $this->assertInstanceOf(NodeInterface::class, $clonedReplacedNode);
         $this->assertCount(5, $clonedReplacedNode->getProperties());
         $this->checkNodeProperty($clonedReplacedNode, 'jcr:uuid', '091d157f-dfaf-42eb-aedd-88183ff8fa3d');
         $this->checkNodeProperty($clonedReplacedNode, 'jcr:primaryType', 'nt:unstructured');
-        $this->checkNodeProperty($clonedReplacedNode, 'jcr:mixinTypes', array('mix:referenceable'));
+        $this->checkNodeProperty($clonedReplacedNode, 'jcr:mixinTypes', ['mix:referenceable']);
         $this->checkNodeProperty($clonedReplacedNode, 'foo', 'bar-updated');
         $this->checkNodeProperty($clonedReplacedNode, 'newProperty', 'hello');
     }
@@ -139,23 +147,23 @@ class CloneMethodsTest extends BaseCase
     /**
      * Clone a referenceable node, then clone again with removeExisting = false
      * This should cause an exception, even with a corresponding node (same UUID).
-     *
-     * @expectedException \PHPCR\ItemExistsException
      */
     public function testCloneReferenceableNoRemoveExisting()
     {
+        $this->expectException(ItemExistsException::class);
+
         $srcNode = '/tests_write_manipulation_clone/testWorkspaceClone/referenceableNoRemoveExisting_1';
         $dstNode = $srcNode;
         $destSession = self::$destWs->getSession();
 
         try {
             self::$destWs->cloneFrom($this->srcWsName, $srcNode, $dstNode, false);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             $this->fail($exception->getMessage());
         }
 
         $clonedNode = $destSession->getNode($dstNode);
-        $this->assertInstanceOf('PHPCR\NodeInterface', $clonedNode);
+        $this->assertInstanceOf(NodeInterface::class, $clonedNode);
         $this->assertCount(3, $clonedNode->getProperties());
 
         self::$destWs->cloneFrom($this->srcWsName, $srcNode, $dstNode, false);
@@ -165,11 +173,11 @@ class CloneMethodsTest extends BaseCase
      * Clone a referenceable node, then clone again with removeExisting = false.
      * Even though the second clone is to a new location, because a corresponding node (same UUID)
      * already exists in the destination workspace, an exception should still be thrown.
-     *
-     * @expectedException \PHPCR\ItemExistsException
      */
     public function testCloneNoRemoveExistingNewLocation()
     {
+        $this->expectException(ItemExistsException::class);
+
         $srcNode = '/tests_write_manipulation_clone/testWorkspaceClone/referenceableNoRemoveExisting_2';
         $dstNode = $srcNode;
         $secondDstNode = '/tests_write_manipulation_clone/testWorkspaceClone/thisShouldStillConflict';
@@ -177,12 +185,12 @@ class CloneMethodsTest extends BaseCase
 
         try {
             self::$destWs->cloneFrom($this->srcWsName, $srcNode, $dstNode, false);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             $this->fail($exception->getMessage());
         }
 
         $clonedNode = $destSession->getNode($dstNode);
-        $this->assertInstanceOf('PHPCR\NodeInterface', $clonedNode);
+        $this->assertInstanceOf(NodeInterface::class, $clonedNode);
         $this->assertCount(3, $clonedNode->getProperties());
 
         self::$destWs->cloneFrom($this->srcWsName, $srcNode, $secondDstNode, false);
@@ -204,11 +212,11 @@ class CloneMethodsTest extends BaseCase
         $this->renewDestinationSession();
 
         $clonedReplacedNode = self::$destWs->getSession()->getNode($dstNode);
-        $this->assertInstanceOf('PHPCR\NodeInterface', $clonedReplacedNode);
+        $this->assertInstanceOf(NodeInterface::class, $clonedReplacedNode);
         $this->assertCount(3, $clonedReplacedNode->getProperties());
         $this->checkNodeProperty($clonedReplacedNode, 'jcr:uuid', 'f8019868-3533-4519-a077-9c8601950627');
         $this->checkNodeProperty($clonedReplacedNode, 'jcr:primaryType', 'nt:unstructured');
-        $this->checkNodeProperty($clonedReplacedNode, 'jcr:mixinTypes', array('mix:referenceable'));
+        $this->checkNodeProperty($clonedReplacedNode, 'jcr:mixinTypes', ['mix:referenceable']);
     }
 
     /**
@@ -218,11 +226,11 @@ class CloneMethodsTest extends BaseCase
      * This can happen when cloning from one workspace to another, when a node
      * already exists at the destination but is not a corresponding node (the
      * nodes have different UUIDs).
-     *
-     * @expectedException \PHPCR\ItemExistsException
      */
     public function testExistingNonCorrespondingNodeRemoveExisting()
     {
+        $this->expectException(ItemExistsException::class);
+
         $this->skipIfSameNameSiblingsSupported();
 
         $srcNode = '/tests_write_manipulation_clone/testWorkspaceCloneNonCorresponding/sourceRemoveExisting';
@@ -238,11 +246,11 @@ class CloneMethodsTest extends BaseCase
      * This can happen when cloning from one workspace to another, when a node
      * already exists at the destination but is not a corresponding node (the
      * nodes have different UUIDs).
-     *
-     * @expectedException \PHPCR\ItemExistsException
      */
     public function testExistingNonCorrespondingNodeNoRemoveExisting()
     {
+        $this->expectException(ItemExistsException::class);
+
         $this->skipIfSameNameSiblingsSupported();
 
         $srcNode = '/tests_write_manipulation_clone/testWorkspaceCloneNonCorresponding/sourceNoRemoveExisting';
@@ -253,11 +261,11 @@ class CloneMethodsTest extends BaseCase
 
     /**
      * Test when source node is non-referenceable but a referenceable node exists at destination path.
-     *
-     * @expectedException \PHPCR\ItemExistsException
      */
     public function testReferenceableDestNodeWithNonReferenceableSourceNode()
     {
+        $this->expectException(ItemExistsException::class);
+
         $this->skipIfSameNameSiblingsSupported();
 
         $srcNode = '/tests_write_manipulation_clone/testWorkspaceClone/nonReferenceable';
@@ -266,33 +274,30 @@ class CloneMethodsTest extends BaseCase
         self::$destWs->cloneFrom($this->srcWsName, $srcNode, $dstNode, true);
     }
 
-    /**
-     * @expectedException \PHPCR\NoSuchWorkspaceException
-     */
     public function testCloneNoSuchWorkspace()
     {
+        $this->expectException(NoSuchWorkspaceException::class);
+
         $srcNode = '/tests_write_manipulation_clone/testWorkspaceClone/referenceable';
         $dstNode = $srcNode;
 
         self::$destWs->cloneFrom('thisWorkspaceDoesNotExist', $srcNode, $dstNode, true);
     }
 
-    /**
-     * @expectedException \PHPCR\RepositoryException
-     */
     public function testCloneRelativePaths()
     {
+        $this->expectException(RepositoryException::class);
+
         $srcNode = 'tests_write_manipulation_clone/testWorkspaceClone/referenceable';
         $dstNode = $srcNode;
 
         self::$destWs->cloneFrom($this->srcWsName, $srcNode, $dstNode, true);
     }
 
-    /**
-     * @expectedException \PHPCR\RepositoryException
-     */
     public function testCloneInvalidDstPath()
     {
+        $this->expectException(RepositoryException::class);
+
         $srcNode = '/tests_write_manipulation_clone/testWorkspaceClone/referenceable';
         $dstNode = '/InvalidDstPath/foo/bar[x]';
 
@@ -304,28 +309,28 @@ class CloneMethodsTest extends BaseCase
      */
     public function testCloneProperty()
     {
+        $this->expectException(PathNotFoundException::class);
+
         $srcNode = '/tests_write_manipulation_clone/testWorkspaceClone/referenceable/jcr:uuid';
         $dstNode = $srcNode;
 
         self::$destWs->cloneFrom($this->srcWsName, $srcNode, $dstNode, true);
     }
 
-    /**
-     * @expectedException \PHPCR\PathNotFoundException
-     */
     public function testCloneSrcNotFound()
     {
+        $this->expectException(PathNotFoundException::class);
+
         $srcNode = '/there-is-no-node-here';
         $dstNode = $srcNode;
 
         self::$destWs->cloneFrom($this->srcWsName, $srcNode, $dstNode, true);
     }
 
-    /**
-     * @expectedException \PHPCR\PathNotFoundException
-     */
     public function testCloneDstParentNotFound()
     {
+        $this->expectException(PathNotFoundException::class);
+
         $srcNode = '/tests_write_manipulation_clone/testWorkspaceClone/referenceable';
         $dstNode = '/there-is-no-node-here/foo';
 
@@ -344,7 +349,7 @@ class CloneMethodsTest extends BaseCase
         self::$destWs->cloneFrom($this->srcWsName, $srcNode, $dstNode, false);
 
         $clonedNode = $destSession->getNode($dstNode);
-        $this->assertInstanceOf('PHPCR\NodeInterface', $clonedNode);
+        $this->assertInstanceOf(NodeInterface::class, $clonedNode);
         $this->assertCount(2, $clonedNode->getProperties());
         $this->checkNodeProperty($clonedNode, 'jcr:primaryType', 'nt:unstructured');
         $this->checkNodeProperty($clonedNode, 'foo', 'bar_3');
@@ -352,11 +357,11 @@ class CloneMethodsTest extends BaseCase
 
     /**
      * Clone a non-referenceable node, then clone again with removeExisting = true.
-     *
-     * @expectedException \PHPCR\ItemExistsException
      */
     public function testCloneRemoveExistingNonReferenceable()
     {
+        $this->expectException(ItemExistsException::class);
+
         $this->skipIfSameNameSiblingsSupported();
 
         $srcNode = '/tests_write_manipulation_clone/testWorkspaceClone/nonReferenceableRemoveExisting';
@@ -366,7 +371,7 @@ class CloneMethodsTest extends BaseCase
         self::$destWs->cloneFrom($this->srcWsName, $srcNode, $dstNode, false);
 
         $clonedNode = $destSession->getNode($dstNode);
-        $this->assertInstanceOf('PHPCR\NodeInterface', $clonedNode);
+        $this->assertInstanceOf(NodeInterface::class, $clonedNode);
         $this->assertCount(2, $clonedNode->getProperties());
         $this->checkNodeProperty($clonedNode, 'jcr:primaryType', 'nt:unstructured');
         $this->checkNodeProperty($clonedNode, 'foo', 'bar_4');
@@ -375,11 +380,10 @@ class CloneMethodsTest extends BaseCase
         self::$destWs->cloneFrom($this->srcWsName, $srcNode, $dstNode, true);
     }
 
-    /**
-     * @expectedException \PHPCR\ItemExistsException
-     */
     public function testCloneNonReferenceableNoRemoveExisting()
     {
+        $this->expectException(ItemExistsException::class);
+
         $this->skipIfSameNameSiblingsSupported();
 
         $srcNode = '/tests_write_manipulation_clone/testWorkspaceClone/nonReferenceableNoRemoveExisting';
@@ -388,12 +392,12 @@ class CloneMethodsTest extends BaseCase
 
         try {
             self::$destWs->cloneFrom($this->srcWsName, $srcNode, $dstNode, false);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             $this->fail($exception->getMessage());
         }
 
         $clonedNode = $destSession->getNode($dstNode);
-        $this->assertInstanceOf('PHPCR\NodeInterface', $clonedNode);
+        $this->assertInstanceOf(NodeInterface::class, $clonedNode);
         $this->assertCount(1, $clonedNode->getProperties());
 
         self::$destWs->cloneFrom($this->srcWsName, $srcNode, $dstNode, false);
@@ -408,41 +412,39 @@ class CloneMethodsTest extends BaseCase
         self::$destWs->cloneFrom($this->srcWsName, $srcNode, $dstNode, false);
 
         $node = $this->srcWs->getSession()->getNode($srcNode);
-        $this->assertInstanceOf('PHPCR\NodeInterface', $node);
+        $this->assertInstanceOf(NodeInterface::class, $node);
         $this->checkNodeProperty($node, 'jcr:uuid', 'a64bfa45-d5e1-4bf0-a739-1890da40579d');
 
         $this->assertEquals($dstNode, $node->getCorrespondingNodePath(self::$destWsName));
 
         $clonedNode = $destSession->getNode($dstNode);
-        $this->assertInstanceOf('PHPCR\NodeInterface', $clonedNode);
+        $this->assertInstanceOf(NodeInterface::class, $clonedNode);
         $this->checkNodeProperty($clonedNode, 'jcr:uuid', 'a64bfa45-d5e1-4bf0-a739-1890da40579d');
 
         $this->assertEquals($srcNode, $clonedNode->getCorrespondingNodePath($this->srcWsName));
     }
 
-    /**
-     * @expectedException \PHPCR\NoSuchWorkspaceException
-     */
     public function testGetCorrespondingNodeNoSuchWorkspace()
     {
+        $this->expectException(NoSuchWorkspaceException::class);
+
         $srcNode = '/tests_write_manipulation_clone/testWorkspaceCorrespondingNode/nodeThatWillNotBeCloned';
 
         $node = $this->srcWs->getSession()->getNode($srcNode);
-        $this->assertInstanceOf('PHPCR\NodeInterface', $node);
+        $this->assertInstanceOf(NodeInterface::class, $node);
         $this->checkNodeProperty($node, 'jcr:uuid', 'e7c14901-aec8-4e9b-8e76-704197d24794');
 
         $node->getCorrespondingNodePath('thisWorkspaceDoesNotExist');
     }
 
-    /**
-     * @expectedException \PHPCR\ItemNotFoundException
-     */
     public function testGetCorrespondingNodeItemNotFound()
     {
+        $this->expectException(ItemNotFoundException::class);
+
         $srcNode = '/tests_write_manipulation_clone/testWorkspaceCorrespondingNode/nodeThatWillNotBeCloned';
 
         $node = $this->srcWs->getSession()->getNode($srcNode);
-        $this->assertInstanceOf('PHPCR\NodeInterface', $node);
+        $this->assertInstanceOf(NodeInterface::class, $node);
         $this->checkNodeProperty($node, 'jcr:uuid', 'e7c14901-aec8-4e9b-8e76-704197d24794');
 
         $node->getCorrespondingNodePath(self::$destWsName);
@@ -466,7 +468,7 @@ class CloneMethodsTest extends BaseCase
         self::$destWs->cloneFrom($this->srcWsName, $srcNode, $dstNode, false);
 
         $node = $sourceSession->getNode($srcNode);
-        $this->assertInstanceOf('PHPCR\NodeInterface', $node);
+        $this->assertInstanceOf(NodeInterface::class, $node);
         $this->assertCount(4, $node->getProperties());
         $this->checkNodeProperty($node, 'jcr:uuid', 'c8996418-3fd9-407c-bfe6-faea6dcfbb40');
         $this->checkNodeProperty($node, 'foo', 'bar_5');
@@ -482,7 +484,7 @@ class CloneMethodsTest extends BaseCase
         $sourceSession->save();
 
         $clonedNode = $destSession->getNode($dstNode);
-        $this->assertInstanceOf('PHPCR\NodeInterface', $clonedNode);
+        $this->assertInstanceOf(NodeInterface::class, $clonedNode);
         $this->assertCount(4, $clonedNode->getProperties());
         $this->checkNodeProperty($clonedNode, 'jcr:uuid', 'c8996418-3fd9-407c-bfe6-faea6dcfbb40');
 
@@ -497,7 +499,7 @@ class CloneMethodsTest extends BaseCase
         $clonedNode->update($this->srcWsName);
 
         $clonedNode = $destSession->getNode($dstNode);
-        $this->assertInstanceOf('PHPCR\NodeInterface', $clonedNode);
+        $this->assertInstanceOf(NodeInterface::class, $clonedNode);
         $this->assertCount(5, $clonedNode->getProperties());
         $this->checkNodeProperty($clonedNode, 'jcr:uuid', 'c8996418-3fd9-407c-bfe6-faea6dcfbb40');
         $this->checkNodeProperty($clonedNode, 'foo', 'foo-updated');
@@ -514,11 +516,10 @@ class CloneMethodsTest extends BaseCase
         $this->checkNodeProperty($cloneChildOfChild, 'fooChildOfChild', 'barChildOfChild-updated');
     }
 
-    /**
-     * @expectedException \PHPCR\NoSuchWorkspaceException
-     */
     public function testUpdateNoSuchWorkspace()
     {
+        $this->expectException(NoSuchWorkspaceException::class);
+
         $srcNode = '/tests_write_manipulation_clone/testWorkspaceUpdateNode/updateNoSuchWorkspace';
         $dstNode = $srcNode;
         $destSession = self::$destWs->getSession();
