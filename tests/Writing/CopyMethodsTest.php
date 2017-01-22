@@ -85,6 +85,20 @@ class CopyMethodsTest extends BaseCase
         $this->assertNotEquals($sfile->getPropertyValue('jcr:data'), $dfile->getPropertyValue('jcr:data'));
     }
 
+    public function testCopyPreserveChildOrder()
+    {
+        $expected = ['three', 'one', 'two'];
+        $src = '/tests_write_manipulation_copy/testCopyPreserveChildOrder/srcNode';
+        $dst = '/tests_write_manipulation_copy/testCopyPreserveChildOrder/dstNode/srcNode';
+        $node = $this->session->getNode($src);
+        $node->orderBefore('three', 'one');
+        $this->session->save();
+        $this->assertEquals($expected, iterator_to_array($node->getNodeNames()));
+        $this->ws->copy($src, $dst);
+        $node = $this->session->getNode($dst);
+        $this->assertEquals($expected, iterator_to_array($node->getNodeNames()));
+    }
+
     public function testWorkspaceCopyReference()
     {
         $src = '/tests_write_manipulation_copy/testWorkspaceCopy/referencedNodeSet';
@@ -255,8 +269,8 @@ class CopyMethodsTest extends BaseCase
         $srcProp = $this->session->getNode($src . '/single')->getProperty('jcr:data');
         $dstProp = $this->session->getNode($dst . '/single')->getProperty('jcr:data');
 
-        $this->assertEquals(\PHPCR\PropertyType::BINARY, $srcProp->getType());
-        $this->assertEquals(\PHPCR\PropertyType::BINARY, $dstProp->getType());
+        $this->assertEquals(PropertyType::BINARY, $srcProp->getType());
+        $this->assertEquals(PropertyType::BINARY, $dstProp->getType());
 
         $srcVal = $srcProp->getBinary();
         $dstVal = $dstProp->getBinary();

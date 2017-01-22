@@ -334,7 +334,7 @@ class PropertyReadMethodsTest extends BaseCase
         $expectedArray = [
                 new DateTime('2011-04-22T14:34:20+01:00'),
                 new DateTime('2011-10-23T14:34:20+01:00'),
-                new DateTime('2010-10-23T14:34:20+01:00')
+                new DateTime('2010-10-23T14:34:20+01:00'),
         ];
 
         foreach ($expectedArray as $key => $expected) {

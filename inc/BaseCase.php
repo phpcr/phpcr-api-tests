@@ -20,12 +20,6 @@ use PHPCR\NodeInterface;
 use DateTime;
 use PHPUnit_Framework_SkippedTestSuiteError;
 use PHPUnit_Framework_TestCase;
-use PHPUnit_Util_Filter;
-
-// PHPUnit 3.4 compat
-if (method_exists(PHPUnit_Util_Filter::class, 'addDirectoryToFilter')) {
-    require_once 'PHPUnit/Framework.php';
-}
 
 /**
  * Base class for all phpcr api tests.
