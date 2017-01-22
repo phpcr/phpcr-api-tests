@@ -111,6 +111,14 @@ EOT;
      */
     public function testScannerErrorComment()
     {
+        /**
+         * Remove this PHP7 only condition after PHPCR-Utils #168
+         * (https://github.com/phpcr/phpcr-utils/issues/168) is closed
+         */
+        if (PHP_MAJOR_VERSION >= 7) {
+            $this->markTestSkipped();
+        }
+
         $this->expectException(ScannerException::class);
 
         $cnd = <<<EOT
