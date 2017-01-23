@@ -172,7 +172,7 @@ class QuerySql2OperationsTest extends QueryBaseCase
         foreach ($result->getRows() as $row) {
             $vals[] = $row->getValue('nt:unstructured.longNumber');
         }
-        $this->assertEquals(array(999), $vals);
+        $this->assertEquals([999], $vals);
     }
 
     public function testQueryJoinWithAlias()
@@ -308,13 +308,13 @@ class QuerySql2OperationsTest extends QueryBaseCase
 
         // We get 10 results (idExample comes back multiple times because of the join)
         $this->assertCount(10, $result->getRows());
-        $this->assertEquals(array(
+        $this->assertEquals([
             'index.txt'                     => null,
             'idExample'                     => null,
             'numberPropertyNode'            => null,
             'NumberPropertyNodeToCompare1'  => '2',
             'NumberPropertyNodeToCompare2'  => '10',
-        ), $vals);
+        ], $vals);
     }
 
     public function testQueryJoinReference()

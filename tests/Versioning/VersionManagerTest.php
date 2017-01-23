@@ -361,7 +361,7 @@ class VersionManagerTest extends BaseCase
         $this->vm->restore(true, $version);
 
         $node = $this->session->getNode($nodePath);
-        $this->assertEquals(array('mix:versionable'), $node->getPropertyValue('jcr:mixinTypes'));
+        $this->assertEquals(['mix:versionable'], $node->getPropertyValue('jcr:mixinTypes'));
         $this->assertFalse($node->hasProperty('jcr:created'));
     }
 

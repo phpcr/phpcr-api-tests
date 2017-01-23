@@ -84,14 +84,14 @@ class Sql2ToQomConverterTest extends \PHPCR\Test\BaseCase
 
     public function getSQL2WithWhitespace()
     {
-        return array(
-            array('SELECT * FROM [nt:file] WHERE prop1 = "Foo bar"', 'Foo bar'),
-            array('SELECT * FROM [nt:file] WHERE prop1 = "Foo  bar"', 'Foo  bar'),
-            array('SELECT * FROM [nt:file] WHERE prop1 = "Foo\tbar"', 'Foo\tbar'),
-            array('SELECT * FROM [nt:file] WHERE prop1 = "Foo\n\tbar"', 'Foo\n\tbar'),
-            array('SELECT * FROM [nt:file] WHERE prop1 = "Foo \t bar"', 'Foo \t bar'),
-            array('SELECT * FROM [nt:file] WHERE prop1 = "Foo \t \n bar"', 'Foo \t \n bar'),
-        );
+        return [
+            ['SELECT * FROM [nt:file] WHERE prop1 = "Foo bar"', 'Foo bar'],
+            ['SELECT * FROM [nt:file] WHERE prop1 = "Foo  bar"', 'Foo  bar'],
+            ['SELECT * FROM [nt:file] WHERE prop1 = "Foo\tbar"', 'Foo\tbar'],
+            ['SELECT * FROM [nt:file] WHERE prop1 = "Foo\n\tbar"', 'Foo\n\tbar'],
+            ['SELECT * FROM [nt:file] WHERE prop1 = "Foo \t bar"', 'Foo \t bar'],
+            ['SELECT * FROM [nt:file] WHERE prop1 = "Foo \t \n bar"', 'Foo \t \n bar'],
+        ];
     }
 
     /**

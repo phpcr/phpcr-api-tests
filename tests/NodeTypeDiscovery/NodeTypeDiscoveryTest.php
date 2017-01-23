@@ -93,7 +93,7 @@ class NodeTypeDiscoveryTest extends BaseCase
     {
         $types = $this->nodeTypeManager->getAllNodeTypes();
         $this->assertInstanceOf(SeekableIterator::class, $types);
-        $names = array();
+        $names = [];
 
         foreach ($types as $name => $type) {
             $this->assertInstanceOf(NodeTypeInterface::class, $type);
@@ -114,7 +114,8 @@ class NodeTypeDiscoveryTest extends BaseCase
     {
         $types = $this->nodeTypeManager->getPrimaryNodeTypes();
         $this->assertInstanceOf(SeekableIterator::class, $types);
-        $names = array();
+        $names = [];
+
         foreach ($types as $name => $type) {
             $this->assertInstanceOf(NodeTypeInterface::class, $type);
             $this->assertEquals($name, $type->getName());
@@ -134,7 +135,8 @@ class NodeTypeDiscoveryTest extends BaseCase
     {
         $types = $this->nodeTypeManager->getMixinNodeTypes();
         $this->assertInstanceOf(SeekableIterator::class, $types);
-        $names = array();
+        $names = [];
+
         foreach ($types as $name => $type) {
             $this->assertInstanceOf(NodeTypeInterface::class, $type);
             $this->assertEquals($name, $type->getName());

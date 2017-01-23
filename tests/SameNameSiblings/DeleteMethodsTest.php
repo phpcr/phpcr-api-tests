@@ -65,7 +65,7 @@ class DeleteMethodsTest extends BaseCase
     public function testRemoveNode()
     {
         $parentPath = '/tests_write_manipulation_delete_sns/testRemoveSnsByNode';
-        $childNames = array('child', 'child[2]', 'child[3]');
+        $childNames = ['child', 'child[2]', 'child[3]'];
 
         $parent = $this->getParentNode($this->session, $parentPath);
 

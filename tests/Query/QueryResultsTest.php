@@ -79,7 +79,7 @@ class QueryResultsTest extends QueryBaseCase
 
         $columnNames = $qr->getColumnNames();
         sort($columnNames); //order is not determined
-        $columnNamesExpected = array('bar', 'ding', 'foo', 'nt:unstructured.longNumberToCompare');
+        $columnNamesExpected = ['bar', 'ding', 'foo', 'nt:unstructured.longNumberToCompare'];
         $this->assertEquals($columnNamesExpected, $columnNames);
 
         foreach ($qr->getRows() as $row) {
@@ -123,7 +123,7 @@ class QueryResultsTest extends QueryBaseCase
     public function testGetSelectorNames()
     {
         $selectorNames = $this->qr->getSelectorNames();
-        $selectorNamesExpected = array('nt:folder');
+        $selectorNamesExpected = ['nt:folder'];
 
         $this->assertEquals($selectorNamesExpected, $selectorNames);
     }
@@ -234,7 +234,8 @@ class QueryResultsTest extends QueryBaseCase
         );
         $result = $query->execute();
 
-        $rows = array();
+        $rows = [];
+
         foreach ($result->getRows() as $row) {
             $rows[] = $row;
         }

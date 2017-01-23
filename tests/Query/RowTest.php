@@ -10,6 +10,7 @@
  */
 
 namespace PHPCR\Tests\Query;
+
 use PHPCR\ItemNotFoundException;
 use PHPCR\NodeInterface;
 use PHPCR\Query\RowInterface;

@@ -74,7 +74,8 @@ class NodeTypeAssignementTest extends BaseCase
         $path = $newNode->getPath();
         $session = $this->saveAndRenewSession();
         $savedNode = $session->getNode($path);
-        $resultTypes = array();
+        $resultTypes = [];
+
         foreach ($savedNode->getMixinNodeTypes() as $type) {
             $resultTypes[] = $type->getName();
         }

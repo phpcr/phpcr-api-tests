@@ -59,10 +59,12 @@ abstract class QueryBaseCase extends BaseCase
         );
 
         // the query result is not ordered, but these are the nodes that are to be expected in any order
-        $this->resultPaths = array('/tests_general_base',
-                                   '/tests_general_base/test:namespacedNode',
-                                   '/tests_general_base/emptyExample',
-                                   '/tests_general_base/multiValueProperty/deepnode',
-                                   '/tests_general_base/multiValueProperty', );
+        $this->resultPaths = [
+            '/tests_general_base',
+            '/tests_general_base/test:namespacedNode',
+            '/tests_general_base/emptyExample',
+            '/tests_general_base/multiValueProperty/deepnode',
+            '/tests_general_base/multiValueProperty'
+        ];
     }
 }

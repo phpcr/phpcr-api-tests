@@ -39,6 +39,7 @@ class OrderBeforeTest extends BaseCase
     private function assertChildOrder($names, $node)
     {
         $children = [];
+
         foreach ($node as $name => $dummy) {
             $children[] = $name;
         }
@@ -211,7 +212,7 @@ class OrderBeforeTest extends BaseCase
         $session = $this->renewSession();
 
         $node = $session->getNode($path);
-        $this->assertChildOrder(array('four', 'new1', 'new2', 'two'), $node);
+        $this->assertChildOrder(['four', 'new1', 'new2', 'two'], $node);
     }
 
     /**

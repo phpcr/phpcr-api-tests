@@ -51,7 +51,8 @@ class RowIteratorTest extends QueryBaseCase
     {
         $position = 2;
 
-        $rows = array();
+        $rows = [];
+
         foreach ($this->rowIterator as $row) {
             $rows[] = $row;
         }
@@ -72,7 +73,8 @@ class RowIteratorTest extends QueryBaseCase
 
     public function testCountable()
     {
-        $rows = array();
+        $rows = [];
+
         foreach ($this->rowIterator as $row) {
             $rows[] = $row;
         }

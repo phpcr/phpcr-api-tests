@@ -10,6 +10,7 @@
  */
 
 namespace PHPCR\Tests\Query;
+
 use PHPCR\NodeInterface;
 use PHPCR\Query\InvalidQueryException;
 use PHPCR\Query\QOM\QueryObjectModelFactoryInterface;

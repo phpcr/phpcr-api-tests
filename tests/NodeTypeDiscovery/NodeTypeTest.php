@@ -120,7 +120,8 @@ class NodeTypeTest extends BaseCase
     {
         $types = self::$created->getSubtypes();
         $this->assertInstanceOf(SeekableIterator::class, $types);
-        $names = array();
+        $names = [];
+
         foreach ($types as $name => $type) {
             $this->assertInstanceOf(NodeTypeInterface::class, $type);
             $this->assertEquals($name, $type->getName());
@@ -137,7 +138,8 @@ class NodeTypeTest extends BaseCase
     {
         $types = self::$created->getDeclaredSubtypes();
         $this->assertInstanceOf(SeekableIterator::class, $types);
-        $names = array();
+        $names = [];
+
         foreach ($types as $name => $type) {
             $this->assertInstanceOf(NodeTypeInterface::class, $type);
             $this->assertEquals($name, $type->getName());
@@ -166,7 +168,8 @@ class NodeTypeTest extends BaseCase
         $properties = self::$file->getPropertyDefinitions();
         $this->assertInternalType('array', $properties);
         $this->assertCount(4, $properties);
-        $names = array();
+        $names = [];
+
         foreach ($properties as $prop) {
             $this->assertInstanceOf(PropertyDefinitionInterface::class, $prop);
             $names[] = $prop->getName();

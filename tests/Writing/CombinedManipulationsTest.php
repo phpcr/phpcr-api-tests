@@ -10,6 +10,7 @@
  */
 
 namespace PHPCR\Tests\Writing;
+
 use PHPCR\InvalidItemStateException;
 use PHPCR\NodeInterface;
 use PHPCR\NodeType\NodeTypeInterface;

@@ -36,7 +36,7 @@ class DeleteMethodsTest extends BaseCase
     }
 
     /**
-     * \PHPCR\SessionInterface::removeItem.
+     * @see SessionInterface::removeItem.
      */
     public function testRemoveItemNode()
     {
@@ -391,7 +391,7 @@ class DeleteMethodsTest extends BaseCase
 
         $this->node->remove();
 
-        $items = array($this->node, $ptest, $prop, $child, $childprop, $childchild, $childchildprop);
+        $items = [$this->node, $ptest, $prop, $child, $childprop, $childchild, $childchildprop];
         foreach ($items as $item) {
             try {
                 $this->fail('Should not be able to get path of deleted item '.$item->getPath()); // this should explode

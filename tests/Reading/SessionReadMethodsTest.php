@@ -85,12 +85,12 @@ class SessionReadMethodsTest extends BaseCase
 
     public function testGetNodes()
     {
-        $nodes = $this->session->getNodes(array(
+        $nodes = $this->session->getNodes([
             '/tests_general_base',
             '/tests_general_base/numberPropertyNode',
             '/not_existing',
             '/tests_general_base/../not_existing',
-        ));
+        ]);
 
         $this->assertCount(2, $nodes);
         $this->assertTrue(isset($nodes['/tests_general_base']));
@@ -162,12 +162,12 @@ class SessionReadMethodsTest extends BaseCase
 
     public function testGetProperties()
     {
-        $properties = $this->session->getProperties(array(
+        $properties = $this->session->getProperties([
             '/tests_general_base/jcr:primaryType',
             '/tests_general_base/numberPropertyNode/jcr:primaryType',
             '/not_existing/jcr:primaryType',
             '/tests_general_base/../not_existing/jcr:primaryType',
-        ));
+        ]);
         $this->assertCount(2, $properties);
         $this->assertTrue(isset($properties['/tests_general_base/jcr:primaryType']));
         $this->assertTrue(isset($properties['/tests_general_base/numberPropertyNode/jcr:primaryType']));
@@ -179,12 +179,12 @@ class SessionReadMethodsTest extends BaseCase
 
     public function testGetPropertiesTraversable()
     {
-        $properties = $this->session->getProperties(new \ArrayIterator(array(
+        $properties = $this->session->getProperties(new \ArrayIterator([
             '/tests_general_base/jcr:primaryType',
             '/tests_general_base/numberPropertyNode/jcr:primaryType',
             '/not_existing/jcr:primaryType',
             '/tests_general_base/../not_existing/jcr:primaryType',
-        )));
+        ]));
         $this->assertCount(2, $properties);
         $this->assertTrue(isset($properties['/tests_general_base/jcr:primaryType']));
         $this->assertTrue(isset($properties['/tests_general_base/numberPropertyNode/jcr:primaryType']));
@@ -300,11 +300,11 @@ class SessionReadMethodsTest extends BaseCase
 
     public function testGetNodesByIdentifier()
     {
-        $nodes = (array) $this->session->getNodesByIdentifier(array(
+        $nodes = (array) $this->session->getNodesByIdentifier([
             '842e61c0-09ab-42a9-87c0-308ccc90e6f4',
             '00000000-0000-0000-0000-000000000000',
             '13543fc6-1abf-4708-bfcc-e49511754b40',
-        ));
+        ]);
 
         $this->assertCount(2, $nodes);
         list($key, $node) = each($nodes);

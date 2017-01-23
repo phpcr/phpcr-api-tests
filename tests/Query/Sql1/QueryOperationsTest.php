@@ -38,10 +38,12 @@ class QueryOperationsTest extends QueryBaseCase
 
         $this->assertEquals(['bar'], $vals);
 
-        $vals = array();
+        $vals = [];
+
         foreach ($result->getRows() as $row) {
             $vals[] = $row->getValue('foo');
         }
+
         $this->assertEquals(['bar'], $vals);
     }
 

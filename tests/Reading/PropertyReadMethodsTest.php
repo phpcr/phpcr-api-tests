@@ -476,7 +476,7 @@ class PropertyReadMethodsTest extends BaseCase
         $this->assertEquals('/tests_general_base/numberPropertyNode/jcr:content/foo', $properties[0]->getPath());
         $this->assertEquals('/tests_general_base/index.txt/jcr:content/mydateprop', $properties[1]->getPath());
 
-        $expected = array($this->valProperty, $this->dateProperty);
+        $expected = [$this->valProperty, $this->dateProperty];
         $this->assertEquals($expected, $properties, '', 0, 3);
     }
 

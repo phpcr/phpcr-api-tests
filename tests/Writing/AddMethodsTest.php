@@ -200,7 +200,7 @@ class AddMethodsTest extends BaseCase
         $path = $this->node->getPath();
 
         $node = $this->node->addNode('unstructuredNode2', 'nt:unstructured');
-        $node->setProperty('test', array('val', 'val2'));
+        $node->setProperty('test', ['val', 'val2']);
 
         $this->session->save();
         $this->assertFalse($node->isNew(), 'Node was not saved');

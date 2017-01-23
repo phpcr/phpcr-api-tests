@@ -36,7 +36,8 @@ class CreateVersionableNodeTest extends BaseCase
     public function testAddVersionableMixin()
     {
         $this->node->addMixin('mix:versionable');
-        $mixins = array();
+        $mixins = [];
+
         foreach ($this->node->getMixinNodeTypes() as $mix) {
             $mixins[] = $mix->getName();
         }

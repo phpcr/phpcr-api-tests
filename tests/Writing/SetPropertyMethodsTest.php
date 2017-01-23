@@ -229,7 +229,7 @@ class SetPropertyMethodsTest extends BaseCase
 
     public function testSetPropertyMultivalueRef()
     {
-        $ids = array('842e61c0-09ab-42a9-87c0-308ccc90e6f4', '13543fc6-1abf-4708-bfcc-e49511754b40', '14e18ef3-be20-4985-bee9-7bb4763b31de');
+        $ids = ['842e61c0-09ab-42a9-87c0-308ccc90e6f4', '13543fc6-1abf-4708-bfcc-e49511754b40', '14e18ef3-be20-4985-bee9-7bb4763b31de'];
         $prop = $this->node->setProperty('multiref', $ids, PropertyType::WEAKREFERENCE);
         $this->assertEquals($ids, $this->node->getProperty('multiref')->getString());
         $this->assertEquals(PropertyType::WEAKREFERENCE, $prop->getType());

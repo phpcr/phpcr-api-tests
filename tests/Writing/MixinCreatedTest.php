@@ -10,6 +10,7 @@
  */
 
 namespace PHPCR\Tests\Writing;
+
 use DateTime;
 use PHPCR\NodeInterface;
 use PHPCR\Test\BaseCase;

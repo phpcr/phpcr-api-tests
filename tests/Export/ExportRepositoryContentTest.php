@@ -110,7 +110,7 @@ class ExportRepositoryContentTest extends BaseCase
         } elseif ($expected->tagName === 'sv:node') {
             // nodes have sv:node or sv:property children
             foreach ($expected->childNodes as $child) {
-                $this->assertContains($child->tagName, array('sv:property', 'sv:node'), 'unexpected child of sv:node');
+                $this->assertContains($child->tagName, ['sv:property', 'sv:node'], 'unexpected child of sv:node');
                 $childname = $child->attributes->getNamedItem('name')->value;
                 $q = $oxpath->query($child->tagName.'[@sv:name="'.$childname.'"]', $output);
                 $this->assertEquals(1, $q->length, 'expected to find exactly one node named '.$childname.' under '.$this->buildPath($output));

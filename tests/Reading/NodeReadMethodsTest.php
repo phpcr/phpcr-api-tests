@@ -21,11 +21,12 @@ use PHPCR\PathNotFoundException;
 use PHPCR\PropertyInterface;
 use PHPCR\RepositoryException;
 use PHPCR\SessionInterface;
+use PHPCR\Test\BaseCase;
 
 /**
  * test javax.jcr.Node read methods (read) §5.6.
  */
-class NodeReadMethodsTest extends \PHPCR\Test\BaseCase
+class NodeReadMethodsTest extends BaseCase
 {
     /** @var NodeInterface */
     protected $rootNode;
@@ -233,8 +234,9 @@ class NodeReadMethodsTest extends \PHPCR\Test\BaseCase
     public function testGetNodesTypeFilterList()
     {
         $this->node = $this->rootNode->getNode('tests_general_base');
-        $iterator = $this->node->getNodes('id*', array('nt:file', 'nt:folder'));
-        $nodes = array();
+        $iterator = $this->node->getNodes('id*', ['nt:file', 'nt:folder']);
+        $nodes = [];
+
         foreach ($iterator as $n) {
             $this->assertInstanceOf(NodeInterface::class, $n);
             /* @var $n NodeInterface */
@@ -367,7 +369,8 @@ class NodeReadMethodsTest extends \PHPCR\Test\BaseCase
     {
         $iterator = $this->node->getProperties('jcr:cr*');
         $this->assertInstanceOf('Iterator', $iterator);
-        $props = array();
+        $props = [];
+
         foreach ($iterator as $prop) {
             array_push($props, $prop->getName());
         }

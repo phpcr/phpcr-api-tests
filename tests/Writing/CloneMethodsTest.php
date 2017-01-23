@@ -217,7 +217,7 @@ class CloneMethodsTest extends BaseCase
         $this->assertCount(3, $clonedReplacedNode->getProperties());
         $this->checkNodeProperty($clonedReplacedNode, 'jcr:uuid', 'f8019868-3533-4519-a077-9c8601950627');
         $this->checkNodeProperty($clonedReplacedNode, 'jcr:primaryType', 'nt:unstructured');
-        $this->checkNodeProperty($clonedReplacedNode, 'jcr:mixinTypes', array('mix:referenceable'));
+        $this->checkNodeProperty($clonedReplacedNode, 'jcr:mixinTypes', ['mix:referenceable']);
     }
 
     /**

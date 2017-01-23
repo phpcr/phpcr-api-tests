@@ -63,11 +63,11 @@ class PermissionReadTest extends BaseCase
     public function testHasCapability()
     {
         $node = $this->session->getNode('/tests_general_base');
-        $this->assertTrue($this->session->hasCapability('getReferences', $node, array()), 'Does not have getReferences capability');
-        $this->assertTrue($this->session->hasCapability('getProperty', $node, array('foo')));
+        $this->assertTrue($this->session->hasCapability('getReferences', $node, []), 'Does not have getReferences capability');
+        $this->assertTrue($this->session->hasCapability('getProperty', $node, ['foo']));
         $property = $this->session->getProperty('/tests_general_base/numberPropertyNode/jcr:content/foo');
-        $this->assertTrue($this->session->hasCapability('getNode', $property, array()));
-        //$this->assertFalse($this->session->hasCapability('inexistentXXX', $property, array()));
+        $this->assertTrue($this->session->hasCapability('getNode', $property, []));
+        //$this->assertFalse($this->session->hasCapability('inexistentXXX', $property, []));
         //actually, the repository is not required to know, it can always say that the info can not be determined and return true. this makes me think that this method is pretty useless...
     }
 }

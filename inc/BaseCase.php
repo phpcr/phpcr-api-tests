@@ -107,7 +107,7 @@ abstract class BaseCase extends PHPUnit_Framework_TestCase
             throw new PHPUnit_Framework_SkippedTestSuiteError('Test case not supported by this implementation');
         }
 
-        self::$staticSharedFixture = array();
+        self::$staticSharedFixture = [];
         date_default_timezone_set('Europe/Zurich'); //TODO put this here?
 
         self::$staticSharedFixture['ie'] = self::$loader->getFixtureLoader();
