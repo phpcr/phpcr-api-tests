@@ -7,4 +7,5 @@ use PHPCR\NamespaceRegistryInterface;
 
 abstract class MockNamespaceRegistry implements Iterator, NamespaceRegistryInterface
 {
+
 }
