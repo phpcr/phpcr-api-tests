@@ -233,7 +233,7 @@ class SetPropertyTypesTest extends BaseCase
         $this->assertEquals(PropertyType::WEAKREFERENCE, $value->getType());
         $this->assertEquals($identifier, $value->getString());
         $node = $value->getValue();
-        $this->assertInstanceOf(NodeInterface::class , $node);
+        $this->assertInstanceOf(NodeInterface::class, $node);
     }
 
     public function testCreateValueNodeNonReferenceable()

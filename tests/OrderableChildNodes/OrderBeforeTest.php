@@ -10,6 +10,7 @@
  */
 
 namespace PHPCR\Tests\OrderableChildNodes;
+
 use PHPCR\ItemNotFoundException;
 use PHPCR\NodeInterface;
 use PHPCR\Test\BaseCase;

@@ -218,12 +218,11 @@ class SessionReadMethodsTest extends BaseCase
         $this->session->getItem('/foobarmooh');
     }
 
-     public function testGetItemRepositoryException()
-     {
-         $this->expectException(RepositoryException::class);
-
-         $this->session->getItem('//');
-     }
+    public function testGetItemRepositoryException()
+    {
+        $this->expectException(RepositoryException::class);
+        $this->session->getItem('//');
+    }
 
      //5.1.2
     public function testItemExists()
@@ -287,7 +286,6 @@ class SessionReadMethodsTest extends BaseCase
     public function testPropertyExistsInvalidPath()
     {
         $this->expectException(RepositoryException::class);
-
         $this->session->propertyExists('//');
     }
 
