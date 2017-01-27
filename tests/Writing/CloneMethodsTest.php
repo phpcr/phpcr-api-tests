@@ -15,7 +15,6 @@ use Exception;
 use PHPCR\ItemExistsException;
 use PHPCR\ItemNotFoundException;
 use PHPCR\NodeInterface;
-use PHPCR\NodeType\NoSuchNodeTypeException;
 use PHPCR\NoSuchWorkspaceException;
 use PHPCR\PathNotFoundException;
 use PHPCR\RepositoryException;
@@ -277,7 +276,7 @@ class CloneMethodsTest extends BaseCase
 
     public function testCloneNoSuchWorkspace()
     {
-        $this->expectException(NoSuchNodeTypeException::class);
+        $this->expectException(NoSuchWorkspaceException::class);
 
         $srcNode = '/tests_write_manipulation_clone/testWorkspaceClone/referenceable';
         $dstNode = $srcNode;
@@ -427,7 +426,7 @@ class CloneMethodsTest extends BaseCase
 
     public function testGetCorrespondingNodeNoSuchWorkspace()
     {
-        $this->expectException(NoSuchNodeTypeException::class);
+        $this->expectException(NoSuchWorkspaceException::class);
 
         $srcNode = '/tests_write_manipulation_clone/testWorkspaceCorrespondingNode/nodeThatWillNotBeCloned';
 
