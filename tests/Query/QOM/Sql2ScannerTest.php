@@ -30,9 +30,9 @@ class Sql2ScannerTest extends \PHPCR\Test\BaseCase
                 [nt:file]
             INNER JOIN
                 [nt:folder] ON ISSAMENODE(sel1, sel2, [/home])';
-        $this->tokens = array(
+        $this->tokens = [
             'SELECT', '*', 'FROM','[nt:file]', 'INNER', 'JOIN', '[nt:folder]',
-            'ON', 'ISSAMENODE', '(', 'sel1', ',', 'sel2', ',', '[/home]', ')', );
+            'ON', 'ISSAMENODE', '(', 'sel1', ',', 'sel2', ',', '[/home]', ')', ];
     }
 
     public function testConstructor()
