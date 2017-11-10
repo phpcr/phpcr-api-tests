@@ -19,12 +19,12 @@ use PHPCR\SessionInterface;
 use PHPCR\NodeInterface;
 use DateTime;
 use PHPUnit_Framework_SkippedTestSuiteError;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Base class for all phpcr api tests.
  */
-abstract class BaseCase extends PHPUnit_Framework_TestCase
+abstract class BaseCase extends TestCase
 {
     /**
      * Describes the path to the node for this test, used with writing tests.
