@@ -341,13 +341,13 @@ class ImportRepositoryContentTest extends BaseCase
         $this->session->importXML('/', 'nonexisting.xml', ImportUUIDBehaviorInterface::IMPORT_UUID_COLLISION_THROW);
     }
 
-/*
-    TODO: can we make XMLReader throw exception instead of whatever it does now?
-    public function testImportXMLNoXml()
-    {
-        $this->session->importXML('/', __FILE__, ImportUUIDBehaviorInterface::IMPORT_UUID_COLLISION_THROW);
-    }
-*/
+    /*
+        TODO: can we make XMLReader throw exception instead of whatever it does now?
+        public function testImportXMLNoXml()
+        {
+            $this->session->importXML('/', __FILE__, ImportUUIDBehaviorInterface::IMPORT_UUID_COLLISION_THROW);
+        }
+    */
 
     public function testImportXMLDocument()
     {

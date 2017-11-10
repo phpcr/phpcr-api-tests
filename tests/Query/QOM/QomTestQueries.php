@@ -137,9 +137,9 @@ class QomTestQueries
             )
         ;
 
-       /*
-        * 6.7.10 ChildNodeJoinCondition
-        */
+        /*
+         * 6.7.10 ChildNodeJoinCondition
+         */
 
         // SELECT * FROM nt:file INNER JOIN nt:folder ON ISCHILDNODE(child, parent)
         $queries['6.7.10.ChildNodeCondition'] =
@@ -508,7 +508,7 @@ class QomTestQueries
             )
         ;
 
-         /*
+        /*
         * 6.7.29. NodeName
         */
 

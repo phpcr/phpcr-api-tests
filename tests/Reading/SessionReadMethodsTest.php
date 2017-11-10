@@ -224,7 +224,7 @@ class SessionReadMethodsTest extends BaseCase
         $this->session->getItem('//');
     }
 
-     //5.1.2
+    //5.1.2
     public function testItemExists()
     {
         $this->assertTrue($this->session->itemExists('/'));
