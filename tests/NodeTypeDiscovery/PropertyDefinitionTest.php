@@ -249,7 +249,7 @@ class PropertyDefinitionTest extends BaseCase
         $this->assertTrue($b);
     }
 
-     /// item methods ///
+    /// item methods ///
     public function testGetDeclaringNodeType()
     {
         $nt = $this->primaryType->getDeclaringNodeType();
