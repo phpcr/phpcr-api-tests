@@ -157,7 +157,7 @@ class NodeTypeTest extends BaseCase
         $children = self::$file->getChildNodeDefinitions();
         $this->assertInternalType('array', $children);
         $this->assertCount(1, $children);
-        list($key, $child) = each($children);
+        $child = current($children);
         $this->assertInstanceOf(NodeDefinitionInterface::class, $child);
         $this->assertEquals('jcr:content', $child->getName());
         // the rest is tested in NodeDefinitionTest

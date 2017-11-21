@@ -305,10 +305,10 @@ class SessionReadMethodsTest extends BaseCase
         ]);
 
         $this->assertCount(2, $nodes);
-        list($key, $node) = each($nodes);
+        $node = current($nodes);
         $this->assertInstanceOf(NodeInterface::class, $node);
         $this->assertEquals('/tests_general_base/idExample', $node->getPath());
-        list($key, $node) = each($nodes);
+        $node = next($nodes);
         $this->assertInstanceOf(NodeInterface::class, $node);
         $this->assertEquals('/tests_general_base/idExample/jcr:content/weakreference_target', $node->getPath());
     }
@@ -322,10 +322,10 @@ class SessionReadMethodsTest extends BaseCase
         ]));
 
         $this->assertCount(2, $nodes);
-        list($key, $node) = each($nodes);
+        $node = current($nodes);
         $this->assertInstanceOf(NodeInterface::class, $node);
         $this->assertEquals('/tests_general_base/idExample', $node->getPath());
-        list($key, $node) = each($nodes);
+        $node = next($nodes);
         $this->assertInstanceOf(NodeInterface::class, $node);
         $this->assertEquals('/tests_general_base/idExample/jcr:content/weakreference_target', $node->getPath());
     }

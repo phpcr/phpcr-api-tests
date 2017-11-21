@@ -140,10 +140,12 @@ class DeleteMethodsTest extends BaseCase
         $parent = $this->session->getNode($parentPath);
         $this->assertCount(count($childrenAtEnd), $parent->getNodes());
 
+        $childValue = -1;
         foreach ($parent->getNodes() as $node) {
-            $child = each($childrenAtEnd);
-            $this->assertEquals($parentPath.'/'.$child['key'], $node->getPath());
-            $this->assertEquals($child['value'], $node->getProperty('childNumber')->getValue());
+            $childValue = (-1 === $childValue) ? current($childrenAtEnd) : next($childrenAtEnd);
+            $childKey = key($childrenAtEnd);
+            $this->assertEquals($parentPath.'/'.$childKey, $node->getPath());
+            $this->assertEquals($childValue, $node->getProperty('childNumber')->getValue());
         }
     }
 

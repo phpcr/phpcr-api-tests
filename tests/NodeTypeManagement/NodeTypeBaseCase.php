@@ -98,7 +98,8 @@ abstract class NodeTypeBaseCase extends BaseCase
         $this->assertCount(2, $types, 'Wrong number of nodes registered');
 
         // apitest
-        list($name, $type) = each($types);
+        $type = current($types);
+        $name = key($types);
         $this->assertEquals('phpcr:apitest', $name);
         $this->assertInstanceOf(NodeTypeDefinitionInterface::class, $type);
         /* @var $type NodeTypeDefinitionInterface */
@@ -108,7 +109,8 @@ abstract class NodeTypeBaseCase extends BaseCase
         $this->assertTrue($props[0]->isMultiple());
 
         // test
-        list($name, $type) = each($types);
+        $type = next($types);
+        $name = key($types);
         $this->assertEquals('phpcr:test', $name);
         $this->assertInstanceOf(NodeTypeDefinitionInterface::class, $type);
         /* @var $type NodeTypeDefinitionInterface */
@@ -164,8 +166,7 @@ abstract class NodeTypeBaseCase extends BaseCase
         $root = $this->session->getRootNode();
 
         if ($root->hasNode('test_node')) {
-            $node = $root->getNode('test_node');
-            $node->remove();
+            $root->getNode('test_node')->remove();
             $this->session->save();
         }
 
