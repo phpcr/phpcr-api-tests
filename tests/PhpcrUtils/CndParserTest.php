@@ -197,7 +197,8 @@ EOT;
         // get first node type
         reset($res['nodeTypes']);
         /** @var $def NodeTypeDefinitionInterface */
-        list($name, $def) = each($res['nodeTypes']);
+        $def = current($res['nodeTypes']);
+        $name = key($res['nodeTypes']);
 
         $this->assertEquals('ns:NodeType', $name);
         $this->assertInstanceOf(NodeTypeTemplateInterface::class, $def);

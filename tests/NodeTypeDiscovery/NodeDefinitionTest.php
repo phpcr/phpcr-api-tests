@@ -74,14 +74,14 @@ class NodeDefinitionTest extends BaseCase
             $defs = self::$file->getChildNodeDefinitions();
             $this->assertInternalType('array', $defs);
             $this->assertCount(1, $defs);
-            list($key, $this->content) = each($defs);
+            $this->content = current($defs);
             $this->assertInstanceOf(NodeDefinitionInterface::class, $this->content);
             $this->assertEquals('jcr:content', $this->content->getName());
 
             $defs = self::$folder->getChildNodeDefinitions();
             $this->assertInternalType('array', $defs);
             $this->assertCount(1, $defs);
-            list($key, $this->hierarchyNodeDef) = each($defs);
+            $this->hierarchyNodeDef = next($defs);
             $this->assertInstanceOf(NodeDefinitionInterface::class, $this->hierarchyNodeDef);
             $this->assertEquals('*', $this->hierarchyNodeDef->getName());
         } catch (Exception $e) {

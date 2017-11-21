@@ -11,6 +11,7 @@
 
 namespace PHPCR\Tests\NodeTypeManagement;
 
+use PHPCR\NodeType\NodeTypeDefinitionInterface;
 use PHPCR\PropertyType;
 
 /**
@@ -18,6 +19,45 @@ use PHPCR\PropertyType;
  */
 class NodeTypeTest extends NodeTypeBaseCase
 {
+    public function testRegisterNodeType()
+    {
+        $ns = $this->workspace->getNamespaceRegistry();
+        $ns->registerNamespace('phpcr', 'http://www.doctrine-project.org/projects/phpcr_odm');
+
+        $ntm = $this->workspace->getNodeTypeManager();
+
+        $apitest = $ntm->createNodeTypeTemplate();
+        $apitest->setName('phpcr:apitest');
+        $apitest->setMixin(true);
+
+        $class = $ntm->createPropertyDefinitionTemplate();
+        $class->setName('phpcr:class');
+        $class->setRequiredType(PropertyType::STRING);
+        $class->setMultiple(true);
+        $apitest->getPropertyDefinitionTemplates()->append($class);
+
+        $type = $ntm->registerNodeType($apitest, true);
+
+        $this->assertApitestType($type);
+
+        $session = $this->renewSession();
+        $ntm = $session->getWorkspace()->getNodeTypeManager();
+
+        $this->assertTrue($ntm->hasNodeType('phpcr:apitest'));
+        $this->assertApitestType($ntm->getNodeType('phpcr:apitest'));
+    }
+
+    private function assertApitestType($type)
+    {
+        $this->assertInstanceOf(NodeTypeDefinitionInterface::class, $type);
+        /* @var $type NodeTypeDefinitionInterface */
+        $this->assertEquals('phpcr:apitest', $type->getName());
+        $props = $type->getDeclaredPropertyDefinitions();
+        $this->assertCount(1, $props, 'Wrong number of properties in phpcr:apitest');
+        $this->assertEquals('phpcr:class', $props[0]->getName());
+        $this->assertTrue($props[0]->isMultiple());
+    }
+
     protected function registerNodeTypes($allowUpdate)
     {
         $ns = $this->workspace->getNamespaceRegistry();
