@@ -496,7 +496,7 @@ class NodeReadMethodsTest extends BaseCase
     public function testGetIndex()
     {
         $index = $this->node->getIndex();
-        $this->assertTrue(is_numeric($index));
+        $this->assertInternalType('numeric', $index);
         $this->assertEquals(1, $index);
     }
 
@@ -523,7 +523,7 @@ class NodeReadMethodsTest extends BaseCase
         $this->assertCount(2, $iterator, 'Wrong number of references to idExample');
         foreach ($iterator as $prop) {
             $this->assertInstanceOf(PropertyInterface::class, $prop);
-            $this->assertTrue(in_array($prop, $source));
+            $this->assertContains($prop, $source);
         }
     }
 
@@ -594,7 +594,7 @@ class NodeReadMethodsTest extends BaseCase
         $this->assertCount(3, $iterator, 'Wrong number of weak references to weakreference_target');
         foreach ($iterator as $prop) {
             $this->assertInstanceOf(PropertyInterface::class, $prop);
-            $this->assertTrue(in_array($prop, $source, true));
+            $this->assertContains($prop, $source);
         }
     }
 

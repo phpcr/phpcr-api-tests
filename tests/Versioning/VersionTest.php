@@ -76,7 +76,7 @@ class VersionTest extends BaseCase
     {
         $date = $this->version->getCreated();
         $diff = time() - $date->getTimestamp();
-        $this->assertTrue($diff < 60, 'creation date of the version we created in setupBeforeClass should be within the last few seconds');
+        $this->assertLessThan(60, $diff, 'creation date of the version we created in setupBeforeClass should be within the last few seconds');
     }
 
     public function testGetFrozenNode()

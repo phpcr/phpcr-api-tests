@@ -48,7 +48,7 @@ class MixinCreatedTest extends BaseCase
         $this->assertInstanceOf(DateTime::class, $date);
         /* @var $date DateTime */
         $diff = time() - $date->getTimestamp();
-        $this->assertTrue($diff < 60 * 10, 'jcr:created should be current date as fixture was just imported: '.$date->format('c'));
+        $this->assertLessThan(60 * 10, $diff, 'jcr:created should be current date as fixture was just imported: '.$date->format('c'));
 
         // Re-read the node to be sure things got properly saved
         $this->renewSession();
@@ -59,6 +59,6 @@ class MixinCreatedTest extends BaseCase
         $date = $child->getPropertyValue('jcr:created');
         $this->assertInstanceOf(DateTime::class, $date);
         $diff = time() - $date->getTimestamp();
-        $this->assertTrue($diff < 60 * 10, 'jcr:created should be current date as fixture was just imported: '.$date->format('c'));
+        $this->assertLessThan(60 * 10, $diff, 'jcr:created should be current date as fixture was just imported: '.$date->format('c'));
     }
 }

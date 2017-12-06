@@ -411,7 +411,7 @@ class QomToSql2ConverterTest extends BaseCase
 
         $result = $this->parser->convert($query);
         if (is_array($expectedSql2)) {
-            $this->assertTrue(in_array($result, $expectedSql2), "The statement '$result' does not match an expected variation");
+            $this->assertContains($result, $expectedSql2, "The statement '$result' does not match an expected variation");
         } else {
             $this->assertEquals($expectedSql2, $result);
         }

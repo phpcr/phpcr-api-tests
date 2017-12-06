@@ -43,14 +43,14 @@ class NamespaceRegistryTest extends BaseCase
     {
         $ret = $this->nr->getPrefixes();
         $this->assertInternalType('array', $ret);
-        $this->assertTrue(count($ret) >= count($this->nsBuiltIn));
+        $this->assertGreaterThanOrEqual(count($this->nsBuiltIn), count($ret));
     }
 
     public function testGetURIs()
     {
         $ret = $this->nr->getURIs();
         $this->assertInternalType('array', $ret);
-        $this->assertTrue(count($ret) >= count($this->nsBuiltIn));
+        $this->assertGreaterThanOrEqual(count($this->nsBuiltIn), count($ret));
         //we test in getURI / getPrefix if the names match
     }
 
@@ -150,6 +150,6 @@ class NamespaceRegistryTest extends BaseCase
             $this->assertInternalType('string', $url);
             $this->assertEquals($url, $this->nr->getURI($prefix));
         }
-        $this->assertTrue($results > 3, 'Not enough namespaces');
+        $this->assertGreaterThan(3, $results, 'Not enough namespaces');
     }
 }

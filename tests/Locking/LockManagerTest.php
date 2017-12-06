@@ -137,7 +137,7 @@ class LockManagerTest extends BaseCase
         sleep(2);
         $this->assertFalse($this->lm->isLocked('/lockable-expire'));
         $this->assertFalse($lock->isLive());
-        $this->assertTrue($lock->getSecondsRemaining() < 0);
+        $this->assertLessThan(0, $lock->getSecondsRemaining());
     }
 
     /**
