@@ -242,7 +242,7 @@ class ObservationManagerTest extends BaseCase
             $journal->next();
 
             // Notice the assertion is slightly different from the one in testFilterOnPathNoDeep
-            $this->assertTrue(substr($event->getPath(), 0, strlen($this->nodePath.'/child')) === $this->nodePath.'/child');
+            $this->assertSame(substr($event->getPath(), 0, strlen($this->nodePath.'/child')), $this->nodePath.'/child');
         }
     }
 
