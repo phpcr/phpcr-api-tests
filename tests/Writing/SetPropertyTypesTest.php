@@ -82,7 +82,7 @@ class SetPropertyTypesTest extends BaseCase
         $oldSession = $this->session;
         $this->saveAndRenewSession(); // either this
         $oldSession->logout(); // or this should close the stream
-        $this->assertFalse(is_resource($stream), 'The responsibility for the stream goes into phpcr who must close it');
+        $this->assertNotInternalType('resource', $stream, 'The responsibility for the stream goes into phpcr who must close it');
 
         $bin = $this->session->getProperty('/tests_general_base/numberPropertyNode/jcr:content/newBinaryStream');
         $this->assertEquals(PropertyType::BINARY, $bin->getType());
@@ -102,7 +102,7 @@ class SetPropertyTypesTest extends BaseCase
         $oldSession = $this->session;
         $this->saveAndRenewSession(); // either this
         $oldSession->logout(); // or this should close the stream
-        $this->assertFalse(is_resource($stream), 'The responsibility for the stream goes into phpcr who must close it');
+        $this->assertNotInternalType('resource', $stream, 'The responsibility for the stream goes into phpcr who must close it');
 
         $bin = $this->session->getProperty('/tests_general_base/numberPropertyNode/jcr:content/newBinaryStream');
         $this->assertEquals(PropertyType::BINARY, $bin->getType());
@@ -185,13 +185,13 @@ class SetPropertyTypesTest extends BaseCase
         $this->assertInstanceOf(PropertyInterface::class, $value);
         $this->assertEquals(PropertyType::BOOLEAN, $value->getType(), 'wrong type');
         $this->assertTrue($value->getBoolean(), 'boolean not true');
-        $this->assertTrue($value->getString() == true, 'wrong string value'); //boolean converted to string must be true
+        $this->assertEquals(true, $value->getString(), 'wrong string value'); //boolean converted to string must be true
 
         $this->saveAndRenewSession();
         $value = $this->session->getProperty('/tests_general_base/numberPropertyNode/jcr:content/propBoolean');
         $this->assertEquals(PropertyType::BOOLEAN, $value->getType(), 'wrong type');
         $this->assertTrue($value->getBoolean(), 'boolean not true');
-        $this->assertTrue($value->getString() == true, 'wrong string value'); //boolean converted to string must be true
+        $this->assertEquals(true, $value->getString(), 'wrong string value'); //boolean converted to string must be true
     }
 
     public function testCreateValueNode()

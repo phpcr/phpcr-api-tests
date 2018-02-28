@@ -108,24 +108,24 @@ class NodeDefinitionTest extends BaseCase
     {
         $names = $this->content->getRequiredPrimaryTypeNames();
         $this->assertInternalType('array', $names);
-        $this->assertTrue(1, count($names));
+        $this->assertCount(1, $names);
         $this->assertEquals('nt:base', $names[0]);
 
         $names = $this->hierarchyNodeDef->getRequiredPrimaryTypeNames();
         $this->assertInternalType('array', $names);
-        $this->assertTrue(1, count($names));
+        $this->assertCount(1, $names);
         $this->assertEquals('nt:hierarchyNode', $names[0]);
     }
     public function getRequiredPrimaryTypes()
     {
         $types = $this->content->getRequiredPrimaryTypeNames();
         $this->assertInternalType('array', $types);
-        $this->assertTrue(1, count($types));
+        $this->assertCount(1, $types);
         $this->assertEquals(self::$base, $types[0]);
 
         $types = $this->hierarchyNodeDef->getRequiredPrimaryTypeNames();
         $this->assertInternalType('array', $types);
-        $this->assertTrue(1, count($types));
+        $this->assertCount(1, $types);
         $this->assertEquals(self::$hierarchyNodeType, $types[0]);
     }
 

@@ -93,8 +93,8 @@ class SessionReadMethodsTest extends BaseCase
         ]);
 
         $this->assertCount(2, $nodes);
-        $this->assertTrue(isset($nodes['/tests_general_base']));
-        $this->assertTrue(isset($nodes['/tests_general_base/numberPropertyNode']));
+        $this->assertArrayHasKey('/tests_general_base', $nodes);
+        $this->assertArrayHasKey('/tests_general_base/numberPropertyNode', $nodes);
 
         foreach ($nodes as $key => $node) {
             $this->assertInstanceOf(NodeInterface::class, $node);
@@ -115,8 +115,8 @@ class SessionReadMethodsTest extends BaseCase
         ]));
 
         $this->assertCount(2, $nodes);
-        $this->assertTrue(isset($nodes['/tests_general_base']));
-        $this->assertTrue(isset($nodes['/tests_general_base/numberPropertyNode']));
+        $this->assertArrayHasKey('/tests_general_base', $nodes);
+        $this->assertArrayHasKey('/tests_general_base/numberPropertyNode', $nodes);
 
         foreach ($nodes as $key => $node) {
             $this->assertInstanceOf(NodeInterface::class, $node);
@@ -169,8 +169,8 @@ class SessionReadMethodsTest extends BaseCase
             '/tests_general_base/../not_existing/jcr:primaryType',
         ]);
         $this->assertCount(2, $properties);
-        $this->assertTrue(isset($properties['/tests_general_base/jcr:primaryType']));
-        $this->assertTrue(isset($properties['/tests_general_base/numberPropertyNode/jcr:primaryType']));
+        $this->assertArrayHasKey('/tests_general_base/jcr:primaryType', $properties);
+        $this->assertArrayHasKey('/tests_general_base/numberPropertyNode/jcr:primaryType', $properties);
         foreach ($properties as $key => $property) {
             $this->assertInstanceOf(PropertyInterface::class, $property);
             $this->assertEquals($key, $property->getPath());
@@ -186,8 +186,8 @@ class SessionReadMethodsTest extends BaseCase
             '/tests_general_base/../not_existing/jcr:primaryType',
         ]));
         $this->assertCount(2, $properties);
-        $this->assertTrue(isset($properties['/tests_general_base/jcr:primaryType']));
-        $this->assertTrue(isset($properties['/tests_general_base/numberPropertyNode/jcr:primaryType']));
+        $this->assertArrayHasKey('/tests_general_base/jcr:primaryType', $properties);
+        $this->assertArrayHasKey('/tests_general_base/numberPropertyNode/jcr:primaryType', $properties);
         foreach ($properties as $key => $property) {
             $this->assertInstanceOf(PropertyInterface::class, $property);
             $this->assertEquals($key, $property->getPath());

@@ -74,6 +74,6 @@ class NodeViewTest extends QueryBaseCase
             $nodes[] = $node;
         }
 
-        $this->assertEquals(count($nodes), $this->nodeIterator->count());
+        $this->assertCount($this->nodeIterator->count(), $nodes);
     }
 }

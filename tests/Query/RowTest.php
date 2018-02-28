@@ -87,7 +87,7 @@ class RowTest extends QueryBaseCase
 
     public function testGetPath()
     {
-        $this->assertTrue(in_array($this->row->getPath(), $this->resultPaths), 'not one of the expected results');
+        $this->assertContains($this->row->getPath(), $this->resultPaths, 'not one of the expected results');
     }
 
     public function testGetScore()

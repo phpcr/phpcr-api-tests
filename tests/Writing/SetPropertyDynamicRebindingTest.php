@@ -77,7 +77,7 @@ class SetPropertyDynamicRebindingTest extends BaseCase
             $this->assertEquals($sourcePropValue, $prop->getValue(), 'Initial property value does not match before saving');
         } else {
             // PHPUnit does not like to assertEquals on resources
-            $this->assertTrue(is_resource($prop->getValue()));
+            $this->assertInternalType('resource', $prop->getValue());
         }
 
         // Read it from backend check it's still valid
@@ -97,7 +97,7 @@ class SetPropertyDynamicRebindingTest extends BaseCase
             $this->assertEquals($sourcePropValue, $prop->getValue(), 'Initial property value does not match after saving');
         } else {
             // PHPUnit does not like to assertEquals on resources
-            $this->assertTrue(is_resource($prop->getValue()));
+            $this->assertInternalType('resource', $prop->getValue());
         }
 
         try {

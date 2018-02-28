@@ -207,7 +207,7 @@ class PropertyReadMethodsTest extends BaseCase
     public function testGetBinary()
     {
         $bin = $this->valProperty->getBinary();
-        $this->assertTrue(is_resource($bin));
+        $this->assertInternalType('resource', $bin);
         $str = $this->valProperty->getString();
         $this->assertEquals($str, stream_get_contents($bin));
         $this->assertEquals($this->valProperty->getLength(), strlen($str));
@@ -215,7 +215,7 @@ class PropertyReadMethodsTest extends BaseCase
         $prop = $this->node->getProperty('index.txt/jcr:content/jcr:data');
         $this->assertEquals(PropertyType::BINARY, $prop->getType(), 'Expected binary type');
         $bin = $prop->getValue();
-        $this->assertTrue(is_resource($bin));
+        $this->assertInternalType('resource', $bin);
         $this->assertNotNull(stream_get_contents($bin));
         fclose($bin);
     }
@@ -227,7 +227,7 @@ class PropertyReadMethodsTest extends BaseCase
         $arr = $prop->getValue();
         $this->assertInternalType('array', $arr);
         foreach ($arr as $bin) {
-            $this->assertTrue(is_resource($bin));
+            $this->assertInternalType('resource', $bin);
             $this->assertNotNull(stream_get_contents($bin));
         }
     }
