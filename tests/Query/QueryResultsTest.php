@@ -146,7 +146,7 @@ class QueryResultsTest extends QueryBaseCase
     {
         $seekName = '/tests_general_base/multiValueProperty';
 
-        $this->assertTrue(count($this->qr->getNodes()) > 0);
+        $this->assertGreaterThan(0, count($this->qr->getNodes()));
         foreach ($this->qr->getNodes() as $path => $node) {
             if ($seekName == $path) {
                 break;
@@ -202,7 +202,7 @@ class QueryResultsTest extends QueryBaseCase
         }
 
         $this->assertCount(1, $rows);
-        
+
         // returning a string value is, perhaps suprisingly, the correct behavior.
         $this->assertEquals('4 2 8', $rows[0]->getValue('data.longNumberToCompareMulti'));
     }

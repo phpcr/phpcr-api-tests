@@ -157,10 +157,10 @@ EOT;
     {
         $res = $this->cndParser->parseFile(__DIR__.'/resources/cnd/no-stop-at-eof.cnd');
 
-        $this->assertTrue(isset($res['namespaces']));
+        $this->assertArrayHasKey('namespaces', $res);
         $this->assertEquals(['phpcr' => 'http://www.doctrine-project.org/projects/phpcr_odm'], $res['namespaces']);
 
-        $this->assertTrue(isset($res['nodeTypes']));
+        $this->assertArrayHasKey('nodeTypes', $res);
     }
 
     public function testBigFile()
@@ -169,10 +169,10 @@ EOT;
         $res = $this->cndParser->parseFile(__DIR__.'/resources/cnd/jackrabbit_nodetypes.cnd');
 
         // some random sanity checks
-        $this->assertTrue(isset($res['nodeTypes']));
+        $this->assertArrayHasKey('nodeTypes', $res);
 
         $def = $res['nodeTypes'];
-        $this->assertTrue(isset($def['nt:file']));
+        $this->assertArrayHasKey('nt:file', $def);
         /** @var $parsed NodeTypeDefinitionInterface */
         $parsed = $def['nt:file'];
         $this->assertEquals('nt:file', $parsed->getName());
@@ -190,10 +190,10 @@ EOT;
      */
     protected function assertExampleCnd($res)
     {
-        $this->assertTrue(isset($res['namespaces']));
+        $this->assertArrayHasKey('namespaces', $res);
         $this->assertEquals(['ns' => 'http://namespace.com/ns'], $res['namespaces']);
 
-        $this->assertTrue(isset($res['nodeTypes']));
+        $this->assertArrayHasKey('nodeTypes', $res);
         // get first node type
         reset($res['nodeTypes']);
         /** @var $def NodeTypeDefinitionInterface */

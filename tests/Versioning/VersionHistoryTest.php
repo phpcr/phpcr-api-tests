@@ -402,15 +402,15 @@ class VersionHistoryTest extends BaseCase
         $version = $history->getVersion('1.0');
 
         $labels = $history->getVersionLabels($version);
-        $this->assertEquals(2, count($labels));
-        $this->assertTrue(in_array('stable', $labels));
-        $this->assertTrue(in_array('labelname', $labels));
+        $this->assertCount(2, $labels);
+        $this->assertContains('stable', $labels);
+        $this->assertContains('labelname', $labels);
 
         $labels = $history->getVersionLabels();
-        $this->assertEquals(3, count($labels));
-        $this->assertTrue(in_array('stable', $labels));
-        $this->assertTrue(in_array('labelname', $labels));
-        $this->assertTrue(in_array('anotherlabelname', $labels));
+        $this->assertCount(3, $labels);
+        $this->assertContains('stable', $labels);
+        $this->assertContains('labelname', $labels);
+        $this->assertContains('anotherlabelname', $labels);
     }
 
     /**

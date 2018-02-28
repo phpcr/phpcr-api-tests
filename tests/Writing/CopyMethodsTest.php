@@ -275,8 +275,8 @@ class CopyMethodsTest extends BaseCase
         $srcVal = $srcProp->getBinary();
         $dstVal = $dstProp->getBinary();
 
-        $this->assertTrue(is_resource($srcVal), 'Failed to get src binary stream');
-        $this->assertTrue(is_resource($dstVal), 'Failed to get dst binary stream');
+        $this->assertInternalType('resource', $srcVal, 'Failed to get src binary stream');
+        $this->assertInternalType('resource', $dstVal, 'Failed to get dst binary stream');
 
         $this->assertEquals(stream_get_contents($srcVal), stream_get_contents($dstVal));
     }
@@ -303,13 +303,13 @@ class CopyMethodsTest extends BaseCase
         $srcVal = $srcProp->getValue();
         $dstVal = $dstProp->getValue();
 
-        $this->assertTrue(is_array($srcVal), 'Failed to get src value');
-        $this->assertTrue(is_array($dstVal), 'Failed to get dst value');
+        $this->assertInternalType('array', $srcVal, 'Failed to get src value');
+        $this->assertInternalType('array', $dstVal, 'Failed to get dst value');
 
-        $this->assertTrue(is_resource($srcVal[0]));
-        $this->assertTrue(is_resource($srcVal[1]));
-        $this->assertTrue(is_resource($dstVal[0]));
-        $this->assertTrue(is_resource($dstVal[1]));
+        $this->assertInternalType('resource', $srcVal[0]);
+        $this->assertInternalType('resource', $srcVal[1]);
+        $this->assertInternalType('resource', $dstVal[0]);
+        $this->assertInternalType('resource', $dstVal[1]);
 
         $this->assertEquals(stream_get_contents($srcVal[0]), stream_get_contents($dstVal[0]));
         $this->assertEquals(stream_get_contents($srcVal[1]), stream_get_contents($dstVal[1]));

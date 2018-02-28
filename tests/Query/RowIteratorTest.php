@@ -79,6 +79,6 @@ class RowIteratorTest extends QueryBaseCase
             $rows[] = $row;
         }
 
-        $this->assertEquals(count($rows), $this->rowIterator->count());
+        $this->assertCount($this->rowIterator->count(), $rows);
     }
 }

@@ -55,18 +55,18 @@ hello world
     public function testReadBinaryValue()
     {
         $binary = $this->binaryProperty->getBinary();
-        $this->assertTrue(is_resource($binary));
+        $this->assertInternalType('resource', $binary);
         $this->assertEquals($this->decodedstring, stream_get_contents($binary));
 
         // stream must start when getting again
         $binary = $this->binaryProperty->getBinary();
-        $this->assertTrue(is_resource($binary));
+        $this->assertInternalType('resource', $binary);
         $this->assertEquals($this->decodedstring, stream_get_contents($binary), 'Stream must begin at start again on second read');
 
         // stream must not be the same
         fclose($binary);
         $binary = $this->binaryProperty->getBinary();
-        $this->assertTrue(is_resource($binary));
+        $this->assertInternalType('resource', $binary);
         $this->assertEquals($this->decodedstring, stream_get_contents($binary), 'Stream must be different for each call, fclose should not matter');
     }
 
@@ -100,7 +100,7 @@ hello world
         $vals = $binaryMulti->getValue();
         $this->assertInternalType('array', $vals);
         foreach ($vals as $value) {
-            $this->assertTrue(is_resource($value));
+            $this->assertInternalType('resource', $value);
             $this->assertEquals($this->decodedstring, stream_get_contents($value));
         }
     }
@@ -161,8 +161,8 @@ hello world
         $empty = $node->getProperty('empty_multidata');
         $this->assertEquals(PropertyType::BINARY, $empty->getType());
         $emptyValue = $empty->getBinary();
-        $this->assertTrue(is_array($emptyValue));
-        $this->assertTrue(count($emptyValue) === 0);
+        $this->assertInternalType('array', $emptyValue);
+        $this->assertCount(0, $emptyValue);
     }
 
     /**
@@ -174,8 +174,8 @@ hello world
         $single = $node->getProperty('single_multidata');
         $this->assertEquals(PropertyType::BINARY, $single->getType());
         $singleValue = $single->getBinary();
-        $this->assertTrue(is_array($singleValue));
-        $this->assertTrue(is_resource($singleValue[0]));
+        $this->assertInternalType('array', $singleValue);
+        $this->assertInternalType('resource', $singleValue[0]);
         $contents = stream_get_contents($singleValue[0]);
         $this->assertEquals($this->decodedstring, $contents);
     }
