@@ -263,6 +263,24 @@
     </sv:node>
   </sv:node>
 
+  <sv:node sv:name="testRemoveNewNodeInOtherSessionDiscardChanges">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>nt:unstructured</sv:value>
+    </sv:property>
+  </sv:node>
+
+  <sv:node sv:name="testRemoveNewNodeInOtherSessionKeepChanges">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>nt:unstructured</sv:value>
+    </sv:property>
+  </sv:node>
+
+  <sv:node sv:name="testRemoveNodeInOtherSessionKeepChangeg">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>nt:unstructured</sv:value>
+    </sv:property>
+  </sv:node>
+
   <sv:node sv:name="testMoveSessionRefresh">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
       <sv:value>nt:unstructured</sv:value>
