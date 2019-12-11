@@ -17,7 +17,7 @@ use PHPCR\NoSuchWorkspaceException;
 use PHPCR\RepositoryFactoryInterface;
 use PHPCR\RepositoryInterface;
 use PHPCR\SessionInterface;
-use PHPUnit_Framework_SkippedTestSuiteError;
+use PHPUnit\Framework\SkippedTestSuiteError;
 
 /**
  * Base class for the bootstrapping to load your phpcr implementation for the
@@ -216,7 +216,7 @@ abstract class AbstractLoader
      *
      * @return SessionInterface
      *
-     * @throws PHPUnit_Framework_SkippedTestSuiteError to make whole test
+     * @throws SkippedTestSuiteError to make whole test
      *      suite skip if implementation does not support updating the
      *      properties automatically.
      */
@@ -226,7 +226,7 @@ abstract class AbstractLoader
             return $this->getSession();
         }
 
-        throw new PHPUnit_Framework_SkippedTestSuiteError('Not supported');
+        throw new SkippedTestSuiteError('Not supported');
     }
 
     /**

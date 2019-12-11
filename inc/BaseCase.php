@@ -18,7 +18,7 @@ use PHPCR\RepositoryException;
 use PHPCR\SessionInterface;
 use PHPCR\NodeInterface;
 use DateTime;
-use PHPUnit_Framework_SkippedTestSuiteError;
+use PHPUnit\Framework\SkippedTestSuiteError;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -104,7 +104,7 @@ abstract class BaseCase extends TestCase
         list($phpcr, $tests, $chapter, $case) = explode('\\', $fqn);
         $case = "$chapter\\$case";
         if (!self::$loader->getTestSupported($chapter, $case, null)) {
-            throw new PHPUnit_Framework_SkippedTestSuiteError('Test case not supported by this implementation');
+            throw new SkippedTestSuiteError('Test case not supported by this implementation');
         }
 
         self::$staticSharedFixture = [];
