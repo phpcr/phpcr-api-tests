@@ -148,6 +148,8 @@ abstract class NodeTypeBaseCase extends BaseCase
 
         $node->setProperty('phpcr:class', ['x', 'y']);
         $this->session->save();
+
+        $this->addToAssertionCount(1);
     }
 
     public function testRegisterNodeTypesNoUpdate()

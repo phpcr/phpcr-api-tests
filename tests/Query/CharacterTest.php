@@ -120,6 +120,8 @@ class CharacterTest extends BaseCase
             ',
             QueryInterface::JCR_SQL2
         )->execute();
+
+        $this->addToAssertionCount(1);
     }
 
     public function testQueryWithAmpersand()

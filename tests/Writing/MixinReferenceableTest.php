@@ -219,5 +219,7 @@ class MixinReferenceableTest extends BaseCase
         $child1->setProperty('someref', $child2, PropertyType::REFERENCE);
 
         $this->session->save();
+
+        $this->addToAssertionCount(1);
     }
 }
