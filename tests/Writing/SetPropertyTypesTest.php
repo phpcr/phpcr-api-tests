@@ -82,7 +82,8 @@ class SetPropertyTypesTest extends BaseCase
         $oldSession = $this->session;
         $this->saveAndRenewSession(); // either this
         $oldSession->logout(); // or this should close the stream
-        $this->assertNotInternalType('resource', $stream, 'The responsibility for the stream goes into phpcr who must close it');
+        // phpunit assertNotInternalType type still considers the closed stream a resource
+        $this->assertFalse(\is_resource($stream), 'The responsibility for the stream goes into phpcr who must close it');
 
         $bin = $this->session->getProperty('/tests_general_base/numberPropertyNode/jcr:content/newBinaryStream');
         $this->assertEquals(PropertyType::BINARY, $bin->getType());
@@ -102,7 +103,8 @@ class SetPropertyTypesTest extends BaseCase
         $oldSession = $this->session;
         $this->saveAndRenewSession(); // either this
         $oldSession->logout(); // or this should close the stream
-        $this->assertNotInternalType('resource', $stream, 'The responsibility for the stream goes into phpcr who must close it');
+        // phpunit assertNotInternalType type still considers the closed stream a resource
+        $this->assertFalse(\is_resource($stream), 'The responsibility for the stream goes into phpcr who must close it');
 
         $bin = $this->session->getProperty('/tests_general_base/numberPropertyNode/jcr:content/newBinaryStream');
         $this->assertEquals(PropertyType::BINARY, $bin->getType());
