@@ -56,7 +56,7 @@ class RepositoryTest extends BaseCase
     {
         $repository = self::$loader->getRepository();
         if (!self::$loader->prepareAnonymousLogin()) {
-            $this->setExpectedException(LoginException::class);
+            $this->expectException(LoginException::class);
         }
 
         $session = $repository->login(null, self::$loader->getWorkspaceName());
@@ -72,7 +72,7 @@ class RepositoryTest extends BaseCase
     {
         $repository = self::$loader->getRepository();
         if (!self::$loader->prepareAnonymousLogin()) {
-            $this->setExpectedException(LoginException::class);
+            $this->expectException(LoginException::class);
         }
 
         $session = $repository->login();
