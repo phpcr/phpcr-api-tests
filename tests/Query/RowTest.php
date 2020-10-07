@@ -22,7 +22,7 @@ class RowTest extends QueryBaseCase
 {
     private $row;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -67,7 +67,7 @@ class RowTest extends QueryBaseCase
     public function testGetValue()
     {
         $path = $this->row->getValue('jcr:createdBy');
-        $this->assertInternalType('string', $path);
+        $this->assertIsString($path);
         $this->assertEquals('admin', $path);
     }
 
@@ -92,6 +92,6 @@ class RowTest extends QueryBaseCase
 
     public function testGetScore()
     {
-        $this->assertInternalType('float', $this->row->getScore());
+        $this->assertIsFloat($this->row->getScore());
     }
 }

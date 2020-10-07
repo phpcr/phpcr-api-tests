@@ -17,7 +17,7 @@ use PHPCR\Test\BaseCase;
 
 class RepositoryFactoryTest extends BaseCase
 {
-    public static function setupBeforeClass($fixtures = false)
+    public static function setupBeforeClass($fixtures = false): void
     {
         // Don't care about fixtures
         parent::setupBeforeClass($fixtures);

@@ -62,7 +62,7 @@ class PropertyReadMethodsTest extends BaseCase
      */
     protected $multiValueProperty;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -162,7 +162,7 @@ class PropertyReadMethodsTest extends BaseCase
     public function testGetValueMulti()
     {
         $vals = $this->multiValueProperty->getValue();
-        $this->assertInternalType('array', $vals);
+        $this->assertIsArray($vals);
         foreach ($vals as $val) {
             $this->assertNotNull($val);
         }
@@ -177,11 +177,11 @@ class PropertyReadMethodsTest extends BaseCase
     {
         $expectedStr = '2011-04-21T14:34:20+01:00'; //date precision might not be down to milliseconds
         $str = $this->dateProperty->getString();
-        $this->assertInternalType('string', $str);
+        $this->assertIsString($str);
 
         $this->assertEqualDateString($expectedStr, $str);
         $str = $this->valProperty->getString();
-        $this->assertInternalType('string', $str);
+        $this->assertIsString($str);
         $this->assertEquals('bar', $str);
     }
 
@@ -195,9 +195,9 @@ class PropertyReadMethodsTest extends BaseCase
     public function testGetStringMulti()
     {
         $arr = $this->multiValueProperty->getString();
-        $this->assertInternalType('array', $arr);
+        $this->assertIsArray($arr);
         foreach ($arr as $v) {
-            $this->assertInternalType('string', $v);
+            $this->assertIsString($v);
         }
     }
 
@@ -207,7 +207,7 @@ class PropertyReadMethodsTest extends BaseCase
     public function testGetBinary()
     {
         $bin = $this->valProperty->getBinary();
-        $this->assertInternalType('resource', $bin);
+        $this->assertIsResource($bin);
         $str = $this->valProperty->getString();
         $this->assertEquals($str, stream_get_contents($bin));
         $this->assertEquals($this->valProperty->getLength(), strlen($str));
@@ -215,7 +215,7 @@ class PropertyReadMethodsTest extends BaseCase
         $prop = $this->node->getProperty('index.txt/jcr:content/jcr:data');
         $this->assertEquals(PropertyType::BINARY, $prop->getType(), 'Expected binary type');
         $bin = $prop->getValue();
-        $this->assertInternalType('resource', $bin);
+        $this->assertIsResource($bin);
         $this->assertNotNull(stream_get_contents($bin));
         fclose($bin);
     }
@@ -225,9 +225,9 @@ class PropertyReadMethodsTest extends BaseCase
         $prop = $this->node->getProperty('index.txt/jcr:content/multidata');
         $this->assertEquals(PropertyType::BINARY, $prop->getType(), 'Expected binary type');
         $arr = $prop->getValue();
-        $this->assertInternalType('array', $arr);
+        $this->assertIsArray($arr);
         foreach ($arr as $bin) {
-            $this->assertInternalType('resource', $bin);
+            $this->assertIsResource($bin);
             $this->assertNotNull(stream_get_contents($bin));
         }
     }
@@ -236,15 +236,15 @@ class PropertyReadMethodsTest extends BaseCase
     {
         $prop = $this->node->getNode('numberPropertyNode/jcr:content')->getProperty('longNumber');
         $num = $prop->getLong();
-        $this->assertInternalType('integer', $num);
+        $this->assertIsInt($num);
         $this->assertEquals(999, $num);
     }
     public function testGetLongMulti()
     {
         $arr = $this->multiValueProperty->getLong();
-        $this->assertInternalType('array', $arr);
+        $this->assertIsArray($arr);
         foreach ($arr as $v) {
-            $this->assertInternalType('integer', $v);
+            $this->assertIsInt($v);
         }
     }
     /**
@@ -261,15 +261,15 @@ class PropertyReadMethodsTest extends BaseCase
     {
         $nv = $this->node->getNode('numberPropertyNode/jcr:content')->getProperty('longNumber');
         $number = $nv->getDouble();
-        $this->assertInternalType('float', $number);
+        $this->assertIsFloat($number);
         $this->assertEquals(999, $number);
     }
     public function testGetDoubleMulti()
     {
         $arr = $this->multiValueProperty->getDouble();
-        $this->assertInternalType('array', $arr);
+        $this->assertIsArray($arr);
         foreach ($arr as $v) {
-            $this->assertInternalType('float', $v);
+            $this->assertIsFloat($v);
         }
     }
 
@@ -289,7 +289,7 @@ class PropertyReadMethodsTest extends BaseCase
 
         $num = $prop->getDecimal();
         //we do not have an equivalent to java.math.BigDecimal. PHPCR uses strings suitable for BC Math
-        $this->assertInternalType('string', $num);
+        $this->assertIsString($num);
         $this->assertEquals(999, $num);
     }
     /**
@@ -326,7 +326,7 @@ class PropertyReadMethodsTest extends BaseCase
         $multidate = $this->node->getProperty('index.txt/jcr:content/multidate');
         $this->assertEquals(PropertyType::DATE, $multidate->getType());
         $arr = $multidate->getValue();
-        $this->assertInternalType('array', $arr);
+        $this->assertIsArray($arr);
 
         foreach ($arr as $v) {
             $this->assertInstanceOf(DateTime::class, $v);
@@ -375,9 +375,9 @@ class PropertyReadMethodsTest extends BaseCase
     {
         $prop = $this->node->getNode('numberPropertyNode/jcr:content')->getProperty('multiBoolean');
         $arr = $prop->getBoolean();
-        $this->assertInternalType('array', $arr);
+        $this->assertIsArray($arr);
         foreach ($arr as $v) {
-            $this->assertInternalType('boolean', $v);
+            $this->assertIsBool($v);
         }
         $this->assertCount(2, $arr);
         $this->assertFalse($arr[0]);
@@ -413,7 +413,7 @@ class PropertyReadMethodsTest extends BaseCase
         $multiref = $this->node->getNode('numberPropertyNode/jcr:content')->getProperty('multiref');
 
         $arr = $multiref->getNode();
-        $this->assertInternalType('array', $arr);
+        $this->assertIsArray($arr);
         foreach ($arr as $v) {
             $this->assertInstanceOf(NodeInterface::class, $v);
         }
@@ -478,7 +478,7 @@ class PropertyReadMethodsTest extends BaseCase
         $this->assertEquals('/tests_general_base/index.txt/jcr:content/mydateprop', $properties[1]->getPath());
 
         $expected = [$this->valProperty, $this->dateProperty];
-        $this->assertEquals($expected, $properties, '', 0, 3);
+        $this->assertEquals($expected, $properties);
     }
 
     public function testGetPropertyNoPath()
@@ -583,7 +583,7 @@ class PropertyReadMethodsTest extends BaseCase
         $results = 0;
         foreach ($this->valProperty as $value) {
             $results++;
-            $this->assertInternalType('string', $value);
+            $this->assertIsString($value);
             $this->assertEquals('bar', $value);
         }
 

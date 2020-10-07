@@ -32,12 +32,12 @@ class NodeTypeReadTest extends BaseCase
      */
     protected $simpleVersioned;
 
-    public static function setupBeforeClass($fixtures = '15_Versioning/base')
+    public static function setupBeforeClass($fixtures = '15_Versioning/base'): void
     {
         parent::setupBeforeClass($fixtures);
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

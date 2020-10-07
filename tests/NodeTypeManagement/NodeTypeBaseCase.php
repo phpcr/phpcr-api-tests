@@ -36,7 +36,7 @@ abstract class NodeTypeBaseCase extends BaseCase
      */
     protected $session;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->renewSession(); // reset session
 

@@ -39,7 +39,7 @@ class VersionHistoryTest extends BaseCase
      */
     private $history;
 
-    public static function setupBeforeClass($fixtures = '15_Versioning/base')
+    public static function setupBeforeClass($fixtures = '15_Versioning/base'): void
     {
         parent::setupBeforeClass($fixtures);
 
@@ -59,7 +59,7 @@ class VersionHistoryTest extends BaseCase
         self::$staticSharedFixture['session'] = self::$loader->getSession(); //reset the session, should not be needed if save would correctly invalidate and refresh $node
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->vm = $this->session->getWorkspace()->getVersionManager();
@@ -77,7 +77,7 @@ class VersionHistoryTest extends BaseCase
         $lastNode = null;
         foreach ($frozenNodes as $name => $node) {
             $this->assertInstanceOf(NodeInterface::class, $node);
-            $this->assertInternalType('string', $name);
+            $this->assertIsString($name);
             $lastNode = $node;
         }
 
@@ -97,7 +97,7 @@ class VersionHistoryTest extends BaseCase
         $lastNode = null;
         foreach ($frozenNodes as $name => $node) {
             $this->assertInstanceOf(NodeInterface::class, $node);
-            $this->assertInternalType('string', $name);
+            $this->assertIsString($name);
             $lastNode = $node;
         }
 

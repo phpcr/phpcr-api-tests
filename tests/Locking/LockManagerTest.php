@@ -32,7 +32,7 @@ class LockManagerTest extends BaseCase
     /** @var LockManagerInterface */
     private $lm;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->lm = $this->session->getWorkspace()->getLockManager();
@@ -42,11 +42,10 @@ class LockManagerTest extends BaseCase
 
     /**
      * Try to lock a non-lockable node.
-     *
-     * @expectedException \PHPCR\Lock\LockException
      */
     public function testCannotLockNonLockableNodes()
     {
+        $this->expectException(LockException::class);
         $this->recreateTestNode('non-lockable', false);
         $this->lm->lock('/non-lockable', true, true, 3, '');
     }

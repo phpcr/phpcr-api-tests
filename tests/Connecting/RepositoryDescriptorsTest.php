@@ -15,7 +15,7 @@ use PHPCR\Test\BaseCase;
 
 class RepositoryDescriptorsTest extends BaseCase
 {
-    public static function setupBeforeClass($fixtures = false)
+    public static function setupBeforeClass($fixtures = false): void
     {
         // Don't care about fixtures
         parent::setupBeforeClass($fixtures);
@@ -41,7 +41,7 @@ class RepositoryDescriptorsTest extends BaseCase
     {
         $rep = self::$loader->getRepository();
         $keys = $rep->getDescriptorKeys();
-        $this->assertInternalType('array', $keys);
+        $this->assertIsArray($keys);
         $this->assertNotEmpty($keys);
         foreach ($this->expectedDescriptors as $descriptor) {
             $this->assertContains($descriptor, $keys);

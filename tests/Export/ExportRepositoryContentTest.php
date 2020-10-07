@@ -21,7 +21,7 @@ use PHPCR\Test\BaseCase;
 //7 Export Repository Content
 class ExportRepositoryContentTest extends BaseCase
 {
-    public static function setupBeforeClass($fixtures = '07_Export/systemview')
+    public static function setupBeforeClass($fixtures = '07_Export/systemview'): void
     {
         parent::setupBeforeClass($fixtures);
     }

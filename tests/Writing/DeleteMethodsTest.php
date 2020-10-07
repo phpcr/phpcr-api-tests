@@ -24,12 +24,12 @@ use PHPCR\Test\BaseCase;
  */
 class DeleteMethodsTest extends BaseCase
 {
-    public static function setupBeforeClass($fixtures = '10_Writing/delete')
+    public static function setupBeforeClass($fixtures = '10_Writing/delete'): void
     {
         parent::setupBeforeClass($fixtures);
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->renewSession(); // get rid of cache from previous tests
         parent::setUp();

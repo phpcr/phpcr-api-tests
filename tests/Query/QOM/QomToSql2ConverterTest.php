@@ -42,7 +42,7 @@ class QomToSql2ConverterTest extends BaseCase
 
     protected $queries;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

@@ -35,7 +35,7 @@ class VersionTest extends BaseCase
      */
     private $version;
 
-    public static function setupBeforeClass($fixtures = '15_Versioning/base')
+    public static function setupBeforeClass($fixtures = '15_Versioning/base'): void
     {
         parent::setupBeforeClass($fixtures);
 
@@ -56,7 +56,7 @@ class VersionTest extends BaseCase
         self::$staticSharedFixture['session'] = self::$loader->getSession(); //reset the session
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -86,7 +86,7 @@ class VersionTest extends BaseCase
         $this->assertEquals('bar3', $frozen->getPropertyValue('foo'));
 
         $predecessors = $this->version->getPredecessors();
-        $this->assertInternalType('array', $predecessors);
+        $this->assertIsArray($predecessors);
         $firstVersion = reset($predecessors);
         $this->assertInstanceOf(VersionInterface::class, $firstVersion);
         $frozen2 = $firstVersion->getFrozenNode();

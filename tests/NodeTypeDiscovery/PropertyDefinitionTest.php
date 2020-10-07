@@ -94,7 +94,7 @@ class PropertyDefinitionTest extends BaseCase
      */
     private $data; //
 
-    public static function setupBeforeClass($fixtures = false)
+    public static function setupBeforeClass($fixtures = false): void
     {
         parent::setupBeforeClass(); // load default fixtures
         /** @var NodeTypeManagerInterface $ntm */
@@ -105,12 +105,12 @@ class PropertyDefinitionTest extends BaseCase
         self::$resource = $ntm->getNodeType('nt:resource');
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         try {
             $defs = self::$base->getPropertyDefinitions();
-            $this->assertInternalType('array', $defs);
+            $this->assertIsArray($defs);
             foreach ($defs as $def) {
                 $this->assertInstanceOf(PropertyDefinitionInterface::class, $def);
                 switch ($def->getName()) {
@@ -126,7 +126,7 @@ class PropertyDefinitionTest extends BaseCase
             $this->assertNotNull($this->mixinTypes);
 
             $defs = self::$address->getPropertyDefinitions();
-            $this->assertInternalType('array', $defs);
+            $this->assertIsArray($defs);
             foreach ($defs as $def) {
                 $this->assertInstanceOf(PropertyDefinitionInterface::class, $def);
                 switch ($def->getName()) {
@@ -147,7 +147,7 @@ class PropertyDefinitionTest extends BaseCase
             $this->assertNotNull($this->id);
 
             $defs = self::$mix_created->getPropertyDefinitions();
-            $this->assertInternalType('array', $defs);
+            $this->assertIsArray($defs);
 
             foreach ($defs as $def) {
                 $this->assertInstanceOf(PropertyDefinitionInterface::class, $def);
@@ -159,7 +159,7 @@ class PropertyDefinitionTest extends BaseCase
             $this->assertNotNull($this->created);
 
             $defs = self::$resource->getPropertyDefinitions();
-            $this->assertInternalType('array', $defs);
+            $this->assertIsArray($defs);
             foreach ($defs as $def) {
                 $this->assertInstanceOf(PropertyDefinitionInterface::class, $def);
                 if ('jcr:data' === $def->getName()) {
@@ -196,7 +196,7 @@ class PropertyDefinitionTest extends BaseCase
     public function testGetDefaultValues()
     {
         $def = $this->primaryType->getDefaultValues();
-        $this->assertInternalType('array', $def);
+        $this->assertIsArray($def);
         $this->assertCount(0, $def);
         // no built-in types with default value
     }
@@ -220,7 +220,7 @@ class PropertyDefinitionTest extends BaseCase
     public function testGetValueConstraints()
     {
         $constraint = $this->primaryType->getValueConstraints();
-        $this->assertInternalType('array', $constraint);
+        $this->assertIsArray($constraint);
         $this->assertCount(0, $constraint);
         // no built-in type with constraints
     }
@@ -228,24 +228,24 @@ class PropertyDefinitionTest extends BaseCase
     public function testIsFullTextSearchable()
     {
         $b = $this->primaryType->isFullTextSearchable();
-        $this->assertInternalType('boolean', $b);
+        $this->assertIsBool($b);
         $this->assertTrue($b);
     }
     public function testIsMultiple()
     {
         $b = $this->primaryType->isMultiple();
-        $this->assertInternalType('boolean', $b);
+        $this->assertIsBool($b);
         $this->assertFalse($b);
 
         $b = $this->mixinTypes->isMultiple();
-        $this->assertInternalType('boolean', $b);
+        $this->assertIsBool($b);
         $this->assertTrue($b);
     }
 
     public function testIsQueryOrderable()
     {
         $b = $this->primaryType->isQueryOrderable();
-        $this->assertInternalType('boolean', $b);
+        $this->assertIsBool($b);
         $this->assertTrue($b);
     }
 

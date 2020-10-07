@@ -96,7 +96,7 @@ abstract class BaseCase extends TestCase
      *
      * @see initProperties()
      */
-    public static function setupBeforeClass($fixtures = 'general/base')
+    public static function setupBeforeClass($fixtures = 'general/base'): void
     {
         self::$loader = ImplementationLoader::getInstance();
 
@@ -120,7 +120,7 @@ abstract class BaseCase extends TestCase
         self::$staticSharedFixture['additionalSession'] = self::$loader->getAdditionalSession();
     }
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $fqn = get_called_class();
         $parts = explode('\\', $fqn);
@@ -144,7 +144,7 @@ abstract class BaseCase extends TestCase
         $this->initProperties();
     }
 
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         if (isset(self::$staticSharedFixture['session'])) {
             self::$staticSharedFixture['session']->logout();
@@ -278,7 +278,8 @@ abstract class BaseCase extends TestCase
     {
         $this->assertInstanceOf(DateTime::class, $expected);
         $this->assertInstanceOf(DateTime::class, $data);
-        $this->assertTrue(abs($expected->getTimestamp() - $data->getTimestamp()) <= 3,
+        $this->assertTrue(
+            abs($expected->getTimestamp() - $data->getTimestamp()) <= 3,
             $data->format('c').' is not close to the expected '.$expected->format('c')
         );
     }
@@ -290,7 +291,7 @@ abstract class BaseCase extends TestCase
      *
      * @return bool True if the test can be done. Otherwise the test is skipped.
      */
-    protected function skipIfNotSupported($descriptor)
+    protected function skipIfNotSupported($descriptor): bool
     {
         if (false === $this->session->getRepository()->getDescriptor($descriptor)) {
             $this->markTestSkipped('Descriptor "'.$descriptor.'" not supported');

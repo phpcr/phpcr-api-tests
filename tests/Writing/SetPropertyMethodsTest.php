@@ -37,7 +37,7 @@ class SetPropertyMethodsTest extends BaseCase
      */
     private $property;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->node = $this->session->getNode($this->nodePath);
@@ -242,7 +242,7 @@ class SetPropertyMethodsTest extends BaseCase
         $this->assertTrue($prop->isMultiple());
         $this->assertEquals($ids, $prop->getString());
         $nodes = $prop->getValue();
-        $this->assertInternalType('array', $nodes);
+        $this->assertIsArray($nodes);
         $this->assertCount(3, $nodes);
         $this->assertInstanceOf(NodeInterface::class, reset($nodes));
     }

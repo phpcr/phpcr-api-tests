@@ -22,7 +22,7 @@ use PHPCR\Test\BaseCase;
  */
 class MixinCreatedTest extends BaseCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->renewSession(); // discard changes
     }

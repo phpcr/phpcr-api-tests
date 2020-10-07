@@ -20,7 +20,7 @@ use PHPCR\Test\BaseCase;
  */
 class NodeHelperTest extends BaseCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         if (!class_exists(NodeHelper::class)) {
             $this->markTestSkipped('This testbed does not have phpcr-utils available');

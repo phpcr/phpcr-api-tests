@@ -52,7 +52,7 @@ class NodeTypeDiscoveryTest extends BaseCase
         'mix:title',
     ];
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp(false);
 

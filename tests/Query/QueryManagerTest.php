@@ -23,7 +23,7 @@ use PHPCR\Query\QueryInterface;
  */
 class QueryManagerTest extends QueryBaseCase
 {
-    public static function setupBeforeClass($fixture = 'general/query')
+    public static function setupBeforeClass($fixture = 'general/query'): void
     {
         parent::setupBeforeClass($fixture);
     }
@@ -66,7 +66,7 @@ class QueryManagerTest extends QueryBaseCase
     public function testGetSupportedQueryLanguages()
     {
         $ret = $this->sharedFixture['qm']->getSupportedQueryLanguages();
-        $this->assertInternalType('array', $ret);
+        $this->assertIsArray($ret);
         $this->assertContains('JCR-SQL2', $ret);
         $this->assertContains('JCR-JQOM', $ret);
     }

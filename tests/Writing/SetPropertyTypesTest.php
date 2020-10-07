@@ -31,7 +31,7 @@ class SetPropertyTypesTest extends BaseCase
     /** @var PropertyInterface */
     private $property;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

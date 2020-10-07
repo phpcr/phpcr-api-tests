@@ -56,7 +56,7 @@ class NodeDefinitionTest extends BaseCase
      */
     private $hierarchyNodeDef;
 
-    public static function setupBeforeClass($fixtures = false)
+    public static function setupBeforeClass($fixtures = false): void
     {
         parent::setupBeforeClass($fixtures);
         /** @var NodeTypeManagerInterface $ntm */
@@ -66,20 +66,20 @@ class NodeDefinitionTest extends BaseCase
         self::$hierarchyNodeType = $ntm->getNodeType('nt:hierarchyNode');
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
         try {
             $defs = self::$file->getChildNodeDefinitions();
-            $this->assertInternalType('array', $defs);
+            $this->assertIsArray($defs);
             $this->assertCount(1, $defs);
             $this->content = current($defs);
             $this->assertInstanceOf(NodeDefinitionInterface::class, $this->content);
             $this->assertEquals('jcr:content', $this->content->getName());
 
             $defs = self::$folder->getChildNodeDefinitions();
-            $this->assertInternalType('array', $defs);
+            $this->assertIsArray($defs);
             $this->assertCount(1, $defs);
             $this->hierarchyNodeDef = next($defs);
             $this->assertInstanceOf(NodeDefinitionInterface::class, $this->hierarchyNodeDef);
@@ -107,24 +107,24 @@ class NodeDefinitionTest extends BaseCase
     public function getRequiredPrimaryTypeNames()
     {
         $names = $this->content->getRequiredPrimaryTypeNames();
-        $this->assertInternalType('array', $names);
+        $this->assertIsArray($names);
         $this->assertCount(1, $names);
         $this->assertEquals('nt:base', $names[0]);
 
         $names = $this->hierarchyNodeDef->getRequiredPrimaryTypeNames();
-        $this->assertInternalType('array', $names);
+        $this->assertIsArray($names);
         $this->assertCount(1, $names);
         $this->assertEquals('nt:hierarchyNode', $names[0]);
     }
     public function getRequiredPrimaryTypes()
     {
         $types = $this->content->getRequiredPrimaryTypeNames();
-        $this->assertInternalType('array', $types);
+        $this->assertIsArray($types);
         $this->assertCount(1, $types);
         $this->assertEquals(self::$base, $types[0]);
 
         $types = $this->hierarchyNodeDef->getRequiredPrimaryTypeNames();
-        $this->assertInternalType('array', $types);
+        $this->assertIsArray($types);
         $this->assertCount(1, $types);
         $this->assertEquals(self::$hierarchyNodeType, $types[0]);
     }

@@ -37,7 +37,7 @@ class NodeReadMethodsTest extends BaseCase
     /** @var NodeInterface */
     protected $deepnode;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -395,7 +395,7 @@ class NodeReadMethodsTest extends BaseCase
     {
         $node = $this->session->getNode('/tests_general_base/idExample/jcr:content/weakreference_source1');
         $props = $node->getPropertiesValues();
-        $this->assertInternalType('array', $props);
+        $this->assertIsArray($props);
         $this->assertArrayHasKey('ref1', $props);
         $this->assertInstanceOf(NodeInterface::class, $props['ref1']);
     }
@@ -404,7 +404,7 @@ class NodeReadMethodsTest extends BaseCase
     {
         $node = $this->session->getNode('/tests_general_base/idExample/jcr:content/weakreference_source1');
         $props = $node->getPropertiesValues(null, false);
-        $this->assertInternalType('array', $props);
+        $this->assertIsArray($props);
         $this->assertArrayHasKey('ref1', $props);
         $this->assertEquals('13543fc6-1abf-4708-bfcc-e49511754b40', $props['ref1']);
     }
@@ -413,7 +413,7 @@ class NodeReadMethodsTest extends BaseCase
     {
         $node = $this->session->getNode('/tests_general_base/idExample/jcr:content/weakreference_source1');
         $props = $node->getPropertiesValues('jcr:*');
-        $this->assertInternalType('array', $props);
+        $this->assertIsArray($props);
         /*
          * jcr:mixinTypes is a protected multi-value NAME property
          * it is optional if there are no mixin types declared on this node,
@@ -434,7 +434,7 @@ class NodeReadMethodsTest extends BaseCase
     {
         $node = $this->session->getNode('/tests_general_base/idExample/jcr:content/weakreference_repeated');
         $refs = $node->getPropertyValue('other_ref');
-        $this->assertInternalType('array', (array) $refs);
+        $this->assertIsArray((array) $refs);
         $this->assertCount(2, $refs);
         foreach ($refs as $node) {
             $this->assertInstanceOf(NodeInterface::class, $node);
@@ -487,7 +487,7 @@ class NodeReadMethodsTest extends BaseCase
     public function testGetIdentifierNonReferenceable()
     {
         $id = $this->node->getNode('index.txt')->getIdentifier();
-        $this->assertInternalType('string', $id);
+        $this->assertIsString($id);
     }
 
     /**
@@ -496,7 +496,7 @@ class NodeReadMethodsTest extends BaseCase
     public function testGetIndex()
     {
         $index = $this->node->getIndex();
-        $this->assertInternalType('numeric', $index);
+        $this->assertIsNumeric($index);
         $this->assertEquals(1, $index);
     }
 
@@ -729,7 +729,7 @@ class NodeReadMethodsTest extends BaseCase
 
         foreach ($this->node as $name => $child) {
             $results = true;
-            $this->assertInternalType('string', $name);
+            $this->assertIsString($name);
             $this->assertInstanceOf(NodeInterface::class, $child);
             $this->assertEquals($name, $child->getName());
         }

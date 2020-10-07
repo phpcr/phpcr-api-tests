@@ -21,7 +21,7 @@ class Sql2ScannerTest extends \PHPCR\Test\BaseCase
     protected $sql2;
     protected $tokens;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -38,8 +38,13 @@ class Sql2ScannerTest extends \PHPCR\Test\BaseCase
     public function testConstructor()
     {
         $scanner = new Sql2Scanner($this->sql2);
-        $this->assertAttributeEquals($this->sql2, 'sql2', $scanner);
-        $this->assertAttributeEquals($this->tokens, 'tokens', $scanner);
+        $refl = new \ReflectionClass($scanner);
+        $sql2Property = $refl->getProperty('sql2');
+        $sql2Property->setAccessible(true);
+        $this->assertSame($this->sql2, $sql2Property->getValue($scanner));
+        $tokensProperty = $refl->getProperty('tokens');
+        $tokensProperty->setAccessible(true);
+        $this->assertSame($this->tokens, $tokensProperty->getValue($scanner));
     }
 
     public function testLookupAndFetch()

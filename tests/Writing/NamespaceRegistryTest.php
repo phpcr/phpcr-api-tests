@@ -32,7 +32,7 @@ class NamespaceRegistryTest extends BaseCase
         ''    => ''
     ];
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->workspace = $this->session->getWorkspace();
@@ -42,14 +42,14 @@ class NamespaceRegistryTest extends BaseCase
     public function testGetPrefixes()
     {
         $ret = $this->nr->getPrefixes();
-        $this->assertInternalType('array', $ret);
+        $this->assertIsArray($ret);
         $this->assertGreaterThanOrEqual(count($this->nsBuiltIn), count($ret));
     }
 
     public function testGetURIs()
     {
         $ret = $this->nr->getURIs();
-        $this->assertInternalType('array', $ret);
+        $this->assertIsArray($ret);
         $this->assertGreaterThanOrEqual(count($this->nsBuiltIn), count($ret));
         //we test in getURI / getPrefix if the names match
     }
@@ -146,8 +146,8 @@ class NamespaceRegistryTest extends BaseCase
         $results = 0;
         foreach ($this->nr as $prefix => $url) {
             $results++;
-            $this->assertInternalType('string', $prefix);
-            $this->assertInternalType('string', $url);
+            $this->assertIsString($prefix);
+            $this->assertIsString($url);
             $this->assertEquals($url, $this->nr->getURI($prefix));
         }
         $this->assertGreaterThan(3, $results, 'Not enough namespaces');

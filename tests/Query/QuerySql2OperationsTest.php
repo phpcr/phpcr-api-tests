@@ -23,7 +23,8 @@ class QuerySql2OperationsTest extends QueryBaseCase
     public function testQueryField()
     {
         /** @var $query QueryInterface */
-        $query = $this->sharedFixture['qm']->createQuery('
+        $query = $this->sharedFixture['qm']->createQuery(
+            '
             SELECT foo
             FROM [nt:unstructured]
             WHERE foo = "bar"
@@ -53,7 +54,8 @@ class QuerySql2OperationsTest extends QueryBaseCase
     public function testQueryFieldDate()
     {
         /** @var $query QueryInterface */
-        $query = $this->sharedFixture['qm']->createQuery("
+        $query = $this->sharedFixture['qm']->createQuery(
+            "
             SELECT *
             FROM [nt:base]
             WHERE [mydateprop] <= CAST('2011-04-27T13:01:07.472+02:00' AS DATE)
@@ -73,7 +75,8 @@ class QuerySql2OperationsTest extends QueryBaseCase
     public function testQueryFieldSomeNull()
     {
         /** @var $query QueryInterface */
-        $query = $this->sharedFixture['qm']->createQuery('
+        $query = $this->sharedFixture['qm']->createQuery(
+            '
             SELECT foo
             FROM [nt:unstructured]
             WHERE ISDESCENDANTNODE([/tests_general_base])
@@ -106,7 +109,8 @@ class QuerySql2OperationsTest extends QueryBaseCase
     public function testQueryFieldSelector()
     {
         /** @var $query QueryInterface */
-        $query = $this->sharedFixture['qm']->createQuery('
+        $query = $this->sharedFixture['qm']->createQuery(
+            '
             SELECT [nt:unstructured].foo
             FROM [nt:unstructured]
             WHERE [nt:unstructured].foo = "bar"
@@ -130,7 +134,8 @@ class QuerySql2OperationsTest extends QueryBaseCase
     public function testQueryFieldSelectorWithAlias()
     {
         /** @var $query QueryInterface */
-        $query = $this->sharedFixture['qm']->createQuery('
+        $query = $this->sharedFixture['qm']->createQuery(
+            '
             SELECT data.foo
             FROM [nt:unstructured] AS data
             WHERE data.foo = "bar"
@@ -153,7 +158,8 @@ class QuerySql2OperationsTest extends QueryBaseCase
     public function testQueryJoin()
     {
         /** @var $query QueryInterface */
-        $query = $this->sharedFixture['qm']->createQuery('
+        $query = $this->sharedFixture['qm']->createQuery(
+            '
             SELECT [nt:unstructured].longNumber
             FROM [nt:file]
               INNER JOIN [nt:unstructured]
@@ -178,7 +184,8 @@ class QuerySql2OperationsTest extends QueryBaseCase
     public function testQueryJoinWithAlias()
     {
         /** @var $query QueryInterface */
-        $query = $this->sharedFixture['qm']->createQuery('
+        $query = $this->sharedFixture['qm']->createQuery(
+            '
             SELECT content.longNumber
             FROM [nt:file] AS file
               INNER JOIN [nt:unstructured] AS content
@@ -203,7 +210,8 @@ class QuerySql2OperationsTest extends QueryBaseCase
     public function testQueryJoinNested()
     {
         /** @var $query QueryInterface */
-        $query = $this->sharedFixture['qm']->createQuery('
+        $query = $this->sharedFixture['qm']->createQuery(
+            '
             SELECT content.longNumber
             FROM [nt:folder] AS folder
               INNER JOIN [nt:file] AS file
@@ -343,7 +351,8 @@ class QuerySql2OperationsTest extends QueryBaseCase
     public function testQueryJoinChildnode()
     {
         /** @var $query QueryInterface */
-        $query = $this->sharedFixture['qm']->createQuery('
+        $query = $this->sharedFixture['qm']->createQuery(
+            '
             SELECT [nt:unstructured].longNumber
             FROM [nt:file]
               INNER JOIN [nt:unstructured]
@@ -369,7 +378,8 @@ class QuerySql2OperationsTest extends QueryBaseCase
     public function testQueryOrder()
     {
         /** @var $query QueryInterface */
-        $query = $this->sharedFixture['qm']->createQuery('
+        $query = $this->sharedFixture['qm']->createQuery(
+            '
             SELECT data.foo
             FROM [nt:unstructured] AS data
             WHERE ISDESCENDANTNODE([/tests_general_base]) AND data.foo IS NOT NULL
@@ -393,7 +403,8 @@ class QuerySql2OperationsTest extends QueryBaseCase
     public function testQueryOrderWithMissingProperty()
     {
         /** @var $query QueryInterface */
-        $query = $this->sharedFixture['qm']->createQuery('
+        $query = $this->sharedFixture['qm']->createQuery(
+            '
             SELECT data.zeronumber
             FROM [nt:unstructured] AS data
             WHERE ISDESCENDANTNODE([/tests_general_base])
@@ -416,7 +427,8 @@ class QuerySql2OperationsTest extends QueryBaseCase
     public function testQueryMultiValuedProperty()
     {
         /** @var $query QueryInterface */
-        $query = $this->sharedFixture['qm']->createQuery('
+        $query = $this->sharedFixture['qm']->createQuery(
+            '
             SELECT data.tags
             FROM [nt:unstructured] AS data
             WHERE data.tags = "foo"
@@ -439,7 +451,8 @@ class QuerySql2OperationsTest extends QueryBaseCase
     public function testLengthOperandOnStringProperty()
     {
         /** @var $query QueryInterface */
-        $query = $this->sharedFixture['qm']->createQuery('
+        $query = $this->sharedFixture['qm']->createQuery(
+            '
             SELECT data.*
             FROM [nt:unstructured] AS data
             WHERE
@@ -459,7 +472,8 @@ class QuerySql2OperationsTest extends QueryBaseCase
         $this->assertCount(1, $rows, 'Expected 1 node with property "foo" with a value with 3 characters (bar)');
 
         /** @var $query QueryInterface */
-        $query = $this->sharedFixture['qm']->createQuery('
+        $query = $this->sharedFixture['qm']->createQuery(
+            '
             SELECT data.*
             FROM [nt:unstructured] AS data
             WHERE
@@ -479,7 +493,8 @@ class QuerySql2OperationsTest extends QueryBaseCase
         $this->assertCount(1, $rows, 'Expected 1 node with property "foo" with a value with 4 characters (bar2)');
 
         /** @var $query QueryInterface */
-        $query = $this->sharedFixture['qm']->createQuery('
+        $query = $this->sharedFixture['qm']->createQuery(
+            '
             SELECT data.*
             FROM [nt:unstructured] AS data
             WHERE
@@ -502,7 +517,8 @@ class QuerySql2OperationsTest extends QueryBaseCase
     public function testLengthOperandOnEmptyProperty()
     {
         /** @var $query QueryInterface */
-        $query = $this->sharedFixture['qm']->createQuery('
+        $query = $this->sharedFixture['qm']->createQuery(
+            '
             SELECT data.*
             FROM [nt:unstructured] AS data
             WHERE
@@ -522,7 +538,8 @@ class QuerySql2OperationsTest extends QueryBaseCase
         $this->assertCount(1, $rows, 'Expected 1 node with property "empty-value" with a length smaller then 1');
 
         /** @var $query QueryInterface */
-        $query = $this->sharedFixture['qm']->createQuery('
+        $query = $this->sharedFixture['qm']->createQuery(
+            '
             SELECT data.*
             FROM [nt:unstructured] AS data
             WHERE
@@ -542,7 +559,8 @@ class QuerySql2OperationsTest extends QueryBaseCase
         $this->assertCount(1, $rows, 'Expected 1 node with property "empty-value" with a length equal to 0');
 
         /** @var $query QueryInterface */
-        $query = $this->sharedFixture['qm']->createQuery('
+        $query = $this->sharedFixture['qm']->createQuery(
+            '
             SELECT data.*
             FROM [nt:unstructured] AS data
             WHERE
@@ -565,7 +583,8 @@ class QuerySql2OperationsTest extends QueryBaseCase
     public function testLengthOperandOnBinaryProperty()
     {
         /** @var $query QueryInterface */
-        $query = $this->sharedFixture['qm']->createQuery('
+        $query = $this->sharedFixture['qm']->createQuery(
+            '
             SELECT data.*
             FROM [nt:unstructured] AS data
             WHERE LENGTH(data.[jcr:data]) = 121

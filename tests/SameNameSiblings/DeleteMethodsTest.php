@@ -22,12 +22,12 @@ use PHPCR\Test\BaseCase;
  */
 class DeleteMethodsTest extends BaseCase
 {
-    public static function setupBeforeClass($fixtures = '22_SameNameSiblings/delete')
+    public static function setupBeforeClass($fixtures = '22_SameNameSiblings/delete'): void
     {
         parent::setupBeforeClass($fixtures);
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->renewSession(); // get rid of cache from previous tests
 

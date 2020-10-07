@@ -255,10 +255,11 @@ abstract class AbstractLoader
      */
     public function getTestSupported($chapter, $case, $name)
     {
-        return !(in_array($chapter, $this->unsupportedChapters)
+        return !(
+            in_array($chapter, $this->unsupportedChapters)
                   || in_array($case, $this->unsupportedCases)
                   || in_array($name, $this->unsupportedTests)
-                 );
+        );
     }
 
     /**
