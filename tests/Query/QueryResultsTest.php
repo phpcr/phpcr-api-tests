@@ -68,7 +68,8 @@ class QueryResultsTest extends QueryBaseCase
 
     public function testGetAliasColumnNames()
     {
-        $query = $this->sharedFixture['qm']->createQuery('
+        $query = $this->sharedFixture['qm']->createQuery(
+            '
             SELECT [jcr:mimeType] AS bar, stringToCompare as foo, [nt:unstructured].longNumberToCompare, ding
             FROM [nt:unstructured]
             WHERE stringToCompare IS NOT NULL
@@ -163,7 +164,8 @@ class QueryResultsTest extends QueryBaseCase
 
     public function testCompareNumberFields()
     {
-        $query = $this->sharedFixture['qm']->createQuery('
+        $query = $this->sharedFixture['qm']->createQuery(
+            '
             SELECT data.longNumberToCompare
             FROM [nt:unstructured] AS data
             WHERE data.longNumberToCompare > 2
@@ -185,7 +187,8 @@ class QueryResultsTest extends QueryBaseCase
 
     public function testCompareNumberFieldsMulti()
     {
-        $query = $this->sharedFixture['qm']->createQuery('
+        $query = $this->sharedFixture['qm']->createQuery(
+            '
             SELECT data.longNumberToCompareMulti
             FROM [nt:unstructured] AS data
             WHERE data.longNumberToCompareMulti = 2
@@ -230,7 +233,7 @@ class QueryResultsTest extends QueryBaseCase
     {
         $query = $this->sharedFixture['qm']->createQuery(
             'SELECT data.thisIsNo FROM [nt:unstructured] as data WHERE data.thisIsNo = false',
-             QueryInterface::JCR_SQL2
+            QueryInterface::JCR_SQL2
         );
         $result = $query->execute();
 
@@ -245,7 +248,7 @@ class QueryResultsTest extends QueryBaseCase
 
         $query = $this->sharedFixture['qm']->createQuery(
             'SELECT data.thisIsYes FROM [nt:unstructured] as data WHERE data.thisIsYes = true',
-             QueryInterface::JCR_SQL2
+            QueryInterface::JCR_SQL2
         );
         $result = $query->execute();
 

@@ -30,7 +30,8 @@ class CharacterTest extends BaseCase
     {
         /** @var QueryManagerInterface $queryManager */
         $queryManager = $this->sharedFixture['qm'];
-        $query = $queryManager->createQuery('
+        $query = $queryManager->createQuery(
+            '
             SELECT data.class
             FROM [nt:unstructured] AS data
             WHERE data.class = "PHPCR\Query\QueryInterface"',
@@ -51,7 +52,8 @@ class CharacterTest extends BaseCase
     {
         /** @var QueryManagerInterface $queryManager */
         $queryManager = $this->sharedFixture['qm'];
-        $query = $queryManager->createQuery('
+        $query = $queryManager->createQuery(
+            '
             SELECT data.doublebackslash
             FROM [nt:unstructured] AS data
             WHERE data.doublebackslash = "PHPCR\\\\Query\\\\QueryInterface"',
@@ -72,7 +74,8 @@ class CharacterTest extends BaseCase
     {
         /** @var QueryManagerInterface $queryManager */
         $queryManager = $this->sharedFixture['qm'];
-        $query = $queryManager->createQuery(sprintf('
+        $query = $queryManager->createQuery(
+            sprintf('
             SELECT data.quotes
             FROM [nt:unstructured] AS data
             WHERE data.quotes = "%s"
@@ -94,7 +97,8 @@ class CharacterTest extends BaseCase
     {
         /** @var QueryManagerInterface $queryManager */
         $queryManager = $this->sharedFixture['qm'];
-        $query = $queryManager->createQuery(sprintf('
+        $query = $queryManager->createQuery(
+            sprintf('
             SELECT data.quoteandbackslash
             FROM [nt:unstructured] AS data
             WHERE data.quoteandbackslash = "%s"
@@ -113,7 +117,8 @@ class CharacterTest extends BaseCase
     {
         /** @var QueryManagerInterface $queryManager */
         $queryManager = $this->sharedFixture['qm'];
-        $query = $queryManager->createQuery('
+        $query = $queryManager->createQuery(
+            '
             SELECT data.property
             FROM [nt:unstructured] AS data
             WHERE data.property = "foo:bar"
@@ -128,7 +133,8 @@ class CharacterTest extends BaseCase
     {
         /** @var QueryManagerInterface $queryManager */
         $queryManager = $this->sharedFixture['qm'];
-        $query = $queryManager->createQuery('
+        $query = $queryManager->createQuery(
+            '
             SELECT data.ampersand
             FROM [nt:unstructured] AS data
             WHERE data.ampersand = "foo & bar&baz"

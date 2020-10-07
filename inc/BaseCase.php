@@ -278,7 +278,8 @@ abstract class BaseCase extends TestCase
     {
         $this->assertInstanceOf(DateTime::class, $expected);
         $this->assertInstanceOf(DateTime::class, $data);
-        $this->assertTrue(abs($expected->getTimestamp() - $data->getTimestamp()) <= 3,
+        $this->assertTrue(
+            abs($expected->getTimestamp() - $data->getTimestamp()) <= 3,
             $data->format('c').' is not close to the expected '.$expected->format('c')
         );
     }

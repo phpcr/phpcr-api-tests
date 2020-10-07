@@ -410,7 +410,8 @@ class ObservationManagerTest extends BaseCase
 
         // Adding a node will cause a NODE_ADDED + PROPERTY_ADDED (for the primary node type)
         // The order is implementation specific (Jackrabbit will trigger the prop added before the node added event)
-        $this->expectEventsInAnyOrder($journal,
+        $this->expectEventsInAnyOrder(
+            $journal,
             [
                 [EventInterface::NODE_ADDED, $this->nodePath.'/child'],
                 [EventInterface::PROPERTY_ADDED, $this->nodePath.'/child/jcr%3aprimaryType'],
@@ -454,7 +455,8 @@ class ObservationManagerTest extends BaseCase
 
         // Same problem as before. Moving a node will cause a NODE_REMOVED + NODE_ADDED + NODE_MOVED
         // The order of the events is implementation specific.
-        $events = $this->expectEventsInAnyOrder($journal,
+        $events = $this->expectEventsInAnyOrder(
+            $journal,
             [
                 [EventInterface::NODE_REMOVED, $this->nodePath.'/child'],
                 [EventInterface::NODE_ADDED, $this->nodePath.'/moved'],

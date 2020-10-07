@@ -49,7 +49,8 @@ abstract class QueryBaseCase extends BaseCase
     {
         parent::setUp();
 
-        $this->query = $this->sharedFixture['qm']->createQuery('
+        $this->query = $this->sharedFixture['qm']->createQuery(
+            '
             SELECT *
             FROM [nt:folder]
             WHERE ISDESCENDANTNODE([/tests_general_base])
