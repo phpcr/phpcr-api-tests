@@ -17,12 +17,12 @@ use PHPCR\Test\BaseCase;
 
 class PurgeTest extends BaseCase
 {
-    public static function setupBeforeClass($fixtures = '11_Import/empty')
+    public static function setupBeforeClass($fixtures = '11_Import/empty'): void
     {
         parent::setupBeforeClass($fixtures);
     }
 
-    protected function setUp()
+    protected function setUp(): void
     {
         if (!class_exists(NodeHelper::class)) {
             $this->markTestSkipped('This testbed does not have phpcr-utils available');

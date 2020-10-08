@@ -19,12 +19,12 @@ use PHPCR\Test\BaseCase;
  */
 class JackalopeFetchDepthTest extends BaseCase
 {
-    public static function setupBeforeClass($fixtures = '05_Reading/jackalopeFetchDepth')
+    public static function setupBeforeClass($fixtures = '05_Reading/jackalopeFetchDepth'): void
     {
         parent::setupBeforeClass($fixtures);
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

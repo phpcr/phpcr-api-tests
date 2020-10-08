@@ -35,12 +35,12 @@ class SetPropertyDynamicRebindingTest extends BaseCase
 
     protected static $created_nodes = [];
 
-    public static function setupBeforeClass($fixtures = '10_Writing/nodetype')
+    public static function setupBeforeClass($fixtures = '10_Writing/nodetype'): void
     {
         parent::setupBeforeClass($fixtures);
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->renewSession();
@@ -77,7 +77,7 @@ class SetPropertyDynamicRebindingTest extends BaseCase
             $this->assertEquals($sourcePropValue, $prop->getValue(), 'Initial property value does not match before saving');
         } else {
             // PHPUnit does not like to assertEquals on resources
-            $this->assertInternalType('resource', $prop->getValue());
+            $this->assertIsResource($prop->getValue());
         }
 
         // Read it from backend check it's still valid
@@ -97,7 +97,7 @@ class SetPropertyDynamicRebindingTest extends BaseCase
             $this->assertEquals($sourcePropValue, $prop->getValue(), 'Initial property value does not match after saving');
         } else {
             // PHPUnit does not like to assertEquals on resources
-            $this->assertInternalType('resource', $prop->getValue());
+            $this->assertIsResource($prop->getValue());
         }
 
         try {

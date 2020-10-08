@@ -35,12 +35,12 @@ class SimpleVersionTest extends BaseCase
      */
     private $simpleVersioned;
 
-    public static function setupBeforeClass($fixtures = '15_Versioning/base')
+    public static function setupBeforeClass($fixtures = '15_Versioning/base'): void
     {
         parent::setupBeforeClass($fixtures);
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -70,7 +70,7 @@ class SimpleVersionTest extends BaseCase
         $this->assertEquals('bar3', $frozen->getPropertyValue('foo'));
 
         $predecessors = $this->simpleVersioned->getPredecessors();
-        $this->assertInternalType('array', $predecessors);
+        $this->assertIsArray($predecessors);
         $firstVersion = reset($predecessors);
         $this->assertInstanceOf(VersionInterface::class, $firstVersion);
         $frozen2 = $firstVersion->getFrozenNode();

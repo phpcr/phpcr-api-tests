@@ -20,7 +20,7 @@ use PHPCR\Test\BaseCase;
 
 class RepositoryTest extends BaseCase
 {
-    public static function setupBeforeClass($fixtures = null)
+    public static function setupBeforeClass($fixtures = null): void
     {
         // Don't care about fixtures
         parent::setupBeforeClass($fixtures);

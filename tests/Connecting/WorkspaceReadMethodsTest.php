@@ -35,7 +35,7 @@ class WorkspaceReadMethodsTest extends BaseCase
 
     //4.5 Workspace Read Methods
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -98,7 +98,7 @@ class WorkspaceReadMethodsTest extends BaseCase
     {
         $names = $this->workspace->getAccessibleWorkspaceNames();
 
-        $this->assertInternalType('array', $names);
+        $this->assertIsArray($names);
         $this->assertContains(self::$loader->getWorkspaceName(), $names);
     }
 

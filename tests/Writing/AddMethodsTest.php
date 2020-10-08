@@ -29,12 +29,12 @@ use PHPCR\ValueFormatException;
  */
 class AddMethodsTest extends BaseCase
 {
-    public static function setupBeforeClass($fixtures = '10_Writing/add')
+    public static function setupBeforeClass($fixtures = '10_Writing/add'): void
     {
         parent::setupBeforeClass($fixtures);
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->renewSession();
         parent::setUp();

@@ -43,7 +43,7 @@ class NodeTypePreemptiveValidationTest extends BaseCase
      */
     private $ntm;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->ntm = $this->session->getWorkspace()->getNodeTypeManager();

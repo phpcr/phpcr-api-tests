@@ -28,7 +28,7 @@ class Sql2ToQomConverterTest extends \PHPCR\Test\BaseCase
     /** @var Sql2ToQomQueryConverter */
     protected $parser;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -55,7 +55,7 @@ class Sql2ToQomConverterTest extends \PHPCR\Test\BaseCase
         $this->assertEquals('nt:unstructured', $query->getSource()->getNodeTypeName());
 
         $cols = $query->getColumns();
-        $this->assertInternalType('array', $cols);
+        $this->assertIsArray($cols);
         $this->assertCount(2, $cols);
 
         $this->assertEquals('u', $cols[0]->getselectorName());

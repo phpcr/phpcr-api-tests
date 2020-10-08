@@ -37,7 +37,7 @@ class QueryObjectQOMTest extends QueryBaseCase
      */
     protected $query;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

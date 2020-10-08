@@ -34,7 +34,7 @@ class NodeNodeTypeReadMethodsTest extends BaseCase
      */
     protected $deepnode;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

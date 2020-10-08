@@ -27,12 +27,12 @@ class CopyMethodsTest extends BaseCase
     /** @var WorkspaceInterface */
     protected $ws;
 
-    public static function setupBeforeClass($fixtures = '10_Writing/copy')
+    public static function setupBeforeClass($fixtures = '10_Writing/copy'): void
     {
         parent::setupBeforeClass($fixtures);
     }
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->renewSession(); // get rid of cache from previous tests
         parent::setUp();
@@ -275,8 +275,8 @@ class CopyMethodsTest extends BaseCase
         $srcVal = $srcProp->getBinary();
         $dstVal = $dstProp->getBinary();
 
-        $this->assertInternalType('resource', $srcVal, 'Failed to get src binary stream');
-        $this->assertInternalType('resource', $dstVal, 'Failed to get dst binary stream');
+        $this->assertIsResource($srcVal, 'Failed to get src binary stream');
+        $this->assertIsResource($dstVal, 'Failed to get dst binary stream');
 
         $this->assertEquals(stream_get_contents($srcVal), stream_get_contents($dstVal));
     }
@@ -303,13 +303,13 @@ class CopyMethodsTest extends BaseCase
         $srcVal = $srcProp->getValue();
         $dstVal = $dstProp->getValue();
 
-        $this->assertInternalType('array', $srcVal, 'Failed to get src value');
-        $this->assertInternalType('array', $dstVal, 'Failed to get dst value');
+        $this->assertIsArray($srcVal, 'Failed to get src value');
+        $this->assertIsArray($dstVal, 'Failed to get dst value');
 
-        $this->assertInternalType('resource', $srcVal[0]);
-        $this->assertInternalType('resource', $srcVal[1]);
-        $this->assertInternalType('resource', $dstVal[0]);
-        $this->assertInternalType('resource', $dstVal[1]);
+        $this->assertIsResource($srcVal[0]);
+        $this->assertIsResource($srcVal[1]);
+        $this->assertIsResource($dstVal[0]);
+        $this->assertIsResource($dstVal[1]);
 
         $this->assertEquals(stream_get_contents($srcVal[0]), stream_get_contents($dstVal[0]));
         $this->assertEquals(stream_get_contents($srcVal[1]), stream_get_contents($dstVal[1]));

@@ -20,7 +20,7 @@ use PHPCR\Test\BaseCase;
  */
 class SimpleCredentialsTest extends BaseCase
 {
-    public static function setupBeforeClass($fixtures = false)
+    public static function setupBeforeClass($fixtures = false): void
     {
         // Don't care about fixtures
         parent::setupBeforeClass($fixtures);
@@ -67,7 +67,7 @@ class SimpleCredentialsTest extends BaseCase
         $cr->setAttribute($attrName, $attrValue);
         $this->assertEquals($attrValue, $cr->getAttribute($attrName));
         $attrs = $cr->getAttributeNames();
-        $this->assertInternalType('array', $attrs);
+        $this->assertIsArray($attrs);
         $this->assertContains($attrName, $attrs);
         $cr->removeAttribute($attrName);
         $this->assertNull($cr->getAttribute($attrName));

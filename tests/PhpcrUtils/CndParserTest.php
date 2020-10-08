@@ -27,7 +27,7 @@ class CndParserTest extends BaseCase
     /** @var CndParser */
     private $cndParser;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->cndParser = new CndParser($this->session->getWorkspace()->getNodeTypeManager());

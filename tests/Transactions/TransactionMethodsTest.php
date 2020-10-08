@@ -22,12 +22,12 @@ use PHPCR\Transaction\UserTransactionInterface;
  */
 class TransactionMethodsTest extends BaseCase
 {
-    public static function setupBeforeClass($fixtures = '21_Transactions/transactions')
+    public static function setupBeforeClass($fixtures = '21_Transactions/transactions'): void
     {
         parent::setupBeforeClass($fixtures);
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->renewSession();
 

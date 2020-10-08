@@ -50,7 +50,7 @@ class NodeTypeTest extends BaseCase
      */
     private static $created;
 
-    public static function setupBeforeClass($fixtures = false)
+    public static function setupBeforeClass($fixtures = false): void
     {
         parent::setupBeforeClass($fixtures);
         $ntm = self::$staticSharedFixture['session']->getWorkspace()->getNodeTypeManager();
@@ -64,7 +64,7 @@ class NodeTypeTest extends BaseCase
     public function testGetSupertypes()
     {
         $types = self::$file->getSupertypes();
-        $this->assertInternalType('array', $types);
+        $this->assertIsArray($types);
         $typenames = [];
 
         foreach ($types as $type) {
@@ -77,14 +77,14 @@ class NodeTypeTest extends BaseCase
     public function testGetSupertypesNone()
     {
         $types = self::$base->getSupertypes();
-        $this->assertInternalType('array', $types);
+        $this->assertIsArray($types);
         $this->assertCount(0, $types);
     }
 
     public function testGetDeclaredSupertypes()
     {
         $types = self::$file->getDeclaredSupertypes();
-        $this->assertInternalType('array', $types);
+        $this->assertIsArray($types);
         $typenames = [];
 
         foreach ($types as $type) {
@@ -96,7 +96,7 @@ class NodeTypeTest extends BaseCase
         $this->assertNotContains('nt:base', $typenames);
 
         $types = self::$resource->getDeclaredSupertypes();
-        $this->assertInternalType('array', $types);
+        $this->assertIsArray($types);
         $typenames = [];
 
         foreach ($types as $type) {
@@ -112,7 +112,7 @@ class NodeTypeTest extends BaseCase
     public function testGetDeclaredSupertypesNone()
     {
         $types = self::$base->getDeclaredSupertypes();
-        $this->assertInternalType('array', $types);
+        $this->assertIsArray($types);
         $this->assertCount(0, $types);
     }
 
@@ -155,7 +155,7 @@ class NodeTypeTest extends BaseCase
     public function testGetChildNodeDefinitions()
     {
         $children = self::$file->getChildNodeDefinitions();
-        $this->assertInternalType('array', $children);
+        $this->assertIsArray($children);
         $this->assertCount(1, $children);
         $child = current($children);
         $this->assertInstanceOf(NodeDefinitionInterface::class, $child);
@@ -166,7 +166,7 @@ class NodeTypeTest extends BaseCase
     public function testGetPropertyDefinitions()
     {
         $properties = self::$file->getPropertyDefinitions();
-        $this->assertInternalType('array', $properties);
+        $this->assertIsArray($properties);
         $this->assertCount(4, $properties);
         $names = [];
 

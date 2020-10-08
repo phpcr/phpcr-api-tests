@@ -23,7 +23,7 @@ class QueryOperationsTest extends QueryBaseCase
     {
         /** @var $query QueryInterface */
         $query = $this->sharedFixture['qm']->createQuery(
-                "SELECT foo FROM nt:unstructured WHERE foo = 'bar'",
+            "SELECT foo FROM nt:unstructured WHERE foo = 'bar'",
             QueryInterface::SQL
         );
 
@@ -50,7 +50,8 @@ class QueryOperationsTest extends QueryBaseCase
     public function testQueryFieldSomenull()
     {
         /** @var $query QueryInterface */
-        $query = $this->sharedFixture['qm']->createQuery('
+        $query = $this->sharedFixture['qm']->createQuery(
+            '
             SELECT foo
             FROM nt:unstructured
             WHERE jcr:path LIKE \'/tests_general_base/%\'

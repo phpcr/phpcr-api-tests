@@ -21,12 +21,12 @@ use PHPCR\Test\BaseCase;
  */
 class LastModifiedTest extends BaseCase
 {
-    public static function setupBeforeClass($fixtures = '10_Writing/lastmodified')
+    public static function setupBeforeClass($fixtures = '10_Writing/lastmodified'): void
     {
         parent::setupBeforeClass($fixtures);
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

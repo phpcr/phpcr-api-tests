@@ -25,7 +25,7 @@ use RuntimeException;
 //6.5 Import Repository Content
 class ImportRepositoryContentTest extends BaseCase
 {
-    public static function setupBeforeClass($fixtures = null)
+    public static function setupBeforeClass($fixtures = null): void
     {
         parent::setupBeforeClass($fixtures);
     }

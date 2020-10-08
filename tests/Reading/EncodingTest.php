@@ -20,12 +20,12 @@ use PHPCR\Test\BaseCase;
  */
 class EncodingTest extends BaseCase
 {
-    public static function setupBeforeClass($fixtures = '05_Reading/encoding')
+    public static function setupBeforeClass($fixtures = '05_Reading/encoding'): void
     {
         parent::setupBeforeClass($fixtures);
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

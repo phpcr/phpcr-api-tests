@@ -36,7 +36,7 @@ abstract class QueryBaseCase extends BaseCase
      *
      * @param string $fixture name of the fixture to load, defaults to general/base
      */
-    public static function setupBeforeClass($fixture = 'general/base')
+    public static function setupBeforeClass($fixture = 'general/base'): void
     {
         parent::setupBeforeClass($fixture);
         self::$staticSharedFixture['qm'] = self::$staticSharedFixture['session']->getWorkspace()->getQueryManager();
@@ -45,11 +45,12 @@ abstract class QueryBaseCase extends BaseCase
     /**
      * in addition to base stuff, prepare $this->query with a simple select query.
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
-        $this->query = $this->sharedFixture['qm']->createQuery('
+        $this->query = $this->sharedFixture['qm']->createQuery(
+            '
             SELECT *
             FROM [nt:folder]
             WHERE ISDESCENDANTNODE([/tests_general_base])

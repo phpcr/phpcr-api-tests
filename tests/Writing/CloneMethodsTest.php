@@ -39,7 +39,7 @@ class CloneMethodsTest extends BaseCase
     /** @var string */
     protected static $destWsName;
 
-    public static function setupBeforeClass($fixtures = '10_Writing/clone')
+    public static function setupBeforeClass($fixtures = '10_Writing/clone'): void
     {
         parent::setupBeforeClass($fixtures);
 
@@ -57,7 +57,7 @@ class CloneMethodsTest extends BaseCase
         $destSession->save();
     }
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->renewSession(); // get rid of cache from previous tests
 
@@ -67,7 +67,7 @@ class CloneMethodsTest extends BaseCase
         $this->srcWsName = $this->session->getWorkspace()->getName();
     }
 
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         self::$destWs = null;
         parent::tearDownAfterClass();
@@ -304,9 +304,6 @@ class CloneMethodsTest extends BaseCase
         self::$destWs->cloneFrom($this->srcWsName, $srcNode, $dstNode, true);
     }
 
-    /**
-     * @expectedException \PHPCR\PathNotFoundException
-     */
     public function testCloneProperty()
     {
         $this->expectException(PathNotFoundException::class);

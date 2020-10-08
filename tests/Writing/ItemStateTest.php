@@ -22,7 +22,7 @@ use PHPCR\Test\BaseCase;
  */
 class ItemStateTest extends BaseCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

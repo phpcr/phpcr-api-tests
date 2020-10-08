@@ -41,7 +41,7 @@ class ConvertQueriesBackAndForthTest extends BaseCase
      */
     protected $qomParser;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

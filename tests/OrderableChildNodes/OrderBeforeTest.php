@@ -20,12 +20,12 @@ use PHPCR\Test\BaseCase;
  */
 class OrderBeforeTest extends BaseCase
 {
-    public static function setupBeforeClass($fixtures = '23_OrderableChildNodes/orderable')
+    public static function setupBeforeClass($fixtures = '23_OrderableChildNodes/orderable'): void
     {
         parent::setupBeforeClass($fixtures);
     }
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->renewSession();
         parent::setUp();

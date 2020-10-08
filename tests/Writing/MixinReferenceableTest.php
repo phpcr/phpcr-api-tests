@@ -24,12 +24,12 @@ use PHPCR\ValueFormatException;
  */
 class MixinReferenceableTest extends BaseCase
 {
-    public static function setupBeforeClass($fixtures = '10_Writing/mixinreferenceable')
+    public static function setupBeforeClass($fixtures = '10_Writing/mixinreferenceable'): void
     {
         parent::setupBeforeClass($fixtures);
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->renewSession(); // discard changes
     }

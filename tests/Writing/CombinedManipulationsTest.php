@@ -22,12 +22,12 @@ use PHPCR\Test\BaseCase;
  */
 class CombinedManipulationsTest extends BaseCase
 {
-    public static function setupBeforeClass($fixtures = '10_Writing/combinedmanipulations')
+    public static function setupBeforeClass($fixtures = '10_Writing/combinedmanipulations'): void
     {
         parent::setupBeforeClass($fixtures);
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->renewSession(); // kill cache between tests
         parent::setUp();

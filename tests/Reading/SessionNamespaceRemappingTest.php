@@ -17,7 +17,7 @@ use PHPCR\Test\BaseCase;
 // 6.3.3 Session Namespace Remapping
 class SessionNamespaceRemappingTest extends BaseCase
 {
-    public static function setupBeforeClass($fixtures = false)
+    public static function setupBeforeClass($fixtures = false): void
     {
         // Do not care about the fixtures
         parent::setupBeforeClass($fixtures);
@@ -38,7 +38,7 @@ class SessionNamespaceRemappingTest extends BaseCase
 
         $session->setNamespacePrefix('notyetexisting', 'http://www.jcp.org/jcr/mix/1.0');
         $ret = $session->getNamespacePrefixes();
-        $this->assertInternalType('array', $ret);
+        $this->assertIsArray($ret);
         $this->assertContains('notyetexisting', $ret);
 
         $session->logout();
@@ -54,7 +54,7 @@ class SessionNamespaceRemappingTest extends BaseCase
     public function testGetNamespacePrefixes()
     {
         $ret = $this->session->getNamespacePrefixes();
-        $this->assertInternalType('array', $ret);
+        $this->assertIsArray($ret);
         foreach ($this->nsBuiltIn as $prefix => $uri) {
             $this->assertContains($prefix, $ret);
         }

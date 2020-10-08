@@ -51,7 +51,8 @@ class QomTestQueries
                     $factory->selector('file', 'nt:file'),
                     $factory->selector('folder', 'nt:folder'),
                     Constants::JCR_JOIN_TYPE_INNER,
-                    $factory->equiJoinCondition('file', 'prop1', 'folder', 'prop2')),
+                    $factory->equiJoinCondition('file', 'prop1', 'folder', 'prop2')
+                ),
                 null,
                 [],
                 []
@@ -65,7 +66,8 @@ class QomTestQueries
                     $factory->selector('file', 'nt:file'),
                     $factory->selector('folder', 'nt:folder'),
                     Constants::JCR_JOIN_TYPE_LEFT_OUTER,
-                    $factory->equiJoinCondition('file', 'prop1', 'folder', 'prop2')),
+                    $factory->equiJoinCondition('file', 'prop1', 'folder', 'prop2')
+                ),
                 null,
                 [],
                 []
@@ -79,7 +81,8 @@ class QomTestQueries
                     $factory->selector('file', 'nt:file'),
                     $factory->selector('folder', 'nt:folder'),
                     Constants::JCR_JOIN_TYPE_RIGHT_OUTER,
-                    $factory->equiJoinCondition('file', 'prop1', 'folder', 'prop2')),
+                    $factory->equiJoinCondition('file', 'prop1', 'folder', 'prop2')
+                ),
                 null,
                 [],
                 []
@@ -98,7 +101,8 @@ class QomTestQueries
                     ),
                     $factory->selector('folder2', 'nt:folder'),
                     Constants::JCR_JOIN_TYPE_INNER,
-                    $factory->equiJoinCondition('file', 'prop1', 'folder', 'prop2')),
+                    $factory->equiJoinCondition('file', 'prop1', 'folder', 'prop2')
+                ),
                 null,
                 [],
                 []
@@ -116,7 +120,8 @@ class QomTestQueries
                     $factory->selector('file', 'nt:file'),
                     $factory->selector('folder', 'nt:folder'),
                     Constants::JCR_JOIN_TYPE_INNER,
-                    $factory->sameNodeJoinCondition('file', 'folder')),
+                    $factory->sameNodeJoinCondition('file', 'folder')
+                ),
                 null,
                 [],
                 []
@@ -130,7 +135,8 @@ class QomTestQueries
                     $factory->selector('file', 'nt:file'),
                     $factory->selector('folder', 'nt:folder'),
                     Constants::JCR_JOIN_TYPE_INNER,
-                    $factory->sameNodeJoinCondition('file', 'folder', '/home')),
+                    $factory->sameNodeJoinCondition('file', 'folder', '/home')
+                ),
                 null,
                 [],
                 []
@@ -148,7 +154,8 @@ class QomTestQueries
                     $factory->selector('child', 'nt:file'),
                     $factory->selector('parent', 'nt:folder'),
                     Constants::JCR_JOIN_TYPE_INNER,
-                    $factory->childNodeJoinCondition('child', 'parent')),
+                    $factory->childNodeJoinCondition('child', 'parent')
+                ),
                 null,
                 [],
                 []
@@ -166,7 +173,8 @@ class QomTestQueries
                     $factory->selector('descendant', 'nt:file'),
                     $factory->selector('ancestor', 'nt:folder'),
                     Constants::JCR_JOIN_TYPE_INNER,
-                    $factory->descendantNodeJoinCondition('descendant', 'ancestor')),
+                    $factory->descendantNodeJoinCondition('descendant', 'ancestor')
+                ),
                 null,
                 [],
                 []
@@ -322,7 +330,8 @@ class QomTestQueries
                 $factory->selector('file', 'nt:file'),
                 $factory->andConstraint(
                     $factory->propertyExistence('file', 'prop1'),
-                    $factory->propertyExistence('file', 'prop2')),
+                    $factory->propertyExistence('file', 'prop2')
+                ),
                 [],
                 []
             )
@@ -338,7 +347,8 @@ class QomTestQueries
                 $factory->selector('file', 'nt:file'),
                 $factory->orConstraint(
                     $factory->propertyExistence('file', 'prop1'),
-                    $factory->propertyExistence('file', 'prop2')),
+                    $factory->propertyExistence('file', 'prop2')
+                ),
                 [],
                 []
             )
@@ -353,7 +363,8 @@ class QomTestQueries
             $factory->createQuery(
                 $factory->selector('file', 'nt:file'),
                 $factory->notConstraint(
-                    $factory->propertyExistence('file', 'prop1')),
+                    $factory->propertyExistence('file', 'prop1')
+                ),
                 [],
                 []
             )
@@ -370,7 +381,8 @@ class QomTestQueries
                 $factory->comparison(
                     $factory->nodeName('file'),
                     Constants::JCR_OPERATOR_LIKE,
-                    $factory->literal('literal2')),
+                    $factory->literal('literal2')
+                ),
                 [],
                 []
             )
@@ -472,7 +484,8 @@ class QomTestQueries
                 $factory->comparison(
                     $factory->propertyValue('file', 'prop'),
                     Constants::JCR_OPERATOR_LIKE,
-                    $factory->literal('literal')),
+                    $factory->literal('literal')
+                ),
                 [],
                 []
             )
@@ -485,7 +498,8 @@ class QomTestQueries
                 $factory->comparison(
                     $factory->propertyValue('sel', 'prop'),
                     Constants::JCR_OPERATOR_GREATER_THAN,
-                    $factory->literal(new \DateTime('2013-04-15 +02:00'))),
+                    $factory->literal(new \DateTime('2013-04-15 +02:00'))
+                ),
                 [],
                 []
             )
@@ -502,7 +516,8 @@ class QomTestQueries
                 $factory->comparison(
                     $factory->length($factory->propertyValue('file', 'prop')),
                     Constants::JCR_OPERATOR_LIKE,
-                    $factory->literal('literal')),
+                    $factory->literal('literal')
+                ),
                 [],
                 []
             )
@@ -519,7 +534,8 @@ class QomTestQueries
                 $factory->comparison(
                     $factory->nodeName('file'),
                     Constants::JCR_OPERATOR_LIKE,
-                    $factory->literal('literal')),
+                    $factory->literal('literal')
+                ),
                 [],
                 []
             )
@@ -536,7 +552,8 @@ class QomTestQueries
                 $factory->comparison(
                     $factory->nodeLocalName('file'),
                     Constants::JCR_OPERATOR_LIKE,
-                    $factory->literal('literal')),
+                    $factory->literal('literal')
+                ),
                 [],
                 []
             )
@@ -553,7 +570,8 @@ class QomTestQueries
                 $factory->comparison(
                     $factory->fullTextSearchScore('file'),
                     Constants::JCR_OPERATOR_LIKE,
-                    $factory->literal('literal')),
+                    $factory->literal('literal')
+                ),
                 [],
                 []
             )
@@ -570,7 +588,8 @@ class QomTestQueries
                 $factory->comparison(
                     $factory->lowerCase($factory->nodeName('file')),
                     Constants::JCR_OPERATOR_LIKE,
-                    $factory->literal('literal')),
+                    $factory->literal('literal')
+                ),
                 [],
                 []
             )
@@ -587,7 +606,8 @@ class QomTestQueries
                 $factory->comparison(
                     $factory->upperCase($factory->nodeName('file')),
                     Constants::JCR_OPERATOR_LIKE,
-                    $factory->literal('literal')),
+                    $factory->literal('literal')
+                ),
                 [],
                 []
             )
@@ -604,7 +624,8 @@ class QomTestQueries
                 $factory->comparison(
                     $factory->upperCase($factory->nodeName('file')),
                     Constants::JCR_OPERATOR_LIKE,
-                    $factory->bindVariable('var')),
+                    $factory->bindVariable('var')
+                ),
                 [],
                 []
             )

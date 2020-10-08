@@ -22,12 +22,12 @@ use PHPCR\Test\BaseCase;
  */
 class MoveMethodsTest extends BaseCase
 {
-    public static function setupBeforeClass($fixtures = '10_Writing/move')
+    public static function setupBeforeClass($fixtures = '10_Writing/move'): void
     {
         parent::setupBeforeClass($fixtures);
     }
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->renewSession();
         parent::setUp();
@@ -443,11 +443,9 @@ class MoveMethodsTest extends BaseCase
         $this->assertTrue($session->nodeExists($dst2), 'Destination child node not found [B]');
     }
 
-    /**
-     * @expectedException   \PHPCR\RepositoryException
-     */
     public function testSessionMoveProperty()
     {
+        $this->expectException(RepositoryException::class);
         $src = '/tests_write_manipulation_move/testSessionMoveProperty/srcNode/prop';
         $dst = '/tests_write_manipulation_move/testSessionMoveProperty/dstNode/prop';
         $this->session->move($src, $dst);

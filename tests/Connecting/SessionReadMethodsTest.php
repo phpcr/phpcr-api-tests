@@ -54,7 +54,7 @@ class SessionReadMethodsTest extends BaseCase
         $cr->setAttribute('foo', 'bar');
         $session = $this->assertSession($cr);
         $attrs = $session->getAttributeNames();
-        $this->assertInternalType('array', $attrs);
+        $this->assertIsArray($attrs);
         $this->assertContains('foo', $attrs);
     }
 
