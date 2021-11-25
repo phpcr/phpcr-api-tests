@@ -21,11 +21,14 @@ use PHPCR\Util\QOM\Sql2ToQomQueryConverter;
 
 class Sql2ToQomConverterTest extends \PHPCR\Test\BaseCase
 {
-    protected $sql2Queries;
-
+    /**
+     * @var QueryObjectModelInterface[]
+     */
     protected $qomQueries;
 
-    /** @var Sql2ToQomQueryConverter */
+    /**
+     * @var Sql2ToQomQueryConverter
+     */
     protected $parser;
 
     public function setUp(): void
@@ -33,7 +36,6 @@ class Sql2ToQomConverterTest extends \PHPCR\Test\BaseCase
         parent::setUp();
 
         $factory = $this->session->getWorkspace()->getQueryManager()->getQOMFactory();
-        $this->sql2Queries = Sql2TestQueries::getQueries();
         $this->qomQueries = QomTestQueries::getQueries($factory);
 
         try {
@@ -66,20 +68,37 @@ class Sql2ToQomConverterTest extends \PHPCR\Test\BaseCase
         $this->assertEquals('prop2', $cols[1]->getColumnName());
     }
 
-    public function testQueries()
+    public function provideQueries()
     {
-        foreach ($this->qomQueries as $name => $query) {
-            $sql2 = $this->sql2Queries[$name];
-            if (is_array($sql2)) {
-                foreach ($sql2 as $sql2Variation) {
-                    $qom = $this->parser->parse($sql2Variation);
-                    $this->assertEquals($query, $qom, "Original query = $sql2Variation");
-                }
-            } else {
-                $qom = $this->parser->parse($sql2);
-                $this->assertEquals($query, $qom, "Original query = $sql2");
-            }
+        // unfortunately the provider can't create the QOM queries because phpunit calls the data providers before doing setUp/setupBeforeClass
+        foreach (Sql2TestQueries::getQueries() as $name => $sql2) {
+            yield $name => [$name, $sql2];
         }
+    }
+
+    /**
+     * @dataProvider provideQueries
+     *
+     * @param string          $name
+     * @param string|string[] $originalSql2Query
+     */
+    public function testQueries($name, $sql2)
+    {
+        if (!array_key_exists($name, $this->qomQueries)) {
+            $this->markTestSkipped('Case '.$name.' needs to be implemented');
+        }
+        $query = $this->qomQueries[$name];
+
+        if (is_array($sql2)) {
+            foreach ($sql2 as $sql2Variation) {
+                $qom = $this->parser->parse($sql2Variation);
+                $this->assertEquals($query, $qom, "Original query = $sql2Variation");
+            }
+            return;
+        }
+
+        $qom = $this->parser->parse($sql2);
+        $this->assertEquals($query, $qom, "Original query = $sql2");
     }
 
     public function getSQL2WithWhitespace()

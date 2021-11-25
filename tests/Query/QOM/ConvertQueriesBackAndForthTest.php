@@ -22,11 +22,6 @@ use PHPCR\Util\ValueConverter;
 class ConvertQueriesBackAndForthTest extends BaseCase
 {
     /**
-     * @var string[]
-     */
-    protected $sql2Queries;
-
-    /**
      * @var QueryObjectModelInterface[]
      */
     protected $qomQueries;
@@ -46,7 +41,6 @@ class ConvertQueriesBackAndForthTest extends BaseCase
         parent::setUp();
 
         $factory = $this->session->getWorkspace()->getQueryManager()->getQOMFactory();
-        $this->sql2Queries = Sql2TestQueries::getQueries();
         $this->qomQueries = QomTestQueries::getQueries($factory);
         $this->qomParser = new QomToSql2QueryConverter(new Sql2Generator(new ValueConverter()));
 
@@ -57,31 +51,42 @@ class ConvertQueriesBackAndForthTest extends BaseCase
         }
     }
 
-    public function testBackAndForth()
+    public function provideQueries()
     {
-        foreach ($this->qomQueries as $name => $originalQomQuery) {
-            $originalSql2Query = $this->sql2Queries[$name];
-            if (is_array($originalSql2Query)) {
-                $this->assertGreaterThan(0, count($originalSql2Query), 'empty list of queries');
-                $passed = false;
-                $sql2 = 'None of the QOM statements matched';
-                foreach ($originalSql2Query as $query) {
-                    $qom = $this->sql2Parser->parse($query);
-                    if ($originalQomQuery->getStatement() == $qom->getStatement()) {
-                        $sql2 = $this->qomParser->convert($qom);
-                        if ($sql2 == $query) {
-                            $passed = true;
-                            break;
-                        }
-                    }
-                }
-                $this->assertTrue($passed, "QOM-->SQL2->QOM: Query variation $name resulted in SQL2 that is not found: $sql2");
-            } else {
-                $qom = $this->sql2Parser->parse($originalSql2Query);
-                $this->assertEquals($originalQomQuery, $qom, "QOM-->SQL2: Original query = $originalSql2Query");
-                $sql2 = $this->qomParser->convert($qom);
-                $this->assertEquals($originalSql2Query, $sql2, "SQL2-->QOM: Original query = $originalSql2Query");
-            }
+        // unfortunately the provider can't create the QOM queries because phpunit calls the data providers before doing setUp/setupBeforeClass
+        foreach (Sql2TestQueries::getQueries() as $name => $originalSqlQuery) {
+            yield $name => [$name, $originalSqlQuery];
         }
+    }
+
+    /**
+     * @dataProvider provideQueries
+     *
+     * @param string          $name
+     * @param string|string[] $originalSql2Query
+     */
+    public function testBackAndForth($name, $originalSql2Query)
+    {
+        if (!array_key_exists($name, $this->qomQueries)) {
+            $this->markTestSkipped('Case '.$name.' needs to be implemented');
+        }
+        $originalQomQuery = $this->qomQueries[$name];
+        if (is_array($originalSql2Query)) {
+            $this->assertGreaterThan(0, count($originalSql2Query), 'empty list of queries');
+            foreach ($originalSql2Query as $query) {
+                $qom = $this->sql2Parser->parse($query);
+                if ($originalQomQuery->getStatement() == $qom->getStatement()
+                    && $query == $this->qomParser->convert($qom)
+                ) {
+                    return;
+                }
+            }
+            $this->fail("QOM-->SQL2->QOM: Query variation $name resulted in SQL2 that is not found: ".var_export($originalSql2Query, true));
+        }
+
+        $qom = $this->sql2Parser->parse($originalSql2Query);
+        $this->assertEquals($originalQomQuery, $qom, "QOM-->SQL2: Original query = $originalSql2Query");
+        $sql2 = $this->qomParser->convert($qom);
+        $this->assertEquals($originalSql2Query, $sql2, "SQL2-->QOM: Original query = $originalSql2Query");
     }
 }
