@@ -438,14 +438,12 @@ class QomTestQueries
             )
         ;
 
-        /* TODO
         $queries['6.7.20.SameNode.Selector_Space'] =
             $factory->createQuery(
                 $factory->selector('file', 'nt:file'),
                 $factory->sameNode('file', '/home node'),
                 array(),
                 array());
-        */
 
         /*
         * 6.7.21. ChildNode
