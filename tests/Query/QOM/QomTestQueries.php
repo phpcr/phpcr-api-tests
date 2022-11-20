@@ -442,8 +442,9 @@ class QomTestQueries
             $factory->createQuery(
                 $factory->selector('file', 'nt:file'),
                 $factory->sameNode('file', '/home node'),
-                array(),
-                array());
+                [],
+                []
+            );
 
         /*
         * 6.7.21. ChildNode
