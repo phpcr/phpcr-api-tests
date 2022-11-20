@@ -290,7 +290,7 @@ abstract class AbstractLoader
             $workspace = $session->getWorkspace();
 
             if (in_array($workspaceName, $workspace->getAccessibleWorkspaceNames())) {
-                throw new Exception(sprintf('Workspace "%s" already exists but could not login to it', $workspaceName), null, $e);
+                throw new Exception(sprintf('Workspace "%s" already exists but could not login to it', $workspaceName), 0, $e);
             }
             $workspace->createWorkspace($workspaceName);
 
