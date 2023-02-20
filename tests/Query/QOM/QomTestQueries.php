@@ -444,7 +444,8 @@ class QomTestQueries
                 $factory->sameNode('file', '/home node'),
                 [],
                 []
-            );
+            )
+        ;
 
         /*
         * 6.7.21. ChildNode
