@@ -447,20 +447,18 @@ class VersionManagerTest extends BaseCase
         $this->vm->restore(true, 'not-existing', '/tests_version_base/versioned');
     }
 
-    public function testRestoreNonsenseArguments()
+    public function testRestoreNoPath()
     {
-        try {
-            $this->vm->restore(true, 'something');
-            $this->fail('restoring with version name and no path should throw an exception');
-        } catch (Exception $e) {
-            // we expect something to be thrown
-        }
-        try {
-            $this->vm->restore(true, $this);
-            $this->fail('restoring with non-version object');
-        } catch (Exception $e) {
-            // we expect something to be thrown
-        }
+        $this->expectException(\Exception::class);
+
+        $this->vm->restore(true, 'something');
+    }
+
+    public function testRestoreInvalidType()
+    {
+        $this->expectException(\Exception::class);
+
+        $this->vm->restore(true, $this);
     }
 
     public function testRestoreRootVersion()

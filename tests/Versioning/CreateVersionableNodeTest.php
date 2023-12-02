@@ -12,6 +12,7 @@
 namespace PHPCR\Tests\Versioning;
 
 use PHPCR\Test\BaseCase;
+use PHPCR\Version\VersionManagerInterface;
 
 /**
 * Testing whether mix:versionable node type is properly handled.
@@ -20,6 +21,11 @@ use PHPCR\Test\BaseCase;
 */
 class CreateVersionableNodeTest extends BaseCase
 {
+    /**
+     * @var VersionManagerInterface
+     */
+    private $vm;
+
     public static function setupBeforeClass($fixtures = '15_Versioning/base'): void
     {
         parent::setupBeforeClass($fixtures);
