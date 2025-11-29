@@ -40,10 +40,16 @@ class Sql2ScannerTest extends \PHPCR\Test\BaseCase
         $scanner = new Sql2Scanner($this->sql2);
         $refl = new \ReflectionClass($scanner);
         $sql2Property = $refl->getProperty('sql2');
-        $sql2Property->setAccessible(true);
+        // remove when we drop PHP 8.0 support
+        if (PHP_VERSION_ID < 80100) {
+            $sql2Property->setAccessible(true);
+        }
         $this->assertSame($this->sql2, $sql2Property->getValue($scanner));
         $tokensProperty = $refl->getProperty('tokens');
-        $tokensProperty->setAccessible(true);
+        // remove when we drop PHP 8.0 support
+        if (PHP_VERSION_ID < 80100) {
+            $tokensProperty->setAccessible(true);
+        }
         $this->assertSame($this->tokens, $tokensProperty->getValue($scanner));
     }
 
